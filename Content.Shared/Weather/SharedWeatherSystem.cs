@@ -85,7 +85,6 @@ public abstract class SharedWeatherSystem : EntitySystem
         return alpha;
     }
 
-
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
@@ -105,7 +104,6 @@ public abstract class SharedWeatherSystem : EntitySystem
             {
                 var endTime = weather.EndTime;
 
-                // Ended
                 if (endTime != null && endTime < curTime)
                 {
                     EndWeather(uid, comp, proto);
@@ -114,7 +112,6 @@ public abstract class SharedWeatherSystem : EntitySystem
 
                 var remainingTime = endTime - curTime;
 
-                // Admin messed up or the likes.
                 if (!ProtoMan.TryIndex<WeatherPrototype>(proto, out var weatherProto))
                 {
                     Log.Error($"Unable to find weather prototype for {comp.Weather}, ending!");
@@ -122,12 +119,10 @@ public abstract class SharedWeatherSystem : EntitySystem
                     continue;
                 }
 
-                // Shutting down
                 if (endTime != null && remainingTime < WeatherComponent.ShutdownTime)
                 {
                     SetState(uid, WeatherState.Ending, comp, weather, weatherProto);
                 }
-                // Starting up
                 else
                 {
                     var startTime = weather.StartTime;
@@ -139,15 +134,11 @@ public abstract class SharedWeatherSystem : EntitySystem
                     }
                 }
 
-                // Run whatever code we need.
                 Run(uid, weather, weatherProto, frameTime);
             }
         }
     }
 
-    /// <summary>
-    /// Shuts down all existing weather and starts the new one if applicable.
-    /// </summary>
     public void SetWeather(MapId mapId, WeatherPrototype? proto, TimeSpan? endTime)
     {
         if (!_mapSystem.TryGetMap(mapId, out var mapUid))
@@ -157,11 +148,9 @@ public abstract class SharedWeatherSystem : EntitySystem
 
         foreach (var (eProto, weather) in weatherComp.Weather)
         {
-            // if we turn off the weather, we don't want endTime = null
             if (proto == null)
                 endTime ??= Timing.CurTime + WeatherComponent.ShutdownTime;
 
-            // Reset cooldown if it's an existing one.
             if (proto is not null && eProto == proto.ID)
             {
                 weather.EndTime = endTime;
@@ -172,7 +161,6 @@ public abstract class SharedWeatherSystem : EntitySystem
                 continue;
             }
 
-            // Speedrun
             var end = Timing.CurTime + WeatherComponent.ShutdownTime;
 
             if (weather.EndTime == null || weather.EndTime > end)
@@ -186,9 +174,6 @@ public abstract class SharedWeatherSystem : EntitySystem
             StartWeather(mapUid.Value, weatherComp, proto, endTime);
     }
 
-    /// <summary>
-    /// Run every tick when the weather is running.
-    /// </summary>
     protected virtual void Run(EntityUid uid, WeatherData weather, WeatherPrototype weatherProto, float frameTime) { }
 
     protected void StartWeather(EntityUid uid, WeatherComponent component, WeatherPrototype weather, TimeSpan? endTime)
@@ -238,3 +223,4 @@ public abstract class SharedWeatherSystem : EntitySystem
         }
     }
 }
+

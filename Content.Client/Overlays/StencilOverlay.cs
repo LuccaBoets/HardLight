@@ -52,7 +52,7 @@ public sealed partial class StencilOverlay : Overlay
 
     protected override void Draw(in OverlayDrawArgs args)
     {
-        var mapUid = _mapManager.GetMapEntityId(args.MapId);
+        var mapUid = _map.GetMapOrInvalid(args.MapId);
         var invMatrix = args.Viewport.GetWorldToLocalMatrix();
 
        var res = _resources.GetForViewport(args.Viewport, static _ => new CachedResources());
@@ -76,9 +76,7 @@ public sealed partial class StencilOverlay : Overlay
         }
 
         if (_entManager.TryGetComponent<RestrictedRangeComponent>(mapUid, out var restrictedRangeComponent))
-        {
             DrawRestrictedRange(args, res, restrictedRangeComponent, invMatrix);
-        }
 
         args.WorldHandle.UseShader(null);
         args.WorldHandle.SetTransform(Matrix3x2.Identity);

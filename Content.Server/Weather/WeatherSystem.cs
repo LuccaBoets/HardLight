@@ -2,7 +2,7 @@ using Content.Server.Administration;
 using Content.Shared.Administration;
 using Content.Shared.Weather;
 using Robust.Shared.Console;
-using Robust.Shared.GameStates;
+using Robust.Server.GameStates;
 using Robust.Shared.Map;
 using System.Linq;
 
@@ -16,6 +16,7 @@ public sealed class WeatherSystem : SharedWeatherSystem
     public override void Initialize()
     {
         base.Initialize();
+
         SubscribeLocalEvent<WeatherComponent, ComponentGetState>(OnWeatherGetState);
         _console.RegisterCommand("weather",
             Loc.GetString("cmd-weather-desc"),
@@ -43,7 +44,7 @@ public sealed class WeatherSystem : SharedWeatherSystem
 
         var mapId = new MapId(mapInt);
 
-        if (!MapManager.MapExists(mapId))
+        if (!_mapSystem.MapExists(mapId))
             return;
 
         if (!_mapSystem.TryGetMap(mapId, out var mapUid))
@@ -51,7 +52,6 @@ public sealed class WeatherSystem : SharedWeatherSystem
 
         var weatherComp = EnsureComp<WeatherComponent>(mapUid.Value);
 
-        //Weather Proto parsing
         WeatherPrototype? weather = null;
         if (!args[1].Equals("null"))
         {
@@ -62,7 +62,6 @@ public sealed class WeatherSystem : SharedWeatherSystem
             }
         }
 
-        //Time parsing
         TimeSpan? endTime = null;
         if (args.Length == 3)
         {
