@@ -59,7 +59,7 @@ public sealed partial class ShipMoveToOperator : HTNOperator, IHtnConditionalShu
     /// How unwilling we are to use brake to adjust our velocity. Higher means less willing.
     /// </summary>
     [DataField]
-    public float BrakeThreshold = 0.75f;
+    public float BrakeThreshold = 0.3f;
 
     /// <summary>
     /// Whether to consider the movement finished if we collide with target.

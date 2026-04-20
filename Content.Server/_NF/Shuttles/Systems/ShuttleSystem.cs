@@ -21,7 +21,7 @@ public sealed partial class ShuttleSystem
         SubscribeLocalEvent<ShuttleConsoleComponent, SetServiceFlagsRequest>(NfSetServiceFlags);
     }
 
-    private bool SetInertiaDampening(EntityUid uid, PhysicsComponent physicsComponent, ShuttleComponent shuttleComponent, TransformComponent transform, InertiaDampeningMode mode)
+    public bool SetInertiaDampening(EntityUid uid, PhysicsComponent physicsComponent, ShuttleComponent shuttleComponent, TransformComponent transform, InertiaDampeningMode mode)
     {
         if (!transform.GridUid.HasValue)
         {
@@ -56,15 +56,11 @@ public sealed partial class ShuttleSystem
             _ => DampenDampingStrength, // other values: default to some sane behaviour (assume normal dampening)
         };
 
-        // Persist the desired damping via the shuttle component so the TileFrictionController
-        // uses the requested modifier every tick. Changing the PhysicsComponent damping
-        // directly is transient and will be overwritten by the friction controller.
-        if (EntityManager.TryGetComponent(transform.GridUid, out ShuttleComponent? gridShuttle))
-        {
-            gridShuttle.DampingModifier = linearDampeningStrength;
-            Dirty(transform.GridUid.Value, gridShuttle);
-        }
+        if (shuttleComponent.DampingModifier == shuttleComponent.BodyModifier)
+            return true;
 
+        if (shuttleComponent.DampingModifier != 0)
+            shuttleComponent.DampingModifier = shuttleComponent.BodyModifier;
         _console.RefreshShuttleConsoles(transform.GridUid.Value);
         return true;
     }
