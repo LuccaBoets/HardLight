@@ -273,7 +273,6 @@
     maxDraw: 100000 # Base is 150000
     unpoweredBonus: 6 # Base is 6
     shieldColor: "#FF3333"
-    collisionResistanceMultiplier: 0.05
   - type: ShipRepairable
     repairTime: 30
     repairCost: 300
