@@ -125,6 +125,21 @@ public sealed partial class ShipShieldsSystem : EntitySystem
         InitializeEmitters();
     }
 
+    private void OnShieldedMapInit(EntityUid uid, ShipShieldedComponent component, MapInitEvent args)
+    {
+        if (component.Source is { } source && TryComp<ShipShieldEmitterComponent>(source, out var emitter))
+        {
+            emitter.Shield = component.Shield;
+            emitter.Shielded = uid;
+        }
+
+        if (TryComp<ShipShieldComponent>(component.Shield, out var shield))
+        {
+            shield.Shielded = uid;
+            shield.Source = component.Source;
+        }
+    }
+
     private void OnPreventCollide(EntityUid uid, ShipShieldComponent component, ref PreventCollideEvent args)
     {
         // only handle ship weapons for now. engine update introduced physics regressions. Let's polish everything else and circle back yeah?
