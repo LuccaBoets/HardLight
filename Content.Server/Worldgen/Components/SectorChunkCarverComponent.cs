@@ -21,6 +21,9 @@ public sealed partial class SectorChunkCarverComponent : Component
     public float SparseFieldScale = 104f;
 
     [DataField]
+    public float ChunkFieldScale = 5f;
+
+    [DataField]
     public float IslandFieldScale = 22f;
 
     [DataField]
@@ -28,6 +31,9 @@ public sealed partial class SectorChunkCarverComponent : Component
 
     [DataField]
     public float SparseThreshold = 0.978f;
+
+    [DataField]
+    public float ChunkThreshold = 0.45f;
 
     [DataField]
     public float DensityThreshold = 0.79f;
@@ -44,9 +50,30 @@ public sealed partial class SectorChunkCarverComponent : Component
     [DataField]
     public float PlanetFalloff = 0.08f;
 
+    [DataField]
+    public List<string> Biomes =
+    [
+        "SectorRock",
+        "SectorIce",
+        "SectorAndesite",
+        "SectorBasalt",
+        "SectorSand",
+        "SectorChromite",
+        "SectorRust",
+        "SectorScrap",
+        "SectorWreck",
+        "SectorBrass",
+    ];
+
     [ViewVariables]
     public HashSet<Vector2i> GeneratedTiles = new();
 
     [ViewVariables]
     public HashSet<EntityUid> GeneratedEntities = new();
+
+    [ViewVariables]
+    public bool Materialized;
+
+    [ViewVariables]
+    public string? CacheFilePath;
 }

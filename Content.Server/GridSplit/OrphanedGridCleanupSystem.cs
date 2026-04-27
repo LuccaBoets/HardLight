@@ -1,6 +1,8 @@
 using System.Linq;
 using Content.Server.Power.Components;
 using Content.Server.Procedural;
+using Content.Server._Mono.Cleanup;
+using Content.Server.Worldgen.Components;
 using Content.Server.Station.Components;
 using Content.Shared.CCVar;
 using Content.Shared.Doors.Components;
@@ -163,6 +165,9 @@ public sealed class OrphanedGridCleanupSystem : EntitySystem
     /// </summary>
     private bool ShouldCleanupEmptyGrid(EntityUid gridUid, MapGridComponent grid, MetaDataComponent meta)
     {
+        if (ShouldPreserveGrid(gridUid))
+            return false;
+
         // Count tiles
         var tileCount = _mapSystem.GetAllTiles(gridUid, grid).Count();
 
@@ -227,6 +232,9 @@ public sealed class OrphanedGridCleanupSystem : EntitySystem
         if (!TryComp<MapGridComponent>(gridUid, out var grid))
             return false;
 
+        if (ShouldPreserveGrid(gridUid))
+            return false;
+
         // Count total tiles by iterating through all tiles
         var tileCount = _mapSystem.GetAllTiles(gridUid, grid).Count();
 
@@ -259,6 +267,9 @@ public sealed class OrphanedGridCleanupSystem : EntitySystem
 
         while (children.MoveNext(out var child))
         {
+            if (HasComp<WorldLoaderComponent>(child))
+                return true;
+
             // Check for players
             if (HasComp<ActorComponent>(child))
                 return true;
@@ -289,6 +300,17 @@ public sealed class OrphanedGridCleanupSystem : EntitySystem
         }
 
         return false;
+    }
+
+    private bool ShouldPreserveGrid(EntityUid gridUid)
+    {
+        if (HasComp<CleanupImmuneComponent>(gridUid))
+            return true;
+
+        if (HasComp<WorldControllerComponent>(gridUid))
+            return true;
+
+        return HasImportantEntities(gridUid);
     }
 
 

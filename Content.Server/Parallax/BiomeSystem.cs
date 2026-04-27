@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using Content.Server._Mono.Cleanup;
 using Content.Server.Atmos;
 using Content.Server.Atmos.Components;
 using Content.Server.Atmos.EntitySystems;
@@ -1010,7 +1011,9 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
         if (!Resolve(mapUid, ref metadata))
             return;
 
-        EnsureComp<MapGridComponent>(mapUid);
+        var mapGrid = EnsureComp<MapGridComponent>(mapUid);
+        mapGrid.CanSplit = false;
+        EnsureComp<CleanupImmuneComponent>(mapUid);
         var biome = (BiomeComponent) EntityManager.ComponentFactory.GetComponent(typeof(BiomeComponent));
         seed ??= _random.Next();
         SetSeed(mapUid, biome, seed.Value, false);

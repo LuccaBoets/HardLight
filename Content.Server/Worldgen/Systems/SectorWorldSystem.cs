@@ -36,7 +36,6 @@ public sealed class SectorWorldSystem : EntitySystem
     [Dependency] private readonly SharedMapSystem _mapSystem = default!;
     [Dependency] private readonly ITileDefinitionManager _tileDefs = default!;
     [Dependency] private readonly WeatherSystem _weather = default!;
-    [Dependency] private readonly WorldControllerSystem _worldController = default!;
 
     private static readonly string[] TimeOfDayStates = ["Dawn", "Day", "Dusk", "Night"];
 
@@ -166,13 +165,32 @@ public sealed class SectorWorldSystem : EntitySystem
 
     public bool IsSolidAt(EntityUid sectorMap, EntityUid noiseHolder, SectorChunkCarverComponent carver, Vector2 worldPos, out SectorPlanetDescriptor planet)
     {
-        if (!TryGetPlanetAtPosition(sectorMap, worldPos, out planet))
+        if (TryComp<SectorWorldComponent>(sectorMap, out SectorWorldComponent? sectorComp) &&
+            sectorComp != null &&
+            worldPos.LengthSquared() <= sectorComp.CentralClearRadius * sectorComp.CentralClearRadius)
+        {
+            planet = default!;
             return false;
+        }
 
-        var localPos = worldPos - planet.Center;
+        var chunkCoords = SharedMapSystem.GetChunkIndices(worldPos, WorldGen.ChunkSize);
+        if (sectorComp == null)
+        {
+            planet = default!;
+            return false;
+        }
+
+        planet = GetSectorAsteroidDescriptor(sectorComp, chunkCoords);
+
+        var localPos = worldPos;
+        var chunkSample = new Vector2(chunkCoords.X + 0.5f, chunkCoords.Y + 0.5f) / MathF.Max(carver.ChunkFieldScale, 1f);
         var sparseSample = localPos / MathF.Max(carver.SparseFieldScale, 1f);
         var islandSample = localPos / MathF.Max(carver.IslandFieldScale, 1f);
         var detailSample = localPos / MathF.Max(carver.DetailFieldScale, 1f);
+
+        var chunkPresence = _noiseIndex.Evaluate(noiseHolder, carver.IslandNoiseChannel, chunkSample * 0.57f + new Vector2(17.5f, -12.25f));
+        if (chunkPresence < carver.ChunkThreshold)
+            return false;
 
         var sparse = _noiseIndex.Evaluate(noiseHolder, carver.IslandNoiseChannel, sparseSample * 0.73f + new Vector2(-11.75f, 6.25f));
         if (sparse < carver.SparseThreshold)
@@ -182,8 +200,7 @@ public sealed class SectorWorldSystem : EntitySystem
         var carve = _noiseIndex.Evaluate(noiseHolder, carver.CarveNoiseChannel, detailSample * 1.33f + new Vector2(7.5f, -4.25f));
         var islands = _noiseIndex.Evaluate(noiseHolder, carver.IslandNoiseChannel, islandSample * 1.61f + new Vector2(-3.75f, 5.5f));
 
-        var radialDistance = (worldPos - planet.Center).Length() / MathF.Max(planet.Radius, 1f);
-        var densityBias = radialDistance * carver.PlanetFalloff;
+        var densityBias = 0f;
 
         var sparseStrength = (sparse - carver.SparseThreshold) / MathF.Max(1f - carver.SparseThreshold, 0.001f);
         sparseStrength = Math.Clamp(sparseStrength, 0f, 1f);
@@ -192,11 +209,28 @@ public sealed class SectorWorldSystem : EntitySystem
         var ridge = 1f - MathF.Abs(carve - 0.5f) * 2f;
         ridge = Math.Clamp(ridge, 0f, 1f);
 
-        var signedDensity = density * 0.58f + islands * 0.22f + ridge * 0.2f + sparseStrength * 0.32f - densityBias;
-        var baseMass = signedDensity >= carver.DensityThreshold || (sparseStrength >= carver.IslandThreshold && density >= carver.DensityThreshold - 0.08f);
-        var carvedOut = carve >= carver.CarveRange.X && carve <= carver.CarveRange.Y && sparseStrength < 0.94f;
+        var islandMass = islands * 0.42f + sparseStrength * 0.26f + ridge * 0.12f;
+        var signedDensity = density * 0.38f + islandMass - densityBias - 0.12f;
+        var baseMass = islands >= carver.IslandThreshold - 0.08f
+            && signedDensity >= carver.DensityThreshold - 0.04f;
+        var carvedOut = carve >= carver.CarveRange.X && carve <= carver.CarveRange.Y && islandMass < 0.92f;
 
         return baseMass && !carvedOut;
+    }
+
+    private SectorPlanetDescriptor GetSectorAsteroidDescriptor(SectorWorldComponent sector, Vector2i chunkCoords)
+    {
+        if (sector.Planets.Count == 0)
+        {
+            return new SectorPlanetDescriptor
+            {
+                SurfaceTile = "FloorSteel",
+            };
+        }
+
+        var hash = HashCode.Combine(sector.UniverseSeed, chunkCoords.X, chunkCoords.Y);
+        var index = Math.Abs(hash % sector.Planets.Count);
+        return sector.Planets[index];
     }
 
     public bool TryReserveExpeditionSite(int seed, EntityUid expeditionUid, string? planetTypeId, out SectorExpeditionPlacement placement)
@@ -275,9 +309,13 @@ public sealed class SectorWorldSystem : EntitySystem
         {
             var sectorGrid = _mapManager.CreateGridEntity(mapComp.MapId);
             ent.Comp.SectorGrid = sectorGrid.Owner;
+            sectorGrid.Comp.CanSplit = false;
             EnsureComp<CleanupImmuneComponent>(sectorGrid.Owner);
             _metaData.SetEntityName(sectorGrid.Owner, $"{MetaData(ent.Owner).EntityName} Sector Grid");
         }
+
+        if (ent.Comp.SectorGrid is { } existingSectorGrid)
+            EnsurePersistentWorldGrid(existingSectorGrid);
 
         if (ent.Comp.UniverseSeed == 0)
             ent.Comp.UniverseSeed = _random.Next(1, int.MaxValue);
@@ -327,21 +365,16 @@ public sealed class SectorWorldSystem : EntitySystem
 
     private void EnsureStartupPlanetLoaders(Entity<SectorWorldComponent> ent)
     {
-        if (!TryGetSectorGrid(ent.Owner, out var sectorGrid, ent.Comp))
+        if (ent.Comp.StartupLoaders.Count == 0)
             return;
 
-        if (ent.Comp.StartupLoaders.Count == ent.Comp.Planets.Count && ent.Comp.StartupLoaders.All(Exists))
-            return;
-
-        ent.Comp.StartupLoaders.RemoveAll(loader => !Exists(loader));
-
-        foreach (var planet in ent.Comp.Planets)
+        foreach (var loader in ent.Comp.StartupLoaders)
         {
-            var loader = Spawn(null, new EntityCoordinates(sectorGrid, planet.Center));
-            EnsureComp<WorldLoaderComponent>(loader);
-            _worldController.SetLoaderRadius(loader, (int) MathF.Ceiling(planet.Radius + WorldGen.ChunkSize));
-            ent.Comp.StartupLoaders.Add(loader);
+            if (Exists(loader))
+                QueueDel(loader);
         }
+
+        ent.Comp.StartupLoaders.Clear();
     }
 
     private void EnsurePersistentLayerMaps(Entity<SectorWorldComponent> ent)
@@ -349,10 +382,16 @@ public sealed class SectorWorldSystem : EntitySystem
         ent.Comp.FtlMap ??= CreateLayerMap($"{MetaData(ent.Owner).EntityName} FTL", space: true, gravity: false);
         ent.Comp.ColCommMap ??= CreateLayerMap($"{MetaData(ent.Owner).EntityName} ColComm", space: false, gravity: true, mixture: CreateStandardAirMixture(), timeOfDay: "Day");
 
+        EnsurePersistentWorldGrid(ent.Comp.FtlMap.Value);
+        EnsurePersistentWorldGrid(ent.Comp.ColCommMap.Value);
+
         foreach (var planet in ent.Comp.Planets)
         {
             if (ent.Comp.PlanetTypeMaps.ContainsKey(planet.PlanetTypeId))
+            {
+                EnsurePersistentWorldGrid(ent.Comp.PlanetTypeMaps[planet.PlanetTypeId]);
                 continue;
+            }
 
             ent.Comp.PlanetTypeMaps[planet.PlanetTypeId] = CreateLayerMap(
                 $"{planet.Name} Surface",
@@ -363,7 +402,20 @@ public sealed class SectorWorldSystem : EntitySystem
                 weatherPrototype: planet.WeatherPrototype,
                 biomeTemplateId: planet.BiomeTemplate,
                 biomeSeed: planet.Seed);
+
+            EnsurePersistentWorldGrid(ent.Comp.PlanetTypeMaps[planet.PlanetTypeId]);
         }
+    }
+
+    private void EnsurePersistentWorldGrid(EntityUid mapOrGridUid)
+    {
+        if (!Exists(mapOrGridUid))
+            return;
+
+        EnsureComp<CleanupImmuneComponent>(mapOrGridUid);
+
+        if (TryComp<MapGridComponent>(mapOrGridUid, out var grid))
+            grid.CanSplit = false;
     }
 
     private EntityUid CreateLayerMap(
@@ -378,6 +430,7 @@ public sealed class SectorWorldSystem : EntitySystem
     {
         var mapUid = _mapSystem.CreateMap(out _);
         EnsureComp<FTLMapComponent>(mapUid);
+        EnsureComp<CleanupImmuneComponent>(mapUid);
         _metaData.SetEntityName(mapUid, name);
 
         if (!space && !string.IsNullOrWhiteSpace(biomeTemplateId) && _proto.TryIndex<BiomeTemplatePrototype>(biomeTemplateId, out var biomeTemplate))

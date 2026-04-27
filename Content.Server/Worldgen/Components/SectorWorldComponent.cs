@@ -21,6 +21,9 @@ public sealed partial class SectorWorldComponent : Component
     [DataField]
     public float MissionReservationPadding = 128f;
 
+    [DataField]
+    public float CentralClearRadius = 500f;
+
     [ViewVariables]
     public EntityUid? SectorGrid;
 
