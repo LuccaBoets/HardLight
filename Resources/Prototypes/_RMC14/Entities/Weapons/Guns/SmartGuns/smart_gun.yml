@@ -1,4 +1,5 @@
-﻿- type: entity
+﻿# Disabled during 75%morebullet RMC prototype triage.
+# Original RMC weapon prototypes in this file have been commented out by replacing the file with this stub.- type: entity
   parent: [ CMBaseWeaponGun, BaseItem ] # RMCBaseAttachableHolder missing
   id: RMCSmartGun
   name: ML66A smart gun

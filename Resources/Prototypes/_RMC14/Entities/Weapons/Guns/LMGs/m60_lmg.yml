@@ -1,4 +1,5 @@
-- type: entity
+# Disabled during 75%morebullet RMC prototype triage.
+# Original RMC weapon prototypes in this file have been commented out by replacing the file with this stub.- type: entity
   parent: RMCBaseWeaponLMG
   name: M60 General Purpose Machine Gun
   id: RMCWeaponLMGM60
