@@ -104,8 +104,6 @@
     damage:
       types:
         Piercing: 104
-  - type: CMArmorPiercing
-    amount: 10
   - type: GunStacksProjectile
   - type: RMCProjectileDamageFalloff
     thresholds:

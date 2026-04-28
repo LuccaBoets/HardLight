@@ -118,8 +118,6 @@
     damage:
       types:
         Piercing: 36
-  - type: CMArmorPiercing
-    amount: 25
 
 - type: Tag
   id: RMCMagazinePistolMK45

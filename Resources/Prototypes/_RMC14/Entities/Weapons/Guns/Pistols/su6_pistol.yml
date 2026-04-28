@@ -108,8 +108,6 @@
     damage:
       types:
         Piercing: 30
-  - type: CMArmorPiercing
-    amount: 20
 
 - type: Tag
   id: RMCMagazinePistolSU6

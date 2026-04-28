@@ -121,8 +121,6 @@
     damage:
       types:
         Piercing: 65
-  - type: CMArmorPiercing
-    amount: 35
 
 - type: Tag
   id: RMCSpeedLoaderRsh9

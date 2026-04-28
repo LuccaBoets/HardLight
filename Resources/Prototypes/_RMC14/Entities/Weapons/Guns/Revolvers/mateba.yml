@@ -125,11 +125,6 @@
     damage:
       types:
         Piercing: 60
-  - type: CMArmorPiercing
-    amount: 20
-  - type: RMCStunOnHit
-    maxRange: 4.5
-    stunTime: 1
 
 - type: Tag
   id: RMCSpeedLoaderMateba

@@ -74,8 +74,6 @@
         Blunt: 3
   - type: StaminaDamageOnCollide
     damage: 12.5
-  - type: CMArmorPiercing
-    amount: 5
 
 ## SMG magazines
 
@@ -126,8 +124,6 @@
         Blunt: 3
   - type: StaminaDamageOnCollide
     damage: 10
-  - type: CMArmorPiercing
-    amount: 5
 
 ## Pistol Magazines
 

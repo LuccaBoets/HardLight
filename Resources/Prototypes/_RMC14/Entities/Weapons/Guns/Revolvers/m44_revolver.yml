@@ -159,8 +159,6 @@
     damage:
       types:
         Piercing: 72
-  - type: CMArmorPiercing
-    amount: 5
 
 - type: entity
   parent: CMBulletBase
@@ -176,8 +174,6 @@
     - range: 22
       falloff: 9999
       ignoreModifiers: true
-  - type: CMArmorPiercing
-    amount: 35
 
 - type: Tag
   id: RMCSpeedLoaderM44

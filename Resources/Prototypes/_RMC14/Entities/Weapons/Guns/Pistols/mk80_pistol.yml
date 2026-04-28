@@ -131,8 +131,6 @@
       ignoreModifiers: true
     - range: 6
       falloff: 5
-  - type: CMArmorPiercing
-    amount: 30
 
 - type: Tag
   id: CMMagazinePistolMK80

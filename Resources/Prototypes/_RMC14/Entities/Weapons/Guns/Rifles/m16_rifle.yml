@@ -122,8 +122,6 @@
     damage:
       types:
         Piercing: 40
-  - type: CMArmorPiercing
-    amount: 5
 
 - type: Tag
   id: RMCMagazineRifleM16

@@ -127,8 +127,6 @@
     damage:
       types:
         Piercing: 40
-  - type: CMArmorPiercing
-    amount: 10
 
 - type: Tag
   id: CMMagazinePistol

@@ -37,7 +37,6 @@
       ignoreModifiers: true
     - range: 0
       falloff: 1
-  - type: RMCStunOnHit
 
 - type: entity
   parent: CMPelletShotgunBase
@@ -60,13 +59,6 @@
       ignoreModifiers: true
     - range: 0
       falloff: 1
-  - type: CMArmorPiercing
-    amount: 20
-  - type: RMCStunOnHit
-    maxRange: 6.5
-    stunTime: 1
-    superSlowTime: 2
-    slowTime: 6
 
 - type: entity
   parent: CMPelletShotgunSlug
@@ -113,8 +105,6 @@
   id: CMPelletShotgunFlechette
   name: flechette shell
   components:
-  - type: CMArmorPiercing
-    amount: 35
   - type: Sprite
     sprite: _RMC14/Objects/Weapons/Guns/Ammunition/Projectiles/shotgun_projectiles.rsi
     layers:
@@ -161,8 +151,6 @@
     damage:
       types:
         Blunt: 55
-  - type: CMArmorPiercing
-    amount: 5
   - type: ProjectileSpread
     proto: RMCPelletShotgunBreaching
     count: 4

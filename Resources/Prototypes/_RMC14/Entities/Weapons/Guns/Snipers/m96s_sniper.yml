@@ -223,8 +223,6 @@
     - range: 32
       falloff: 9999
       ignoreModifiers: true
-  - type: CMArmorPiercing
-    amount: 50
 
 - type: entity
   parent: CMBulletSniper10x28mm
@@ -237,8 +235,6 @@
       types:
         Piercing: 100 # TODO RMC14 50 when aimed shot is in please someone help im dying
         Heat: 20 # TODO RMC14 10 when aimed shot is in please someone help im dying
-  - type: CMArmorPiercing
-    amount: 20
   - type: IgniteOnProjectileHit
 
 # TODO RMC14 slow
@@ -252,8 +248,6 @@
     damage:
       types:
         Piercing: 55
-  - type: CMArmorPiercing
-    amount: 0
 
 - type: entity
   parent: CMBulletSniper10x28mm
@@ -265,8 +259,6 @@
     damage:
       types:
         Piercing: 125
-  - type: CMArmorPiercing
-    amount: 50
 
 - type: Tag
   id: CMM96SSniperRifle

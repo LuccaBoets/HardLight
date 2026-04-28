@@ -13,8 +13,6 @@
     damage:
       types:
         Piercing: 20
-  - type: CMArmorPiercing
-    amount: 100
   - type: DeleteXenoResinOnHit
 
 - type: entity
@@ -32,5 +30,3 @@
     damage:
       types:
         Piercing: 30
-  - type: CMArmorPiercing
-    amount: 35
