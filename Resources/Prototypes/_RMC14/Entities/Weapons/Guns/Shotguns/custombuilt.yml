@@ -1,5 +1,5 @@
 - type: entity
-  parent: [ RMCBaseWeaponShotgun, RMCBaseAttachableHolder ]
+  parent: [ RMCBaseWeaponShotgun ] # RMCBaseAttachableHolder missing
   name: custom built shotgun
   id: WeaponShotgunCustomBuilt
   description: A cobbled-together pile of scrap and alien wood. Point end towards things you want to die. Has a burst fire feature, as if it needed it.

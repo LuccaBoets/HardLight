@@ -1,5 +1,5 @@
 ﻿- type: entity
-  parent: [ CMBaseWeaponGun, BaseItem, RMCBaseAttachableHolder ]
+  parent: [ CMBaseWeaponGun, BaseItem ] # RMCBaseAttachableHolder missing
   id: RMCSmartGun
   name: ML66A smart gun
   description: The actual firearm in the Smart Gun System. Essentially a heavy, mobile machinegun.

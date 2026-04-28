@@ -1,6 +1,6 @@
 ﻿- type: entity
   abstract: true
-  parent: RMCAttachableBase
+  # parent: RMCAttachableBase
   id: RMCStockAttachmentBase
   components:
   - type: Sprite
