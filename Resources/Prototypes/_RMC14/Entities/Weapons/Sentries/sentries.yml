@@ -186,7 +186,7 @@
   - type: Sprite
     sprite: _RMC14/Objects/engineering_kit.rsi
     state: icon
-  - type: SentryUpgradeItem
+  # - type: SentryUpgradeItem
 
 - type: entity
   parent: RMCBaseSentry

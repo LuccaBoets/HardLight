@@ -52,5 +52,5 @@
     layers:
     - state: bullet
       shader: unshaded
-  - type: BulletholeGenerator
+  # - type: BulletholeGenerator
   - type: RMCProjectileAccuracy

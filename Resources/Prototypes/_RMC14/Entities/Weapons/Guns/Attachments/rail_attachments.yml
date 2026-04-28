@@ -10,7 +10,7 @@
     - RMCAttachmentRail
 
 - type: entity
-  parent: [ RMCRailAttachmentBase, RMCAttachableToggleableBase ]
+  parent: [ RMCRailAttachmentBase ] # RMCAttachableToggleableBase missing
   id: RMCAttachmentRailFlashlight
   name: rail flashlight
   description: A flashlight, for rails, on guns. Can be toggled on and off. A better light source than standard M3 pattern armor lights.
@@ -153,7 +153,7 @@
 
 - type: entity
   abstract: true
-  parent: [ RMCRailAttachmentBase, RMCAttachableToggleableBase ]
+  parent: [ RMCRailAttachmentBase ] # RMCAttachableToggleableBase missing
   id: RMCAttachmentScopeBase
   components:
   - type: AttachableToggleable
