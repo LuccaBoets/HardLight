@@ -121,11 +121,6 @@
       falloff: 6
   - type: CMArmorPiercing
     amount: 25
-  - type: RMCProjectileAccuracy
-    accuracy: 100
-    thresholds:
-    - range: 5
-      falloff: 10
 
 - type: Tag
   id: RMCMagazineSMGNailgun

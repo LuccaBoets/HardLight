@@ -11,9 +11,6 @@
   - type: AttachableWieldDelayMods
     modifiers:
     - delay: 0.2
-  - type: AttachableSizeMods
-    modifiers:
-    - size: 2
   - type: AttachableWeaponMeleeMods
     modifiers:
     - bonusDamage:
@@ -347,9 +344,6 @@
       sprite: _RMC14/Objects/Weapons/Guns/Attachments/m54_stocks/desert.rsi
       state: m54c-col-on
     actionName: Toggle M54C Folding Stock
-  - type: AttachableSizeMods
-    modifiers:
-      - size: 1
   - type: AttachableSpeedMods
     modifiers:
     - conditions:
@@ -485,9 +479,6 @@
         wieldedOnly: true
       walk: -0.024
       sprint: -0.043
-  - type: AttachableSizeMods
-    modifiers:
-    - size: 1
   - type: AttachableWeaponMeleeMods
     modifiers:
     - bonusDamage:
@@ -521,11 +512,6 @@
       sprite: _RMC14/Objects/Weapons/Guns/Attachments/stock.rsi
       state: smgstockcol-on
     actionName: Toggle Submachinegun Folding Stock
-  - type: AttachableSizeMods
-    modifiers:
-    - conditions:
-        activeOnly: true
-      size: 1
   - type: AttachableSpeedMods
     modifiers:
     - conditions:
@@ -579,9 +565,6 @@
     actionName: Toggle Submachinegun Arm Brace
     actionDesc: Lock the arm brace to your arm.
   - type: AttachablePreventDropToggleable
-  - type: AttachableSizeMods
-    modifiers:
-    - size: 1
   - type: AttachableWieldDelayMods
     modifiers:
     - delay: 0.6
@@ -625,9 +608,6 @@
       sprite: _RMC14/Objects/Weapons/Guns/Attachments/stock.rsi
       state: 44stock-on
     actionName: Toggle M44 Magnum Sharpshooter Stock
-  - type: AttachableSizeMods
-    modifiers:
-    - size: 1
   - type: AttachableWieldDelayMods
     modifiers:
     - delay: 0.4

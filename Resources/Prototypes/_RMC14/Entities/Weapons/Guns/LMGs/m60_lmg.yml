@@ -150,11 +150,6 @@
       ignoreModifiers: true
   - type: CMArmorPiercing
     amount: 30
-  - type: RMCProjectileAccuracy
-    accuracy: 95
-    thresholds:
-    - range: 12
-      falloff: 10
 
 - type: Tag
   id: RMCWeaponLMGM60

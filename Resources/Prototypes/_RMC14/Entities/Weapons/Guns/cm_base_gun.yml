@@ -3,11 +3,7 @@
   parent: RMCBaseMeleeWeapon
   id: CMBaseWeaponGun
   components:
-  - type: UsableWhileDevoured
-    canUnequip: true
   - type: GunUnskilledPenalty
-  - type: GunIFF
-    enabled: false
   - type: RMCWeaponDamageFalloff
   - type: Clothing
     quickEquip: false
@@ -53,4 +49,3 @@
     - state: bullet
       shader: unshaded
   # - type: BulletholeGenerator
-  - type: RMCProjectileAccuracy

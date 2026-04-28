@@ -123,8 +123,6 @@
         Piercing: 65
   - type: CMArmorPiercing
     amount: 35
-  - type: RMCProjectileAccuracy
-    accuracy: 90
 
 - type: Tag
   id: RMCSpeedLoaderRsh9

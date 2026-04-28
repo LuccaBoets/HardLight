@@ -120,8 +120,6 @@
         Piercing: 36
   - type: CMArmorPiercing
     amount: 25
-  - type: RMCProjectileAccuracy
-    accuracy: 100
 
 - type: Tag
   id: RMCMagazinePistolMK45

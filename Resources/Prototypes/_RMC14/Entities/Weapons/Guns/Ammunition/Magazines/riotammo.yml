@@ -76,11 +76,6 @@
     damage: 12.5
   - type: CMArmorPiercing
     amount: 5
-  - type: RMCProjectileAccuracy
-    accuracy: 105
-    thresholds:
-    - range: 16
-      falloff: 10
 
 ## SMG magazines
 
@@ -133,11 +128,6 @@
     damage: 10
   - type: CMArmorPiercing
     amount: 5
-  - type: RMCProjectileAccuracy
-    accuracy: 100
-    thresholds:
-    - range: 4
-      falloff: 10
 
 ## Pistol Magazines
 

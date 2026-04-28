@@ -53,8 +53,6 @@
         unwieldedScatterMultiplier: 2
         shotsToMaxScatter: 4
   - type: GunIDLock
-  - type: GunIFF
-    enabled: true
   - type: IFFToggle
     requireIDLock: true
     changeStats: true

@@ -233,14 +233,6 @@
         Piercing: 55
   - type: CMArmorPiercing
     amount: 35
-  - type: RMCProjectileAccuracy
-    accuracy: 105
-    thresholds:
-    - range: 16
-      falloff: 10
-    - range: 4
-      falloff: 10
-      buildup: true
 
 - type: entity
   parent: RMCBaseBullet
@@ -259,13 +251,6 @@
     stunTime: 1
     superSlowTime: 4
     slowTime: 10
-  - type: RMCProjectileAccuracy
-    accuracy: 75
-    thresholds:
-    - range: 16
-      falloff: 10
-    - range: 4
-      falloff: 10
 
 - type: entity
   parent: RMCBaseBullet
@@ -278,8 +263,6 @@
         Piercing: 40
   - type: CMArmorPiercing
     amount: 25
-  - type: RMCProjectileAccuracy
-    accuracy: 95
   - type: IgniteOnProjectileHit
 
 - type: Tag

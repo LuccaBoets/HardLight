@@ -24,9 +24,6 @@
     tags:
     - RMCAttachmentUnderbarrel
     - RMCAttachmentAngledGrip
-  - type: AttachableSizeMods
-    modifiers:
-    - size: 1
   - type: AttachableWieldDelayMods
     modifiers:
     - delay: -0.4
@@ -85,9 +82,6 @@
     - duration: 2
       walk: 0.66
       sprint: 0.526
-  - type: AttachableSizeMods
-    modifiers:
-    - size: 2
   - type: AttachableWieldDelayMods
     modifiers:
     - delay: 0.4
@@ -448,9 +442,6 @@
     tags:
     - RMCAttachmentUnderbarrel
     - RMCAttachmentVerticalGrip
-  - type: AttachableSizeMods
-    modifiers:
-    - size: 1
   - type: AttachableWeaponRangedMods
     modifiers:
     - conditions:

@@ -17,8 +17,6 @@
     damage:
       types:
         Blunt: 8
-  - type: GunIFF
-    enabled: true
   - type: Gun
     shotsPerBurst: 3
     selectedMode: SemiAuto
@@ -112,8 +110,6 @@
         Piercing: 30
   - type: CMArmorPiercing
     amount: 20
-  - type: RMCProjectileAccuracy
-    accuracy: 125
 
 - type: Tag
   id: RMCMagazinePistolSU6

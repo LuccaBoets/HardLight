@@ -55,8 +55,6 @@
   - type: GunRequiresWield
   - type: Corrodible
     isCorrodible: false
-  - type: GunIFF
-    enabled: true
   - type: RMCNameItemOnVend
     item: PrimaryGun
   - type: AttachableHolder
@@ -227,14 +225,6 @@
       ignoreModifiers: true
   - type: CMArmorPiercing
     amount: 50
-  - type: RMCProjectileAccuracy
-    accuracy: 125
-    thresholds:
-    - range: 32
-      falloff: 10
-    - range: 4
-      falloff: 10
-      buildup: true
 
 - type: entity
   parent: CMBulletSniper10x28mm
