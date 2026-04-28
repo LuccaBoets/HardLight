@@ -32,8 +32,6 @@
     baseDelay: 0.2
   - type: RMCNameItemOnVend
     item: PrimaryGun
-  - type: GunUnskilledPenalty
-    angleIncrease: 20
   - type: Tag
     tags:
     - RMCWeaponSMG

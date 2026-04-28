@@ -28,10 +28,6 @@
     grid:
     - 0,0,27,1
   - type: FixedItemSizeStorage
-  - type: InteractedBlacklist
-    blacklist:
-      components:
-      - Xeno
 
 - type: entity
   parent: RMCBaseGunCase
@@ -64,7 +60,3 @@
     - 0,0,27,1
   - type: RemoveOnlyStorage
   - type: FixedItemSizeStorage
-  - type: InteractedBlacklist
-    blacklist:
-      components:
-      - Xeno

@@ -2,10 +2,6 @@
   abstract: true
   id: RMCBaseMeleeWeapon
   components:
-  - type: MeleeDamageMultiplier
-    whitelist:
-      components:
-      - Xeno
 
 - type: entity
   parent: [ RMCBaseMeleeWeapon, BaseKnife ] # RMCAttachableBase missing

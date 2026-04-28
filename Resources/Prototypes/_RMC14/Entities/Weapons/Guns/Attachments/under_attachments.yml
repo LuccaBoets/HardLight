@@ -24,9 +24,6 @@
     tags:
     - RMCAttachmentUnderbarrel
     - RMCAttachmentAngledGrip
-  - type: AttachableWieldDelayMods
-    modifiers:
-    - delay: -0.4
 
 - type: entity
   parent: [ RMCUnderAttachmentBase ] # RMCAttachableToggleableBase missing
@@ -41,36 +38,6 @@
     tags:
     - RMCAttachmentUnderbarrel
     - RMCAttachmentBipod
-  - type: AttachableToggleable
-    heldOnlyActivate: true
-    userOnly: true
-    doInterrupt: true
-    attachedOnly: true
-    breakOnMove: true
-    breakOnFullRotate: true
-    doAfter: 1.5
-    deactivateDoAfter: 0
-    doAfterNeedHand: false
-    instantToggle: Brace
-    useDelay: 0.5
-    activatePopupText: attachable-popup-activate-deploy-on-ground
-    deactivatePopupText: attachable-popup-deactivate-retract
-    activateSound:
-      path: /Audio/_RMC14/Attachable/bipod_toggle.ogg
-      params:
-        volume: -3
-    deactivateSound:
-      path: /Audio/_RMC14/Attachable/bipod_toggle.ogg
-      params:
-        volume: -3
-    icon:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/under.rsi
-      state: bipod
-    iconActive:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/under.rsi
-      state: bipod-on
-    actionName: Deploy Bipod
-    actionDesc: Deploy the bipod and get into a firing position.
   - type: AttachableVisuals
     showActive: true
   - type: AttachableTemporarySpeedMods
@@ -82,9 +49,6 @@
     - duration: 2
       walk: 0.66
       sprint: 0.526
-  - type: AttachableWieldDelayMods
-    modifiers:
-    - delay: 0.4
   - type: AttachableWeaponMeleeMods
     modifiers:
     - bonusDamage:
@@ -283,25 +247,6 @@
       Breaching: 10.8
   - type: UseDelay
   - type: RMCWeaponAccuracy
-  - type: AttachableToggleable
-    userOnly: true
-    attachedOnly: true
-    supercedeHolder: true
-    wieldedUseOnly: true
-    activatePopupText: attachable-popup-switch-to-generic
-    deactivatePopupText: attachable-popup-switch-from-generic
-    activateSound:
-      path: /Audio/_RMC14/Attachable/gun_u7_activate.ogg
-      params:
-        volume: -2
-    actionName: Switch to the U7 underbarrel shotgun
-    actionDesc: Switch to using the underbarrel shotgun.
-    icon:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/under.rsi
-      state: masterkey
-    iconActive:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/under.rsi
-      state: masterkey-on
   - type: AttachableVisuals
 
 - type: entity
@@ -370,21 +315,6 @@
         enum.BreechVisuals.Open:
           True: { state: grenade-open }
           False: { state: grenade }
-  - type: AttachableToggleable
-    userOnly: true
-    attachedOnly: true
-    supercedeHolder: true
-    wieldedUseOnly: true
-    activatePopupText: attachable-popup-switch-to-generic
-    deactivatePopupText: attachable-popup-switch-from-generic
-    actionName: Switch to the U1 Grenade Launcher
-    actionDesc: Switch to using the underbarrel grenade launcher.
-    icon:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/under.rsi
-      state: grenade
-    iconActive:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/under.rsi
-      state: grenade-on
   - type: AttachableVisuals
     redrawOnAppearanceChange: true
   - type: Tag
@@ -414,14 +344,6 @@
         enum.BreechVisuals.Open:
           True: { state: grenade-mk1-open }
           False: { state: grenade-mk1 }
-  - type: AttachableToggleable
-    actionName: Switch to the MK1 Underslung Grenade Launcher
-    icon:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/under.rsi
-      state: grenade-mk1
-    iconActive:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/under.rsi
-      state: grenade-mk1-on
   - type: Tag
     tags:
     - RMCAttachmentUnderbarrel
@@ -510,17 +432,6 @@
   - type: Item
     sprite: _RMC14/Objects/Weapons/Guns/Attachments/under.rsi
   - type: Appearance
-  - type: AttachableToggleable
-    attachedOnly: true
-    useDelay: 1.0
-    icon:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/under.rsi
-      state: flashgrip
-    iconActive:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/under.rsi
-      state: flashgrip-on
-    actionName: Activate Underbarrel Flashlight Grip
-    actionDesc: Can be toggled on and off. A better light source than standard M3 pattern armor lights.
   - type: AttachableVisuals
     showActive: true
   - type: AttachableToggleableSimpleActivate
@@ -555,15 +466,6 @@
     - RMCAttachmentUnderbarrel
     - RMCAttachmentLaserLightModule
     - Flashlight
-  - type: AttachableToggleable
-    icon:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/under.rsi
-      state: laserlight
-    iconActive:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/under.rsi
-      state: laserlight-on
-    actionName: Activate Laser-Light Module
-    actionDesc: Can be toggled on and off. A better light source than standard M3 pattern armor lights.
   - type: AttachableWeaponRangedMods
     modifiers:
     - accuracyAddMult: 0.05

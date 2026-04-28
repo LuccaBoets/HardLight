@@ -19,10 +19,6 @@
   - type: UseDelay
     delay: 0.5
   - type: FixedItemSizeStorage
-  - type: InteractedBlacklist
-    blacklist:
-      components:
-      - Xeno
   - type: Appearance
   - type: CMStorageVisualizer
     storageClosed: closedLayer
@@ -100,10 +96,6 @@
   - type: UseDelay
     delay: 0.5
   - type: FixedItemSizeStorage
-  - type: InteractedBlacklist
-    blacklist:
-      components:
-      - Xeno
   - type: Appearance
   - type: CMStorageVisualizer
     storageClosed: closedLayer

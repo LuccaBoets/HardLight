@@ -8,9 +8,6 @@
   - type: Tag
     tags:
     - RMCAttachmentStock
-  - type: AttachableWieldDelayMods
-    modifiers:
-    - delay: 0.2
   - type: AttachableWeaponMeleeMods
     modifiers:
     - bonusDamage:
@@ -27,12 +24,6 @@
   - type: Tag
     tags:
     - RMCAttachmentStock
-  - type: AttachableToggleable
-    activatePopupText: attachable-popup-activate-unfold
-    deactivatePopupText: attachable-popup-deactivate-collapse
-    actionDesc: Extend the stock.
-  - type: AttachableWieldDelayMods
-    modifiers: []
   - type: Appearance
 
 - type: entity
@@ -55,9 +46,6 @@
         wieldedOnly: true
       walk: -0.059
       sprint: -0.101
-  - type: AttachableWieldDelayMods
-    modifiers:
-      - delay: 0.4
   - type: AttachableWeaponMeleeMods
     modifiers:
     - bonusDamage:
@@ -110,9 +98,6 @@
         wieldedOnly: true
       walk: -0.050
       sprint: -0.10
-  - type: AttachableWieldDelayMods
-    modifiers:
-      - delay: 0.3
   - type: AttachableWeaponRangedMods
     modifiers:
     - conditions:
@@ -147,9 +132,6 @@
         wieldedOnly: true
       walk: -0.059
       sprint: -0.101
-  - type: AttachableWieldDelayMods
-    modifiers:
-    - delay: 0.4
   - type: AttachableWeaponMeleeMods
     modifiers:
     - bonusDamage:
@@ -189,8 +171,6 @@
     tags:
     - RMCAttachmentStock
     - RMCAttachmentDoubleBarrelShotgunStock
-  - type: AttachableWieldDelayMods
-    modifiers: []
 
 - type: entity
   parent: RMCStockAttachmentBase
@@ -212,9 +192,6 @@
         wieldedOnly: true
       walk: -0.059
       sprint: -0.101
-  - type: AttachableWieldDelayMods
-    modifiers:
-    - delay: 0.4
   - type: AttachableWeaponRangedMods
     modifiers:
     - conditions:
@@ -276,9 +253,6 @@
         wieldedOnly: true
       walk: -0.059
       sprint: -0.101
-  - type: AttachableWieldDelayMods
-    modifiers:
-    - delay: 0.4
   - type: AttachableWeaponMeleeMods
     modifiers:
     - bonusDamage:
@@ -334,16 +308,6 @@
     tags:
     - RMCAttachmentStock
     - RMCAttachmentM54CStockCollapsible
-  - type: AttachableToggleable
-    doAfterBreakOnMove: false
-    doAfter: 0.5
-    icon:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/m54_stocks/desert.rsi
-      state: m54c-col
-    iconActive:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/m54_stocks/desert.rsi
-      state: m54c-col-on
-    actionName: Toggle M54C Folding Stock
   - type: AttachableSpeedMods
     modifiers:
     - conditions:
@@ -351,11 +315,6 @@
         activeOnly: true
       walk: -0.059
       sprint: -0.101
-  - type: AttachableWieldDelayMods
-    modifiers:
-    - conditions:
-        activeOnly: true
-      delay: 0.2
   - type: AttachableWeaponRangedMods
     modifiers:
     - conditions:
@@ -392,9 +351,6 @@
     tags:
     - RMCAttachmentStock
     - RMCAttachmentM16Stock
-  - type: AttachableWieldDelayMods
-    modifiers:
-    - delay: 0.1
 
 - type: entity
   parent: RMCStockAttachmentBase
@@ -406,15 +362,6 @@
     state: m16-folding
   - type: AttachableVisuals
     suffix: ""
-  - type: AttachableToggleable
-    doAfter: 0.5
-    icon:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/stock.rsi
-      state: m16-folding
-    iconActive:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/stock.rsi
-      state: m16-folding-on
-    actionName: Toggle Collapsible M16 Stock
   - type: Tag
     tags:
     - RMCAttachmentStock
@@ -426,11 +373,6 @@
         activeOnly: true
       walk: -0.059
       sprint: -0.101
-  - type: AttachableWieldDelayMods
-    modifiers:
-    - conditions:
-        activeOnly: true
-      delay: 0.1
   - type: AttachableWeaponRangedMods
     modifiers:
     - conditions:
@@ -454,8 +396,6 @@
     - RMCAttachmentM79Stock
   - type: AttachableVisuals
     suffix: ""
-  - type: AttachableWieldDelayMods
-    modifiers: []
 
 - type: entity
   parent: RMCStockAttachmentBase
@@ -470,9 +410,6 @@
     - RMCAttachmentStock
     - RMCAttachmentM63Stock
   - type: AttachableVisuals
-  - type: AttachableWieldDelayMods
-    modifiers:
-    - delay: 0.4
   - type: AttachableSpeedMods
     modifiers:
     - conditions:
@@ -504,14 +441,6 @@
     tags:
     - RMCAttachmentStock
     - RMCAttachmentM63StockCollapsible
-  - type: AttachableToggleable
-    icon:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/stock.rsi
-      state: smgstockcol
-    iconActive:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/stock.rsi
-      state: smgstockcol-on
-    actionName: Toggle Submachinegun Folding Stock
   - type: AttachableSpeedMods
     modifiers:
     - conditions:
@@ -519,11 +448,6 @@
         activeOnly: true
       walk: -0.024
       sprint: -0.043
-  - type: AttachableWieldDelayMods
-    modifiers:
-    - conditions:
-        activeOnly: true
-      delay: 0.4
   - type: AttachableWeaponRangedMods
     modifiers:
     - conditions:
@@ -551,23 +475,7 @@
     tags:
     - RMCAttachmentStock
     - RMCAttachmentM63ArmBrace
-  - type: AttachableToggleable
-    doAfter: 2.5
-    heldOnlyActivate: true
-    activatePopupText: attachable-popup-activate-lock
-    deactivatePopupText: attachable-popup-deactivate-unlock
-    icon:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/stock.rsi
-      state: smg-brace
-    iconActive:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/stock.rsi
-      state: smg-brace-on
-    actionName: Toggle Submachinegun Arm Brace
-    actionDesc: Lock the arm brace to your arm.
   - type: AttachablePreventDropToggleable
-  - type: AttachableWieldDelayMods
-    modifiers:
-    - delay: 0.6
   - type: AttachableWeaponRangedMods
     modifiers:
     - shotsPerBurstFlat: -3
@@ -599,18 +507,6 @@
     - RMCAttachmentM44MagnumSharpshooterStock
   - type: AttachableToggleablePreventShoot
     message: You need to extend the stock first!
-  - type: AttachableToggleable
-    doAfter: 1.5
-    icon:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/stock.rsi
-      state: 44stock
-    iconActive:
-      sprite: _RMC14/Objects/Weapons/Guns/Attachments/stock.rsi
-      state: 44stock-on
-    actionName: Toggle M44 Magnum Sharpshooter Stock
-  - type: AttachableWieldDelayMods
-    modifiers:
-    - delay: 0.4
   - type: AttachableSpeedMods
     modifiers:
     - conditions:
@@ -661,9 +557,6 @@
         wieldedOnly: true
       walk: -0.050
       sprint: -0.10
-  - type: AttachableWieldDelayMods
-    modifiers:
-      - delay: 0.3
   - type: AttachableWeaponRangedMods
     modifiers:
     - conditions:

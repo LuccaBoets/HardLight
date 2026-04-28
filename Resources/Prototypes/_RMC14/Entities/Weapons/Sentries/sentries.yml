@@ -116,10 +116,6 @@
     - Shock
   - type: ShortExamine
   - type: Sentry
-  - type: InteractedBlacklist
-    blacklist:
-      components:
-      - Xeno
   - type: RMCRepairable
   - type: RMCNameItemOnVend
     item: Sentry

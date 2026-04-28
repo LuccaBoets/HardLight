@@ -3,7 +3,6 @@
   parent: RMCBaseMeleeWeapon
   id: CMBaseWeaponGun
   components:
-  - type: GunUnskilledPenalty
   - type: RMCWeaponDamageFalloff
   - type: Clothing
     quickEquip: false

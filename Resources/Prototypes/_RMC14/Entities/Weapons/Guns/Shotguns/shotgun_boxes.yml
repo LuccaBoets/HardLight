@@ -15,10 +15,6 @@
   - type: Tag
     tags:
     - RMCBoxShotgunShells
-  - type: InteractedBlacklist
-    blacklist:
-      components:
-      - Xeno
   - type: CMStorageVisualizer
     storageEmpty: empty
   - type: RMCStorageEjectHand
