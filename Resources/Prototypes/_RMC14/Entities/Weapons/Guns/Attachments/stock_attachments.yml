@@ -55,12 +55,12 @@
     modifiers:
     - conditions:
         wieldedOnly: true
-      accuracyAddMult: 0.2
+      accuracyAddMult: 0.25
       recoilFlat: -2
       scatterFlat: -6
     - conditions:
         unwieldedOnly: true
-      accuracyAddMult: -0.15
+      accuracyAddMult: -0.10
       recoilFlat: 2
       scatterFlat: 6
   - type: Appearance

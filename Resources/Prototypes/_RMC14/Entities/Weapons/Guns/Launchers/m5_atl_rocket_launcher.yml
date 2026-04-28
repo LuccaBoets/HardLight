@@ -140,6 +140,7 @@
     totalIntensity: 290
     maxTileBreak: 0
   - type: CMExplosionEffect
+    maxShrapnel: 1
   - type: RMCScorchEffect
   - type: PointLight
     radius: 3.5

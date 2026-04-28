@@ -67,6 +67,10 @@
   - type: AttachableVisuals
     showActive: true
   - type: AttachableToggleableSimpleActivate
+    modifiers:
+    - conditions:
+        activeOnly: true
+      accuracyAddMult: 0.10
   - type: Tag
     tags:
     - RMCAttachmentRail

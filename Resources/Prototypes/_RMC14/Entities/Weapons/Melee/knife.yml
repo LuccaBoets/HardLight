@@ -49,7 +49,7 @@
     modifiers:
     - conditions:
         unwieldedOnly: true
-      accuracyAddMult: -0.05
+      accuracyAddMult: -0.10
   - type: AttachablePrying
 
 - type: entity

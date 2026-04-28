@@ -162,7 +162,7 @@
   - type: Ammo
   - type: ClusterLimitHits
   - type: CMExplosionEffect
-    maxShrapnel: 0
+    maxShrapnel: 1
   - type: CMVocalizeTrigger
   - type: RMCScorchEffect
 

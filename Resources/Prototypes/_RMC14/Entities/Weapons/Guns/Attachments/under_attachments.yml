@@ -70,13 +70,13 @@
     - conditions:
         wieldedOnly: true
         inactiveOnly: true
-      accuracyAddMult: -0.25
+      accuracyAddMult: -0.20
       scatterFlat: 4
       recoilFlat: 1
     - conditions:
         wieldedOnly: true
         activeOnly: true
-      accuracyAddMult: 0.25
+      accuracyAddMult: 0.30
       scatterFlat: -2
       recoilFlat: -2
     - conditions:
