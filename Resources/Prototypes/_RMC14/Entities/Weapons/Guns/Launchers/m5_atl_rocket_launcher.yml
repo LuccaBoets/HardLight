@@ -95,7 +95,7 @@
     state: m5_84mm_he
     suffix: false
   - type: IgnorePredictionHide
-  - type: AssistedReloadAmmo
+  # - type: AssistedReloadAmmo
 
 - type: entity
   id: RMCProjectileRocket84mm

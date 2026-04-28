@@ -40,7 +40,7 @@
         base:
           Primed: { state: active }
           Unprimed: { state: icon }
-  - type: RMCExplosiveDeleteWalls
+  # - type: RMCExplosiveDeleteWalls
   - type: Tag
     tags:
     - RMCExplosiveBreachingCharge
