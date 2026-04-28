@@ -40,7 +40,7 @@
     size: Huge
   - type: Corrodible
     isCorrodible: false
-  - type: Mortar
+  # - type: Mortar
   - type: Damageable
     damageContainer: Inorganic
   - type: Destructible
@@ -102,7 +102,7 @@
     state: mortar_ammo_cas
   - type: Item
     size: Huge
-  - type: MortarShell
+  # - type: MortarShell
 
 - type: entity
   parent: RMCMortarShellBase
@@ -123,7 +123,7 @@
     canCreateVacuum: false
   - type: CMExplosionEffect
   - type: RMCScorchEffect
-  - type: MortarShell
+  # - type: MortarShell
 
 - type: entity
   parent: RMCMortarShellBase
@@ -144,7 +144,7 @@
     canCreateVacuum: false
   - type: CMExplosionEffect
   - type: RMCScorchEffect
-  - type: MortarShell
+  # - type: MortarShell
   - type: TileFireOnTrigger
     spawn: RMCTileFireGreen
     range: 5
@@ -160,7 +160,7 @@
   - type: Sprite
     sprite: _RMC14/Objects/Weapons/mortar.rsi
     state: mortar_ammo_flr
-  - type: MortarShell
+  # - type: MortarShell
   - type: MortarCameraShell
 
 - type: entity
