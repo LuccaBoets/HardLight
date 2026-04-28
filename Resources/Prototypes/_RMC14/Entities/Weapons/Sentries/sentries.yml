@@ -114,7 +114,6 @@
     - Piercing
     - Heat
     - Shock
-  - type: ShortExamine
   - type: Sentry
   - type: RMCRepairable
   - type: RMCNameItemOnVend

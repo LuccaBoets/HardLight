@@ -69,10 +69,6 @@
         mortar:
           Item: { state: mortar_m402_carry }
           Deployed: { state: mortar_m402 }
-  - type: ActivatableUIBlacklist
-    blacklist:
-      components:
-      - Xeno
   - type: RequireProjectileTarget
   - type: ImmuneToMelee
     whitelist:
