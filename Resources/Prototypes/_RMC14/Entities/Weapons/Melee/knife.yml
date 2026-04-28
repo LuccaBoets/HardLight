@@ -1,7 +1,6 @@
 - type: entity
   abstract: true
   id: RMCBaseMeleeWeapon
-  components:
 
 - type: entity
   parent: [ RMCBaseMeleeWeapon, BaseKnife ] # RMCAttachableBase missing
