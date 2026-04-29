@@ -470,10 +470,12 @@ public sealed class SectorWorldSystem : EntitySystem
         EnsureComp<SunShadowComponent>(mapUid);
         EnsureComp<SunShadowCycleComponent>(mapUid);
 
-        if (!string.IsNullOrWhiteSpace(weatherPrototype) &&
+        var resolvedWeatherPrototype = ResolveWeatherPrototype(weatherPrototype);
+
+        if (!string.IsNullOrWhiteSpace(resolvedWeatherPrototype) &&
             TryComp<MapComponent>(mapUid, out var mapComp))
         {
-            _weather.TrySetWeather(mapComp.MapId, weatherPrototype, out _);
+            _weather.TrySetWeather(mapComp.MapId, resolvedWeatherPrototype, out _);
         }
 
         return mapUid;
@@ -505,5 +507,20 @@ public sealed class SectorWorldSystem : EntitySystem
             "Day" => Color.FromHex("#E6CB8B"),
             _ => Color.FromHex("#D8B059"),
         };
+    }
+
+    private string? ResolveWeatherPrototype(string? weatherPrototype)
+    {
+        if (string.IsNullOrWhiteSpace(weatherPrototype))
+            return null;
+
+        if (_proto.HasIndex<EntityPrototype>(weatherPrototype))
+            return weatherPrototype;
+
+        var weatherEntityId = $"Weather{weatherPrototype}";
+        if (_proto.HasIndex<EntityPrototype>(weatherEntityId))
+            return weatherEntityId;
+
+        return weatherPrototype;
     }
 }
