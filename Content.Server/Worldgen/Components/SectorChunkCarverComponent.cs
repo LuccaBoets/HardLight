@@ -76,4 +76,7 @@ public sealed partial class SectorChunkCarverComponent : Component
 
     [ViewVariables]
     public string? CacheFilePath;
+
+    [ViewVariables]
+    public EntityUid MaterializedGrid = EntityUid.Invalid;
 }

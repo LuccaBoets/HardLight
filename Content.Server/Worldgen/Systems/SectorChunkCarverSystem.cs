@@ -56,6 +56,7 @@ public sealed class SectorChunkCarverSystem : EntitySystem
 
         SubscribeLocalEvent<SectorChunkCarverComponent, WorldChunkLoadedEvent>(OnChunkLoaded);
         SubscribeLocalEvent<SectorChunkCarverComponent, WorldChunkUnloadedEvent>(OnChunkUnloaded);
+        SubscribeLocalEvent<SectorChunkCarverComponent, ComponentShutdown>(OnChunkShutdown);
     }
 
     public override void Shutdown()
@@ -88,6 +89,7 @@ public sealed class SectorChunkCarverSystem : EntitySystem
             return;
 
         var grid = EnsureComp<MapGridComponent>(gridUid);
+        ent.Comp.MaterializedGrid = gridUid;
         ent.Comp.GeneratedTiles.Clear();
         ent.Comp.GeneratedEntities.Clear();
         var blockedGrids = GetBlockingGrids(chunk.Map, gridUid, chunk);
@@ -171,6 +173,21 @@ public sealed class SectorChunkCarverSystem : EntitySystem
         _mapSystem.SetTiles(gridUid, grid, tiles);
         ent.Comp.GeneratedTiles.Clear();
         ent.Comp.Materialized = false;
+        ent.Comp.MaterializedGrid = EntityUid.Invalid;
+    }
+
+    private void OnChunkShutdown(Entity<SectorChunkCarverComponent> ent, ref ComponentShutdown args)
+    {
+        if (!ent.Comp.Materialized || ent.Comp.GeneratedTiles.Count == 0)
+            return;
+
+        if (!TryComp<WorldChunkComponent>(ent.Owner, out var chunk))
+            return;
+
+        if (ent.Comp.MaterializedGrid == EntityUid.Invalid || !TryComp(ent.Comp.MaterializedGrid, out MapGridComponent? grid))
+            return;
+
+        SaveChunkToCache(ent, ent.Comp.MaterializedGrid, grid, chunk);
     }
 
     private void SaveChunkToCache(Entity<SectorChunkCarverComponent> ent, EntityUid gridUid, MapGridComponent grid, WorldChunkComponent chunk)

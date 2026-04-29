@@ -91,6 +91,7 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
         _ghostQuery = GetEntityQuery<GhostComponent>();
         _xformQuery = GetEntityQuery<TransformComponent>();
         SubscribeLocalEvent<BiomeComponent, MapInitEvent>(OnBiomeMapInit);
+        SubscribeLocalEvent<BiomeComponent, ComponentShutdown>(OnBiomeShutdown);
         SubscribeLocalEvent<FTLStartedEvent>(OnFTLStarted);
         SubscribeLocalEvent<ShuttleFlattenEvent>(OnShuttleFlatten);
         Subs.CVar(_configManager, CVars.NetMaxUpdateRange, SetLoadRange, true);
@@ -161,10 +162,21 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
         }
     }
 
+    private void OnBiomeShutdown(EntityUid uid, BiomeComponent component, ComponentShutdown args)
+    {
+        if (!TryComp<MapGridComponent>(uid, out var grid) || component.LoadedChunks.Count == 0 || component.Seed == -1)
+            return;
+
+        FlushLoadedChunks(component, uid, grid, component.Seed);
+    }
+
     public void SetEnabled(Entity<BiomeComponent?> ent, bool enabled = true)
     {
         if (!Resolve(ent, ref ent.Comp) || ent.Comp.Enabled == enabled)
             return;
+
+        if (!enabled && ent.Comp.LoadedChunks.Count > 0 && ent.Comp.Seed != -1 && TryComp<MapGridComponent>(ent.Owner, out var grid))
+            FlushLoadedChunks(ent.Comp, ent.Owner, grid, ent.Comp.Seed);
 
         ent.Comp.Enabled = enabled;
         Dirty(ent, ent.Comp);
@@ -896,6 +908,23 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
 
             // Unload NOW!
             tiles ??= new List<(Vector2i, Tile)>(ChunkSize * ChunkSize);
+            UnloadChunk(component, gridUid, grid, chunk, seed, tiles);
+        }
+    }
+
+    private void FlushLoadedChunks(BiomeComponent component, EntityUid gridUid, MapGridComponent grid, int seed)
+    {
+        if (component.LoadedChunks.Count == 0)
+            return;
+
+        var tiles = new List<(Vector2i, Tile)>(ChunkSize * ChunkSize);
+        var chunks = component.LoadedChunks.ToArray();
+
+        foreach (var chunk in chunks)
+        {
+            if (!component.LoadedChunks.Contains(chunk))
+                continue;
+
             UnloadChunk(component, gridUid, grid, chunk, seed, tiles);
         }
     }
