@@ -377,7 +377,8 @@ public sealed class SectorChunkCarverSystem : EntitySystem
             if (entity == gridUid)
                 continue;
 
-            if (!TryComp<MetaDataComponent>(entity, out var meta) || meta.EntityPrototype == null)
+            var meta = MetaData(entity);
+            if (meta.EntityPrototype == null)
                 continue;
 
             if (!IsChunkMaterialPrototype(meta.EntityPrototype.ID))
@@ -401,7 +402,8 @@ public sealed class SectorChunkCarverSystem : EntitySystem
             if (before.Contains(entity))
                 continue;
 
-            if (!TryComp<MetaDataComponent>(entity, out var meta) || meta.EntityPrototype == null)
+            var meta = MetaData(entity);
+            if (meta.EntityPrototype == null)
                 continue;
 
             if (IsTransientChunkSpawnerPrototype(meta.EntityPrototype.ID))
@@ -418,7 +420,8 @@ public sealed class SectorChunkCarverSystem : EntitySystem
 
         if (!ent.Comp.GeneratedEntities.Contains(spawned) && Exists(spawned))
         {
-            if (TryComp<MetaDataComponent>(spawned, out var spawnedMeta) && spawnedMeta.EntityPrototype != null)
+            var spawnedMeta = MetaData(spawned);
+            if (spawnedMeta.EntityPrototype != null)
             {
                 if (IsTransientChunkSpawnerPrototype(spawnedMeta.EntityPrototype.ID))
                 {
@@ -440,7 +443,8 @@ public sealed class SectorChunkCarverSystem : EntitySystem
 
     private void AnchorToGrid(EntityUid entity)
     {
-        if (!TryComp<TransformComponent>(entity, out var xform) || xform.Anchored)
+        var xform = Transform(entity);
+        if (xform.Anchored)
             return;
 
         _transform.AnchorEntity(entity, xform);

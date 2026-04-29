@@ -471,10 +471,9 @@ public sealed class SectorWorldSystem : EntitySystem
         EnsureComp<SunShadowCycleComponent>(mapUid);
 
         if (!string.IsNullOrWhiteSpace(weatherPrototype) &&
-            _proto.TryIndex<WeatherPrototype>(weatherPrototype, out var weather) &&
             TryComp<MapComponent>(mapUid, out var mapComp))
         {
-            _weather.SetWeather(mapComp.MapId, weather, null);
+            _weather.TrySetWeather(mapComp.MapId, weatherPrototype, out _);
         }
 
         return mapUid;
