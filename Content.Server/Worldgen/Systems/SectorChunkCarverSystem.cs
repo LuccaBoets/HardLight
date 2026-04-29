@@ -2,6 +2,7 @@ using System.Numerics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Robust.Server.GameObjects;
 using Content.Server.Worldgen.Components;
 using Content.Server.Worldgen.Tools;
 using Content.Shared.Maps;
@@ -10,6 +11,7 @@ using Content.Shared.Worldgen.Prototypes;
 using Robust.Shared.Maths;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
+using Robust.Shared.Physics;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
@@ -41,6 +43,8 @@ public sealed class SectorChunkCarverSystem : EntitySystem
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly IMapManager _mapManager = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private readonly EntityLookupSystem _lookup = default!;
+    [Dependency] private readonly SharedTransformSystem _transform = default!;
 
     private string _cacheDirectory = string.Empty;
     private readonly Dictionary<string, Dictionary<string, EntitySpawnCollectionCache>> _biomeCaches = new();
@@ -275,8 +279,8 @@ public sealed class SectorChunkCarverSystem : EntitySystem
                 if (!_proto.HasIndex<EntityPrototype>(entityPlacement.PrototypeId))
                     continue;
 
-                var spawned = Spawn(entityPlacement.PrototypeId, new EntityCoordinates(gridUid, entityPlacement.Indices + new Vector2(0.5f, 0.5f)));
-                ent.Comp.GeneratedEntities.Add(spawned);
+                ClearChunkMaterialEntitiesAtTile((ent.Owner, ent.Comp), gridUid, grid, entityPlacement.Indices);
+                SpawnTrackedTileEntity((ent.Owner, ent.Comp), gridUid, grid, entityPlacement.Indices, entityPlacement.PrototypeId);
             }
         }
         else
@@ -336,6 +340,7 @@ public sealed class SectorChunkCarverSystem : EntitySystem
 
             var tileId = tile.Tile.GetContentTileDefinition(_tileDefs).ID;
             var handledByBiome = false;
+            ClearChunkMaterialEntitiesAtTile(ent, gridUid, grid, indices);
 
             var biomeCache = GetBiomeCache(biome);
             if (biomeCache != null && biomeCache.TryGetValue(tileId, out var cache))
@@ -349,8 +354,7 @@ public sealed class SectorChunkCarverSystem : EntitySystem
                     if (prototype == null || !_proto.HasIndex<EntityPrototype>(prototype))
                         continue;
 
-                    var spawned = Spawn(prototype, new EntityCoordinates(gridUid, indices + new Vector2(0.5f, 0.5f)));
-                    ent.Comp.GeneratedEntities.Add(spawned);
+                    SpawnTrackedTileEntity(ent, gridUid, grid, indices, prototype);
                 }
             }
 
@@ -360,9 +364,103 @@ public sealed class SectorChunkCarverSystem : EntitySystem
             if (!TryGetPlanetWallPrototype(gridUid, grid, indices, out var wallPrototype))
                 continue;
 
-            var fallback = Spawn(wallPrototype, new EntityCoordinates(gridUid, indices + new Vector2(0.5f, 0.5f)));
-            ent.Comp.GeneratedEntities.Add(fallback);
+            SpawnTrackedTileEntity(ent, gridUid, grid, indices, wallPrototype);
         }
+    }
+
+    private void ClearChunkMaterialEntitiesAtTile(Entity<SectorChunkCarverComponent> ent, EntityUid gridUid, MapGridComponent grid, Vector2i indices)
+    {
+        var tileRef = _mapSystem.GetTileRef(gridUid, grid, indices);
+
+        foreach (var entity in _lookup.GetLocalEntitiesIntersecting(tileRef, flags: LookupFlags.Dynamic | LookupFlags.Static | LookupFlags.StaticSundries | LookupFlags.Sundries | LookupFlags.Approximate))
+        {
+            if (entity == gridUid)
+                continue;
+
+            if (!TryComp<MetaDataComponent>(entity, out var meta) || meta.EntityPrototype == null)
+                continue;
+
+            if (!IsChunkMaterialPrototype(meta.EntityPrototype.ID))
+                continue;
+
+            ent.Comp.GeneratedEntities.Remove(entity);
+
+            if (Exists(entity))
+                QueueDel(entity);
+        }
+    }
+
+    private void SpawnTrackedTileEntity(Entity<SectorChunkCarverComponent> ent, EntityUid gridUid, MapGridComponent grid, Vector2i indices, string prototypeId)
+    {
+        var before = GetTileEntities(gridUid, grid, indices);
+        var spawned = Spawn(prototypeId, new EntityCoordinates(gridUid, indices + new Vector2(0.5f, 0.5f)));
+        var after = GetTileEntities(gridUid, grid, indices);
+
+        foreach (var entity in after)
+        {
+            if (before.Contains(entity))
+                continue;
+
+            if (!TryComp<MetaDataComponent>(entity, out var meta) || meta.EntityPrototype == null)
+                continue;
+
+            if (IsTransientChunkSpawnerPrototype(meta.EntityPrototype.ID))
+            {
+                if (Exists(entity))
+                    QueueDel(entity);
+
+                continue;
+            }
+
+            AnchorToGrid(entity);
+            ent.Comp.GeneratedEntities.Add(entity);
+        }
+
+        if (!ent.Comp.GeneratedEntities.Contains(spawned) && Exists(spawned))
+        {
+            if (TryComp<MetaDataComponent>(spawned, out var spawnedMeta) && spawnedMeta.EntityPrototype != null)
+            {
+                if (IsTransientChunkSpawnerPrototype(spawnedMeta.EntityPrototype.ID))
+                {
+                    QueueDel(spawned);
+                    return;
+                }
+            }
+
+            AnchorToGrid(spawned);
+            ent.Comp.GeneratedEntities.Add(spawned);
+        }
+    }
+
+    private HashSet<EntityUid> GetTileEntities(EntityUid gridUid, MapGridComponent grid, Vector2i indices)
+    {
+        var tileRef = _mapSystem.GetTileRef(gridUid, grid, indices);
+        return _lookup.GetLocalEntitiesIntersecting(tileRef, flags: LookupFlags.Dynamic | LookupFlags.Static | LookupFlags.StaticSundries | LookupFlags.Sundries | LookupFlags.Approximate).ToHashSet();
+    }
+
+    private void AnchorToGrid(EntityUid entity)
+    {
+        if (!TryComp<TransformComponent>(entity, out var xform) || xform.Anchored)
+            return;
+
+        _transform.AnchorEntity(entity, xform);
+    }
+
+    private static bool IsTransientChunkSpawnerPrototype(string prototypeId)
+    {
+        return prototypeId.Contains("Mineral", StringComparison.OrdinalIgnoreCase)
+            || prototypeId.EndsWith("RoomMarker", StringComparison.OrdinalIgnoreCase)
+            || prototypeId.EndsWith("Spawner", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsChunkMaterialPrototype(string prototypeId)
+    {
+        return prototypeId.StartsWith("Wall", StringComparison.OrdinalIgnoreCase)
+            || prototypeId.StartsWith("NFWall", StringComparison.OrdinalIgnoreCase)
+            || prototypeId.EndsWith("RoomMarker", StringComparison.OrdinalIgnoreCase)
+            || prototypeId.Contains("Mineral", StringComparison.OrdinalIgnoreCase)
+            || prototypeId.EndsWith("Spawner", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(prototypeId, "Grille", StringComparison.OrdinalIgnoreCase);
     }
 
     private Dictionary<string, EntitySpawnCollectionCache>? GetBiomeCache(SectorAsteroidBiomePrototype? biome)

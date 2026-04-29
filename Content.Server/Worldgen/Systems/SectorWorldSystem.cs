@@ -1,6 +1,7 @@
 using System.Numerics;
 using System.Linq;
 using Content.Server._Mono.Cleanup;
+using Content.Server._NF.Shuttles.Components;
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.GameTicking;
 using Content.Server.Parallax;
@@ -13,8 +14,11 @@ using Content.Shared.Maps;
 using Content.Shared.Parallax.Biomes;
 using Content.Shared.Shuttles.Components;
 using Content.Shared.Weather;
+using Robust.Server.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
+using Robust.Shared.Physics;
+using Robust.Shared.Physics.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
@@ -34,6 +38,7 @@ public sealed class SectorWorldSystem : EntitySystem
     [Dependency] private readonly BiomeSystem _biome = default!;
     [Dependency] private readonly MetaDataSystem _metaData = default!;
     [Dependency] private readonly SharedMapSystem _mapSystem = default!;
+    [Dependency] private readonly PhysicsSystem _physics = default!;
     [Dependency] private readonly ITileDefinitionManager _tileDefs = default!;
     [Dependency] private readonly WeatherSystem _weather = default!;
 
@@ -416,6 +421,14 @@ public sealed class SectorWorldSystem : EntitySystem
             return;
 
         EnsureComp<CleanupImmuneComponent>(mapOrGridUid);
+        EnsureComp<PreventGridAnchorChangesComponent>(mapOrGridUid);
+
+        var physics = EnsureComp<PhysicsComponent>(mapOrGridUid);
+        if (physics.BodyType != BodyType.Static)
+            _physics.SetBodyType(mapOrGridUid, BodyType.Static, body: physics);
+
+        _physics.SetBodyStatus(mapOrGridUid, physics, BodyStatus.OnGround);
+        _physics.SetFixedRotation(mapOrGridUid, true, body: physics);
 
         if (TryComp<MapGridComponent>(mapOrGridUid, out var grid))
             grid.CanSplit = false;
