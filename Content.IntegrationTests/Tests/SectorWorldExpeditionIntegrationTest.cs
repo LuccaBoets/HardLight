@@ -6,17 +6,20 @@ using Content.Server.Atmos.EntitySystems;
 using Content.Server.Salvage;
 using Content.Server.Salvage.Expeditions;
 using Content.Server.Shuttles.Events;
+using Content.Server.Worldgen;
 using Content.Server.Worldgen.Components;
 using Content.Server.Worldgen.Systems;
 using Content.Shared.Atmos;
 using Content.Shared.Gravity;
 using Content.Shared.Maps;
 using Content.Shared.Mobs.Components;
+using Content.Shared.Parallax.Biomes;
 using Content.Shared.Shuttles.Components;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Maths;
+using Robust.Shared.Prototypes;
 
 namespace Content.IntegrationTests.Tests;
 
@@ -172,6 +175,81 @@ public sealed class SectorWorldExpeditionIntegrationTest
             entMan.EventBus.RaiseLocalEvent(expeditionA.Owner, ref ev);
 
             Assert.That(ev.Cancelled, Is.False, "Crew on a different expedition in the same host map should not block FTL.");
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task WorldLoaderKeepsBiomeChunkLoadedUntilChunkLeavesLoaderRadiusTest()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+        EntityUid mapUid = default;
+        EntityUid loaderUid = default;
+        var targetChunk = new Vector2i(WorldGen.ChunkSize, 0);
+
+        await server.WaitPost(() =>
+        {
+            var entMan = server.ResolveDependency<IEntityManager>();
+            var proto = server.ResolveDependency<IPrototypeManager>();
+            var biomeSystem = entMan.System<BiomeSystem>();
+            var mapSystem = entMan.System<SharedMapSystem>();
+
+            mapUid = mapSystem.CreateMap(out _);
+            var biomeTemplate = proto.Index<BiomeTemplatePrototype>("NFVGRoidSnow");
+            biomeSystem.EnsurePlanet(mapUid, biomeTemplate, seed: 1337);
+
+            loaderUid = entMan.SpawnEntity(null, new EntityCoordinates(mapUid, new Vector2(WorldGen.ChunkSize / 2f, 0f)));
+            var loader = entMan.EnsureComponent<WorldLoaderComponent>(loaderUid);
+            loader.Radius = WorldGen.ChunkSize;
+        });
+
+        await pair.RunTicksSync(5);
+
+        await server.WaitPost(() =>
+        {
+            var entMan = server.ResolveDependency<IEntityManager>();
+            var biome = entMan.GetComponent<BiomeComponent>(mapUid);
+
+            Assert.That(biome.LoadedChunks.Contains(targetChunk), Is.True,
+                "The biome chunk should load from world-loader coverage even without player PVS.");
+        });
+
+        await server.WaitPost(() =>
+        {
+            var entMan = server.ResolveDependency<IEntityManager>();
+            var xform = entMan.System<SharedTransformSystem>();
+            xform.SetCoordinates(loaderUid, new EntityCoordinates(mapUid, new Vector2(WorldGen.ChunkSize + WorldGen.ChunkSize / 2f, 0f)));
+        });
+
+        await pair.RunTicksSync(5);
+
+        await server.WaitPost(() =>
+        {
+            var entMan = server.ResolveDependency<IEntityManager>();
+            var biome = entMan.GetComponent<BiomeComponent>(mapUid);
+
+            Assert.That(biome.LoadedChunks.Contains(targetChunk), Is.True,
+                "Crossing a chunk edge should not unload a chunk while the world loader still covers it.");
+        });
+
+        await server.WaitPost(() =>
+        {
+            var entMan = server.ResolveDependency<IEntityManager>();
+            var xform = entMan.System<SharedTransformSystem>();
+            xform.SetCoordinates(loaderUid, new EntityCoordinates(mapUid, new Vector2(WorldGen.ChunkSize * 3 + WorldGen.ChunkSize / 8f, 0f)));
+        });
+
+        await pair.RunTicksSync(5);
+
+        await server.WaitPost(() =>
+        {
+            var entMan = server.ResolveDependency<IEntityManager>();
+            var biome = entMan.GetComponent<BiomeComponent>(mapUid);
+
+            Assert.That(biome.LoadedChunks.Contains(targetChunk), Is.False,
+                "The biome chunk should unload once it leaves world-loader coverage.");
         });
 
         await pair.CleanReturnAsync();
