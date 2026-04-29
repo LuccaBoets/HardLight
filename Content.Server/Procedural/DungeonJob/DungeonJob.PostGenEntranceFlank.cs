@@ -52,7 +52,7 @@ public sealed partial class DungeonJob
 
         foreach (var entrance in spawnPositions)
         {
-            _entManager.SpawnEntities(_maps.GridTileToLocal(_gridUid, _grid, entrance), EntitySpawnCollection.GetSpawns(entGroup.Entries, random));
+            SpawnAnchoredStructureCollection(entrance, EntitySpawnCollection.GetSpawns(entGroup.Entries, random));
         }
     }
 }

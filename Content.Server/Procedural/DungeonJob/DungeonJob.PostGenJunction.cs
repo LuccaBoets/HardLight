@@ -122,8 +122,7 @@ public sealed partial class DungeonJob
 
                         _maps.SetTile(_gridUid, _grid, weh, _tile.GetVariantTile((ContentTileDefinition) tileDef, random));
 
-                        var coords = _maps.GridTileToLocal(_gridUid, _grid, weh);
-                        _entManager.SpawnEntities(coords, EntitySpawnCollection.GetSpawns(entranceGroup.Entries, random));
+                        SpawnAnchoredStructureCollection(weh, EntitySpawnCollection.GetSpawns(entranceGroup.Entries, random));
                     }
 
                     break;
