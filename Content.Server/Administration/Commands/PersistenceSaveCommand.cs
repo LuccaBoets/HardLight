@@ -12,8 +12,7 @@ namespace Content.Server.Administration.Commands;
 public sealed class PersistenceSave : IConsoleCommand
 {
     [Dependency] private readonly IConfigurationManager _config = default!;
-    [Dependency] private readonly SharedMapSystem _map = default!;
-    [Dependency] private readonly MapLoaderSystem _mapLoader = default!;
+    [Dependency] private readonly IEntityManager _entManager = default!;
 
     public string Command => "persistencesave";
     public string Description => "Saves server data to a persistence file to be loaded later.";
@@ -21,6 +20,9 @@ public sealed class PersistenceSave : IConsoleCommand
 
     public void Execute(IConsoleShell shell, string argStr, string[] args)
     {
+        var mapSystem = _entManager.System<SharedMapSystem>();
+        var mapLoader = _entManager.System<MapLoaderSystem>();
+
         if (args.Length < 1 || args.Length > 2)
         {
             shell.WriteError(Loc.GetString("shell-wrong-arguments-number"));
@@ -34,7 +36,7 @@ public sealed class PersistenceSave : IConsoleCommand
         }
 
         var mapId = new MapId(intMapId);
-        if (!_map.MapExists(mapId))
+        if (!mapSystem.MapExists(mapId))
         {
             shell.WriteError(Loc.GetString("cmd-savemap-not-exist"));
             return;
@@ -47,7 +49,7 @@ public sealed class PersistenceSave : IConsoleCommand
             return;
         }
 
-        _mapLoader.TrySaveMap(mapId, new ResPath(saveFilePath));
+        mapLoader.TrySaveMap(mapId, new ResPath(saveFilePath));
         shell.WriteLine(Loc.GetString("cmd-savemap-success"));
     }
 }
