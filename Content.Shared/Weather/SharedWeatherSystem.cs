@@ -49,7 +49,7 @@ public abstract class SharedWeatherSystem : EntitySystem
 
         var tileDef = (ContentTileDefinition) _tileDefManager[tileRef.Tile.TypeId];
 
-        if (!tileDef.Weather)
+        if (!tileDef.MapAtmosphere)
             return false;
 
         var anchoredEntities = _mapSystem.GetAnchoredEntitiesEnumerator(ent, ent.Comp1, tileRef.GridIndices);
@@ -125,7 +125,7 @@ public abstract class SharedWeatherSystem : EntitySystem
         if (!_mapSystem.TryGetMap(mapId, out var mapUid))
             return false;
 
-        if (_statusEffects.TryEffectsWithComp<WeatherStatusEffectComponent>(mapUid, out var effects))
+        if (_statusEffects.TryEffectsWithComp<WeatherStatusEffectComponent>(mapUid.Value, out var effects))
         {
             foreach (var effect in effects)
             {

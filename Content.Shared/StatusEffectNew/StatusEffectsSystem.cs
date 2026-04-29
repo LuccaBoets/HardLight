@@ -67,7 +67,8 @@ public sealed class StatusEffectsSystem : EntitySystem
             if (!_statusQuery.TryComp(contained, out var status) || status.AppliedTo != target)
                 continue;
 
-            if (Prototype(contained) != effectProto)
+            var containedProto = Prototype(contained);
+            if (containedProto == null || containedProto != effectProto)
                 continue;
 
             statusEffect = contained;
