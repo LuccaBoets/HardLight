@@ -1,13 +1,14 @@
 - type: entity
+  id: StatusEffectBase
+  abstract: true
+
+- type: entity
   parent: StatusEffectBase
   id: WeatherBase
   abstract: true
   components:
   - type: WeatherStatusEffect
   - type: StatusEffect
-    whitelist:
-      components:
-      - Map
 
 - type: entity
   parent: WeatherBase
