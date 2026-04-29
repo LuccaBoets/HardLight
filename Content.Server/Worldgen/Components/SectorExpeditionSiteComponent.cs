@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Numerics;
+using Robust.Shared.Map;
 
 namespace Content.Server.Worldgen.Components;
 
@@ -19,4 +21,18 @@ public sealed partial class SectorExpeditionSiteComponent : Component
 
     [DataField]
     public float Radius;
+
+    public EntityUid HostGridUid = EntityUid.Invalid;
+
+    public float ContentRadius;
+
+    public Dictionary<Vector2i, Tile> OriginalTiles = new();
+
+    public HashSet<EntityUid> OriginalEntities = new();
+
+    public HashSet<EntityUid> GeneratedEntities = new();
+
+    public Dictionary<Vector2i, Dictionary<Vector2i, Tile>> CachedChunkTiles = new();
+
+    public Dictionary<Vector2i, string> CachedChunkEntityFiles = new();
 }

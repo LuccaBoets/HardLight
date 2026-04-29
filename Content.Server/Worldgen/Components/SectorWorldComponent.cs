@@ -24,24 +24,31 @@ public sealed partial class SectorWorldComponent : Component
     [DataField]
     public float CentralClearRadius = 500f;
 
+    [DataField]
     [ViewVariables]
     public EntityUid? SectorGrid;
 
+    [DataField]
     [ViewVariables]
     public EntityUid? SpaceMap;
 
+    [DataField]
     [ViewVariables]
     public EntityUid? FtlMap;
 
+    [DataField]
     [ViewVariables]
     public EntityUid? ColCommMap;
 
+    [DataField]
     [ViewVariables]
     public Dictionary<string, EntityUid> PlanetTypeMaps = new();
 
+    [DataField]
     [ViewVariables]
     public List<SectorPlanetDescriptor> Planets = new();
 
+    [DataField]
     [ViewVariables]
     public Dictionary<EntityUid, SectorExpeditionReservation> Reservations = new();
 

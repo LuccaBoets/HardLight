@@ -14,13 +14,17 @@ using Content.Shared.Maps;
 using Content.Shared.Parallax.Biomes;
 using Content.Shared.Shuttles.Components;
 using Content.Shared.Weather;
+using Robust.Shared.EntitySerialization;
+using Robust.Shared.EntitySerialization.Systems;
 using Robust.Server.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
+using Robust.Shared.Maths;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
+using Robust.Shared.Utility;
 
 namespace Content.Server.Worldgen.Systems;
 
@@ -36,6 +40,7 @@ public sealed class SectorWorldSystem : EntitySystem
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly AtmosphereSystem _atmosphere = default!;
     [Dependency] private readonly BiomeSystem _biome = default!;
+    [Dependency] private readonly MapLoaderSystem _loader = default!;
     [Dependency] private readonly MetaDataSystem _metaData = default!;
     [Dependency] private readonly SharedMapSystem _mapSystem = default!;
     [Dependency] private readonly PhysicsSystem _physics = default!;
@@ -43,6 +48,7 @@ public sealed class SectorWorldSystem : EntitySystem
     [Dependency] private readonly WeatherSystem _weather = default!;
 
     private static readonly string[] TimeOfDayStates = ["Dawn", "Day", "Dusk", "Night"];
+    private readonly string _siteCacheSession = Guid.NewGuid().ToString("N");
 
     public override void Initialize()
     {
@@ -57,10 +63,323 @@ public sealed class SectorWorldSystem : EntitySystem
 
     private void OnExpeditionSiteShutdown(Entity<SectorExpeditionSiteComponent> ent, ref ComponentShutdown args)
     {
+        CleanupHostedSite(ent);
+
         if (!TryComp(ent.Comp.SectorMap, out SectorWorldComponent? sector))
             return;
 
         sector.Reservations.Remove(ent.Owner);
+    }
+
+    public void CaptureHostedSiteBaseline(Entity<SectorExpeditionSiteComponent> ent, EntityUid hostGridUid, MapGridComponent grid, Vector2 center, float radius)
+    {
+        ent.Comp.HostGridUid = hostGridUid;
+        ent.Comp.ContentRadius = radius;
+        ent.Comp.OriginalTiles.Clear();
+        ent.Comp.OriginalEntities.Clear();
+        ent.Comp.GeneratedEntities.Clear();
+        ent.Comp.CachedChunkTiles.Clear();
+        ent.Comp.CachedChunkEntityFiles.Clear();
+
+        foreach (var tile in _mapSystem.GetTilesIntersecting(hostGridUid, grid, new Circle(center, radius), false))
+        {
+            ent.Comp.OriginalTiles[tile.GridIndices] = tile.Tile;
+        }
+
+        if (!TryGetHostedSiteMapUid(hostGridUid, out var mapUid))
+            return;
+
+        var radiusSquared = radius * radius;
+        var query = AllEntityQuery<TransformComponent>();
+
+        while (query.MoveNext(out var uid, out var xform))
+        {
+            if (uid == ent.Owner || uid == hostGridUid || uid == mapUid)
+                continue;
+
+            if (xform.MapUid != mapUid)
+                continue;
+
+            if ((xform.Coordinates.Position - center).LengthSquared() > radiusSquared)
+                continue;
+
+            ent.Comp.OriginalEntities.Add(uid);
+        }
+    }
+
+    public void CaptureHostedSiteGeneratedEntities(Entity<SectorExpeditionSiteComponent> ent, EntityUid hostMapUid, Vector2 center, float radius)
+    {
+        ent.Comp.GeneratedEntities.Clear();
+
+        var radiusSquared = radius * radius;
+        var query = AllEntityQuery<TransformComponent>();
+
+        while (query.MoveNext(out var uid, out var xform))
+        {
+            if (uid == ent.Owner || uid == ent.Comp.HostGridUid || uid == hostMapUid || ent.Comp.OriginalEntities.Contains(uid))
+                continue;
+
+            if (xform.MapUid != hostMapUid)
+                continue;
+
+            if ((xform.Coordinates.Position - center).LengthSquared() > radiusSquared)
+                continue;
+
+            ent.Comp.GeneratedEntities.Add(uid);
+        }
+    }
+
+    public void SaveHostedChunkContent(EntityUid gridUid, MapGridComponent grid, Vector2i chunkOrigin, int chunkSize)
+    {
+        var query = EntityQueryEnumerator<SectorExpeditionSiteComponent>();
+
+        while (query.MoveNext(out var uid, out var site))
+        {
+            if (site.HostGridUid != gridUid)
+                continue;
+
+            if (!DoesSiteIntersectChunk(site, chunkOrigin, chunkSize))
+                continue;
+
+            SaveHostedChunkContent((uid, site), gridUid, grid, chunkOrigin, chunkSize);
+        }
+    }
+
+    public void RestoreHostedChunkContent(EntityUid gridUid, MapGridComponent grid, Vector2i chunkOrigin, int chunkSize)
+    {
+        var query = EntityQueryEnumerator<SectorExpeditionSiteComponent>();
+
+        while (query.MoveNext(out var uid, out var site))
+        {
+            if (site.HostGridUid != gridUid)
+                continue;
+
+            if (!site.CachedChunkTiles.ContainsKey(chunkOrigin) && !site.CachedChunkEntityFiles.ContainsKey(chunkOrigin))
+                continue;
+
+            if (!DoesSiteIntersectChunk(site, chunkOrigin, chunkSize))
+                continue;
+
+            RestoreHostedChunkContent((uid, site), gridUid, grid, chunkOrigin);
+        }
+    }
+
+    public void CleanupHostedSite(Entity<SectorExpeditionSiteComponent> ent)
+    {
+        foreach (var generated in ent.Comp.GeneratedEntities.ToArray())
+        {
+            if (Exists(generated))
+                QueueDel(generated);
+        }
+
+        ent.Comp.GeneratedEntities.Clear();
+
+        if (ent.Comp.HostGridUid != EntityUid.Invalid
+            && ent.Comp.OriginalTiles.Count > 0
+            && TryComp<MapGridComponent>(ent.Comp.HostGridUid, out var grid))
+        {
+            var tiles = new List<(Vector2i, Tile)>(ent.Comp.OriginalTiles.Count);
+            foreach (var (indices, tile) in ent.Comp.OriginalTiles)
+            {
+                tiles.Add((indices, tile));
+            }
+
+            _mapSystem.SetTiles(ent.Comp.HostGridUid, grid, tiles);
+        }
+
+        ent.Comp.OriginalTiles.Clear();
+        ent.Comp.OriginalEntities.Clear();
+        ent.Comp.CachedChunkTiles.Clear();
+        ent.Comp.CachedChunkEntityFiles.Clear();
+    }
+
+    public void CleanupHostedSite(EntityUid uid, SectorExpeditionSiteComponent component)
+    {
+        CleanupHostedSite((uid, component));
+    }
+
+    private void SaveHostedChunkContent(Entity<SectorExpeditionSiteComponent> ent, EntityUid gridUid, MapGridComponent grid, Vector2i chunkOrigin, int chunkSize)
+    {
+        var cachedTiles = new Dictionary<Vector2i, Tile>();
+
+        for (var x = 0; x < chunkSize; x++)
+        {
+            for (var y = 0; y < chunkSize; y++)
+            {
+                var indices = new Vector2i(chunkOrigin.X + x, chunkOrigin.Y + y);
+
+                if (!IsTileWithinHostedSite(ent.Comp, indices))
+                    continue;
+
+                if (!_mapSystem.TryGetTileRef(gridUid, grid, indices, out var tileRef))
+                    continue;
+
+                cachedTiles[indices] = tileRef.Tile;
+            }
+        }
+
+        if (cachedTiles.Count > 0)
+            ent.Comp.CachedChunkTiles[chunkOrigin] = cachedTiles;
+
+        if (TryGetHostedSiteMapUid(gridUid, out var mapUid))
+        {
+            var generated = new HashSet<EntityUid>();
+
+            foreach (var entity in ent.Comp.GeneratedEntities.ToArray())
+            {
+                if (!Exists(entity))
+                {
+                    ent.Comp.GeneratedEntities.Remove(entity);
+                    continue;
+                }
+
+                var xform = Transform(entity);
+
+                if (xform.MapUid != mapUid)
+                    continue;
+
+                var tile = _mapSystem.LocalToTile(gridUid, grid, xform.Coordinates);
+                if (!IsChunkTile(tile, chunkOrigin, chunkSize) || !IsTileWithinHostedSite(ent.Comp, tile))
+                    continue;
+
+                generated.Add(entity);
+            }
+
+            if (generated.Count > 0)
+            {
+                var cachePath = GetHostedChunkEntityCachePath(ent.Owner, chunkOrigin);
+                if (_loader.TrySaveGeneric(generated, cachePath, out _))
+                {
+                    ent.Comp.CachedChunkEntityFiles[chunkOrigin] = cachePath.ToString();
+                }
+
+                foreach (var entity in generated)
+                {
+                    ent.Comp.GeneratedEntities.Remove(entity);
+                    if (Exists(entity))
+                        QueueDel(entity);
+                }
+            }
+        }
+
+        if (cachedTiles.Count == 0)
+            return;
+
+        var restoreTiles = new List<(Vector2i, Tile)>(cachedTiles.Count);
+        foreach (var indices in cachedTiles.Keys)
+        {
+            restoreTiles.Add((indices, ent.Comp.OriginalTiles.TryGetValue(indices, out var original) ? original : Tile.Empty));
+        }
+
+        _mapSystem.SetTiles(gridUid, grid, restoreTiles);
+    }
+
+    private void RestoreHostedChunkContent(Entity<SectorExpeditionSiteComponent> ent, EntityUid gridUid, MapGridComponent grid, Vector2i chunkOrigin)
+    {
+        if (ent.Comp.CachedChunkTiles.Remove(chunkOrigin, out var tiles))
+        {
+            var restoreTiles = new List<(Vector2i, Tile)>(tiles.Count);
+            foreach (var (indices, tile) in tiles)
+            {
+                restoreTiles.Add((indices, tile));
+            }
+
+            _mapSystem.SetTiles(gridUid, grid, restoreTiles);
+        }
+
+        if (!ent.Comp.CachedChunkEntityFiles.Remove(chunkOrigin, out var cachePathString))
+            return;
+
+        if (!TryGetHostedSiteMapId(gridUid, out var mapId))
+            return;
+
+        var loadOptions = new MapLoadOptions
+        {
+            MergeMap = mapId,
+        };
+
+        if (!_loader.TryLoadGeneric(new ResPath(cachePathString), out var result, loadOptions) || result == null)
+            return;
+
+        foreach (var entity in result.Entities)
+        {
+            if (entity != ent.Owner && entity != ent.Comp.HostGridUid)
+                ent.Comp.GeneratedEntities.Add(entity);
+        }
+    }
+
+    private bool DoesSiteIntersectChunk(SectorExpeditionSiteComponent site, Vector2i chunkOrigin, int chunkSize)
+    {
+        var minX = chunkOrigin.X;
+        var maxX = chunkOrigin.X + chunkSize;
+        var minY = chunkOrigin.Y;
+        var maxY = chunkOrigin.Y + chunkSize;
+        var clampedX = Math.Clamp(site.Center.X, minX, maxX);
+        var clampedY = Math.Clamp(site.Center.Y, minY, maxY);
+        var delta = site.Center - new Vector2(clampedX, clampedY);
+        var radius = GetHostedSiteRadius(site);
+        return delta.LengthSquared() <= radius * radius;
+    }
+
+    private bool IsTileWithinHostedSite(SectorExpeditionSiteComponent site, Vector2i indices)
+    {
+        var delta = site.Center - (indices + new Vector2(0.5f, 0.5f));
+        var radius = GetHostedSiteRadius(site);
+        return delta.LengthSquared() <= radius * radius;
+    }
+
+    private float GetHostedSiteRadius(SectorExpeditionSiteComponent site)
+    {
+        return site.ContentRadius > 0f ? site.ContentRadius : site.Radius;
+    }
+
+    private bool TryGetHostedSiteMapUid(EntityUid gridUid, out EntityUid mapUid)
+    {
+        mapUid = EntityUid.Invalid;
+
+        if (HasComp<MapComponent>(gridUid))
+        {
+            mapUid = gridUid;
+            return true;
+        }
+
+        var xform = Transform(gridUid);
+        if (xform.MapUid is not { } resolved)
+            return false;
+
+        mapUid = resolved;
+        return true;
+    }
+
+    private bool TryGetHostedSiteMapId(EntityUid gridUid, out MapId mapId)
+    {
+        mapId = MapId.Nullspace;
+
+        if (TryComp<MapComponent>(gridUid, out var mapComp))
+        {
+            mapId = mapComp.MapId;
+            return true;
+        }
+
+        var xform = Transform(gridUid);
+        if (xform.MapUid is not { } mapUid || !TryComp<MapComponent>(mapUid, out mapComp))
+            return false;
+
+        mapId = mapComp.MapId;
+        return true;
+    }
+
+    private static bool IsChunkTile(Vector2i tile, Vector2i chunkOrigin, int chunkSize)
+    {
+        return tile.X >= chunkOrigin.X
+            && tile.Y >= chunkOrigin.Y
+            && tile.X < chunkOrigin.X + chunkSize
+            && tile.Y < chunkOrigin.Y + chunkSize;
+    }
+
+    private ResPath GetHostedChunkEntityCachePath(EntityUid siteUid, Vector2i chunkOrigin)
+    {
+        return new ResPath($"/HardLight/hosted-site-cache/{_siteCacheSession}/{siteUid.Id.ToString()}/{chunkOrigin.X}_{chunkOrigin.Y}.yml");
     }
 
     public bool TryGetDefaultSectorMap(out EntityUid sectorMap, out SectorWorldComponent sector)
@@ -311,7 +630,8 @@ public sealed class SectorWorldSystem : EntitySystem
 
     private void EnsureInitialized(Entity<SectorWorldComponent> ent)
     {
-        ent.Comp.SpaceMap ??= ent.Owner;
+        if (ent.Comp.SpaceMap == null || !Exists(ent.Comp.SpaceMap.Value))
+            ent.Comp.SpaceMap = ent.Owner;
 
         if ((ent.Comp.SectorGrid == null || !Exists(ent.Comp.SectorGrid.Value)) && TryComp<MapComponent>(ent.Owner, out var mapComp))
         {
@@ -328,43 +648,43 @@ public sealed class SectorWorldSystem : EntitySystem
         if (ent.Comp.UniverseSeed == 0)
             ent.Comp.UniverseSeed = _random.Next(1, int.MaxValue);
 
-        if (ent.Comp.Planets.Count > 0 || ent.Comp.PlanetTypes.Count == 0)
-            return;
-
-        var rng = new Random(ent.Comp.UniverseSeed);
-        var ringStep = 2400f;
-
-        for (var index = 0; index < ent.Comp.PlanetTypes.Count; index++)
+        if (ent.Comp.Planets.Count == 0 && ent.Comp.PlanetTypes.Count > 0)
         {
-            var type = ent.Comp.PlanetTypes[index];
-            var radius = MathHelper.Lerp(type.MinRadius, type.MaxRadius, rng.NextSingle());
-            var distance = 1800f + index * ringStep + rng.NextSingle() * 900f;
-            var angle = (MathF.Tau / ent.Comp.PlanetTypes.Count) * index + (rng.NextSingle() - 0.5f) * 0.45f;
-            var center = new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * distance;
-            var tileId = type.SurfaceTiles.Count > 0
-                ? type.SurfaceTiles[rng.Next(type.SurfaceTiles.Count)]
-                : "FloorSteel";
+            var rng = new Random(ent.Comp.UniverseSeed);
+            var ringStep = 2400f;
 
-            if (!_proto.TryIndex<BiomeTemplatePrototype>(type.BiomeTemplate, out _))
-                continue;
-
-            ent.Comp.Planets.Add(new SectorPlanetDescriptor
+            for (var index = 0; index < ent.Comp.PlanetTypes.Count; index++)
             {
-                PlanetId = $"{type.Id}-{index + 1}",
-                Name = $"{type.Name} {index + 1}",
-                PlanetTypeId = type.Id,
-                BiomeTemplate = type.BiomeTemplate,
-                SurfaceTile = tileId,
-                Center = center,
-                Radius = radius,
-                Seed = rng.Next(),
-                Temperature = MathHelper.Lerp(type.MinTemperature, type.MaxTemperature, rng.NextSingle()),
-                Oxygen = MathHelper.Lerp(type.MinOxygen, type.MaxOxygen, rng.NextSingle()),
-                Nitrogen = MathHelper.Lerp(type.MinNitrogen, type.MaxNitrogen, rng.NextSingle()),
-                CarbonDioxide = MathHelper.Lerp(type.MinCarbonDioxide, type.MaxCarbonDioxide, rng.NextSingle()),
-                TimeOfDay = TimeOfDayStates[rng.Next(TimeOfDayStates.Length)],
-                WeatherPrototype = type.WeatherPrototype,
-            });
+                var type = ent.Comp.PlanetTypes[index];
+                var radius = MathHelper.Lerp(type.MinRadius, type.MaxRadius, rng.NextSingle());
+                var distance = 1800f + index * ringStep + rng.NextSingle() * 900f;
+                var angle = (MathF.Tau / ent.Comp.PlanetTypes.Count) * index + (rng.NextSingle() - 0.5f) * 0.45f;
+                var center = new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * distance;
+                var tileId = type.SurfaceTiles.Count > 0
+                    ? type.SurfaceTiles[rng.Next(type.SurfaceTiles.Count)]
+                    : "FloorSteel";
+
+                if (!_proto.TryIndex<BiomeTemplatePrototype>(type.BiomeTemplate, out _))
+                    continue;
+
+                ent.Comp.Planets.Add(new SectorPlanetDescriptor
+                {
+                    PlanetId = $"{type.Id}-{index + 1}",
+                    Name = $"{type.Name} {index + 1}",
+                    PlanetTypeId = type.Id,
+                    BiomeTemplate = type.BiomeTemplate,
+                    SurfaceTile = tileId,
+                    Center = center,
+                    Radius = radius,
+                    Seed = rng.Next(),
+                    Temperature = MathHelper.Lerp(type.MinTemperature, type.MaxTemperature, rng.NextSingle()),
+                    Oxygen = MathHelper.Lerp(type.MinOxygen, type.MaxOxygen, rng.NextSingle()),
+                    Nitrogen = MathHelper.Lerp(type.MinNitrogen, type.MaxNitrogen, rng.NextSingle()),
+                    CarbonDioxide = MathHelper.Lerp(type.MinCarbonDioxide, type.MaxCarbonDioxide, rng.NextSingle()),
+                    TimeOfDay = TimeOfDayStates[rng.Next(TimeOfDayStates.Length)],
+                    WeatherPrototype = rng.NextSingle() < 0.5f ? null : type.WeatherPrototype,
+                });
+            }
         }
 
         EnsurePersistentLayerMaps(ent);
@@ -387,6 +707,22 @@ public sealed class SectorWorldSystem : EntitySystem
 
     private void EnsurePersistentLayerMaps(Entity<SectorWorldComponent> ent)
     {
+        if (ent.Comp.FtlMap is { } ftlMap && !Exists(ftlMap))
+            ent.Comp.FtlMap = null;
+
+        if (ent.Comp.ColCommMap is { } colCommMap && !Exists(colCommMap))
+            ent.Comp.ColCommMap = null;
+
+        var invalidPlanetMaps = ent.Comp.PlanetTypeMaps
+            .Where(pair => !Exists(pair.Value))
+            .Select(pair => pair.Key)
+            .ToArray();
+
+        foreach (var planetTypeId in invalidPlanetMaps)
+        {
+            ent.Comp.PlanetTypeMaps.Remove(planetTypeId);
+        }
+
         ent.Comp.FtlMap ??= CreateLayerMap($"{MetaData(ent.Owner).EntityName} FTL", space: true, gravity: false);
         ent.Comp.ColCommMap ??= CreateLayerMap($"{MetaData(ent.Owner).EntityName} ColComm", space: false, gravity: true, mixture: CreateStandardAirMixture(), timeOfDay: "Day");
 

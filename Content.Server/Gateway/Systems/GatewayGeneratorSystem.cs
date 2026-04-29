@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using Content.Server.Gateway.Components;
 using Content.Server.Parallax;
 using Content.Server.Procedural;
@@ -132,6 +133,8 @@ public sealed class GatewayGeneratorSystem : EntitySystem
         site.Center = placement.Center;
         site.Radius = placement.ReservationRadius;
 
+        _sectorWorld.CaptureHostedSiteBaseline((gatewayUid, site), hostGridUid, grid, placement.Center, placement.ReservationRadius + 32f);
+
         var biome = EnsureComp<BiomeComponent>(hostGridUid);
         var biomeTemplate = string.IsNullOrWhiteSpace(hostPlanet.BiomeTemplate)
             ? ContinentalId
@@ -201,16 +204,30 @@ public sealed class GatewayGeneratorSystem : EntitySystem
         var seed = ent.Comp.Seed;
         var origin = ent.Comp.Origin;
         var dungeonPosition = origin;
+        _ = FinishGeneratorOpenAsync(ent, gridUid, grid, xform.MapUid ?? gridUid, dungeonPosition, seed, generatorComp);
+    }
+
+    private async Task FinishGeneratorOpenAsync(
+        Entity<GatewayGeneratorDestinationComponent> ent,
+        EntityUid gridUid,
+        MapGridComponent grid,
+        EntityUid hostMapUid,
+        Vector2i dungeonPosition,
+        int seed,
+        GatewayGeneratorComponent? generatorComp)
+    {
         var random = new Random(seed);
 
-        _dungeon.GenerateDungeon(_protoManager.Index(ExperimentDungeonId), "Experiment", gridUid, grid, dungeonPosition, seed); // Frontier: add "Experiment" arg
+        await _dungeon.GenerateDungeonAsync(_protoManager.Index(ExperimentDungeonId), "Experiment", gridUid, grid, dungeonPosition, seed);
+
+        if (TryComp<SectorExpeditionSiteComponent>(ent.Owner, out var siteComp))
+            _sectorWorld.CaptureHostedSiteGeneratedEntities((ent.Owner, siteComp), hostMapUid, siteComp.Center, siteComp.ContentRadius > 0f ? siteComp.ContentRadius : siteComp.Radius);
 
         // TODO: Dungeon mobs + loot.
 
         // Do markers on the map.
         if (TryComp(ent.Owner, out BiomeComponent? biomeComp) && generatorComp != null)
         {
-            // - Loot
             var lootLayers = generatorComp.LootLayers.ToList();
 
             for (var i = 0; i < generatorComp.LootLayerCount; i++)
@@ -222,7 +239,6 @@ public sealed class GatewayGeneratorSystem : EntitySystem
                 _biome.AddMarkerLayer(ent.Owner, biomeComp, layer.Id);
             }
 
-            // - Mobs
             var mobLayers = generatorComp.MobLayers.ToList();
 
             for (var i = 0; i < generatorComp.MobLayerCount; i++)
@@ -233,6 +249,9 @@ public sealed class GatewayGeneratorSystem : EntitySystem
 
                 _biome.AddMarkerLayer(ent.Owner, biomeComp, layer.Id);
             }
+
+            if (TryComp<SectorExpeditionSiteComponent>(ent.Owner, out siteComp))
+                _sectorWorld.CaptureHostedSiteGeneratedEntities((ent.Owner, siteComp), hostMapUid, siteComp.Center, siteComp.ContentRadius > 0f ? siteComp.ContentRadius : siteComp.Radius);
         }
     }
 }

@@ -9,6 +9,7 @@ using Content.Server.Decals;
 using Content.Server.Ghost.Roles.Components;
 using Content.Server.Shuttles.Events;
 using Content.Server.Shuttles.Systems;
+using Content.Server.Worldgen.Systems;
 using Content.Shared.Atmos;
 using Content.Shared.Decals;
 using Content.Shared.Ghost;
@@ -50,6 +51,7 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
     [Dependency] private readonly DecalSystem _decals = default!;
     [Dependency] private readonly SharedMapSystem _mapSystem = default!;
     [Dependency] private readonly SharedPhysicsSystem _physics = default!;
+    [Dependency] private readonly SectorWorldSystem _sectorWorld = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly ShuttleSystem _shuttles = default!;
     [Dependency] private readonly TagSystem _tags = default!;
@@ -878,6 +880,8 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
             }
         }
 
+        _sectorWorld.RestoreHostedChunkContent(gridUid, grid, chunk, ChunkSize);
+
         if (modified.Count == 0)
         {
             _tilePool.Return(modified);
@@ -937,6 +941,8 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
         // Reverse order to loading
         component.ModifiedTiles.TryGetValue(chunk, out var modified);
         modified ??= new HashSet<Vector2i>();
+
+        _sectorWorld.SaveHostedChunkContent(gridUid, grid, chunk, ChunkSize);
 
         // Delete decals
         foreach (var (dec, indices) in component.LoadedDecals[chunk])

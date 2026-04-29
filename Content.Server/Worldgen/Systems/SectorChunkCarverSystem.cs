@@ -99,14 +99,15 @@ public sealed class SectorChunkCarverSystem : EntitySystem
             return;
 
         var sectorMapId = mapComp.MapId;
+        var chunkOrigin = chunk.Coordinates * WorldGen.ChunkSize;
 
         if (TryRestoreChunkFromCache((ent.Owner, ent.Comp), chunk, gridUid, grid, chunkBiome))
         {
+            _sectorWorld.RestoreHostedChunkContent(gridUid, grid, chunkOrigin, WorldGen.ChunkSize);
             ent.Comp.Materialized = true;
             return;
         }
 
-        var chunkOrigin = chunk.Coordinates * WorldGen.ChunkSize;
         var tiles = new List<(Vector2i, Tile)>(WorldGen.ChunkSize * WorldGen.ChunkSize / 3);
 
         for (var x = 0; x < WorldGen.ChunkSize; x++)
@@ -134,6 +135,7 @@ public sealed class SectorChunkCarverSystem : EntitySystem
             _mapSystem.SetTiles(gridUid, grid, tiles);
 
         SpawnChunkEntities((ent.Owner, ent.Comp), gridUid, grid, chunkBiome);
+    _sectorWorld.RestoreHostedChunkContent(gridUid, grid, chunkOrigin, WorldGen.ChunkSize);
 
         ent.Comp.Materialized = true;
     }
@@ -153,6 +155,9 @@ public sealed class SectorChunkCarverSystem : EntitySystem
             return;
 
         var grid = EnsureComp<MapGridComponent>(gridUid);
+        var chunkOrigin = chunk.Coordinates * WorldGen.ChunkSize;
+
+        _sectorWorld.SaveHostedChunkContent(gridUid, grid, chunkOrigin, WorldGen.ChunkSize);
 
         SaveChunkToCache((ent.Owner, ent.Comp), gridUid, grid, chunk);
 
@@ -431,7 +436,9 @@ public sealed class SectorChunkCarverSystem : EntitySystem
                 continue;
             }
 
-            AnchorToGrid(entity);
+            if (ShouldAnchorChunkEntity(meta.EntityPrototype.ID))
+                AnchorToGrid(entity);
+
             ent.Comp.GeneratedEntities.Add(entity);
         }
 
@@ -445,9 +452,11 @@ public sealed class SectorChunkCarverSystem : EntitySystem
                     QueueDel(spawned);
                     return;
                 }
+
+                if (ShouldAnchorChunkEntity(spawnedMeta.EntityPrototype.ID))
+                    AnchorToGrid(spawned);
             }
 
-            AnchorToGrid(spawned);
             ent.Comp.GeneratedEntities.Add(spawned);
         }
     }
@@ -481,6 +490,14 @@ public sealed class SectorChunkCarverSystem : EntitySystem
             || prototypeId.EndsWith("RoomMarker", StringComparison.OrdinalIgnoreCase)
             || prototypeId.Contains("Mineral", StringComparison.OrdinalIgnoreCase)
             || prototypeId.EndsWith("Spawner", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(prototypeId, "Grille", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool ShouldAnchorChunkEntity(string prototypeId)
+    {
+        return prototypeId.StartsWith("Wall", StringComparison.OrdinalIgnoreCase)
+            || prototypeId.StartsWith("NFWall", StringComparison.OrdinalIgnoreCase)
+            || prototypeId.Contains("Mineral", StringComparison.OrdinalIgnoreCase)
             || string.Equals(prototypeId, "Grille", StringComparison.OrdinalIgnoreCase);
     }
 

@@ -268,6 +268,7 @@ public sealed class SpawnSalvageMissionJob : Job<bool>
         expedition.HostGridUid = hostGridUid;
 
         var captureRadius = placement.ReservationRadius + 32f;
+        _sectorWorld.CaptureHostedSiteBaseline((mapUid, site), hostGridUid, grid, placement.Center, captureRadius);
         CaptureOriginalTiles(expedition, hostGridUid, grid, placement.Center, captureRadius);
         var existingEntities = CaptureNearbyEntities(hostMapUid, placement.Center, captureRadius);
 
@@ -472,6 +473,7 @@ public sealed class SpawnSalvageMissionJob : Job<bool>
         }
 
         CaptureGeneratedEntities(expedition, existingEntities, hostMapUid, placement.Center, captureRadius);
+        _sectorWorld.CaptureHostedSiteGeneratedEntities((mapUid, site), hostMapUid, placement.Center, captureRadius);
 
         // Frontier: delay ship FTL
         if (shuttleUid is { Valid: true })

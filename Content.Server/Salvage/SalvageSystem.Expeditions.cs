@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading;
 using Content.Server.Salvage.Expeditions;
 using Content.Server.Salvage.Expeditions.Structure;
+using Content.Server.Worldgen.Components;
 using Content.Shared.CCVar;
 using Content.Shared.Examine;
 using Content.Shared.Random.Helpers;
@@ -142,6 +143,11 @@ public sealed partial class SalvageSystem
                 _salvageJobs.Remove((job, cancelToken));
             }
         }
+
+        if (TryComp<SectorExpeditionSiteComponent>(uid, out var site))
+            _sectorWorld.CleanupHostedSite(uid, site);
+
+        CleanupHostedExpeditionContent(component);
 
         // HARDLIGHT: Handle round persistence - station might be deleted during round transitions
         if (Deleted(component.Station))
