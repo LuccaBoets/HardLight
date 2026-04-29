@@ -113,9 +113,9 @@ public sealed class GatewaySystem : EntitySystem
                 continue;
 
             // Show destination if either no destination comp on the map or it's ours.
-            GatewayGeneratorDestinationComponent? gatewayDestination = null;
+            GatewayGeneratorDestinationComponent? gatewayDestination = CompOrNull<GatewayGeneratorDestinationComponent>(destUid);
             if (destXform.GridUid != null)
-                TryComp(destXform.GridUid.Value, out gatewayDestination);
+                gatewayDestination ??= CompOrNull<GatewayGeneratorDestinationComponent>(destXform.GridUid.Value);
 
             gatewayDestination ??= CompOrNull<GatewayGeneratorDestinationComponent>(destXform.MapUid);
             var isDockingArm = TryComp<DockingArmDestinationComponent>(destUid, out var dockingArmDestination);
@@ -278,7 +278,10 @@ public sealed class GatewaySystem : EntitySystem
 
         var destinationTarget = destXform.GridUid ?? destXform.MapUid.Value;
         var ev = new AttemptGatewayOpenEvent(destXform.MapUid.Value, dest);
-        RaiseLocalEvent(destinationTarget, ref ev);
+        RaiseLocalEvent(dest, ref ev);
+
+        if (!ev.Cancelled)
+            RaiseLocalEvent(destinationTarget, ref ev);
 
         if (ev.Cancelled)
             return;
@@ -295,6 +298,7 @@ public sealed class GatewaySystem : EntitySystem
         targetPortal.RandomTeleport = false;
 
         var openEv = new GatewayOpenEvent(destXform.MapUid.Value, dest);
+        RaiseLocalEvent(dest, ref openEv);
         RaiseLocalEvent(destinationTarget, ref openEv);
 
         // for ui

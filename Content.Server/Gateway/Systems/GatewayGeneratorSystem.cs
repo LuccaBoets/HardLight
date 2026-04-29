@@ -28,7 +28,6 @@ public sealed class GatewayGeneratorSystem : EntitySystem
 {
     [Dependency] private readonly IConfigurationManager _cfgManager = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
-    [Dependency] private readonly IMapManager _mapManager = default!;
     [Dependency] private readonly IPrototypeManager _protoManager = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly ITileDefinitionManager _tileDefManager = default!;
@@ -113,35 +112,34 @@ public sealed class GatewayGeneratorSystem : EntitySystem
         if (!_sectorWorld.TryGetPersistentMap(hostPlanet.PlanetTypeId, out var hostMapUid, out _))
             return;
 
-        var mapId = Comp<MapComponent>(hostMapUid).MapId;
-        var siteGrid = _mapManager.CreateGridEntity(mapId);
-        var mapUid = siteGrid.Owner;
+        var hostGridUid = hostMapUid;
+        var grid = EnsureComp<MapGridComponent>(hostGridUid);
+        var gatewayUid = EntityManager.SpawnEntity(generator.Proto, MapCoordinates.Nullspace);
 
-        if (!_sectorWorld.TryReserveExpeditionSite(seed, mapUid, hostPlanet.PlanetTypeId, out var placement))
+        if (!_sectorWorld.TryReserveExpeditionSite(seed, gatewayUid, hostPlanet.PlanetTypeId, out var placement))
         {
-            QueueDel(mapUid);
+            QueueDel(gatewayUid);
             return;
         }
 
         var gatewayName = _salvage.GetFTLName(_protoManager.Index(PlanetNamesId), seed);
-        _metadata.SetEntityName(mapUid, gatewayName);
-        _xform.SetCoordinates(mapUid, new EntityCoordinates(placement.SectorMap, placement.Center));
+        _metadata.SetEntityName(gatewayUid, gatewayName);
+        _xform.SetCoordinates(gatewayUid, new EntityCoordinates(hostGridUid, placement.Center));
 
-        var site = EnsureComp<SectorExpeditionSiteComponent>(mapUid);
+        var site = EnsureComp<SectorExpeditionSiteComponent>(gatewayUid);
         site.SectorMap = placement.SectorMap;
         site.PlanetId = placement.Planet.PlanetId;
         site.Center = placement.Center;
         site.Radius = placement.ReservationRadius;
 
-        var biome = EnsureComp<BiomeComponent>(mapUid);
+        var biome = EnsureComp<BiomeComponent>(hostGridUid);
         var biomeTemplate = string.IsNullOrWhiteSpace(hostPlanet.BiomeTemplate)
             ? ContinentalId
             : new ProtoId<BiomeTemplatePrototype>(hostPlanet.BiomeTemplate);
-        _biome.SetTemplate(mapUid, biome, _protoManager.Index(biomeTemplate));
-        _biome.SetSeed(mapUid, biome, seed);
+        _biome.SetTemplate(hostGridUid, biome, _protoManager.Index(biomeTemplate));
+        _biome.SetSeed(hostGridUid, biome, seed);
 
-        var origin = Vector2i.Zero;
-        var grid = siteGrid.Comp;
+        var origin = placement.Center.Floored();
 
         for (var x = -2; x <= 2; x++)
         {
@@ -152,22 +150,17 @@ public sealed class GatewayGeneratorSystem : EntitySystem
         }
 
         // Clear area nearby as a sort of landing pad.
-        _maps.SetTiles(mapUid, grid, tiles);
+        _maps.SetTiles(hostGridUid, grid, tiles);
 
-        _metadata.SetEntityName(mapUid, gatewayName);
-        var originCoords = new EntityCoordinates(mapUid, origin);
-
-        var genDest = AddComp<GatewayGeneratorDestinationComponent>(mapUid);
+        var genDest = AddComp<GatewayGeneratorDestinationComponent>(gatewayUid);
         genDest.Origin = origin;
         genDest.Seed = seed;
         genDest.Generator = uid;
 
-        // Create the gateway.
-        var gatewayUid = SpawnAtPosition(generator.Proto, originCoords);
         var gatewayComp = Comp<GatewayComponent>(gatewayUid);
         _gateway.SetDestinationName(gatewayUid, FormattedMessage.FromMarkupOrThrow($"[color=#D381C996]{gatewayName}[/color]"), gatewayComp);
         _gateway.SetEnabled(gatewayUid, true, gatewayComp);
-        generator.Generated.Add(mapUid);
+        generator.Generated.Add(gatewayUid);
     }
 
     private void OnGeneratorAttemptOpen(Entity<GatewayGeneratorDestinationComponent> ent, ref AttemptGatewayOpenEvent args)
@@ -197,7 +190,8 @@ public sealed class GatewayGeneratorSystem : EntitySystem
             GenerateDestination(ent.Comp.Generator);
         }
 
-        if (!TryComp(ent.Owner, out MapGridComponent? grid))
+        var xform = Transform(ent.Owner);
+        if (xform.GridUid is not { } gridUid || !TryComp(gridUid, out MapGridComponent? grid))
             return;
 
         ent.Comp.Locked = false;
@@ -206,12 +200,10 @@ public sealed class GatewayGeneratorSystem : EntitySystem
         // Do dungeon
         var seed = ent.Comp.Seed;
         var origin = ent.Comp.Origin;
+        var dungeonPosition = origin;
         var random = new Random(seed);
-        var dungeonDistance = random.Next(3, 6);
-        var dungeonRotation = _dungeon.GetDungeonRotation(seed);
-        var dungeonPosition = (origin + dungeonRotation.RotateVec(new Vector2i(0, dungeonDistance))).Floored();
 
-        _dungeon.GenerateDungeon(_protoManager.Index(ExperimentDungeonId), "Experiment", ent.Owner, grid, dungeonPosition, seed); // Frontier: add "Experiment" arg
+        _dungeon.GenerateDungeon(_protoManager.Index(ExperimentDungeonId), "Experiment", gridUid, grid, dungeonPosition, seed); // Frontier: add "Experiment" arg
 
         // TODO: Dungeon mobs + loot.
 
