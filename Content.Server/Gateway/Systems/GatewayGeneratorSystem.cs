@@ -101,6 +101,11 @@ public sealed class GatewayGeneratorSystem : EntitySystem
         if (!Resolve(uid, ref generator))
             return;
 
+        if (generator == null)
+            return;
+
+        var generatorComp = generator;
+
         var tileDef = _tileDefManager["FloorSteel"];
         var tiles = new List<(Vector2i Index, Tile Tile)>();
         var seed = _random.Next();
@@ -115,7 +120,7 @@ public sealed class GatewayGeneratorSystem : EntitySystem
 
         var hostGridUid = hostMapUid;
         var grid = EnsureComp<MapGridComponent>(hostGridUid);
-        var gatewayUid = EntityManager.SpawnEntity(generator.Proto, MapCoordinates.Nullspace);
+        var gatewayUid = EntityManager.SpawnEntity(generatorComp.Proto, MapCoordinates.Nullspace);
 
         if (!_sectorWorld.TryReserveExpeditionSite(seed, gatewayUid, hostPlanet.PlanetTypeId, out var placement))
         {
@@ -163,7 +168,7 @@ public sealed class GatewayGeneratorSystem : EntitySystem
         var gatewayComp = Comp<GatewayComponent>(gatewayUid);
         _gateway.SetDestinationName(gatewayUid, FormattedMessage.FromMarkupOrThrow($"[color=#D381C996]{gatewayName}[/color]"), gatewayComp);
         _gateway.SetEnabled(gatewayUid, true, gatewayComp);
-        generator.Generated.Add(gatewayUid);
+        generatorComp.Generated.Add(gatewayUid);
     }
 
     private void OnGeneratorAttemptOpen(Entity<GatewayGeneratorDestinationComponent> ent, ref AttemptGatewayOpenEvent args)
