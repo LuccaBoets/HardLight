@@ -529,7 +529,7 @@ public sealed class SectorWorldSystem : EntitySystem
 
         EnsureInitialized((sectorMap, sector));
 
-        if (sector.SectorGrid is not { } resolvedGrid || !Exists(resolvedGrid))
+        if (sector == null || sector.SectorGrid is not { } resolvedGrid || !Exists(resolvedGrid))
             return false;
 
         gridUid = resolvedGrid;
