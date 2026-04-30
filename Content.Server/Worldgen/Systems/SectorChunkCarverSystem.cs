@@ -333,7 +333,7 @@ public sealed class SectorChunkCarverSystem : EntitySystem
 
     private string GetCachePath(EntityUid chunkUid, WorldChunkComponent chunk)
     {
-        return Path.Combine(_cacheDirectory, $"chunk_{chunkUid}_{chunk.Coordinates.X}_{chunk.Coordinates.Y}.cache");
+        return Path.Join(_cacheDirectory, $"chunk_{chunkUid}_{chunk.Coordinates.X}_{chunk.Coordinates.Y}.cache");
     }
 
     private SectorAsteroidBiomePrototype? GetChunkBiome(SectorChunkCarverComponent carver, SectorWorldComponent sector, Vector2i chunkCoords)
