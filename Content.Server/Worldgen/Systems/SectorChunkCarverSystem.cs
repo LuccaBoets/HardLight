@@ -51,7 +51,8 @@ public sealed class SectorChunkCarverSystem : EntitySystem
 
     public override void Initialize()
     {
-        _cacheDirectory = Path.Combine(Path.GetTempPath(), "HardLight", "sector-chunk-cache", Guid.NewGuid().ToString("N"));
+        var cacheRunId = Path.GetFileName(Guid.NewGuid().ToString("N"));
+        _cacheDirectory = Path.Combine(Path.GetTempPath(), "HardLight", "sector-chunk-cache", cacheRunId);
         Directory.CreateDirectory(_cacheDirectory);
 
         SubscribeLocalEvent<SectorChunkCarverComponent, WorldChunkLoadedEvent>(OnChunkLoaded);
