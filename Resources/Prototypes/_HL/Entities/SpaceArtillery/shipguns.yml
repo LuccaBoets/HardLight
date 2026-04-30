@@ -464,21 +464,55 @@
   components:
   - type: StaticPrice
     price: 5000
-  - type: Transform
-    anchored: true
+  - type: CombatMode
+  - type: Damageable
+    damageContainer: StructuralInorganic
+    damageModifierSet: StructuralMetallic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 4000
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+    - trigger:
+        !type:DamageTrigger
+        damage: 2000
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+      - !type:PlaySoundBehavior
+        sound:
+          collection: MetalBreak
+  - type: Clickable
+  - type: InteractionOutline
   - type: Physics
     bodyType: Static
   - type: Fixtures
     fixtures:
       fix1:
-        shape: !type:PhysShapeAabb
-          bounds: "-0.45,-0.45,0.45,0.45"
-        density: 60
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.25,-0.25,0.25,0.25"
+        density: 800
         mask:
-          - MachineMask
+        - FullTileMask
         layer:
-          - MachineLayer
-          - HitscanImpassable
+        - WallLayer
+  - type: Transform
+    anchored: true
+  - type: Rotatable
+    rotateWhilePulling: false
+    rotateWhileAnchored: false
+    increment: 45
+  - type: DeviceLinkSink
+    ports:
+    - SpaceArtilleryFire
+  - type: SpaceArtillery
+  - type: DeviceNetwork
+    deviceNetId: Wireless
+    receiveFrequencyId: BasicDevice
   - type: Sprite
     sprite: _HL/Objects/ShuttleWeapons/beamprism.rsi
     layers:
@@ -487,12 +521,19 @@
   - type: Anchorable
     flags:
       - Anchorable
-  - type: Rotatable
   - type: MouseRotator
     angleTolerance: 5
     rotationSpeed: 180
     simple4DirMode: false
   - type: NoRotateOnInteract
+  - type: FireControllable
+  - type: RadarBlip
+    visibleFromOtherGrids: true
+    radarColor: "#FFFFFF"
+    scale: 2
+    shape: star
+  - type: Speech
+    speechSounds: Borg
   - type: NoRotateOnMove
   - type: Input
     context: "human"
