@@ -89,13 +89,17 @@ public sealed class StatusEffectsSystem : EntitySystem
 
         if (TryGetStatusEffect(target, effectProto, out statusEffect))
         {
-            if (!_statusQuery.TryComp(statusEffect.Value, out var existing))
+            if (statusEffect == null)
+                return false;
+
+            var existingUid = statusEffect.Value;
+            if (!_statusQuery.TryComp(existingUid, out var existing))
                 return false;
 
             existing.AppliedTo = target;
             existing.StartEffectTime = _timing.CurTime;
             existing.EndEffectTime = duration == null ? null : _timing.CurTime + duration.Value;
-            Dirty(statusEffect.Value, existing);
+            Dirty(existingUid, existing);
             return true;
         }
 
