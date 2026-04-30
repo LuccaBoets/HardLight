@@ -190,6 +190,16 @@ public sealed class TargetSeekerAlertSystem : EntitySystem
 
     private void OnAlerterParentChanged(Entity<TargetSeekerAlertComponent> alertEntity, ref EntParentChangedMessage args)
     {
+        // Always detach from the old grid (if any) before attaching to the new one,
+        // otherwise stale alerter membership lingers when an alerter changes grids and
+        // the prior code accidentally removed from the new grid instead of the old one.
+        if (args.OldParent is { } oldParent &&
+            TryComp<MapGridComponent>(oldParent, out _) &&
+            TryComp<TargetSeekerAlertGridComponent>(oldParent, out var oldGridComponent))
+        {
+            RemoveAlerterFromGrid((oldParent, oldGridComponent), alertEntity);
+        }
+
         if (!_powerReceiverSystem.IsPowered(alertEntity.Owner))
             return;
 
@@ -198,11 +208,6 @@ public sealed class TargetSeekerAlertSystem : EntitySystem
             return;
 
         AddAlerterToGrid(alertGridUid, alertEntity);
-
-        // remove it from old parent if it was a grid, and if necessary
-        if (TryComp<MapGridComponent>(args.OldParent, out _) &&
-            TryComp<TargetSeekerAlertGridComponent>(alertGridUid, out var alertGridComponent))
-            RemoveAlerterFromGrid((alertGridUid, alertGridComponent), alertEntity);
     }
 
     private void OnAlerterShutdown(Entity<TargetSeekerAlertComponent> alertEntity, ref ComponentShutdown args)

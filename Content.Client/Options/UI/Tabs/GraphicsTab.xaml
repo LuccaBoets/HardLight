@@ -32,6 +32,8 @@
                 <!-- Misc -->
                 <Label Text="{Loc 'ui-options-misc-label'}" StyleClasses="LabelKeyText"/>
                 <CheckBox Name="FpsCounterCheckBox" Text="{Loc 'ui-options-fps-counter'}" />
+                <CheckBox Name="ShowStructureSmoothingCheckBox" Text="{Loc 'ui-options-show-structure-smoothing'}" />
+                <CheckBox Name="ShowCyborgSubtypesCheckBox" Text="{Loc 'ui-options-show-cyborg-subtypes'}" />
             </BoxContainer>
         </ScrollContainer>
         <ui:OptionsTabControlRow Name="Control" Access="Public" />

@@ -30,6 +30,9 @@ namespace Content.Client.Voting
         bool CanCallStandardVote(StandardVoteType type, out TimeSpan whenCan);
         event Action<bool> CanCallVoteChanged;
         event Action CanCallStandardVotesChanged;
+        event Action<MsgVoteAuditResponse>? VoteAuditResponseReceived;
+        void RequestVoteAuditList();
+        void RequestVoteAuditInspect(int voteId);
     }
 
     public sealed class VoteManager : IVoteManager
@@ -66,8 +69,27 @@ namespace Content.Client.Voting
 
             _netManager.RegisterNetMessage<MsgVoteData>(ReceiveVoteData);
             _netManager.RegisterNetMessage<MsgVoteCanCall>(ReceiveVoteCanCall);
+            _netManager.RegisterNetMessage<MsgVoteAuditRequest>();
+            _netManager.RegisterNetMessage<MsgVoteAuditResponse>(ReceiveVoteAuditResponse);
 
             _client.RunLevelChanged += ClientOnRunLevelChanged;
+        }
+
+        public event Action<MsgVoteAuditResponse>? VoteAuditResponseReceived;
+
+        public void RequestVoteAuditList()
+        {
+            _netManager.ClientSendMessage(new MsgVoteAuditRequest { WantInspect = false });
+        }
+
+        public void RequestVoteAuditInspect(int voteId)
+        {
+            _netManager.ClientSendMessage(new MsgVoteAuditRequest { WantInspect = true, VoteId = voteId });
+        }
+
+        private void ReceiveVoteAuditResponse(MsgVoteAuditResponse msg)
+        {
+            VoteAuditResponseReceived?.Invoke(msg);
         }
 
         private void ClientOnRunLevelChanged(object? sender, RunLevelChangedEventArgs e)

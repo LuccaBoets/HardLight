@@ -83,6 +83,7 @@
       color: "#E6173E"
   - type: FTLDrive
     range: 10000
+    speedFactor: 1.2
     thermalSignature: 4000000 # ~4000m range
   - type: ThermalSignature
   - type: ApcPowerReceiver
@@ -120,9 +121,7 @@
       color: "#7E16F7"
   - type: FTLDrive
     range: 5000
-    cooldown: 7.5
-    hyperSpaceTime: 15
-    startupTime: 4.2
+    speedFactor: 0.5
     thermalSignature: 4000000 # ~4000m range but for smaller ships it might not have time to get to full heat signature
   - type: ThermalSignature
   - type: ApcPowerReceiver

@@ -1,0 +1,9 @@
+- type: entity
+  id: BannerStarbound
+  parent: BannerBase
+  name: Starbound BlueShield Services banner
+  description: A banner denoting the emblem of Starbound
+  components:
+  - type: Sprite
+    sprite: _HL/Objects/Factions/Starbound/sbss-banner.rsi
+    state: banner-1

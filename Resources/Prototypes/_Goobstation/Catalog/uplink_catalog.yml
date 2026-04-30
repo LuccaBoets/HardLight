@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2025 August Eymann <august.eymann@gmail.com>
+
 - type: listing
   id: UplinkHardsuitCybersunStealth
   name: uplink-hardsuit-cybersun-stealth-name
@@ -5,16 +7,54 @@
   icon: { sprite: /Textures/_Goobstation/Clothing/OuterClothing/Hardsuits/cybersunstealth.rsi, state: icon }
   productEntity: ClothingBackpackDuffelSyndicateStealthHardsuitBundle
   cost:
-    Telecrystal: 15 # Harmony - modified since goob has different TC ratio.
+    Telecrystal: 15 # Harmony: Modified since goob has different TC ratio.
   categories:
   - UplinkWearables
-# begin Harmony change - yeah let's not give this to syndies
+# Harmony start: Yeah, let's not give this to Syndies.
   conditions:
   - !type:StoreWhitelistCondition
     whitelist:
       tags:
       - NukeOpsUplink
-# end Harmony change
+# Harmony end
+
+# Weaponry
+
+- type: listing
+  id: UplinkDualettaBundle
+  name: uplink-dualetta-bundle-name
+  description: uplink-dualetta-bundle-desc
+  icon: { sprite: /Textures/_Goobstation/Objects/Weapons/Guns/Pistols/dualetta.rsi, state: icon }
+  productEntity: BriefcaseSyndieDualettaBundleFilled
+  cost:
+    Telecrystal: 50
+  categories:
+  - UplinkWeaponry
+
+- type: listing
+  id: UplinkDualettaKit
+  name: uplink-dualetta-kit-name
+  description: uplink-dualetta-kit-desc
+  icon: { sprite: /Textures/_Goobstation/Objects/Weapons/Guns/Pistols/dualetta.rsi, state: icon }
+  productEntity: BoxDualettaKit
+  cost:
+    Telecrystal: 30
+  categories:
+  - UplinkWeaponry
+
+# Ammo
+
+- type: listing
+  id: UplinkHighCapacityMagazinePistol
+  name: uplink-highcap-pistol-mag-name
+  description: uplink-highcap-pistol-mag-desc
+  icon: { sprite: /Textures/Objects/Weapons/Guns/Ammunition/Magazine/Pistol/pistol_high_capacity_mag.rsi, state: red }
+  productEntity: MagazinePistolHighCapacity
+  cost:
+    Telecrystal: 3
+  categories:
+  - UplinkAmmo
+
 # Mechs
 
 - type: listing
@@ -54,24 +94,38 @@
   cost:
     Telecrystal: 60
   categories:
-  - UplinkDeception
+  - UplinkWeaponry
   conditions:
   - !type:StoreWhitelistCondition
     whitelist:
       tags:
       - NukeOpsUplink
 
-#- type: listing
-#  id: UplinkMysteriousScroll
-#  name: uplink-sleeping-carp-name
-#  description: uplink-sleeping-carp-desc
-#  productEntity: SleepingCarpScroll
-#  cost:
-#    Telecrystal: 70
-#  categories:
-#  - UplinkWeaponry
-#  conditions:
-#  - !type:StoreWhitelistCondition
-#    blacklist:
-#      tags:
-#      - NukeOpsUplink
+# - type: listing
+#   id: UplinkMysteriousScroll
+#   name: uplink-sleeping-carp-name
+#   description: uplink-sleeping-carp-desc
+#   productEntity: SleepingCarpScroll
+#   cost:
+#     Telecrystal: 70
+#   categories:
+#   - UplinkWeaponry
+#   conditions:
+#   - !type:StoreWhitelistCondition
+#     blacklist:
+#       tags:
+#       - NukeOpsUplink
+
+- type: listing
+  id: UplinkHoloCigar
+  name: uplink-holo-cigar-name
+  description: uplink-holo-cigar-desc
+  productEntity: HoloCigar
+  cost:
+    Telecrystal: 35
+  categories:
+  - UplinkWearables
+  conditions:
+  - !type:BuyerSpeciesCondition
+    whitelist:
+    - Human

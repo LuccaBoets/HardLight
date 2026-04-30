@@ -1,0 +1,68 @@
+- type: injectorMode
+  id: InjectorModeBase
+  abstract: true
+  transferAmounts: [1, 5, 10, 15]
+  mobTime: 5
+  delayPerVolume: 0.1
+  popupUserAttempt: injector-component-injecting-user
+  popupTargetAttempt: injector-component-injecting-target
+
+- type: injectorMode
+  id: InjectorModeInject
+  parent: InjectorModeBase
+  name: injector-mode-inject-name
+  behavior: Inject
+
+- type: injectorMode
+  id: InjectorModeDraw
+  parent: InjectorModeBase
+  name: injector-mode-draw-name
+  behavior: Draw
+  popupUserAttempt: injector-component-drawing-user
+  popupTargetAttempt: injector-component-drawing-target
+
+- type: injectorMode
+  abstract: true
+  id: BaseBluespaceSyringeMode
+  mobTime: 2.5
+  delayPerVolume: 0.03
+  transferAmounts: [5, 10, 15, 75, 150]
+
+- type: injectorMode
+  parent: [ BaseBluespaceSyringeMode, InjectorModeInject ]
+  id: BluespaceSyringeInjectMode
+  name: injector-mode-inject-name
+  behavior: Inject
+
+- type: injectorMode
+  parent: [ BaseBluespaceSyringeMode, InjectorModeDraw ]
+  id: BluespaceSyringeDrawMode
+  name: injector-mode-draw-name
+  behavior: Draw
+
+- type: injectorMode
+  id: InjectorModeDynamicInject
+  parent: InjectorModeBase
+  name: injector-mode-dynamic-name
+  behavior: Dynamic
+  transferAmounts: [] # No selectable amounts; always injects full reservoir
+  injectSound:
+    path: /Audio/Items/Medical/jet_injector.ogg
+
+- type: injectorMode
+  id: InjectorModeDynamicInjectAdvanced
+  parent: InjectorModeBase
+  name: injector-mode-dynamic-name
+  behavior: Dynamic
+  transferAmounts: [] # No selectable amounts; always injects full reservoir
+  injectSound:
+    path: /Audio/Items/Medical/jet_injector.ogg
+
+- type: injectorMode
+  id: InjectorModeDynamicInjectInterdyne
+  parent: InjectorModeBase
+  name: injector-mode-dynamic-name
+  behavior: Dynamic
+  transferAmounts: [] # No selectable amounts; always injects full reservoir
+  injectSound:
+    path: /Audio/Items/Medical/jet_injector.ogg

@@ -1,5 +1,5 @@
 # Xenoborg autonomous combat drone spawners for deep space encounters
-# These spawn beyond 5.5K distance as rare hostile encounters
+# These spawn beyond 5K distance from world origin as rare hostile encounters
 
 - type: entity
   id: XenoborgDroneBase
@@ -9,6 +9,8 @@
   components:
   - type: GridSpawner
     nameGrid: true
+  - type: MinSpawnDistanceFromOrigin
+    distance: 5000
   - type: IFF
     color: "#ff4444" # Red for hostile
   - type: SpaceDebris
@@ -28,6 +30,8 @@
   components:
   - type: GridSpawner
     path: /Maps/_HL/drones/lbyte.yml
+  - type: MinSpawnDistanceFromOrigin
+    distance: 15000
 
 - type: entity
   id: XenoborgDroneLgbyte
@@ -36,6 +40,8 @@
   components:
   - type: GridSpawner
     path: /Maps/_HL/drones/lgbyte.yml
+  - type: MinSpawnDistanceFromOrigin
+    distance: 15000
 
 - type: entity
   id: XenoborgDroneMbyte
@@ -44,6 +50,8 @@
   components:
   - type: GridSpawner
     path: /Maps/_HL/drones/mbyte.yml
+  - type: MinSpawnDistanceFromOrigin
+    distance: 10000
 
 - type: entity
   id: XenoborgDroneMgbyte
@@ -52,6 +60,8 @@
   components:
   - type: GridSpawner
     path: /Maps/_HL/drones/mgbyte.yml
+  - type: MinSpawnDistanceFromOrigin
+    distance: 10000
 
 - type: entity
   id: XenoborgDroneMtbyte
@@ -60,6 +70,8 @@
   components:
   - type: GridSpawner
     path: /Maps/_HL/drones/mtbyte.yml
+  - type: MinSpawnDistanceFromOrigin
+    distance: 10000
 
 - type: entity
   id: XenoborgDroneSgbyte
@@ -76,3 +88,5 @@
   components:
   - type: GridSpawner
     path: /Maps/_HL/drones/transistorhub.yml
+  - type: MinSpawnDistanceFromOrigin
+    distance: 15000

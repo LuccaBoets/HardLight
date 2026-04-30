@@ -19,3 +19,6 @@ shuttle-console-service-flag-Social-shortform = ☺
 shuttle-console-service-flag-Services-description = Services (e.g. medical, dining, engineering) offered onboard.
 shuttle-console-service-flag-Trade-description = Goods sold onboard.
 shuttle-console-service-flag-Social-description = A social space to gather and hang out.
+
+shuttle-console-signature-infrared = Infrared Signature
+shuttle-console-signature-unknown = Unknown Signature

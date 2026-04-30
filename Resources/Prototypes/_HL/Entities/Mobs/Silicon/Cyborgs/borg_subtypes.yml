@@ -392,3 +392,87 @@
   dummyPrototype: BorgChassisServiceK4tAlt2
   name: K4T-SRV-alt-2
   spritePath: _HL/Mobs/Silicon/Borg/Service/k4t_alt2_service.rsi
+
+- type: borgSubtype
+  parent: BorgSecuritySubtypeBase
+  id: BorgSecuritySubtypeSecbug
+  dummyPrototype: BorgChassisSecSecbug
+  name: Secbug
+  spritePath: _HL/Mobs/Silicon/Borg/Security/secbug.rsi
+  layerData:
+    - state: secbug
+      map: [ "enum.BorgVisualLayers.Body", "movement" ]
+    - state: secbug_e
+      map: [ "enum.BorgVisualLayers.Light" ]
+      shader: unshaded
+      visible: false
+    - state: secbug_l
+      shader: unshaded
+      map: [ "light", "enum.BorgVisualLayers.LightStatus" ]
+      visible: false
+  spriteBodyState: secbug
+  spriteHasMindState: secbug_e
+  spriteNoMindState: secbug_e_r
+
+- type: borgSubtype
+  parent: BorgServiceSubtypeBase
+  id: BorgServiceSubtypeDjbug
+  dummyPrototype: BorgChassisServiceDjbug
+  name: Djbug
+  spritePath: _HL/Mobs/Silicon/Borg/Service/bugdj.rsi
+  layerData:
+    - state: service
+      map: [ "enum.BorgVisualLayers.Body", "movement" ]
+    - state: service_e
+      map: [ "enum.BorgVisualLayers.Light" ]
+      shader: unshaded
+      visible: false
+    - state: service_l
+      shader: unshaded
+      map: [ "light", "enum.BorgVisualLayers.LightStatus" ]
+      visible: false
+  spriteBodyState: service
+  spriteHasMindState: service_e
+  spriteNoMindState: service_e_r
+
+- type: borgSubtype
+  parent: BorgEngineerSubtypeBase
+  id: BorgEngineerSubtypeEngineerbug
+  dummyPrototype: BorgChassisEngineerEngineerbug
+  name: Engineerbug
+  spritePath: _HL/Mobs/Silicon/Borg/Engineering/engineerbug.rsi
+  layerData:
+    - state: engineer
+      map: [ "enum.BorgVisualLayers.Body", "movement" ]
+    - state: engineer_e
+      map: [ "enum.BorgVisualLayers.Light" ]
+      shader: unshaded
+      visible: false
+    - state: engineer_l
+      shader: unshaded
+      map: [ "light", "enum.BorgVisualLayers.LightStatus" ]
+      visible: false
+  spriteBodyState: engineer
+  spriteHasMindState: engineer_e
+  spriteNoMindState: engineer_e_r
+
+- type: borgSubtype
+  parent: BorgMiningSubtypeBase
+  id: BorgMiningSubtypeMinerbug
+  dummyPrototype: BorgChassisMiningMinerbug
+  name: Minerbug
+  spritePath: _HL/Mobs/Silicon/Borg/Mining/minerbug.rsi
+  layerData:
+    - state: miner
+      map: [ "enum.BorgVisualLayers.Body", "movement" ]
+    - state: miner_e
+      map: [ "enum.BorgVisualLayers.Light" ]
+      shader: unshaded
+      visible: false
+    - state: miner_l
+      shader: unshaded
+      map: [ "light", "enum.BorgVisualLayers.LightStatus" ]
+      visible: false
+  spriteBodyState: miner
+  spriteHasMindState: miner_e
+  spriteNoMindState: miner_e_r

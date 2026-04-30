@@ -163,6 +163,64 @@
     rootTask:
       task: AttackerShuttleBroadsideCompound
 
+# Stationary short-range shooter used by xenoborg "byte" drone derelicts.
+# Doesn't pilot the grid: just fires when targets enter ~500m and stops
+# when they leave. Pairs with mounted turret HTN to avoid steering conflict.
+# Switches to chase/orbit if attacked or if a target enters 500m
+# (ShipAggroSystem flips the "Aggroed" blackboard key).
+- type: entity
+  id: NpcStationAiByte
+  name: shooter core
+  parent: NpcStationAiShooter
+  description: Sits there. Shoots at things that get too close. Hunts what shoots back.
+  suffix: AI, Byte
+  components:
+  - type: HTN
+    rootTask:
+      task: ShooterShuttleByteAggroCompound
+  - type: ShipEmpDisableGuns
+    # Medium tier: 1.0x EMP duration (baseline; weakest weapon gives 10s)
+    durationMultiplier: 1.0
+  - type: ShipAggro
+    aggroProximityRange: 500
+    aggroLeashRange: 1000
+    aggroDuration: 10
+    # Keep byte ships at least 5km away from any player station: they
+    # disengage and steer outward whenever they cross the border. The
+    # 1000m buffer pushes them ~6km out so players can't farm them by
+    # camping right on the 5km edge.
+    avoidStationRange: 5000
+    avoidStationBuffer: 1000
+
+# Small-rank byte (e.g. sgbyte): slower in the orbit ring and worse at
+# leading moving targets, so it sprays and misses more often.
+- type: entity
+  id: NpcStationAiByteSmall
+  name: shooter core
+  parent: NpcStationAiByte
+  suffix: AI, Byte (Small)
+  components:
+  - type: HTN
+    rootTask:
+      task: ShooterShuttleByteSmallAggroCompound
+  - type: ShipEmpDisableGuns
+    # Small tier: 2.0x EMP duration (least hardened; weakest weapon gives 20s)
+
+# Large-rank byte (e.g. lbyte/lgbyte): faster orbit cruise, perfect
+# target leading, rarely peels off.
+- type: entity
+  id: NpcStationAiByteLarge
+  name: shooter core
+  parent: NpcStationAiByte
+  suffix: AI, Byte (Large)
+  components:
+  - type: HTN
+    rootTask:
+      task: ShooterShuttleByteLargeAggroCompound
+  - type: ShipEmpDisableGuns
+    # Large tier / transistor hub: 0.5x EMP duration (heavily shielded electronics; weakest weapon gives 5s)
+    durationMultiplier: 0.5
+
 #region Drone AIs
 
 - type: entity

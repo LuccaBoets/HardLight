@@ -1,4 +1,3 @@
-using Content.Shared.DoAfter; // Frontier: Upstream, #30704 - MIT
 using Content.Shared.FixedPoint;
 using Robust.Shared.GameStates;
 using Robust.Shared.Serialization;
@@ -28,19 +27,49 @@ public sealed partial class HyposprayComponent : Component
     public bool OnlyAffectsMobs = false;
 
     /// <summary>
-    /// Whether or not the hypospray is able to draw from containers or if it's a single use
+    /// Whether the hypospray is able to draw from containers or if it's a single use
     /// device that can only inject.
     /// </summary>
     [DataField]
     public bool InjectOnly = false;
 
-    // Frontier: Upstream, #30704 - MIT
+    #region Non-Instant Hyposprays
     /// <summary>
-    /// If set over 0, enables a doafter for the hypospray which must be completed for injection.
+    /// Whether the hypospray injects its entire capacity on use.
     /// </summary>
     [DataField]
-    public float DoAfterTime = 0f;
-    // End Frontier
+    public bool InjectMaxCapacity = false;
+
+    /// <summary>
+    /// The length of the injection do-after.
+    /// </summary>
+    [DataField]
+    public TimeSpan InjectTime = TimeSpan.Zero;
+
+    /// <summary>
+    /// Base injection delay for non-instant injections.
+    /// </summary>
+    [DataField]
+    public TimeSpan Delay = TimeSpan.FromSeconds(2.5);
+
+    /// <summary>
+    /// Additional delay applied per unit above the first 5u.
+    /// </summary>
+    [DataField]
+    public TimeSpan DelayPerVolume = TimeSpan.FromSeconds(0.05);
+
+    /// <inheritdoc cref="DoAfter.DoAfterArgs.NeedHand"/>
+    [DataField]
+    public bool NeedHand = true;
+
+    /// <inheritdoc cref="DoAfter.DoAfterArgs.BreakOnHandChange"/>
+    [DataField]
+    public bool BreakOnHandChange = true;
+
+    /// <inheritdoc cref="DoAfter.DoAfterArgs.MovementThreshold"/>
+    [DataField]
+    public float MovementThreshold = 0.1f;
+    #endregion
 
     /// <summary>
     /// Frontier: if true, object will not inject when attacking.
@@ -48,10 +77,3 @@ public sealed partial class HyposprayComponent : Component
     [DataField]
     public bool PreventCombatInjection;
 }
-
-// Frontier: Upstream, #30704 - MIT
-[Serializable, NetSerializable]
-public sealed partial class HyposprayDoAfterEvent : SimpleDoAfterEvent
-{
-}
-// End Frontier

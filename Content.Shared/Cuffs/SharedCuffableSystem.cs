@@ -423,7 +423,7 @@ namespace Content.Shared.Cuffs
         /// </summary>
         private void UpdateHeldItems(EntityUid uid, EntityUid handcuff, CuffableComponent? component = null)
         {
-            if (!Resolve(uid, ref component))
+            if (!Resolve(uid, ref component, logMissing: false))
                 return;
 
             // TODO we probably don't just want to use the generic virtual-item entity, and instead
@@ -463,7 +463,7 @@ namespace Content.Shared.Cuffs
         /// </summary>
         public bool TryAddNewCuffs(EntityUid target, EntityUid user, EntityUid handcuff, CuffableComponent? component = null, HandcuffComponent? cuff = null)
         {
-            if (!Resolve(target, ref component) || !Resolve(handcuff, ref cuff))
+            if (!Resolve(target, ref component, logMissing: false) || !Resolve(handcuff, ref cuff, logMissing: false))
                 return false;
 
             if (!_interaction.InRangeUnobstructed(handcuff, target))
@@ -486,7 +486,7 @@ namespace Content.Shared.Cuffs
         /// <returns>False if the target entity isn't cuffable.</returns>
         public bool TryCuffing(EntityUid user, EntityUid target, EntityUid handcuff, HandcuffComponent? handcuffComponent = null, CuffableComponent? cuffable = null)
         {
-            if (!Resolve(handcuff, ref handcuffComponent) || !Resolve(target, ref cuffable, false))
+            if (!Resolve(handcuff, ref handcuffComponent, logMissing: false) || !Resolve(target, ref cuffable, logMissing: false))
                 return false;
 
             if (!TryComp<HandsComponent>(target, out var hands))

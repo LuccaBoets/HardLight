@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2025 pheenty <fedorlukin2006@gmail.com>
+
 - type: entity
   id: WeaponProtoKineticAcceleratorBase
   abstract: true
@@ -10,6 +12,10 @@
     size: Large
     shape:
     - 0,0,2,1
+  - type: Multishot # Goobstation
+    missChance: 0.4
+    spreadMultiplier: 3
+    spreadAddition: 20
   - type: GunWieldBonus
     minAngle: -43
     maxAngle: -43

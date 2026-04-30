@@ -56,11 +56,10 @@ public sealed partial class ShuttleSystem
             _ => DampenDampingStrength, // other values: default to some sane behaviour (assume normal dampening)
         };
 
-        if (shuttleComponent.DampingModifier == shuttleComponent.BodyModifier)
-            return true;
+        // Persist the requested damping so TileFriction applies the selected mode every tick.
+        shuttleComponent.DampingModifier = linearDampeningStrength;
+        Dirty(transform.GridUid.Value, shuttleComponent);
 
-        if (shuttleComponent.DampingModifier != 0)
-            shuttleComponent.DampingModifier = shuttleComponent.BodyModifier;
         _console.RefreshShuttleConsoles(transform.GridUid.Value);
         return true;
     }

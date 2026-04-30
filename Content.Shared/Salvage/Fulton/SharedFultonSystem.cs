@@ -7,6 +7,8 @@ using Content.Shared.Popups;
 using Content.Shared.Stacks;
 using Content.Shared.Verbs;
 using Content.Shared.Whitelist;
+using Content.Shared.Administration.Logs;
+using Content.Shared.Database;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
@@ -32,6 +34,7 @@ public abstract partial class SharedFultonSystem : EntitySystem
     [Dependency] private   readonly SharedStackSystem _stack = default!;
     [Dependency] protected readonly SharedTransformSystem TransformSystem = default!;
     [Dependency] private readonly EntityWhitelistSystem _whitelistSystem = default!;
+    [Dependency] protected readonly ISharedAdminLogManager _adminLogger = default!;
     public static readonly EntProtoId EffectProto = "FultonEffect";
     protected static readonly Vector2 EffectOffset = Vector2.Zero;
 
@@ -99,6 +102,7 @@ public abstract partial class SharedFultonSystem : EntitySystem
             Act = () =>
             {
                 Unfulton(uid);
+                _adminLogger.Add(LogType.Unfulton, LogImpact.High, $"{ToPrettyString(args.User):player} unfultoned {ToPrettyString(uid):target}");
             }
         });
     }

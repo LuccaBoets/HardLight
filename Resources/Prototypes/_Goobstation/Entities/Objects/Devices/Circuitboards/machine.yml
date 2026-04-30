@@ -83,8 +83,9 @@
     state: service
   - type: MachineBoard
     prototype: VinylPlayer
-    stackRequirements:
+    requirements: # Frontier: Manipulator is a MachinePart, not a stack
       Manipulator: 1
+    stackRequirements:
       Steel: 1
       WoodPlank: 3
 

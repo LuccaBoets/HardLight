@@ -197,7 +197,7 @@
     lifeTime: 1.0
   - type: HTN
     rootTask:
-      task: ShuttleDeedTurretCompound
+      task: MountedTurretCompound
     blackboard:
       RotateSpeed: !type:Single
         3.141
@@ -239,7 +239,7 @@
     lifeTime: 1.0
   - type: HTN
     rootTask:
-      task: ShuttleDeedTurretCompound
+      task: MountedTurretCompound
     blackboard:
       RotateSpeed: !type:Single
         3.141
@@ -281,7 +281,7 @@
     lifeTime: 1.0
   - type: HTN
     rootTask:
-      task: ShuttleDeedTurretCompound
+      task: MountedTurretCompound
     blackboard:
       RotateSpeed: !type:Single
         3.141
@@ -323,7 +323,7 @@
     lifeTime: 1.0
   - type: HTN
     rootTask:
-      task: ShuttleDeedTurretCompound
+      task: MountedTurretCompound
     blackboard:
       RotateSpeed: !type:Single
         3.141
@@ -365,7 +365,7 @@
     lifeTime: 1.0
   - type: HTN
     rootTask:
-      task: ShuttleDeedTurretCompound
+      task: MountedTurretCompound
     blackboard:
       RotateSpeed: !type:Single
         3.141
@@ -407,7 +407,7 @@
     lifeTime: 1.0
   - type: HTN
     rootTask:
-      task: ShuttleDeedTurretCompound
+      task: MountedTurretCompound
     blackboard:
       RotateSpeed: !type:Single
         3.141
@@ -449,7 +449,7 @@
     lifeTime: 1.0
   - type: HTN
     rootTask:
-      task: ShuttleDeedTurretCompound
+      task: MountedTurretCompound
     blackboard:
       RotateSpeed: !type:Single
         3.141
@@ -512,7 +512,7 @@
     - AIShipWeapon
   - type: HTN
     rootTask:
-      task: ShuttleDeedTurretCompound
+      task: MountedTurretCompound
     blackboard:
       RotateSpeed: !type:Single
         3.141
@@ -552,7 +552,7 @@
     - AIShipWeapon
   - type: HTN
     rootTask:
-      task: ShuttleDeedTurretCompound
+      task: MountedTurretCompound
     blackboard:
       RotateSpeed: !type:Single
         3.141

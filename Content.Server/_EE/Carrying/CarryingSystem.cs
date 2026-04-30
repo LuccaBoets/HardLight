@@ -29,7 +29,6 @@ using Content.Shared.Movement.Pulling.Systems;
 using Content.Shared.Mobs.Systems;
 using Content.Shared.Nyanotrasen.Item.PseudoItem;
 using Content.Shared.Storage;
-using Content.Shared._HL.Traits.Physical;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Physics.Components;
 using Robust.Server.GameObjects;
@@ -390,61 +389,12 @@ namespace Content.Server.Carrying
                 || !HasComp<MapGridComponent>(Transform(carrier).ParentUid)
                 || HasComp<BeingCarriedComponent>(carrier)
                 || HasComp<BeingCarriedComponent>(carried)
-                || !TryComp<HandsComponent>(carrier, out var hands))
-                return false;
-
-            // HardLight start
-            var carrierTier = GetCarrySizeTier(carrier);
-            var carriedTier = GetCarrySizeTier(carried);
-
-            var requiredHands = carriedComp.FreeHandsRequired;
-            if (carriedTier == CarrySizeTier.Tiny && carrierTier >= CarrySizeTier.Normal)
-                requiredHands = Math.Min(requiredHands, 1);
-
-            if (hands.CountFreeHands() < requiredHands)
-                return false;
-
-            // Big can only be carried by Big.
-            if (carriedTier == CarrySizeTier.Big && carrierTier != CarrySizeTier.Big)
-                return false;
-
-            // Tiny can only carry Tiny.
-            if (carrierTier == CarrySizeTier.Tiny && carriedTier != CarrySizeTier.Tiny)
-                return false;
-
-            // Small can carry Small or Tiny only.
-            if (carrierTier == CarrySizeTier.Small && carriedTier > CarrySizeTier.Small)
-            // HardLight end
+                || !TryComp<HandsComponent>(carrier, out var hands)
+                || hands.CountFreeHands() < carriedComp.FreeHandsRequired)
                 return false;
 
             return true;
         }
-
-        // HardLight start
-        // Determine the carry size tier of an entity based on its components.
-        // This is used to enforce certain carrying restrictions, such as big entities only being carriable by other big entities.
-        private CarrySizeTier GetCarrySizeTier(EntityUid uid)
-        {
-            if (HasComp<BigWeaponHandlingComponent>(uid))
-                return CarrySizeTier.Big;
-
-            if (HasComp<SmallWeaponHandlingComponent>(uid))
-                return CarrySizeTier.Small;
-
-            if (HasComp<TinyWeaponHandlingComponent>(uid))
-                return CarrySizeTier.Tiny;
-
-            return CarrySizeTier.Normal;
-        }
-
-        private enum CarrySizeTier
-        {
-            Tiny = 0,
-            Small = 1,
-            Normal = 2,
-            Big = 3,
-        }
-        // HardLight end
 
         public override void Update(float frameTime)
         {

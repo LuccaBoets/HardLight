@@ -6,7 +6,6 @@
   cost: 4 # Whilst they can still eat everything this is literally only a positive trait.
   speciesBlacklist:
     - IPC
-    - Synth
   components:
     - type: Vampirism
       succDelay: 3

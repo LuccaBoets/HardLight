@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2025 Ted Lukin <66275205+pheenty@users.noreply.github.com>
+
 - type: entity
   name: BaseWeaponLightMachineGun
   parent: BaseItem
@@ -64,6 +66,8 @@
     price: 500
   - type: UseDelay
     delay: 1
+  - type: Multishot # Goobstation
+    missChance: 0.4
 
 - type: entity
   name: L6 SAW (762x39mm)

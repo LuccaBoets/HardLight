@@ -5,6 +5,7 @@ using Content.Server.Shuttles.Systems;
 using Content.Shared._Mono;
 using Content.Shared._Mono.SpaceArtillery;
 using Content.Shared._NF.Shuttles.Events;
+using Content.Shared.Emp;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Physics.Components;
@@ -65,6 +66,10 @@ public sealed partial class ShipSteeringSystem : EntitySystem
             ent.Comp.Status = ShipSteeringStatus.InRange;
             return;
         }
+
+        if (HasComp<EmpDisabledComponent>(ent))
+            return;
+
         ent.Comp.Status = ShipSteeringStatus.Moving;
 
         var shipXform = Transform(shipUid.Value);

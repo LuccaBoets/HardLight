@@ -1,6 +1,5 @@
 using System.Numerics;
 using Content.Shared.Weapons.Ranged.Events;
-using Content.Shared.Weapons.Ranged.Systems;
 using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Map;
@@ -9,7 +8,7 @@ using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 namespace Content.Shared.Weapons.Ranged.Components;
 
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState(fieldDeltas: true), AutoGenerateComponentPause]
-// [Access(typeof(SharedGunSystem))] Frontier: Commenting this out because OniSystem (server) needs to access this component
+// Goob modularity - rip explicit access
 public sealed partial class GunComponent : Component
 {
     #region Sound

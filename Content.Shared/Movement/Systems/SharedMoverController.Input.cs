@@ -157,7 +157,17 @@ namespace Content.Shared.Movement.Systems
 
         public void RotateCamera(EntityUid uid, Angle angle)
         {
-            if (CameraRotationLocked || !MoverQuery.TryGetComponent(uid, out var mover))
+            if (CameraRotationLocked)
+                return;
+
+            // When piloting a relayed entity (e.g. a mech) the movement direction
+            // is computed from the relay target's RelativeRotation, not the
+            // pilot's. Forward the rotation so the camera and movement stay in
+            // sync. (Fixes mechs flailing when reorienting the camera.)
+            if (RelayQuery.TryGetComponent(uid, out var relay))
+                RotateCamera(relay.RelayEntity, angle);
+
+            if (!MoverQuery.TryGetComponent(uid, out var mover))
                 return;
 
             mover.TargetRelativeRotation += angle;
@@ -166,8 +176,15 @@ namespace Content.Shared.Movement.Systems
 
         public void ResetCamera(EntityUid uid)
         {
-            if (CameraRotationLocked ||
-                !MoverQuery.TryGetComponent(uid, out var mover))
+            if (CameraRotationLocked)
+                return;
+
+            // See RotateCamera: also reset the relay target so a piloted mech
+            // realigns with the pilot's view.
+            if (RelayQuery.TryGetComponent(uid, out var relay))
+                ResetCamera(relay.RelayEntity);
+
+            if (!MoverQuery.TryGetComponent(uid, out var mover))
             {
                 return;
             }

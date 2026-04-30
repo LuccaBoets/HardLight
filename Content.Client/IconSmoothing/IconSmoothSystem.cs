@@ -1,12 +1,15 @@
 using System.Numerics;
-using Content.Client.Anomaly.Ui;
-using Content.Client.Overlays;
+using Content.Shared.CCVar; // HardLight
 using Content.Shared.IconSmoothing;
+using Content.Shared.Tag; // HardLight
 using JetBrains.Annotations;
 using Robust.Client.GameObjects;
+using Robust.Shared.Configuration; // HardLight
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Map.Enumerators;
+using Robust.Shared.Prototypes; // HardLight
+using Robust.Shared.Utility; // HardLight
 using static Robust.Client.GameObjects.SpriteComponent;
 
 namespace Content.Client.IconSmoothing
@@ -18,13 +21,20 @@ namespace Content.Client.IconSmoothing
     [UsedImplicitly]
     public sealed partial class IconSmoothSystem : EntitySystem
     {
+        private static readonly ProtoId<TagPrototype> WindowTag = "Window"; // HardLight
+        private static readonly ResPath PlasticFlapsRsi = new("/Textures/Structures/plastic_flaps.rsi"); // HardLight
+        private const string SolidReinforcedWallFamily = "solid-reinforced"; // HardLight
+
+        [Dependency] private readonly IConfigurationManager _cfg = default!; // HardLight
         [Dependency] private readonly SharedMapSystem _mapSystem = default!;
         [Dependency] private readonly SpriteSystem _sprite = default!;
+        [Dependency] private readonly TagSystem _tagSystem = default!; // HardLight
 
         private readonly Queue<EntityUid> _dirtyEntities = new();
         private readonly Queue<EntityUid> _anchorChangedEntities = new();
 
         private int _generation;
+        private bool _structureSmoothingEnabled = true; // HardLight
 
         public void SetEnabled(EntityUid uid, bool value, IconSmoothComponent? component = null)
         {
@@ -40,9 +50,23 @@ namespace Content.Client.IconSmoothing
             base.Initialize();
 
             InitializeEdge();
+            Subs.CVar(_cfg, CCVars.ShowStructureSmoothing, OnStructureSmoothingChanged, true); // HardLight
             SubscribeLocalEvent<IconSmoothComponent, AnchorStateChangedEvent>(OnAnchorChanged);
             SubscribeLocalEvent<IconSmoothComponent, ComponentShutdown>(OnShutdown);
             SubscribeLocalEvent<IconSmoothComponent, ComponentStartup>(OnStartup);
+        }
+
+        // HardLight: Refresh wall/window smoothing immediately when the client graphics toggle changes.
+        private void OnStructureSmoothingChanged(bool enabled)
+        {
+            _structureSmoothingEnabled = enabled;
+
+            var query = AllEntityQuery<IconSmoothComponent>();
+            while (query.MoveNext(out var uid, out var smooth))
+            {
+                if (smooth.Running && smooth.Enabled && IsStructureSmoothingTarget(smooth))
+                    _dirtyEntities.Enqueue(uid);
+            }
         }
 
         private void OnStartup(EntityUid uid, IconSmoothComponent component, ComponentStartup args)
@@ -98,20 +122,6 @@ namespace Content.Client.IconSmoothing
             _sprite.LayerMapSet(sprite, CornerLayers.SW, _sprite.AddRsiLayer(sprite, state0));
             _sprite.LayerSetDirOffset(sprite, CornerLayers.SW, DirectionOffset.Clockwise);
         }
-
-        // Frontier: set layer function to remove redundancy
-        private void SetCornerLayerState(Entity<SpriteComponent?> sprite, CornerLayers corner, DirectionOffset offset, string state)
-        {
-            if (_sprite.LayerMapTryGet(sprite, corner, out var layer, false))
-                _sprite.LayerSetRsiState(sprite, layer, state);
-            else
-            {
-                var idx = _sprite.AddRsiLayer(sprite, state);
-                _sprite.LayerMapSet(sprite, corner, idx);
-            }
-            _sprite.LayerSetDirOffset(sprite, corner, offset);
-        }
-        // End Frontier: set layer function to remove redundancy
 
         private void OnShutdown(EntityUid uid, IconSmoothComponent component, ComponentShutdown args)
         {
@@ -254,13 +264,13 @@ namespace Content.Client.IconSmoothing
 
                         gridEntity = (gridUid, grid);
 
-                        if (MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.North)), smoothQuery, new(0, 1))) // Frontier: added (0, 1) vector
+                        if (MatchingEntity(uid, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.North)), smoothQuery, new(0, 1))) // Frontier: Added (0, 1) vector, // HardLight: Added uid
                             directions |= DirectionFlag.North;
-                        if (MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.South)), smoothQuery, new(0, -1))) // Frontier: added (0, -1) vector
+                        if (MatchingEntity(uid, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.South)), smoothQuery, new(0, -1))) // Frontier: Added (0, -1) vector, // HardLight: Added uid
                             directions |= DirectionFlag.South;
-                        if (MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.East)), smoothQuery, new(1, 0))) // Frontier: added (1, 0) vector
+                        if (MatchingEntity(uid, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.East)), smoothQuery, new(1, 0))) // Frontier: Added (1, 0) vector, // HardLight: Added uid
                             directions |= DirectionFlag.East;
-                        if (MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.West)), smoothQuery, new(-1, 0))) // Frontier: added (-1, 0) vector
+                        if (MatchingEntity(uid, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.West)), smoothQuery, new(-1, 0))) // Frontier: Added (-1, 0) vector, // HardLight: Added uid
                             directions |= DirectionFlag.West;
                     }
 
@@ -343,7 +353,7 @@ namespace Content.Client.IconSmoothing
             for (var i = 0; i < neighbors.Length; i++)
             {
                 var neighbor = (Vector2i)rotation.RotateVec(neighbors[i]);
-                matching = matching && MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos + neighbor), smoothQuery, neighbor); // Frontier: add neighbor
+                matching = matching && MatchingEntity(sprite.Owner, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos + neighbor), smoothQuery, neighbor); // Frontier: Added neighbor, // HardLight: Added sprite.Owner
             }
 
             if (matching)
@@ -386,7 +396,7 @@ namespace Content.Client.IconSmoothing
             for (var i = 0; i < neighbors.Length; i++)
             {
                 var neighbor = (Vector2i)rotation.RotateVec(neighbors[i]);
-                if (MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos + neighbor), smoothQuery, neighbor))
+                if (MatchingEntity(sprite.Owner, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos + neighbor), smoothQuery, neighbor)) // HardLight: Added sprite.Owner
                     value |= 1 << i;
             }
 
@@ -394,7 +404,7 @@ namespace Content.Client.IconSmoothing
             if (value == 3)
             {
                 var neighbor = (Vector2i)rotation.RotateVec(new(1, -1));
-                if (MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos + neighbor), smoothQuery, neighbor))
+                if (MatchingEntity(sprite.Owner, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos + neighbor), smoothQuery, neighbor)) // HardLight: Added sprite.Owner
                     value = 4;
             }
 
@@ -435,13 +445,13 @@ namespace Content.Client.IconSmoothing
             var grid = gridEntity.Value.Comp;
 
             var pos = _mapSystem.TileIndicesFor(gridUid, grid, xform.Coordinates);
-            if (MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.North)), smoothQuery, new(0, 1))) // Frontier: add vector
+            if (MatchingEntity(sprite.Owner, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.North)), smoothQuery, new(0, 1))) // Frontier: Added vector, // HardLight: Added sprite.Owner
                 dirs |= CardinalConnectDirs.North;
-            if (MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.South)), smoothQuery, new(0, -1))) // Frontier: add vector
+            if (MatchingEntity(sprite.Owner, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.South)), smoothQuery, new(0, -1))) // Frontier: Added vector, // HardLight: Added sprite.Owner
                 dirs |= CardinalConnectDirs.South;
-            if (MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.East)), smoothQuery, new(1, 0))) // Frontier: add vector
+            if (MatchingEntity(sprite.Owner, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.East)), smoothQuery, new(1, 0))) // Frontier: Added vector, // HardLight: Added sprite.Owner
                 dirs |= CardinalConnectDirs.East;
-            if (MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.West)), smoothQuery, new(-1, 0))) // Frontier: add vector
+            if (MatchingEntity(sprite.Owner, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.West)), smoothQuery, new(-1, 0))) // Frontier: Added vector, // HardLight: Added sprite.Owner
                 dirs |= CardinalConnectDirs.West;
 
             _sprite.LayerSetRsiState(sprite.AsNullable(), 0, $"{smooth.StateBase}{(int)dirs}");
@@ -460,7 +470,7 @@ namespace Content.Client.IconSmoothing
             CalculateEdge(sprite, directions, sprite);
         }
 
-        private bool MatchingEntity(IconSmoothComponent smooth, AnchoredEntitiesEnumerator candidates, EntityQuery<IconSmoothComponent> smoothQuery, Vector2 offset)
+        private bool MatchingEntity(EntityUid source, IconSmoothComponent smooth, AnchoredEntitiesEnumerator candidates, EntityQuery<IconSmoothComponent> smoothQuery, Vector2 offset) // HardLight: Added EntityUid source
         {
             while (candidates.MoveNext(out var entity))
             {
@@ -468,13 +478,77 @@ namespace Content.Client.IconSmoothing
                     other.SmoothKey != null &&
                     (other.SmoothKey == smooth.SmoothKey || smooth.AdditionalKeys.Contains(other.SmoothKey)) &&
                     other.Enabled &&
-                    EntityIsSmoothOnEdge(entity, other, offset)) // Frontier: added EntityIsSmoothOnEdge
+                    ShouldSmoothEntity(source, smooth, entity.Value, other, offset)) // Frontier: added EntityIsSmoothOnEdge, // HardLight: EntityIsSmoothOnEdge<ShouldSmoothEntity; entity<entity.Value; added source & smooth
                 {
                     return true;
                 }
             }
 
             return false;
+        }
+
+        // HardLight: Apply stricter client-only matching rules when extended structure smoothing is disabled.
+        private bool ShouldSmoothEntity(EntityUid source, IconSmoothComponent sourceComp, EntityUid target, IconSmoothComponent targetComp, Vector2 sourceDir)
+        {
+            if (_structureSmoothingEnabled || !IsStructureSmoothingTarget(sourceComp))
+                return EntityIsSmoothOnEdge(target, targetComp, sourceDir);
+
+            // Toggle-off behavior for structure smoothing:
+            // 1. Windows do not cross-smooth with walls.
+            // 2. Walls do not smooth with shutters / blast doors.
+            // 3. Walls do not smooth with plastic flaps.
+            var sourceIsWindow = _tagSystem.HasTag(source, WindowTag);
+            var targetIsWindow = _tagSystem.HasTag(target, WindowTag);
+            if (sourceIsWindow != targetIsWindow)
+                return false;
+
+            if (sourceIsWindow ||
+                !TryComp<SpriteComponent>(source, out var sourceSprite) ||
+                !TryComp<SpriteComponent>(target, out var targetSprite))
+                return true;
+
+            var sourceFamily = GetWallSmoothingFamily(sourceSprite);
+            var targetFamily = GetWallSmoothingFamily(targetSprite);
+
+            if (targetSprite.DrawDepth == (int) Content.Shared.DrawDepth.DrawDepth.BlastDoors &&
+                sourceFamily != targetFamily)
+                return false;
+
+            if (targetSprite.BaseRSI?.Path == PlasticFlapsRsi &&
+                sourceFamily != targetFamily)
+                return false;
+
+            return sourceFamily == null || targetFamily == null || sourceFamily == targetFamily;
+        }
+
+        // HardLight: Restrict the toggle logic to the shared wall/window smoothing group.
+        private static bool IsStructureSmoothingTarget(IconSmoothComponent smooth)
+        {
+            return smooth.SmoothKey == "walls";
+        }
+
+        private static string? GetWallSmoothingFamily(SpriteComponent sprite)
+        {
+            var path = sprite.BaseRSI?.Path.CanonPath;
+            if (path == null)
+                return null;
+
+            var slashIndex = path.LastIndexOf('/');
+            var fileName = slashIndex == -1 ? path : path[(slashIndex + 1)..];
+            const string extension = ".rsi";
+            if (!fileName.EndsWith(extension))
+                return null;
+
+            var baseName = fileName[..^extension.Length];
+
+            if (baseName is "solid" or "solid_rust" or "solid_diagonal" or "reinforced_diagonal")
+                return SolidReinforcedWallFamily;
+
+            const string diagonalSuffix = "_diagonal";
+            if (baseName.EndsWith(diagonalSuffix))
+                baseName = baseName[..^diagonalSuffix.Length];
+
+            return baseName;
         }
 
         private void CalculateNewSpriteCorners(Entity<MapGridComponent>? gridEntity, IconSmoothComponent smooth, Entity<SpriteComponent> spriteEnt, TransformComponent xform, EntityQuery<IconSmoothComponent> smoothQuery)
@@ -517,14 +591,14 @@ namespace Content.Client.IconSmoothing
             var grid = gridEntity.Comp;
 
             var pos = _mapSystem.TileIndicesFor(gridUid, grid, xform.Coordinates);
-            var n = MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.North)), smoothQuery, new(0, 1)); // Frontier: add vector
-            var ne = MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.NorthEast)), smoothQuery, new(1, 1)); // Frontier: add vector
-            var e = MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.East)), smoothQuery, new(1, 0)); // Frontier: add vector
-            var se = MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.SouthEast)), smoothQuery, new(1, -1)); // Frontier: add vector
-            var s = MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.South)), smoothQuery, new(0, -1)); // Frontier: add vector
-            var sw = MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.SouthWest)), smoothQuery, new(-1, -1)); // Frontier: add vector
-            var w = MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.West)), smoothQuery, new(-1, 0)); // Frontier: add vector
-            var nw = MatchingEntity(smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.NorthWest)), smoothQuery, new(-1, 1)); // Frontier: add vector
+            var n = MatchingEntity(xform.Owner, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.North)), smoothQuery, new(0, 1)); // Frontier: Added vector, // HardLight: Added xform.Owner
+            var ne = MatchingEntity(xform.Owner, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.NorthEast)), smoothQuery, new(1, 1)); // Frontier: Added vector, // HardLight: Added xform.Owner
+            var e = MatchingEntity(xform.Owner, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.East)), smoothQuery, new(1, 0)); // Frontier: Added vector, // HardLight: Added xform.Owner
+            var se = MatchingEntity(xform.Owner, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.SouthEast)), smoothQuery, new(1, -1)); // Frontier: Added vector, // HardLight: Added xform.Owner
+            var s = MatchingEntity(xform.Owner, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.South)), smoothQuery, new(0, -1)); // Frontier: Added vector, // HardLight: Added xform.Owner
+            var sw = MatchingEntity(xform.Owner, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.SouthWest)), smoothQuery, new(-1, -1)); // Frontier: Added vector, // HardLight: Added xform.Owner
+            var w = MatchingEntity(xform.Owner, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.West)), smoothQuery, new(-1, 0)); // Frontier: Added vector, // HardLight: Added xform.Owner
+            var nw = MatchingEntity(xform.Owner, smooth, _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, pos.Offset(Direction.NorthWest)), smoothQuery, new(-1, 1)); // Frontier: Added vector, // HardLight: Added xform.Owner
 
             // ReSharper disable InconsistentNaming
             var cornerNE = CornerFill.None;

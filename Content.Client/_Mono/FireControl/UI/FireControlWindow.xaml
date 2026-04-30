@@ -15,6 +15,11 @@
             <Button Name="RefreshButton" Access="Public" Text="{Loc admin-logs-refresh}"
                     StyleClasses="ButtonSquare OpenRight" Margin="0 0"/>
 
+            <!-- Shield Status Section -->
+            <controls:StripeBack MinSize="36 36" Margin="0 3 0 0">
+                <Label Name="ShieldStatus" Text="SHIELD: —" StyleClasses="LabelKeyText" HorizontalAlignment="Center"/>
+            </controls:StripeBack>
+
             <!-- Weapons Control Section -->
             <controls:StripeBack MinSize="48 48" Margin="0 0 0 0">
                 <Label Name="WeaponsLabel" Text="{Loc 'gunnery-guns'}" HorizontalAlignment="Center"/>

@@ -124,6 +124,7 @@
   - type: BlockInjection
     blockHypospray: true
     blockInjectOnProjectile: true
+    blockReason: synth
   - type: Temperature
     heatDamageThreshold: 475
     coldDamageThreshold: 55

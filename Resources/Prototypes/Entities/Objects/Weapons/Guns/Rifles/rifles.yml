@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2025 Ted Lukin <66275205+pheenty@users.noreply.github.com>
+
 - type: entity
   name: BaseWeaponRifle
   parent: [BaseItem, BaseGunWieldable]
@@ -50,6 +52,10 @@
       gun_chamber: !type:ContainerSlot
   - type: StaticPrice
     price: 500
+  - type: Multishot # Goobstation
+    missChance: 0.4
+    spreadMultiplier: 3
+    spreadAddition: 60 # You're not multifiring a rifle.
 
 - type: entity
   name: AKM (762x39mm)

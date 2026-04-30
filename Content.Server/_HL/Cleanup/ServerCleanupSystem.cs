@@ -69,6 +69,12 @@ public sealed class ServerCleanupSystem : EntitySystem
     /// </summary>
     private readonly Dictionary<Guid, TimeSpan> _disconnectedPlayers = new();
 
+    /// <summary>
+    /// Reused per cleanup pass to avoid walking _playerManager.Sessions inside the per-entity loop
+    /// in CleanupFloatingEntities. Cleared and refilled at the start of each pass that needs it.
+    /// </summary>
+    private readonly HashSet<Guid> _connectedUsersScratch = new();
+
     public override void Initialize()
     {
         base.Initialize();
@@ -183,6 +189,15 @@ public sealed class ServerCleanupSystem : EntitySystem
     private void CleanupFloatingEntities()
     {
         var deleted = 0;
+
+        // Cache the set of connected users once for this cleanup pass so HasActivePlayerMind
+        // doesn't have to re-scan _playerManager.Sessions for every candidate entity.
+        _connectedUsersScratch.Clear();
+        foreach (var session in _playerManager.Sessions)
+        {
+            if (session.Status == SessionStatus.InGame || session.Status == SessionStatus.Connected)
+                _connectedUsersScratch.Add(session.UserId);
+        }
 
         // Bucket player positions by (map, cellX, cellY) where cell size == FloatingEntitySafeRadius.
         // Then a candidate entity only needs to check players in its own cell + 8 neighbours,
@@ -310,6 +325,8 @@ public sealed class ServerCleanupSystem : EntitySystem
     /// <summary>
     /// Checks whether an entity has a mind with an actively-connected player session.
     /// Returns false if the entity has no mind, the mind has no UserId, or the user is disconnected.
+    /// Uses the per-pass <see cref="_connectedUsersScratch"/> cache when populated to avoid an
+    /// inner Sessions scan per candidate.
     /// </summary>
     private bool HasActivePlayerMind(EntityUid uid)
     {
@@ -318,6 +335,9 @@ public sealed class ServerCleanupSystem : EntitySystem
 
         if (mind.UserId == null)
             return false;
+
+        if (_connectedUsersScratch.Count > 0)
+            return _connectedUsersScratch.Contains(mind.UserId.Value);
 
         foreach (var session in _playerManager.Sessions)
         {

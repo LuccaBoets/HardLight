@@ -2694,7 +2694,7 @@ entities:
     - type: Transform
       pos: -2.5,-7.5
       parent: 1
-- proto: NpcStationAiAttacker
+- proto: NpcStationAiByteLarge
   entities:
   - uid: 406
     components:

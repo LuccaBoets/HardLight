@@ -12,6 +12,7 @@ using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Maths;
 using Robust.Shared.Network;
+using Robust.Shared.Enums;
 using Robust.Shared.Player;
 using Content.Shared.Verbs;
 using System;
@@ -47,10 +48,28 @@ public sealed class RoomGridSpawnerSystem : EntitySystem
         _gridQuery = GetEntityQuery<MapGridComponent>();
         _xformQuery = GetEntityQuery<TransformComponent>();
 
+        _player.PlayerStatusChanged += OnPlayerStatusChanged;
+
         SubscribeLocalEvent<RoomGridSpawnerConsoleComponent, InteractHandEvent>(OnConsoleInteract);
         SubscribeLocalEvent<RoomGridSpawnerConsoleComponent, GetVerbsEvent<AlternativeVerb>>(OnGetAlternativeVerbs);
         SubscribeLocalEvent<MindContainerComponent, MindRemovedMessage>(OnMindRemoved);
         SubscribeNetworkEvent<SendRoomGridDataMessage>(OnRoomGridData);
+    }
+
+    public override void Shutdown()
+    {
+        base.Shutdown();
+        _player.PlayerStatusChanged -= OnPlayerStatusChanged;
+    }
+
+    private void OnPlayerStatusChanged(object? sender, SessionStatusEventArgs e)
+    {
+        if (e.NewStatus is not (SessionStatus.Disconnected or SessionStatus.Zombie))
+            return;
+
+        // Only clear stale pending loads for disconnected players.
+        // Active sessions are intentionally left untouched to avoid impacting live room state.
+        _pendingLoads.Remove(e.Session.UserId);
     }
 
     private void OnConsoleInteract(EntityUid uid, RoomGridSpawnerConsoleComponent component, InteractHandEvent args)
@@ -104,8 +123,18 @@ public sealed class RoomGridSpawnerSystem : EntitySystem
 
         var bounds = GetAreaBounds(markerComp, markerXform);
         var characterKey = BuildCharacterKey(mindComp.UserId.Value, mindComp.CharacterName ?? session.Name);
+        var gridUid = consoleXform.GridUid.Value;
+        var anchorTile = _gridQuery.TryComp(gridUid, out var anchorGrid)
+            ? _map.LocalToTile(gridUid, anchorGrid, markerXform.Coordinates)
+            : new Vector2i((int)MathF.Floor(markerXform.LocalPosition.X), (int)MathF.Floor(markerXform.LocalPosition.Y));
+        var anchorPosition = markerXform.LocalPosition;
+        // Apartment markers in maps are placed with rot: 0; the console is the entity that
+        // carries the bay's facing direction (it's wall-mounted on the entrance). Use the
+        // console rotation so saved rooms re-orient to match each bay's entrance.
+        // See HardLightSector/HardLight#1493 / #1512.
+        var anchorRotation = consoleXform.LocalRotation;
 
-        var pending = new PendingRoomLoad(uid, markerUid, consoleXform.GridUid.Value, bounds, characterKey);
+        var pending = new PendingRoomLoad(uid, markerUid, gridUid, bounds, characterKey, anchorTile, anchorPosition, anchorRotation);
         _pendingLoads[mindComp.UserId.Value] = pending;
 
         RaiseNetworkEvent(new RequestRoomGridLoadMessage(GetNetEntity(uid), characterKey), session);
@@ -175,6 +204,7 @@ public sealed class RoomGridSpawnerSystem : EntitySystem
         if (!msg.Found || string.IsNullOrWhiteSpace(roomData))
         {
             var blank = CreateBlankRoomData(pending.Bounds, BlankRoomSize, BlankRoomTileId);
+            NormalizeRoomDataToAnchor(blank, pending.AnchorTile, pending.AnchorPosition, pending.AnchorRotation);
             roomData = _shipSerialization.SerializeShipGridDataToYaml(blank);
             RaiseNetworkEvent(new SendRoomGridSaveDataClientMessage(pending.CharacterKey, roomData), args.SenderSession);
             _popup.PopupEntity("No saved room found. Created a blank room.", consoleEntity, args.SenderSession);
@@ -186,6 +216,7 @@ public sealed class RoomGridSpawnerSystem : EntitySystem
         consoleEntity = ClearArea(pending.GridUid, gridComp, pending.Bounds, consoleEntity, pending.MarkerUid, DeleteContainedEntitiesOnReset);
 
         var shipData = _shipSerialization.DeserializeShipGridDataFromYaml(roomData, userId);
+        DenormalizeRoomDataToAnchor(shipData, pending.AnchorTile, pending.AnchorPosition, pending.AnchorRotation);
         shipData = FilterShipGridDataToBounds(shipData, pending.Bounds);
         _shipSerialization.ReconstructShipOnExistingGrid(shipData, pending.GridUid, Vector2.Zero);
 
@@ -195,7 +226,7 @@ public sealed class RoomGridSpawnerSystem : EntitySystem
             _appearance.SetData(consoleEntity, RoomGridSpawnerVisuals.InUse, true);
         }
 
-        _activeSessions[userId] = new ActiveRoomSession(consoleEntity, pending.MarkerUid, pending.GridUid, pending.Bounds, pending.CharacterKey);
+        _activeSessions[userId] = new ActiveRoomSession(consoleEntity, pending.MarkerUid, pending.GridUid, pending.Bounds, pending.CharacterKey, pending.AnchorTile, pending.AnchorPosition, pending.AnchorRotation);
 
         _popup.PopupEntity("Room loaded.", consoleEntity, args.SenderSession);
     }
@@ -230,6 +261,7 @@ public sealed class RoomGridSpawnerSystem : EntitySystem
 
         var excluded = new HashSet<EntityUid> { session.ConsoleUid, session.MarkerUid };
         var shipData = _shipSerialization.SerializeShipArea(session.GridUid, userId, $"Room_{session.CharacterKey}", session.Bounds, excluded);
+        NormalizeRoomDataToAnchor(shipData, session.AnchorTile, session.AnchorPosition, session.AnchorRotation);
         var yaml = _shipSerialization.SerializeShipGridDataToYaml(shipData);
 
         if (_player.TryGetSessionById(userId, out var playerSession))
@@ -438,6 +470,68 @@ public sealed class RoomGridSpawnerSystem : EntitySystem
         return filtered;
     }
 
+    // Save: convert tile indices and entity positions/rotations into a frame anchored at the
+    // room marker's tile / position / rotation, so the same data can be loaded into any apartment.
+    // Tiles use pure integer arithmetic (exact for 90° marker rotations) to avoid the
+    // banker's-rounding collisions that occur when rotating tile centers around a half-integer anchor.
+    private static void NormalizeRoomDataToAnchor(ShipGridData data, Vector2i anchorTile, Vector2 anchorPosition, Angle anchorRotation)
+    {
+        if (data.Grids.Count == 0)
+            return;
+
+        var anchorTheta = (float) anchorRotation.Theta;
+        var inverseRotation = Matrix3x2.CreateRotation(-anchorTheta);
+        var grid = data.Grids[0];
+
+        foreach (var tile in grid.Tiles)
+        {
+            var rel = new Vector2(tile.X - anchorTile.X, tile.Y - anchorTile.Y);
+            var rotated = Vector2.Transform(rel, inverseRotation);
+            tile.X = (int) MathF.Round(rotated.X);
+            tile.Y = (int) MathF.Round(rotated.Y);
+        }
+
+        foreach (var entity in grid.Entities)
+        {
+            var relativePosition = Vector2.Transform(entity.Position - anchorPosition, inverseRotation);
+            entity.Position = new Vector2(
+                MathF.Round(relativePosition.X, 3),
+                MathF.Round(relativePosition.Y, 3));
+            entity.Rotation = MathF.Round(entity.Rotation - anchorTheta, 3);
+        }
+
+        data.Metadata.RoomRelative = true;
+        data.Metadata.RoomAnchorPosition = anchorPosition;
+        data.Metadata.RoomAnchorRotation = anchorTheta;
+    }
+
+    private static void DenormalizeRoomDataToAnchor(ShipGridData data, Vector2i anchorTile, Vector2 anchorPosition, Angle anchorRotation)
+    {
+        if (!data.Metadata.RoomRelative || data.Grids.Count == 0)
+            return;
+
+        var anchorTheta = (float) anchorRotation.Theta;
+        var forwardRotation = Matrix3x2.CreateRotation(anchorTheta);
+        var grid = data.Grids[0];
+
+        foreach (var tile in grid.Tiles)
+        {
+            var rel = new Vector2(tile.X, tile.Y);
+            var rotated = Vector2.Transform(rel, forwardRotation);
+            tile.X = anchorTile.X + (int) MathF.Round(rotated.X);
+            tile.Y = anchorTile.Y + (int) MathF.Round(rotated.Y);
+        }
+
+        foreach (var entity in grid.Entities)
+        {
+            var absolutePosition = Vector2.Transform(entity.Position, forwardRotation) + anchorPosition;
+            entity.Position = new Vector2(
+                MathF.Round(absolutePosition.X, 3),
+                MathF.Round(absolutePosition.Y, 3));
+            entity.Rotation = MathF.Round(entity.Rotation + anchorTheta, 3);
+        }
+    }
+
     private static string BuildCharacterKey(NetUserId userId, string characterName)
     {
         var safeName = characterName.Trim();
@@ -489,7 +583,23 @@ public sealed class RoomGridSpawnerSystem : EntitySystem
     private const string RoomConsolePrototype = "ComputerRoomGridSpawner";
     private const bool DeleteContainedEntitiesOnReset = false;
 
-    private readonly record struct PendingRoomLoad(EntityUid ConsoleUid, EntityUid MarkerUid, EntityUid GridUid, Box2 Bounds, string CharacterKey);
+    private readonly record struct PendingRoomLoad(
+        EntityUid ConsoleUid,
+        EntityUid MarkerUid,
+        EntityUid GridUid,
+        Box2 Bounds,
+        string CharacterKey,
+        Vector2i AnchorTile,
+        Vector2 AnchorPosition,
+        Angle AnchorRotation);
 
-    private readonly record struct ActiveRoomSession(EntityUid ConsoleUid, EntityUid MarkerUid, EntityUid GridUid, Box2 Bounds, string CharacterKey);
+    private readonly record struct ActiveRoomSession(
+        EntityUid ConsoleUid,
+        EntityUid MarkerUid,
+        EntityUid GridUid,
+        Box2 Bounds,
+        string CharacterKey,
+        Vector2i AnchorTile,
+        Vector2 AnchorPosition,
+        Angle AnchorRotation);
 }

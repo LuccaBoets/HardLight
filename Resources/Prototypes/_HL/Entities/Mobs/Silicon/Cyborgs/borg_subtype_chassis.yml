@@ -554,3 +554,43 @@
     selectedBorgType: service
   - type: BorgSwitchableSubtype
     borgSubtype: BorgServiceSubtypeK4tAlt2
+ 
+- type: entity
+  id: BorgChassisSecSecbug
+  parent: BorgChassisSelectable
+  name: Secbug
+  components:
+  - type: BorgSwitchableType
+    selectedBorgType: security
+  - type: BorgSwitchableSubtype
+    borgSubtype: BorgSecuritySubtypeSecbug
+
+- type: entity
+  id: BorgChassisServiceDjbug
+  parent: BorgChassisSelectable
+  name: Djbug
+  components:
+  - type: BorgSwitchableType
+    selectedBorgType: service
+  - type: BorgSwitchableSubtype
+    borgSubtype: BorgServiceSubtypeDjbug
+
+- type: entity
+  id: BorgChassisEngineerEngineerbug
+  parent: BorgChassisSelectable
+  name: Engineerbug
+  components:
+  - type: BorgSwitchableType
+    selectedBorgType: engineering
+  - type: BorgSwitchableSubtype
+    borgSubtype: BorgEngineerSubtypeEngineerbug
+
+- type: entity
+  id: BorgChassisMiningMinerbug
+  parent: BorgChassisSelectable
+  name: Minerbug
+  components:
+  - type: BorgSwitchableType
+    selectedBorgType: mining
+  - type: BorgSwitchableSubtype
+    borgSubtype: BorgMiningSubtypeMinerbug

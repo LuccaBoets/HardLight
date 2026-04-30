@@ -1,5 +1,6 @@
 using System.Numerics;
 using Content.Server._Mono.FireControl;
+using Content.Server._Mono.NPC.HTN;
 using Content.Shared.DeviceLinking.Events;
 using Content.Server.DeviceLinking.Systems;
 using Content.Server.Power.Components;
@@ -14,6 +15,7 @@ using Content.Shared.Power;
 using Content.Shared.Projectiles;
 using Content.Shared.Weapons.Ranged.Events;
 using Robust.Shared.Map;
+using Robust.Shared.Physics.Events;
 using Robust.Shared.Player;
 using SpaceArtilleryComponent = Content.Server._Mono.SpaceArtillery.Components.SpaceArtilleryComponent;
 
@@ -26,6 +28,7 @@ public sealed partial class SpaceArtillerySystem : EntitySystem
     [Dependency] private readonly SharedTransformSystem _xform = default!;
     [Dependency] private readonly SharedCameraRecoilSystem _recoilSystem = default!;
     [Dependency] private readonly FireControlSystem _fireControl = default!;
+    [Dependency] private readonly ShipAggroSystem _aggro = default!;
 
     private const float DISTANCE = 100;
     private const float BIG_DAMAGE = 1000;
@@ -42,7 +45,28 @@ public sealed partial class SpaceArtillerySystem : EntitySystem
         SubscribeLocalEvent<SpaceArtilleryComponent, SignalReceivedEvent>(OnSignalReceived);
         SubscribeLocalEvent<SpaceArtilleryComponent, ChargeChangedEvent>(OnBatteryChargeChanged);
         SubscribeLocalEvent<ShipWeaponProjectileComponent, ProjectileHitEvent>(OnProjectileHit);
+        SubscribeLocalEvent<ShipWeaponProjectileComponent, PreventCollideEvent>(OnShipProjectilePreventCollide);
         SubscribeLocalEvent<ShipGunClassComponent, ExaminedEvent>(OnExamined);
+    }
+
+    /// <summary>
+    /// Ship-gun projectiles spawn on the firing ship's grid; without this they can collide with
+    /// the firing ship's own hull on the first physics step.
+    /// </summary>
+    private void OnShipProjectilePreventCollide(EntityUid uid, ShipWeaponProjectileComponent component, ref PreventCollideEvent args)
+    {
+        if (args.Cancelled)
+            return;
+
+        if (!TryComp<ProjectileComponent>(uid, out var projectile) || projectile.Weapon == null)
+            return;
+
+        var weaponGrid = _xform.GetGrid(projectile.Weapon.Value);
+        if (weaponGrid == null)
+            return;
+
+        if (args.OtherEntity == weaponGrid.Value || _xform.GetGrid(args.OtherEntity) == weaponGrid)
+            args.Cancelled = true;
     }
 
 
@@ -164,6 +188,9 @@ public sealed partial class SpaceArtillerySystem : EntitySystem
         var grid = Transform(hitEvent.Target).GridUid;
         if (grid == null)
             return;
+
+        // Notify any AI ship core on the hit grid so it can wake up and chase.
+        _aggro.NotifyGridHit(grid.Value);
 
         var players = Filter.Empty();
         players.AddInGrid((EntityUid)grid);

@@ -11,6 +11,10 @@ namespace Content.Client.Paint
 {
     public sealed class PaintedVisualizerSystem : VisualizerSystem<PaintedComponent>
     {
+        private const string GreyscaleShader = "Greyscale"; // HardLight
+        private const string DisplacedStencilDrawShader = "DisplacedStencilDraw"; // HardLight
+        private const string DisplacedGreyscaleShader = "DisplacedGreyscale"; // HardLight
+
         /// <summary>
         /// Visualizer for Paint which applies a shader and colors the entity.
         /// </summary>
@@ -67,10 +71,12 @@ namespace Content.Client.Paint
 
             foreach (var revealed in args.RevealedLayers)
             {
-                if (!_sprite.LayerMapTryGet((args.User, sprite), revealed, out var layer, false) || sprite[layer] is not Layer notlayer)
+                if (!_sprite.LayerMapTryGet((args.User, sprite), revealed, out var layer, false) || // HardLight
+                    sprite[layer] is not Layer spriteLayer || // Added spriteLayer
+                    spriteLayer.CopyToShaderParameters != null)
                     continue;
 
-                sprite.LayerSetShader(layer, component.ShaderName);
+                sprite.LayerSetShader(layer, GetPaintShaderPrototype(component.ShaderName, spriteLayer)); // HardLight: Added GetPaintShaderPrototype & spriteLayer
                 _sprite.LayerSetColor((args.User, sprite), layer, component.Color);
             }
         }
@@ -85,12 +91,24 @@ namespace Content.Client.Paint
 
             foreach (var revealed in args.RevealedLayers)
             {
-                if (!_sprite.LayerMapTryGet((args.Equipee, sprite), revealed, out var layer, false) || sprite[layer] is not Layer notlayer)
+                if (!_sprite.LayerMapTryGet((args.Equipee, sprite), revealed, out var layer, false) || // HardLight
+                    sprite[layer] is not Layer spriteLayer || // Added spriteLayer
+                    spriteLayer.CopyToShaderParameters != null)
                     continue;
 
-                sprite.LayerSetShader(layer, component.ShaderName);
+                sprite.LayerSetShader(layer, GetPaintShaderPrototype(component.ShaderName, spriteLayer)); // HardLight: Added GetPaintShaderPrototype & spriteLayer
                 _sprite.LayerSetColor((args.Equipee, sprite), layer, component.Color);
             }
+        }
+
+        // HardLight: Preserve displacement-aware clothing rendering by using a combined shader
+        // instead of replacing the displacement shader with plain greyscale paint.
+        private static string GetPaintShaderPrototype(string defaultShader, Layer layer)
+        {
+            if (defaultShader == GreyscaleShader && layer.ShaderPrototype == DisplacedStencilDrawShader)
+                return DisplacedGreyscaleShader;
+
+            return defaultShader;
         }
 
         private void OnShutdown(EntityUid uid, PaintedComponent component, ref ComponentShutdown args)

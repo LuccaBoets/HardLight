@@ -73,24 +73,30 @@ public sealed class FloorTileSystem : EntitySystem
         // FTLing close is okay but this makes alignment too finnicky.
         // While you may already have a tile close you want to replace when we get half-tiles that may also be finnicky
         // so we're just gon with this for now.
-        const bool inRange = true;
-        var state = (inRange, location.EntityId);
-        _mapManager.FindGridsIntersecting(map.MapId, new Box2(map.Position - CheckRange, map.Position + CheckRange), ref state,
-            static (EntityUid entityUid, MapGridComponent grid, ref (bool weh, EntityUid EntityId) tuple) =>
-            {
-                if (tuple.EntityId == entityUid)
-                    return true;
-
-                tuple.weh = false;
-                return false;
-            });
-
-        if (!state.inRange)
+        // HardLight: only enforce the proximity check when creating a new grid in space. Placing or
+        // replacing tiles on an existing grid must not be blocked by a neighbouring grid (e.g. a dock
+        // or an adjacent ship), see HardLight issue #1477.
+        if (!HasComp<MapGridComponent>(location.EntityId))
         {
-            if (_netManager.IsClient && _timing.IsFirstTimePredicted)
-                _popup.PopupEntity(Loc.GetString("invalid-floor-placement"), args.User);
+            const bool inRange = true;
+            var state = (inRange, location.EntityId);
+            _mapManager.FindGridsIntersecting(map.MapId, new Box2(map.Position - CheckRange, map.Position + CheckRange), ref state,
+                static (EntityUid entityUid, MapGridComponent grid, ref (bool weh, EntityUid EntityId) tuple) =>
+                {
+                    if (tuple.EntityId == entityUid)
+                        return true;
 
-            return;
+                    tuple.weh = false;
+                    return false;
+                });
+
+            if (!state.inRange)
+            {
+                if (_netManager.IsClient && _timing.IsFirstTimePredicted)
+                    _popup.PopupEntity(Loc.GetString("invalid-floor-placement"), args.User);
+
+                return;
+            }
         }
 
         var userPos = _transform.ToMapCoordinates(transformQuery.GetComponent(args.User).Coordinates).Position;

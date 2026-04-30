@@ -19,6 +19,7 @@
     containers:
       ballistic-ammo: !type:Container
         ents: []
+  - type: Multishot # Goobstation
 
 - type: entity
   # abstract: true # Frontier: use NF variant

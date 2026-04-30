@@ -3,6 +3,7 @@ using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Chemistry.Hypospray.Events;
 using Content.Shared.Chemistry;
+using Content.Shared.CombatMode;
 using Content.Shared.Database;
 using Content.Shared.FixedPoint;
 using Content.Shared.Forensics;
@@ -10,6 +11,7 @@ using Content.Shared.IdentityManagement;
 using Content.Shared.Interaction;
 using Content.Shared.Interaction.Events;
 using Content.Shared.Mobs.Components;
+using Content.Shared.Mobs.Systems;
 using Content.Shared.Timing;
 using Content.Shared.Weapons.Melee.Events;
 using Content.Server.Body.Components;
@@ -24,6 +26,8 @@ public sealed class HypospraySystem : SharedHypospraySystem
 {
     [Dependency] private readonly AudioSystem _audio = default!;
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!; // Frontier - Upstream: #30704 - MIT
+    [Dependency] private readonly MobStateSystem _mobState = default!;
+    [Dependency] private readonly SharedCombatModeSystem _combatMode = default!;
 
     public override void Initialize()
     {
@@ -54,31 +58,26 @@ public sealed class HypospraySystem : SharedHypospraySystem
             return TryDraw(entity, target, drawableSolution.Value, user);
         }
 
-        // Frontier - Upstream: #30704 - MIT
-        if (entity.Comp.DoAfterTime > 0 && target != user)
-        {
-            // Is the target a mob? If yes, use a do-after to give them time to respond.
-            if (HasComp<MobStateComponent>(target) || HasComp<BloodstreamComponent>(target))
-            {
-                //If the injection would fail the doAfter can be skipped at this step
-                if (InjectionFailureCheck(entity, target, user, out _, out _, out _, out _))
-                {
-                    _doAfter.TryStartDoAfter(new DoAfterArgs(EntityManager, user, entity.Comp.DoAfterTime, new HyposprayDoAfterEvent(), entity.Owner, target: target, used: entity.Owner)
-                    {
-                        BreakOnMove = true,
-                        BreakOnWeightlessMove = false,
-                        BreakOnDamage = true,
-                        NeedHand = true,
-                        BreakOnHandChange = true,
-                        //Hidden = true // Frontier: if supporting this, should be configurable
-                    });
-                }
-                return true;
-            }
-        }
-        // End Frontier
+        var component = entity.Comp;
+        var injectTime = component.InjectTime;
 
-        return TryDoInject(entity, target, user);
+        // Instant mode or non-mob target: inject immediately.
+        if (injectTime == TimeSpan.Zero || !HasComp<MobStateComponent>(target))
+            return TryDoInject(entity, target, user);
+
+        if (!InjectionFailureCheck(entity, target, user, out _, out _, out _, out _))
+            return true;
+
+        injectTime = GetInjectTime(entity, user, target);
+        return _doAfter.TryStartDoAfter(new DoAfterArgs(EntityManager, user, injectTime, new HyposprayDoAfterEvent(), entity.Owner, target: target, used: entity.Owner)
+        {
+            BreakOnMove = true,
+            BreakOnWeightlessMove = false,
+            BreakOnDamage = true,
+            NeedHand = component.NeedHand,
+            BreakOnHandChange = component.BreakOnHandChange,
+            MovementThreshold = component.MovementThreshold,
+        });
     }
 
     private void OnUseInHand(Entity<HyposprayComponent> entity, ref UseInHandEvent args)
@@ -198,21 +197,23 @@ public sealed class HypospraySystem : SharedHypospraySystem
             // meleeSys.SendLunge(angle, user);
         }
 
-        _audio.PlayPvs(component.InjectSound, user);
-
-        // Medipens and such use this system and don't have a delay, requiring extra checks
-        // BeginDelay function returns if item is already on delay
-        if (delayComp != null)
-            _useDelay.TryResetDelay((uid, delayComp));
-
         // Get transfer amount. May be smaller than component.TransferAmount if not enough room
-        var realTransferAmount = FixedPoint2.Min(component.TransferAmount, targetSolution.AvailableVolume);
+        // If InjectMaxCapacity is enabled, inject as much as possible from current contents.
+        var plannedTransfer = component.InjectMaxCapacity ? hypoSpraySoln.Value.Comp.Solution.Volume : component.TransferAmount;
+        var realTransferAmount = FixedPoint2.Min(plannedTransfer, targetSolution.AvailableVolume);
 
         if (realTransferAmount <= 0)
         {
             _popup.PopupEntity(Loc.GetString("hypospray-component-transfer-already-full-message", ("owner", target)), target, user);
             return true;
         }
+
+        _audio.PlayPvs(component.InjectSound, user);
+
+        // Medipens and such use this system and don't have a delay, requiring extra checks
+        // BeginDelay function returns if item is already on delay
+        if (delayComp != null)
+            _useDelay.TryResetDelay((uid, delayComp));
 
         // Move units from attackSolution to targetSolution
         var removedSolution = _solutionContainers.SplitSolution(hypoSpraySoln.Value, realTransferAmount);
@@ -229,6 +230,49 @@ public sealed class HypospraySystem : SharedHypospraySystem
         _adminLogger.Add(LogType.ForceFeed, $"{EntityManager.ToPrettyString(user):user} injected {EntityManager.ToPrettyString(target):target} with a solution {SharedSolutionContainerSystem.ToPrettyString(removedSolution):removedSolution} using a {EntityManager.ToPrettyString(uid):using}");
 
         return true;
+    }
+
+    /// <summary>
+    /// Calculates the do-after time for non-instant hyposprays and emits attempt popups.
+    /// </summary>
+    private TimeSpan GetInjectTime(Entity<HyposprayComponent> hypospray, EntityUid user, EntityUid target)
+    {
+        _popup.PopupEntity(Loc.GetString("hypospray-component-injecting-user"), target, user);
+        var comp = hypospray.Comp;
+
+        if (!_solutionContainers.TryGetSolution(hypospray.Owner, comp.SolutionName, out _, out var solution))
+            return TimeSpan.Zero;
+
+        var actualDelay = comp.Delay;
+        var amountToInject = comp.InjectMaxCapacity
+            ? solution.Volume
+            : FixedPoint2.Min(comp.TransferAmount, solution.Volume);
+
+        // First 5u does not add extra delay.
+        actualDelay += comp.DelayPerVolume * FixedPoint2.Max(0, amountToInject - 5).Double();
+        actualDelay = MathHelper.Max(actualDelay, TimeSpan.FromSeconds(1));
+
+        if (user != target)
+        {
+            var userName = Identity.Entity(user, EntityManager);
+            _popup.PopupEntity(Loc.GetString("hypospray-component-injecting-target", ("user", userName)), user, target);
+
+            if (_mobState.IsIncapacitated(target))
+                actualDelay /= 2.5f;
+            else if (_combatMode.IsInCombatMode(target))
+                actualDelay += TimeSpan.FromSeconds(1);
+
+            _adminLogger.Add(LogType.ForceFeed,
+                $"{ToPrettyString(user):user} is attempting to inject {ToPrettyString(target):target} with a solution {SharedSolutionContainerSystem.ToPrettyString(solution):solution}");
+        }
+        else
+        {
+            actualDelay /= 2;
+            _adminLogger.Add(LogType.Ingestion,
+                $"{ToPrettyString(user):user} is attempting to inject themselves with a solution {SharedSolutionContainerSystem.ToPrettyString(solution):solution}.");
+        }
+
+        return actualDelay;
     }
 
     private bool TryDraw(Entity<HyposprayComponent> entity, Entity<BloodstreamComponent?> target, Entity<SolutionComponent> targetSolution, EntityUid user)

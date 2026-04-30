@@ -44,6 +44,7 @@
   - DiseaseSwab
   - BodyBag
   - WhiteCane
+  - JetInjector
   - AACTablet
 
 - type: latheRecipePack
@@ -123,6 +124,7 @@
   - SyringeCryostasis
   - BluespaceBeaker
   - SyringeBluespace
+  - AdvancedJetInjector
   - BluespaceBucket
   - BluespaceBarrel
 

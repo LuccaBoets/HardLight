@@ -1,4 +1,5 @@
 using Content.Shared.Chemistry.EntitySystems;
+using Content.Shared.Chemistry.Prototypes;
 using Content.Shared.Chemistry.Reagent;
 using Content.Shared.DoAfter;
 using Content.Shared.FixedPoint;
@@ -73,6 +74,25 @@ public sealed partial class InjectorComponent : Component
     [DataField]
     [AutoNetworkedField]
     public FixedPoint2 TransferAmount = FixedPoint2.New(5);
+
+    /// <summary>
+    /// Mode-architecture transfer amount. Null means "inject everything".
+    /// Used when ActiveModeProtoId is set.
+    /// </summary>
+    [DataField]
+    public FixedPoint2? CurrentTransferAmount;
+
+    /// <summary>
+    /// Optional active injector mode prototype id.
+    /// </summary>
+    [DataField]
+    public ProtoId<InjectorModePrototype>? ActiveModeProtoId;
+
+    /// <summary>
+    /// Optional set of allowed injector modes for this injector.
+    /// </summary>
+    [DataField]
+    public List<ProtoId<InjectorModePrototype>>? AllowedModes;
 
     /// <summary>
     /// Injection delay (seconds) when the target is a mob.

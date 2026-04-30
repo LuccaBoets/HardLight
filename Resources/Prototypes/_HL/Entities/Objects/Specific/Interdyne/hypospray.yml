@@ -31,3 +31,39 @@
     maxFillLevels: 6
     fillBaseName: hypo_fill
     solutionName: hypospray
+
+- type: entity
+  parent: [JetInjector, BaseC2Contraband]
+  id: InterdyneJetInjector
+  name: interdyne jet injector
+  description: A high quality injector branded in Interdyne's signature colors. Interdyne R&D improved upon the design to include a larger internal reservoir.
+  components:
+  - type: Sprite
+    sprite: _HL/Objects/Specific/Interdyne/jetinjector.rsi
+    layers:
+    - state: jetinjector_base
+      map: ["enum.SolutionContainerLayers.Base"]
+    - state: jetinjector_filled1
+      map: ["enum.SolutionContainerLayers.Fill"]
+      visible: false
+  - type: Item
+    sprite: _HL/Objects/Specific/Interdyne/jetinjector.rsi
+  - type: SolutionContainerManager
+    solutions:
+      hypospray:
+        maxVol: 30
+  - type: SolutionContainerVisuals
+    maxFillLevels: 6
+  - type: Injector
+    solutionName: hypospray
+    transferAmount: 30
+    minTransferAmount: 30
+    maxTransferAmount: 30
+    currentTransferAmount: null
+    ignoreMobs: false
+    injectOnly: false
+    activeModeProtoId: InjectorModeDynamicInjectInterdyne
+    allowedModes: [InjectorModeDynamicInjectInterdyne]
+    delay: 2.5
+    delayPerVolume: 0.05
+    toggleState: Inject

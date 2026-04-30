@@ -293,8 +293,9 @@ public sealed partial class ShuttleSystem
         if (!TrySetupFTL(shuttleUid, component, out var hyperspace))
             return;
 
-        startupTime ??= DefaultStartupTime;
-        hyperspaceTime ??= DefaultTravelTime;
+        var speedFactor = GetFTLSpeedFactor(shuttleUid);
+        startupTime ??= DefaultStartupTime * speedFactor;
+        hyperspaceTime ??= DefaultTravelTime * speedFactor;
 
         hyperspace.StartupTime = startupTime.Value;
         hyperspace.TravelTime = hyperspaceTime.Value;
@@ -328,8 +329,9 @@ public sealed partial class ShuttleSystem
         if (!TrySetupFTL(shuttleUid, component, out var hyperspace))
             return;
 
-        startupTime ??= DefaultStartupTime;
-        hyperspaceTime ??= DefaultTravelTime;
+        var speedFactor = GetFTLSpeedFactor(shuttleUid);
+        startupTime ??= DefaultStartupTime * speedFactor;
+        hyperspaceTime ??= DefaultTravelTime * speedFactor;
 
         var config = _dockSystem.GetDockingConfig(shuttleUid, target, priorityTag);
         hyperspace.StartupTime = startupTime.Value;
@@ -432,7 +434,7 @@ public sealed partial class ShuttleSystem
         // Reset rotation so they always face the same direction.
         xform.LocalRotation = Angle.Zero;
         _index += width + Buffer;
-        comp.StateTime = StartEndTime.FromCurTime(_gameTiming, comp.TravelTime - DefaultArrivalTime);
+        comp.StateTime = StartEndTime.FromCurTime(_gameTiming, comp.TravelTime - DefaultArrivalTime * GetFTLSpeedFactor(uid));
 
         // Frontier: rollover coordinates
         if (_index > MaxCoord)
@@ -462,7 +464,7 @@ public sealed partial class ShuttleSystem
     {
         var shuttle = entity.Comp2;
         var comp = entity.Comp1;
-        comp.StateTime = StartEndTime.FromCurTime(_gameTiming, DefaultArrivalTime);
+        comp.StateTime = StartEndTime.FromCurTime(_gameTiming, DefaultArrivalTime * GetFTLSpeedFactor(entity.Owner));
         comp.State = FTLState.Arriving;
 
         if (entity.Comp1.VisualizerProto != null && entity.Comp1.TargetCoordinates.IsValid(EntityManager))
@@ -574,9 +576,9 @@ public sealed partial class ShuttleSystem
         }
 
         comp.State = FTLState.Cooldown;
-        var cooldown = entity.Comp2.FTLCooldownOverride ?? (HasComp<ArrivalsShuttleComponent>(uid)
-                ? ArrivalsFTLCooldown
-                : FTLCooldown);
+        var baseCooldown = HasComp<ArrivalsShuttleComponent>(uid) ? ArrivalsFTLCooldown : FTLCooldown;
+        var speedFactor = GetFTLSpeedFactor(uid);
+        var cooldown = entity.Comp2.FTLCooldownOverride ?? baseCooldown * speedFactor;
         comp.StateTime = StartEndTime.FromCurTime(_gameTiming, cooldown);
         _console.RefreshShuttleConsoles(uid);
         _mapManager.SetMapPaused(mapId, false);

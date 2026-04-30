@@ -3,10 +3,6 @@ using Robust.Shared.Serialization.Manager.Attributes;
 
 namespace Content.Shared._Mono.Shuttle.FTL;
 
-/// <summary>
-/// Minimal stub for FTL drive parameters used by shuttle drive prototypes.
-/// Exists to satisfy prototype loading; behavior may be implemented server-side later.
-/// </summary>
 [RegisterComponent]
 public sealed partial class FTLDriveComponent : Component
 {
@@ -23,20 +19,10 @@ public sealed partial class FTLDriveComponent : Component
     public int ThermalSignature { get; set; } = 0;
 
     /// <summary>
-    /// Cooldown time between FTL uses (seconds).
+    /// Multiplier applied to all FTL timings (startup, travel, cooldown).
+    /// Values below 1.0 speed up FTL; 0 means no effect (drive does not modify timings).
+    /// When multiple drives are present the worst (highest) factor wins to prevent stacking.
     /// </summary>
-    [DataField("cooldown")]
-    public float Cooldown { get; set; } = 0f;
-
-    /// <summary>
-    /// Time spent in hyperspace (seconds).
-    /// </summary>
-    [DataField("hyperSpaceTime")]
-    public float HyperSpaceTime { get; set; } = 0f;
-
-    /// <summary>
-    /// Startup/spool-up time before jump (seconds).
-    /// </summary>
-    [DataField("startupTime")]
-    public float StartupTime { get; set; } = 0f;
+    [DataField("speedFactor")]
+    public float SpeedFactor { get; set; } = 0f;
 }

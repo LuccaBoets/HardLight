@@ -293,6 +293,9 @@
     maxTransferAmount: 5
     transferAmount: 1
     toggleState: 1 # draw
+    activeModeProtoId: InjectorModeDraw
+    allowedModes: [InjectorModeInject, InjectorModeDraw]
+    currentTransferAmount: 1
   - type: ExaminableSolution
     solution: dropper
   - type: UserInterface
@@ -366,6 +369,9 @@
         maxVol: 15
   - type: Injector
     injectOnly: false
+    activeModeProtoId: InjectorModeInject
+    allowedModes: [InjectorModeInject, InjectorModeDraw]
+    currentTransferAmount: 5
   - type: ExaminableSolution
     solution: injector
   - type: Spillable
@@ -389,6 +395,8 @@
   - type: Injector
     transferAmount: 15
     toggleState: Draw
+    activeModeProtoId: InjectorModeDraw
+    currentTransferAmount: 15
   - type: Tag
     tags:
     - Syringe
@@ -467,6 +475,7 @@
   components:
   - type: Injector
     toggleState: Inject
+    activeModeProtoId: InjectorModeInject
 
 - type: entity
   id: SyringeBluespace
@@ -489,10 +498,15 @@
       injector:
         maxVol: 150
   - type: Injector
+    activeModeProtoId: BluespaceSyringeDrawMode
+    allowedModes:
+    - BluespaceSyringeInjectMode
+    - BluespaceSyringeDrawMode
     delay: 2.5
     injectOnly: false
     maxTransferAmount: 150
     minTransferAmount: 5
+    currentTransferAmount: 5
   - type: SolutionContainerVisuals
     maxFillLevels: 2
     fillBaseName: syringe
@@ -527,6 +541,9 @@
     minTransferAmount: 5
     maxTransferAmount: 10
     transferAmount: 10
+    activeModeProtoId: InjectorModeInject
+    allowedModes: [InjectorModeInject, InjectorModeDraw]
+    currentTransferAmount: 10
   - type: Tag
     tags:
     - Syringe

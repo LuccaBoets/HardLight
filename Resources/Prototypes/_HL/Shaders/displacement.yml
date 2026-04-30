@@ -1,0 +1,6 @@
+- type: shader
+  id: DisplacedGreyscale
+  kind: source
+  path: "/Textures/_HL/Shaders/displaced_greyscale.swsl"
+  params:
+    displacementSize: 127

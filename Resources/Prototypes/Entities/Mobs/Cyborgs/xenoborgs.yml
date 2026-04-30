@@ -13,6 +13,7 @@
       sprite: Mobs/Silicon/Chassis/xeno_engi.rsi
       state: borg
   - type: Sprite
+    sprite: Mobs/Silicon/Chassis/xeno_engi.rsi
     layers:
     - state: borg
     - state: borg_e
@@ -73,6 +74,7 @@
       sprite: Mobs/Silicon/Chassis/xeno_heavy.rsi
       state: borg
   - type: Sprite
+    sprite: Mobs/Silicon/Chassis/xeno_heavy.rsi
     layers:
     - state: borg
     - state: borg_e
@@ -168,6 +170,7 @@
       sprite: Mobs/Silicon/Chassis/xeno_scout.rsi
       state: borg
   - type: Sprite
+    sprite: Mobs/Silicon/Chassis/xeno_scout.rsi
     layers:
       - state: borg
       - state: borg_e
@@ -227,6 +230,7 @@
       sprite: Mobs/Silicon/Chassis/xeno_stealth.rsi
       state: borg
   - type: Sprite
+    sprite: Mobs/Silicon/Chassis/xeno_stealth.rsi
     layers:
       - state: borg
       - state: borg_e

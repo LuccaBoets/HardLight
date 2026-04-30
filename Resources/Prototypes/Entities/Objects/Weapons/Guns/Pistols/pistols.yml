@@ -67,6 +67,10 @@
   - type: Appearance
   - type: StaticPrice
     price: 500
+  - type: Multishot # Goobstation
+    missChance: 0.4
+    spreadMultiplier: 2
+    spreadAddition: 40
 
 - type: entity
   name: viper (9x19mm)
@@ -310,3 +314,5 @@
         whitelist:
           tags:
             - Cartridge45_magnumFMJ
+  - type: Multishot # Goobstation
+    spreadMultiplier: 30

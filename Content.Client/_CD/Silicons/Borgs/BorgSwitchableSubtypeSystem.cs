@@ -2,11 +2,13 @@ using System.Linq;
 using Content.Client.Silicons.Borgs;
 using Content.Shared._CD.Silicons;
 using Content.Shared._CD.Silicons.Borgs;
+using Content.Shared.CCVar; // HardLight
 using Content.Shared.Movement.Components;
 using Content.Shared.Silicons.Borgs.Components;
 using Robust.Client.GameObjects;
 using Robust.Client.Graphics;
 using Robust.Client.ResourceManagement;
+using Robust.Shared.Configuration; // HardLight
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Serialization.TypeSerializers.Implementations;
 using Robust.Shared.Utility;
@@ -23,6 +25,7 @@ public sealed class BorgSwitchableSubtypeSystem : SharedBorgSwitchableSubtypeSys
     [Dependency] private readonly AppearanceSystem _appearance = default!;
     [Dependency] private readonly IResourceCache _resourceCache = default!;
     [Dependency] private readonly FixtureSystem _fixture = default!;
+    [Dependency] private readonly IConfigurationManager _cfg = default!; // HardLight
 
     public override void Initialize()
     {
@@ -44,6 +47,13 @@ public sealed class BorgSwitchableSubtypeSystem : SharedBorgSwitchableSubtypeSys
 
     protected override void UpdateEntityAppearance(Entity<BorgSwitchableSubtypeComponent> entity, BorgSubtypePrototype borgSubtypePrototype)
     {
+        // HardLight: Check if player has disabled custom borg sprites
+        if (!_cfg.GetCVar(CCVars.ShowCyborgSubtypeSprites))
+        {
+            // Don't apply custom appearance for remote entities
+            return;
+        }
+
         // LOT of copy pasted code from BorgSwitchableTypeSystem, but is probably necessary unless the upstream code
         // is refactored
 

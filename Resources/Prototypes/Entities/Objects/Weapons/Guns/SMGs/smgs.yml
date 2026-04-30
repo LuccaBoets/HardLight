@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2025 Ted Lukin <66275205+pheenty@users.noreply.github.com>
+
 - type: entity
   name: BaseSMG
   parent: BaseItem
@@ -57,6 +59,7 @@
       gun_chamber: !type:ContainerSlot
   - type: StaticPrice
     price: 500
+  - type: Multishot # Goobstation
 
 - type: entity
   name: Atreides (57x28mm)
@@ -274,3 +277,7 @@
     steps: 6
     zeroVisible: true
   - type: Appearance
+  - type: Multishot # Goobstation
+    missChance: 0.4
+    spreadMultiplier: 3
+    spreadAddition: 50 # Very hard to hold two of these steady, let alone steady while shooting them.

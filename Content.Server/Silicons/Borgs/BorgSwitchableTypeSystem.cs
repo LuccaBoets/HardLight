@@ -1,6 +1,8 @@
 ﻿using Content.Server.Inventory;
 using Content.Server.Radio.Components;
 using Content.Shared.Inventory;
+using Content.Shared.Radio;
+using Content.Shared.Radio.Components;
 using Content.Shared.Silicons.Borgs;
 using Content.Shared.Silicons.Borgs.Components;
 using Robust.Shared.Prototypes;
@@ -20,13 +22,29 @@ public sealed class BorgSwitchableTypeSystem : SharedBorgSwitchableTypeSystem
     {
         var prototype = Prototypes.Index(borgType);
 
-        // Assign radio channels
+        // Assign radio channels.
+        // HardLight: write to IntrinsicChannels (rather than just Channels) so per-borg-type
+        // channels survive EncryptionChannelsChangedEvent rebuilds in IntrinsicRadioKeySystem.
+        // Without this, installing or removing an encryption key would clobber the borg type's
+        // own radio channels (e.g. SecBorg losing Security comms after adding any other key).
         string[] radioChannels = [.. ent.Comp.InherentRadioChannels, .. prototype.RadioChannels];
+        var keyHolder = CompOrNull<EncryptionKeyHolderComponent>(ent);
+
         if (TryComp(ent, out IntrinsicRadioTransmitterComponent? transmitter))
+        {
+            transmitter.IntrinsicChannels = [.. radioChannels];
             transmitter.Channels = [.. radioChannels];
+            if (keyHolder != null)
+                transmitter.Channels.UnionWith(keyHolder.Channels);
+        }
 
         if (TryComp(ent, out ActiveRadioComponent? activeRadio))
+        {
+            activeRadio.IntrinsicChannels = [.. radioChannels];
             activeRadio.Channels = [.. radioChannels];
+            if (keyHolder != null)
+                activeRadio.Channels.UnionWith(keyHolder.Channels);
+        }
 
         // Borg transponder for the robotics console
         if (TryComp(ent, out BorgTransponderComponent? transponder))

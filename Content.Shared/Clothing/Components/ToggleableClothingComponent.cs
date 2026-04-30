@@ -24,7 +24,13 @@ public sealed partial class ToggleableClothingComponent : Component
     [DataField, AutoNetworkedField]
     public EntProtoId Action = "ActionToggleSuitPiece";
 
-    [AutoNetworkedField]
+    // HardLight: persist ActionEntity across save/load. Without [DataField] this is wiped on
+    // deserialization; OnMapInit (where EnsureAction normally runs) only fires on entity creation,
+    // not on load, so a hardsuit stashed inside a saved apartment loses its toggle action and
+    // strip verb until the suit is replaced (issue #1530). The action entity itself lives in
+    // ActionsContainerComponent and is persisted as a child, so its EntityUid is remapped
+    // correctly on load.
+    [DataField, AutoNetworkedField]
     public EntityUid? ActionEntity;
 
     /// <summary>

@@ -186,3 +186,16 @@
   id: MedicalEyePatchHud
   equipment:
     eyes: ClothingEyesEyepatchHudMedical
+
+# Injector choice
+- type: loadout
+  id: MedicalJetInjector
+  storage:
+    back:
+    - JetInjector
+
+- type: loadout
+  id: MedicalSyringe
+  storage:
+    back:
+    - Syringe

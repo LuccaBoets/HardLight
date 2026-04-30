@@ -1,7 +1,9 @@
 using Content.Server.Shuttles.Systems;
+using Content.Shared._Crescent.ShipShields;
 using Content.Shared._Mono.FireControl;
 using Content.Shared.Power;
 using Content.Shared.Shuttles.BUIStates;
+using Robust.Shared.Network;
 using Robust.Server.GameObjects;
 
 namespace Content.Server._Mono.FireControl;
@@ -106,12 +108,13 @@ public sealed partial class FireControlSystem : EntitySystem
         }
     }
 
-    private void UpdateUi(EntityUid uid, FireControlConsoleComponent? component = null)
+    private void UpdateUi(EntityUid uid, FireControlConsoleComponent? component = null, Dictionary<NetEntity, List<DockingPortState>>? docks = null)
     {
         if (!Resolve(uid, ref component))
             return;
 
-        NavInterfaceState navState = _shuttleConsoleSystem.GetNavState(uid, _shuttleConsoleSystem.GetAllDocks());
+        docks ??= _shuttleConsoleSystem.GetAllDocks();
+        NavInterfaceState navState = _shuttleConsoleSystem.GetNavState(uid, docks);
 
         List<FireControllableEntry> controllables = new();
         if (component.ConnectedServer != null && TryComp<FireControlServerComponent>(component.ConnectedServer, out var server))
@@ -129,7 +132,22 @@ public sealed partial class FireControlSystem : EntitySystem
 
         var array = controllables.ToArray();
 
-        var state = new FireControlConsoleBoundInterfaceState(component.ConnectedServer != null, array, navState);
+        float? shieldHealth = null;
+        var consoleGrid = Transform(uid).GridUid;
+        if (consoleGrid != null)
+        {
+            var emitterQuery = EntityQueryEnumerator<ShipShieldEmitterComponent, TransformComponent>();
+            while (emitterQuery.MoveNext(out _, out var emitterComp, out var emitterXform))
+            {
+                if (emitterXform.GridUid != consoleGrid)
+                    continue;
+                var health = 1f - Math.Clamp(emitterComp.Damage / emitterComp.DamageLimit, 0f, 1f);
+                shieldHealth = MathF.Round(health * 100f);
+                break;
+            }
+        }
+
+        var state = new FireControlConsoleBoundInterfaceState(component.ConnectedServer != null, array, navState, shieldHealth);
         _ui.SetUiState(uid, FireControlConsoleUiKey.Key, state);
     }
 }

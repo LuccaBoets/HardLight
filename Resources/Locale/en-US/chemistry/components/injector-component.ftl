@@ -2,9 +2,14 @@
 
 injector-draw-text = Draw
 injector-inject-text = Inject
+injector-toggle-verb-text = Toggle mode
 injector-invalid-injector-toggle-mode = Invalid
 injector-volume-label = Volume: [color=white]{$currentVolume}/{$totalVolume}[/color]
     Mode: [color=white]{$modeString}[/color] ([color=white]{$transferVolume}u[/color])
+
+injector-mode-inject-name = Inject
+injector-mode-draw-name = Draw
+injector-mode-dynamic-name = Dynamic
 
 ## Entity
 
@@ -28,3 +33,4 @@ injector-component-injecting-user = You start injecting the needle.
 injector-component-drawing-target = {CAPITALIZE(THE($user))} is trying to use a needle to draw from you!
 injector-component-injecting-target = {CAPITALIZE(THE($user))} is trying to inject a needle into you!
 injector-component-deny-chitinid = {CAPITALIZE(THE($target))}'s exoskeleton is too thick for the needle to pierce.
+injector-component-deny-synth = {CAPITALIZE(THE($target))}'s chassis is too thick for the needle to pierce.

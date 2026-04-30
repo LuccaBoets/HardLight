@@ -1,4 +1,6 @@
 using Content.Server._Mono.FireControl;
+using Content.Server.Emp;
+using Content.Shared.Emp;
 using Content.Shared.Weapons.Hitscan.Components;
 using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Systems;
@@ -29,8 +31,17 @@ public sealed partial class ShipTargetingSystem : EntitySystem
     {
         base.Initialize();
 
+        SubscribeLocalEvent<ShipEmpDisableGunsComponent, EmpPulseEvent>(OnEmpPulse);
+
         _gunQuery = GetEntityQuery<GunComponent>();
         _physQuery = GetEntityQuery<PhysicsComponent>();
+    }
+
+    private void OnEmpPulse(Entity<ShipEmpDisableGunsComponent> ent, ref EmpPulseEvent args)
+    {
+        args.Affected = true;
+        args.Disabled = true;
+        args = args with { Duration = args.Duration * ent.Comp.DurationMultiplier };
     }
 
     // have to use this because RT's is broken and unusable for navigation
@@ -72,6 +83,9 @@ public sealed partial class ShipTargetingSystem : EntitySystem
             if (mapTarget.MapId != shipPos.MapId)
                 continue;
 
+            if (HasComp<EmpDisabledComponent>(uid))
+                continue;
+
             var linVel = shipBody.LinearVelocity;
             var targetVel = targetGrid == null ? Vector2.Zero : _physics.GetMapLinearVelocity(targetGrid.Value);
             var leadBy = 1f - MathF.Pow(1f - comp.LeadingAccuracy, frameTime);
@@ -98,6 +112,9 @@ public sealed partial class ShipTargetingSystem : EntitySystem
     {
         var shipXform = Transform(shipUid);
         if (!_physQuery.TryComp(shipUid, out var shipBody))
+            return;
+
+        if (HasComp<EmpDisabledComponent>(shipUid))
             return;
 
         if (!_cannon.CanFireWeapons(shipUid))

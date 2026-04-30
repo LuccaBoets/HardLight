@@ -158,6 +158,7 @@
   - EnergyCautery
   - AdvancedRetractor
   - BorgModuleAdvancedSurgery
+  - AdvancedJetInjector
 
 - type: technology
   id: CyberneticEnhancements

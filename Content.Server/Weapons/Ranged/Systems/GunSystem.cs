@@ -154,6 +154,15 @@ public sealed partial class GunSystem : SharedGunSystem
         mapAngle = mapDirection.ToAngle(); // HardLight
         var gunVelocity = Physics.GetMapLinearVelocity(fromEnt);
 
+        // GetMapLinearVelocity walks fromEnt's parent chain, but in ship-mounted gun paths
+        // (FireControl, SpaceArtillery) fromCoordinates can already be map-parented or race
+        // with reparenting, causing the walk to return Vector2.Zero. This makes shells appear
+        // to spawn from the ship's centre and lose forward range when the ship is moving.
+        // Override with the firing grid's authoritative LinearVelocity when we know it.
+        // No effect on off-grid handheld guns (gridUid is EntityUid.Invalid).
+        if (gridUid != EntityUid.Invalid && TryComp<PhysicsComponent>(gridUid, out var gridPhysics))
+            gunVelocity = gridPhysics.LinearVelocity;
+
         // I must be high because this was getting tripped even when true.
         // DebugTools.Assert(direction != Vector2.Zero);
         var shotProjectiles = new List<EntityUid>(ammo.Count);

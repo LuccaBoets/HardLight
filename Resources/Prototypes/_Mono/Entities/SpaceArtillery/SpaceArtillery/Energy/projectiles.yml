@@ -286,7 +286,7 @@
   - type: EmpOnTrigger
     range: 4
     energyConsumption: 2700000
-    disableDuration: 10
+    disableDuration: 15
 
 # DYMERE
 
@@ -402,7 +402,7 @@
   - type: EmpOnTrigger
     range: 3
     energyConsumption: 6000000
-    disableDuration: 27.5
+    disableDuration: 55
   - type: LightningOnTrigger
     chance: 1
     count: 5

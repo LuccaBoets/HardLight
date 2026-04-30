@@ -143,10 +143,24 @@ public sealed partial class ShipShieldsSystem : EntitySystem
     private void OnPreventCollide(EntityUid uid, ShipShieldComponent component, ref PreventCollideEvent args)
     {
         // only handle ship weapons for now. engine update introduced physics regressions. Let's polish everything else and circle back yeah?
-        // Ensuring projectiles coming froms same grid don't hit shield is handled by ProjectileGridPhaseComponent
         if (!_shipWeaponProjectileQuery.HasComponent(args.OtherEntity) ||
         !_projectileQuery.TryGetComponent(args.OtherEntity, out var projectile) ||
         projectile.ProjectileSpent)
+        {
+            args.Cancelled = true;
+            return;
+        }
+
+        // Don't deflect/consume projectiles fired from the same grid we're shielding. This was
+        // previously claimed to be handled by ProjectileGridPhaseComponent, but that component
+        // does not exist in this fork. SpaceArtillerySystem cancels the same-grid contact on the
+        // projectile-side PreventCollideEvent, but each side gets a fresh event with Cancelled=false
+        // so the order in which the two handlers run is non-deterministic. Without this check, a
+        // ship's own ship-weapon fire frequently collides with its own shield on the first physics
+        // step, gets QueueDel'd, and damages the emitter -- which players see as "shields don't
+        // work" / "guns don't shoot through our shield".
+        if (projectile.Weapon is { } weapon
+            && _transformSystem.GetGrid(weapon) == component.Shielded)
         {
             args.Cancelled = true;
             return;
@@ -199,8 +213,18 @@ public sealed partial class ShipShieldsSystem : EntitySystem
     /// <returns>The shield entity.</returns>
     private EntityUid ShieldEntity(EntityUid entity, MapGridComponent? mapGrid = null, EntityUid? source = null)
     {
+        // HardLight: Treat a ShipShieldedComponent whose Shield no longer exists as stale and
+        // recreate the bubble. Without this, a ship saved while shielded keeps the marker
+        // component on the grid (Shield field defaults to EntityUid.Invalid after deserialization
+        // since it isn't a DataField); on load, this early-out returned that invalid uid forever
+        // and the emitter never got a real shield, so it just sat powered with no bubble.
         if (TryComp<ShipShieldedComponent>(entity, out var existingShielded))
-            return existingShielded.Shield;
+        {
+            if (Exists(existingShielded.Shield) && HasComp<ShipShieldComponent>(existingShielded.Shield))
+                return existingShielded.Shield;
+
+            RemComp<ShipShieldedComponent>(entity);
+        }
 
         if (!Resolve(entity, ref mapGrid, false))
             return EntityUid.Invalid;
@@ -247,6 +271,7 @@ public sealed partial class ShipShieldsSystem : EntitySystem
             collisionLayer: (int)CollisionGroup.BulletImpassable, // Mono - Only try to block bullets
             body: shieldPhysics);
 
+        _physicsSystem.SetCanCollide(shield, true, body: shieldPhysics);
         _physicsSystem.WakeBody(shield, body: shieldPhysics);
         _physicsSystem.SetSleepingAllowed(shield, shieldPhysics, false);
 
@@ -273,8 +298,20 @@ public sealed partial class ShipShieldsSystem : EntitySystem
     // HardLight start
     private bool HasEmitterShield(EntityUid emitterUid, EntityUid gridUid, ShipShieldEmitterComponent emitter)
     {
-        if (emitter.Shield != null && Exists(emitter.Shield.Value))
-            return true;
+        if (emitter.Shield is { } shieldUid && Exists(shieldUid))
+        {
+            if (TryComp<ShipShieldComponent>(shieldUid, out var shield)
+                && shield.Source == emitterUid
+                && shield.Shielded == gridUid)
+            {
+                emitter.Shielded = gridUid;
+                return true;
+            }
+
+            // Stale or mismatched shield reference; allow recreation.
+            emitter.Shield = null;
+            emitter.Shielded = null;
+        }
 
         if (TryComp<ShipShieldedComponent>(gridUid, out var shielded)
             && shielded.Source == emitterUid

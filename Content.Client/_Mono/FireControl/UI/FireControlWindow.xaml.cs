@@ -141,6 +141,18 @@ public sealed partial class FireControlWindow : FancyWindow
             ServerStatus.FontColorOverride = Color.Red;
         }
 
+        if (state.ShieldHealthPercent == null)
+        {
+            ShieldStatus.Text = "SHIELD: NONE";
+            ShieldStatus.FontColorOverride = Color.Gray;
+        }
+        else
+        {
+            var pct = (int)state.ShieldHealthPercent.Value;
+            ShieldStatus.Text = $"SHIELD: {pct}%";
+            ShieldStatus.FontColorOverride = pct > 50 ? Color.Green : pct > 25 ? Color.Yellow : Color.Red;
+        }
+
         UpdateWeaponsList(state);
 
         // Update the category buttons state based on whether weapons of that type are available

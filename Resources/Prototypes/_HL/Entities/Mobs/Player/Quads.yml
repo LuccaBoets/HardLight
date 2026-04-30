@@ -28,8 +28,9 @@
         - PositronicBrain
       borg_module:
         - BorgModuleTool
-        - BorgModuleDiagnosis
-        - BorgModuleTreatment
+        - BorgModuleTopicals
+        - BorgModuleRescue
+        - BorgModuleChemical
   - type: SurgerySpeedModifier #shitmed
     speedModifier: 1.75
   - type: ItemSlots
@@ -51,6 +52,8 @@
         - PositronicBrain
       borg_module:
         - BorgModuleTool
+        - BorgModuleMining
+        - BorgModuleTraversal
   - type: ItemSlots
     slots:
       cell_slot:
@@ -70,6 +73,7 @@
         - PositronicBrain
       borg_module:
         - BorgModuleTool
+        - BorgModuleConstruction
         - BorgModuleRCD
         - BorgModuleCable
   - type: ItemSlots

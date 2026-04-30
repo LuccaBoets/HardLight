@@ -101,7 +101,7 @@
     sprite: _Starlight/Mobs/Species/Felionoid/parts.rsi
     state: felionoid
     requiredLegs: 2
-  - type: OwOAccent
+  - type: FelionoidAccent
   - type: MobThresholds
     thresholds:
       0: Alive

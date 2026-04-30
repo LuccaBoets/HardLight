@@ -141,9 +141,9 @@
   - CyberneticsPainEditor
   - CyberneticsAdrenal
   - CyberneticsCortexBomb
-  - CyberneticsHiggsCerebralTrainer
-  - CyberneticsHiggsAnchor
-  - CyberneticsHiggsDisplacer
+  # - CyberneticsHiggsCerebralTrainer
+  # - CyberneticsHiggsAnchor
+  # - CyberneticsHiggsDisplacer
   - CyberneticsBloodPump
 
 - type: technology

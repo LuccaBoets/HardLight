@@ -221,6 +221,31 @@ public abstract partial class SharedShuttleSystem : EntitySystem
         return range;
     }
 
+    /// <summary>
+    /// Returns the speed factor to apply to all FTL timings (startup, travel, cooldown) for a shuttle.
+    /// The worst (highest) factor among powered drives wins, preventing stacking multiple drives.
+    /// Returns 1.0 when no drive sets a factor (no change to global defaults).
+    /// </summary>
+    public float GetFTLSpeedFactor(EntityUid shuttleUid)
+    {
+        float? result = null;
+        var driveQuery = EntityQueryEnumerator<FTLDriveComponent, TransformComponent>();
+
+        while (driveQuery.MoveNext(out var uid, out var drive, out var xform))
+        {
+            if (xform.GridUid != shuttleUid || !_power.IsPowered(uid))
+                continue;
+
+            if (drive.SpeedFactor <= 0f)
+                continue;
+
+            if (result == null || drive.SpeedFactor > result.Value)
+                result = drive.SpeedFactor;
+        }
+
+        return result ?? 1f;
+    }
+
     public float GetFTLBufferRange(EntityUid shuttleUid, MapGridComponent? grid = null)
     {
         if (!_gridQuery.Resolve(shuttleUid, ref grid))

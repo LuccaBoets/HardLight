@@ -1,6 +1,6 @@
 - type: entity
   name: EG-4 energy revolver
-  parent: [BaseWeaponBatterySmall, BaseC3ExpeditionContraband] # Mono - C2 contra instead of command contra
+  parent: [ BaseWeaponBatterySmall, BaseC3ExpeditionContraband ] # Mono - C2 contra instead of command contra
   id: WeaponEnergyRevolver
   description: A highly advanced energy revolver capable of firing both lethal and disabling bullets.
   components:
@@ -8,12 +8,12 @@
     sprite: _Goobstation/Objects/Weapons/Guns/Battery/erevolver.rsi
     layers:
     - state: base
-      map: ["enum.GunVisualLayers.Base"]
+      map: [ "enum.GunVisualLayers.Base" ]
     - state: mode-disabler
       shader: unshaded
       map: [ "Firemode" ]
     - state: mag-unshaded-4
-      map: ["enum.GunVisualLayers.MagUnshaded"]
+      map: [ "enum.GunVisualLayers.MagUnshaded" ]
       shader: unshaded
   - type: Clothing
     quickEquip: false
@@ -63,3 +63,7 @@
     autoRechargeRate: 75 # Mono - 75 < 35
   - type: PirateBountyItem # Mono
     id: TSFLaserWeapon
+  - type: Multishot # HardLight
+    missChance: 0.4
+    spreadMultiplier: 3
+    spreadAddition: 50

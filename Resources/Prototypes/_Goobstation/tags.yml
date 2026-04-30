@@ -146,6 +146,9 @@
   id: StasisCage
 
 - type: Tag
+  id: WeaponPistolDualetta
+
+- type: Tag
 
   id: Cartridge127x99mm
 

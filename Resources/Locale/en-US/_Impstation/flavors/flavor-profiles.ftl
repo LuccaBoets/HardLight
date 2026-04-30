@@ -70,3 +70,4 @@ flavor-complex-syndicateagent = like syndicate agent access
 flavor-complex-theatre = like theatre access
 flavor-complex-wizard = like wizard access
 
+flavor-complex-cigarettes = like cigarettes

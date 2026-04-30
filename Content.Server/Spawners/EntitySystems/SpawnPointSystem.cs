@@ -1,4 +1,5 @@
 using Content.Server.GameTicking;
+using Content.Server.Gateway.Components; // HardLight
 using Content.Server.Spawners.Components;
 using Content.Server.Station.Components;
 using Content.Server.Station.Systems;
@@ -71,7 +72,14 @@ public sealed class SpawnPointSystem : EntitySystem
 
         if (possiblePositions.Count == 0
             && args.Station is { } station
-            && TryFindStationFallbackPosition(station, out var stationFallback))
+            && TryFindStationGatewayPosition(station, out var stationGateway)) // HardLight: prefer the station gateway over a random open tile
+        {
+            possiblePositions.Add(stationGateway);
+        }
+
+        if (possiblePositions.Count == 0
+            && args.Station is { } stationFb
+            && TryFindStationFallbackPosition(stationFb, out var stationFallback))
         {
             possiblePositions.Add(stationFallback);
         }
@@ -101,6 +109,31 @@ public sealed class SpawnPointSystem : EntitySystem
             args.HumanoidCharacterProfile,
             args.Station,
             session: args.Session); // Frontier
+    }
+
+    // HardLight: latejoin/passenger fallback. When a station has no matching spawn points,
+    // prefer dropping the player at the station Gateway (every HL station map has one and it
+    // is wired up to the docks shuttle), instead of falling through to a random open tile —
+    // which is how passengers ended up in atmos / lawyer office / solars (issue #1462).
+    private bool TryFindStationGatewayPosition(EntityUid station, out EntityCoordinates coords)
+    {
+        coords = EntityCoordinates.Invalid;
+
+        if (!TryComp<StationDataComponent>(station, out var stationData))
+            return false;
+
+        var query = EntityQueryEnumerator<GatewayComponent, TransformComponent>();
+        while (query.MoveNext(out var gatewayUid, out _, out var xform))
+        {
+            var owning = _stationSystem.GetOwningStation(gatewayUid, xform);
+            if (owning != station)
+                continue;
+
+            coords = xform.Coordinates;
+            return true;
+        }
+
+        return false;
     }
 
     private bool TryFindStationFallbackPosition(EntityUid station, out EntityCoordinates coords)

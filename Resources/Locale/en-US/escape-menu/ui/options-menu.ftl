@@ -109,6 +109,8 @@ ui-options-vp-low-res = Low-resolution viewport
 ui-options-parallax-low-quality = Low-quality Parallax (background)
 ui-options-ambient-occlusion = Show Ambient Occlusion
 ui-options-fps-counter = Show FPS counter
+ui-options-show-structure-smoothing = Show extended wall and window smoothing
+ui-options-show-cyborg-subtypes = Show unique Cyborg subtype sprites
 ui-options-vp-width = Viewport width:
 ui-options-hud-layout = HUD layout:
 

@@ -32,20 +32,33 @@ public sealed partial class MicrowaveSystem : EntitySystem
             string? solidID = null;
             int amountToAdd = 1;
 
-            // Prefer the entity's actual prototype id. Only fall back to the StackPrototype
-            // spawn id when the entity prototype is missing (some stacks may be wrapper
-            // entities where the underlying prototype is stored on the stack prototype).
-            var metaData = MetaData(item); //this simply begs for cooking refactor
-            if (metaData.EntityPrototype is not null)
+            // HardLight #1363: mirror the regular microwave's stack handling so recipes that key
+            // on a stack id (e.g. "Brutepack", "Ointment") still match items spawned as the
+            // single-count entity (e.g. "Brutepack1" from the medical lathe). For stacks that
+            // spawn themselves (StackSpawnSelf, like produce / FoodPoppy), keep using the
+            // entity's prototype id so per-entity-keyed recipes still work.
+            if (TryComp<StackComponent>(item, out var stackComp))
             {
-                solidID = metaData.EntityPrototype.ID;
-                if (TryComp<StackComponent>(item, out var stackComp))
-                    amountToAdd = stackComp.Count;
-            }
-            else if (TryComp<StackComponent>(item, out var stackComp))
-            {
-                solidID = _prototype.Index<StackPrototype>(stackComp.StackTypeId).Spawn;
+                if (HasComp<StackSpawnSelfComponent>(item))
+                {
+                    var metaData = MetaData(item);
+                    if (metaData.EntityPrototype is not null)
+                        solidID = metaData.EntityPrototype.ID;
+                    else
+                        solidID = _prototype.Index<StackPrototype>(stackComp.StackTypeId).Spawn;
+                }
+                else
+                {
+                    solidID = _prototype.Index<StackPrototype>(stackComp.StackTypeId).Spawn;
+                }
+
                 amountToAdd = stackComp.Count;
+            }
+            else
+            {
+                var metaData = MetaData(item); //this simply begs for cooking refactor
+                if (metaData.EntityPrototype is not null)
+                    solidID = metaData.EntityPrototype.ID;
             }
 
             if (solidID is null)

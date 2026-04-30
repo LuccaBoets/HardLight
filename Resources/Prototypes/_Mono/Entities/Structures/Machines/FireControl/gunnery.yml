@@ -225,7 +225,7 @@
         enum.WiresUiKey.Key:
           type: WiresBoundUserInterface
   - type: RadarConsole
-    maxRange: 512
+    maxRange: 1500
   - type: WorldLoader
     radius: 64 # Mono
   - type: Computer

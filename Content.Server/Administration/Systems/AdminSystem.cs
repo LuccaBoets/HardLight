@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Content.Server.Administration.Managers;
 using Content.Server.Chat.Managers;
@@ -33,6 +34,7 @@ using Robust.Shared.Enums;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
+using Robust.Shared.Timing;
 using Content.Shared._NF.Bank.Events; // Frontier
 using Content.Server._NF.Bank; // Frontier
 
@@ -58,8 +60,11 @@ public sealed class AdminSystem : EntitySystem
     [Dependency] private readonly StationRecordsSystem _stationRecords = default!;
     [Dependency] private readonly TransformSystem _transform = default!;
     [Dependency] private readonly BankSystem _bank = default!; // Frontier
+    [Dependency] private readonly IGameTiming _timing = default!;
 
     private readonly Dictionary<NetUserId, PlayerInfo> _playerList = new();
+    private readonly Dictionary<NetUserId, TimeSpan> _disconnectedSince = new();
+    private static readonly TimeSpan DisconnectedCacheTtl = TimeSpan.FromHours(12);
 
     /// <summary>
     ///     Set of players that have participated in this round.
@@ -90,28 +95,19 @@ public sealed class AdminSystem : EntitySystem
         SubscribeLocalEvent<PlayerDetachedEvent>(OnPlayerDetached);
         SubscribeLocalEvent<RoleAddedEvent>(OnRoleEvent);
         SubscribeLocalEvent<RoleRemovedEvent>(OnRoleEvent);
-        /* SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestartCleanup); */
+        SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestartCleanup);
 
         SubscribeLocalEvent<ActorComponent, EntityRenamedEvent>(OnPlayerRenamed);
         SubscribeLocalEvent<ActorComponent, IdentityChangedEvent>(OnIdentityChanged);
         SubscribeLocalEvent<BalanceChangedEvent>(OnBalanceChanged); // Frontier
     }
 
-/*     private void OnRoundRestartCleanup(RoundRestartCleanupEvent ev)
+    private void OnRoundRestartCleanup(RoundRestartCleanupEvent ev)
     {
         _roundActivePlayers.Clear();
 
-        foreach (var (id, data) in _playerList)
-        {
-            if (!data.ActiveThisRound)
-                continue;
-
-            if (!_playerManager.TryGetPlayerData(id, out var playerData))
-                return;
-
-            _playerManager.TryGetSessionById(id, out var session);
-            _playerList[id] = GetPlayerInfo(playerData, session);
-        }
+        // Round-scoped activity is reset, but player cache is retained for admin workflow.
+        PruneDisconnectedCache();
 
         var updateEv = new FullPlayerListEvent() { PlayersInfo = _playerList.Values.ToList() };
 
@@ -119,7 +115,29 @@ public sealed class AdminSystem : EntitySystem
         {
             RaiseNetworkEvent(updateEv, admin.Channel);
         }
-    } */
+    }
+
+    private void PruneDisconnectedCache()
+    {
+        var now = _timing.CurTime;
+
+        foreach (var (userId, disconnectedAt) in _disconnectedSince.ToArray())
+        {
+            if (now - disconnectedAt <= DisconnectedCacheTtl)
+                continue;
+
+            if (_playerManager.TryGetSessionById(userId, out var session) &&
+                session.Status is SessionStatus.Connected or SessionStatus.InGame)
+            {
+                _disconnectedSince.Remove(userId);
+                continue;
+            }
+
+            _disconnectedSince.Remove(userId);
+            _playerList.Remove(userId);
+            _roundActivePlayers.Remove(userId);
+        }
+    }
 
     private void OnPlayerRenamed(Entity<ActorComponent> ent, ref EntityRenamedEvent args)
     {
@@ -208,6 +226,7 @@ public sealed class AdminSystem : EntitySystem
         if (ev.Player.Status == SessionStatus.Disconnected)
             return;
 
+        _disconnectedSince.Remove(ev.Player.UserId);
         _roundActivePlayers.Add(ev.Player.UserId);
         UpdatePlayerList(ev.Player);
     }
@@ -229,12 +248,19 @@ public sealed class AdminSystem : EntitySystem
 
     private void OnPlayerStatusChanged(object? sender, SessionStatusEventArgs e)
     {
+        if (e.NewStatus is SessionStatus.Disconnected or SessionStatus.Zombie)
+            _disconnectedSince[e.Session.UserId] = _timing.CurTime;
+        else
+            _disconnectedSince.Remove(e.Session.UserId);
+
+        PruneDisconnectedCache();
         UpdatePlayerList(e.Session);
         UpdatePanicBunker();
     }
 
     private void SendFullPlayerList(ICommonSession playerSession)
     {
+        PruneDisconnectedCache();
         var ev = new FullPlayerListEvent();
 
         ev.PlayersInfo = _playerList.Values.ToList();

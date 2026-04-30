@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2025 pheenty <fedorlukin2006@gmail.com>
+
 - type: entity
   name: BaseWeaponRevolver
   parent: BaseItem
@@ -50,6 +52,10 @@
       path: /Audio/Weapons/Guns/MagIn/revolver_magin.ogg
   - type: StaticPrice
     price: 50
+  - type: Multishot # Goobstation
+    missChance: 0.4
+    spreadMultiplier: 3
+    spreadAddition: 40
 
 - type: entity
   name: Deckard (.45 magnum)

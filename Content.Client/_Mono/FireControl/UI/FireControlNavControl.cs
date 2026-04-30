@@ -65,7 +65,7 @@ public sealed class FireControlNavControl : BaseShuttleControl
     public bool ShowIFF { get; set; } = true;
     public bool RotateWithEntity { get; set; } = true;
 
-    public FireControlNavControl() : base(64f, 512f, 512f)
+    public FireControlNavControl() : base(64f, 1500f, 512f)
     {
         IoCManager.InjectDependencies(this);
         _shuttles = EntManager.System<SharedShuttleSystem>();
@@ -431,9 +431,42 @@ public sealed class FireControlNavControl : BaseShuttleControl
         // No-op placeholder to maintain compatibility with previous shader clearing behavior.
     }
 
-    private void DrawShields(DrawingHandleScreen handle, TransformComponent xform, Matrix3x2 worldToShuttle)
+    private void DrawShields(DrawingHandleScreen handle, TransformComponent consoleXform, Matrix3x2 worldToShuttle)
     {
-        // Placeholder for shield drawing - can be implemented later if needed
+        var shields = EntManager.AllEntityQueryEnumerator<ShipShieldVisualsComponent, FixturesComponent, TransformComponent>();
+        while (shields.MoveNext(out _, out var visuals, out var fixtures, out var xform))
+        {
+            if (xform.GridUid == null || xform.MapID != consoleXform.MapID)
+                continue;
+
+            if (EntManager.HasComponent<FTLComponent>(xform.GridUid.Value))
+                continue;
+
+            if (!fixtures.Fixtures.TryGetValue("shield", out var fixture) || fixture.Shape is not ChainShape chain)
+                continue;
+
+            var center = xform.LocalPosition;
+            var parentWorldMatrix = _transform.GetWorldMatrix(xform.GridUid.Value);
+
+            var count = chain.Count;
+            var vertices = chain.Vertices;
+            for (var i = 1; i < count; i++)
+            {
+                var v1 = Vector2.Add(center, vertices[i - 1]);
+                v1 = Vector2.Transform(v1, parentWorldMatrix);
+                v1 = Vector2.Transform(v1, worldToShuttle);
+                v1.Y = -v1.Y;
+                v1 = ScalePosition(v1);
+
+                var v2 = Vector2.Add(center, vertices[i]);
+                v2 = Vector2.Transform(v2, parentWorldMatrix);
+                v2 = Vector2.Transform(v2, worldToShuttle);
+                v2.Y = -v2.Y;
+                v2 = ScalePosition(v2);
+
+                handle.DrawLine(v1, v2, visuals.ShieldColor);
+            }
+        }
     }
 
     private void DrawShieldRing(DrawingHandleScreen handle, Vector2 position, float radius, Color color)

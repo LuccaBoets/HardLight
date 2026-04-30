@@ -72,8 +72,31 @@ public sealed class ContainerSpawnPointSystem : EntitySystem
 
         if (possibleContainers.Count == 0)
             return;
-        // we just need some default coords so we can spawn the player entity.
-        var baseCoords = possibleContainers[0].Comp3.Coordinates;
+
+        // HardLight start
+        _random.Shuffle(possibleContainers);
+
+        Entity<ContainerSpawnPointComponent, ContainerManagerComponent, TransformComponent>? selectedContainer = null;
+        BaseContainer? targetContainer = null;
+        foreach (var containerCandidate in possibleContainers)
+        {
+            if (!_container.TryGetContainer(containerCandidate.Owner, containerCandidate.Comp1.ContainerId, out var resolvedContainer, containerCandidate.Comp2))
+                continue;
+
+            // Avoid spawning and charging paid loadouts unless a cryo slot is actually available.
+            if (resolvedContainer.ContainedEntities.Count != 0)
+                continue;
+
+            selectedContainer = containerCandidate;
+            targetContainer = resolvedContainer;
+            break;
+        }
+
+        if (selectedContainer == null || targetContainer == null)
+            return;
+
+        var baseCoords = selectedContainer.Value.Comp3.Coordinates;
+        // HardLight end
 
         args.SpawnResult = _stationSpawning.SpawnPlayerMob(
             baseCoords,
@@ -82,18 +105,10 @@ public sealed class ContainerSpawnPointSystem : EntitySystem
             args.Station,
             session: args.Session); // Frontier
 
-        _random.Shuffle(possibleContainers);
-        foreach (var (uid, spawnPoint, manager, xform) in possibleContainers)
+        if (_container.Insert(args.SpawnResult.Value, targetContainer, containerXform: selectedContainer.Value.Comp3)) // HardLight
         {
-            if (!_container.TryGetContainer(uid, spawnPoint.ContainerId, out var container, manager))
-                continue;
-
-            if (!_container.Insert(args.SpawnResult.Value, container, containerXform: xform))
-                continue;
-
             var ev = new ContainerSpawnEvent(args.SpawnResult.Value);
-            RaiseLocalEvent(uid, ref ev);
-
+            RaiseLocalEvent(selectedContainer.Value.Owner, ref ev); // HardLight: uid<selectedContainer.Value.Owner
             return;
         }
 

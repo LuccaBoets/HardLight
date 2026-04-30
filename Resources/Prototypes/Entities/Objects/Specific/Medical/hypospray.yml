@@ -166,6 +166,89 @@
     delay: 0.5
 
 - type: entity
+  parent: BaseItem
+  id: JetInjector
+  name: jet injector
+  description: A sterile injector for convenient administration of drugs to patients.
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Medical/jetinjector.rsi
+    layers:
+    - state: jetinjector_base
+      map: ["enum.SolutionContainerLayers.Base"]
+    - state: jetinjector_filled1
+      map: ["enum.SolutionContainerLayers.Fill"]
+      visible: false
+  - type: Item
+    sprite: Objects/Specific/Medical/jetinjector.rsi
+  - type: SolutionContainerManager
+    solutions:
+      hypospray:
+        maxVol: 15
+  - type: RefillableSolution
+    solution: hypospray
+  - type: ExaminableSolution
+    solution: hypospray
+  - type: Injector
+    solutionName: hypospray
+    transferAmount: 15
+    minTransferAmount: 15
+    maxTransferAmount: 15
+    currentTransferAmount: null
+    ignoreMobs: false
+    injectOnly: false
+    activeModeProtoId: InjectorModeDynamicInject
+    allowedModes: [InjectorModeDynamicInject]
+    delay: 2.5
+    delayPerVolume: 0.05
+    toggleState: Inject
+  - type: UseDelay
+    delay: 1.5
+  - type: Appearance
+  - type: SolutionContainerVisuals
+    maxFillLevels: 3
+    fillBaseName: jetinjector_filled
+    solutionName: hypospray
+
+- type: entity
+  parent: JetInjector
+  id: AdvancedJetInjector
+  name: advanced jet injector
+  description: A pristine, fashionable, high quality injector with a larger reservoir and faster operation.
+  components:
+  - type: Sprite
+    sprite: Objects/Specific/Medical/advanced_jetinjector.rsi
+    layers:
+    - state: jetinjector_base
+      map: ["enum.SolutionContainerLayers.Base"]
+    - state: jetinjector_filled1
+      map: ["enum.SolutionContainerLayers.Fill"]
+      visible: false
+  - type: Item
+    sprite: Objects/Specific/Medical/advanced_jetinjector.rsi
+  - type: SolutionContainerManager
+    solutions:
+      hypospray:
+        maxVol: 20
+  - type: Injector
+    solutionName: hypospray
+    transferAmount: 20
+    minTransferAmount: 20
+    maxTransferAmount: 20
+    currentTransferAmount: null
+    ignoreMobs: false
+    injectOnly: false
+    activeModeProtoId: InjectorModeDynamicInjectAdvanced
+    allowedModes: [InjectorModeDynamicInjectAdvanced]
+    delay: 2.5
+    delayPerVolume: 0.05
+    toggleState: Inject
+  - type: UseDelay
+    delay: 1.0
+  - type: SolutionContainerVisuals
+    maxFillLevels: 4
+
+- type: entity
   name: experimental hypospray
   suffix: Admeme
   parent: [BaseClearContraband, SyndiHypo] # Frontier: added BaseClearContraband
@@ -220,7 +303,9 @@
     onlyAffectsMobs: false
     injectOnly: true
     preventCombatInjection: true # Frontier
-    doAfterTime: 2 # Frontier
+    injectTime: 2 # Frontier
+    delay: 2 # Frontier
+    delayPerVolume: 0 # Frontier
   - type: Appearance
   - type: SolutionContainerVisuals
     maxFillLevels: 1

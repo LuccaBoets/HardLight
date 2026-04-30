@@ -228,6 +228,10 @@ namespace Content.Shared.Popups
         ///     but is not life-threatening.
         /// </summary>
         Large,
-        LargeCaution
+        LargeCaution,
+        /// <summary>
+        ///     Cryptic popups are for admin subtle messages with red text and slow appearance.
+        /// </summary>
+        Cryptic
     }
 }

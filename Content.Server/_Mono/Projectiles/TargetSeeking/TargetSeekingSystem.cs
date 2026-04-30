@@ -197,8 +197,14 @@ public sealed class TargetSeekingSystem : EntitySystem
             }
             else
             {
-                // Try to acquire a new target
-                AcquireTarget(uid, seekingComp, xform);
+                // Throttle to at most once every 0.25 s: AcquireTarget walks every
+                // ShuttleConsoleComponent in the world, which is O(missiles × consoles)
+                // when run every tick.
+                if (_gameTiming.CurTime >= seekingComp.NextAcquireAttempt)
+                {
+                    AcquireTarget(uid, seekingComp, xform);
+                    seekingComp.NextAcquireAttempt = _gameTiming.CurTime + TimeSpan.FromSeconds(0.25);
+                }
             }
         }
     }

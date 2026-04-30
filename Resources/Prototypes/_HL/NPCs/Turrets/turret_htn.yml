@@ -68,6 +68,69 @@
       operator: !type:RotateToTargetOperator
         targetKey: RotateTarget
 
+# Mounted turret HTN: rotate + fire only, no ship steering.
+# Use this for AI turrets bolted onto a parent ship that already has its
+# own ship-AI core. Otherwise every turret becomes a pilot of the grid
+# and fights the core for steering authority (the byte-class drone bug).
+- type: htnCompound
+  id: MountedTurretCompound
+  branches:
+    - tasks:
+        - !type:HTNPrimitiveTask
+          operator: !type:UtilityOperator
+            proto: NearbyGunTargets
+
+        - !type:HTNPrimitiveTask
+          preconditions:
+            - !type:KeyExistsPrecondition
+              key: Target
+            - !type:TargetInRangePrecondition
+              targetKey: Target
+              rangeKey: RangedRange
+            - !type:TargetInLOSPrecondition
+              targetKey: Target
+              rangeKey: RangedRange
+          operator: !type:GunOperator
+            targetKey: Target
+            requireLOS: true
+          services:
+            - !type:UtilityService
+              id: RangedService
+              proto: NearbyGunTargets
+              key: Target
+    - tasks:
+      - !type:HTNPrimitiveTask
+        operator: !type:UtilityOperator
+          proto: NearbyShuttleDeedGridTargets
+      - !type:HTNCompoundTask
+        task: MountedTurretAttackCompound
+    - tasks:
+      - !type:HTNCompoundTask
+        task: TurretReturnForward
+
+# Attack compound for mounted turrets: rotate to face + fire, no ShipMoveTo.
+- type: htnCompound
+  id: MountedTurretAttackCompound
+  branches:
+  - preconditions:
+    - !type:KeyExistsPrecondition
+      key: TargetCoordinates
+    tasks:
+    - !type:HTNPrimitiveTask
+      operator: !type:ShipFireGunsOperator
+        shutdownState: TaskFinished
+        removeKeyOnFinish: false
+        leadingAccuracy: 0.6
+        requireAnchored: false
+        maxTargetingRange: 500
+        targetKey: TargetCoordinates
+      services:
+      - !type:UtilityService
+        id: TargetsService
+        proto: NearbyShuttleDeedGridTargets
+        key: Target
+        coordinatesKey: TargetCoordinates
+
 # Attack compound - move toward target and fire at it
 - type: htnCompound
   id: ShuttleDeedTurretAttackCompound

@@ -79,10 +79,55 @@ public sealed class PopupUIController : UIController, IOnStateEntered<GameplaySt
                 font = _largeFont;
                 color = Color.Red;
                 break;
+            case PopupType.Cryptic:
+                font = _largeFont;
+                color = Color.Red;
+                break;
         }
 
-        var dimensions = handle.GetDimensions(font, popup.Text, scale);
-        handle.DrawString(font, updatedPosition - dimensions / 2f, popup.Text, scale, color.WithAlpha(alpha));
+        if (popup.Type == PopupType.Cryptic)
+        {
+            var customScale = scale;
+            var messageText = popup.Text;
+
+            // Parse scale from message if present
+            if (messageText.StartsWith("[scale:"))
+            {
+                var scaleEnd = messageText.IndexOf(']');
+                if (scaleEnd > 0 && float.TryParse(messageText[7..scaleEnd], out var parsedScale))
+                {
+                    customScale = parsedScale;
+                    messageText = messageText[(scaleEnd + 1)..];
+                }
+            }
+
+            var charsPerSecond = 5f;
+            var charsToShow = (int)(popup.TotalTime * charsPerSecond);
+            var displayText = messageText[..Math.Min(charsToShow, messageText.Length)];
+
+            var totalWidth = 0f;
+            for (int i = 0; i < displayText.Length; i++)
+            {
+                totalWidth += handle.GetDimensions(font, displayText[i].ToString(), customScale).X;
+            }
+
+            var basePosition = position - new Vector2(0f, MathF.Min(8f, 12f * (popup.TotalTime * popup.TotalTime + popup.TotalTime)));
+            var startX = basePosition.X - totalWidth / 2f;
+
+            var currentX = startX;
+            for (int i = 0; i < displayText.Length; i++)
+            {
+                var charBob = MathF.Sin(popup.TotalTime * 3f + i * 0.5f) * 3f; // wave effect per character
+                var charPosition = new Vector2(currentX, basePosition.Y + charBob);
+                handle.DrawString(font, charPosition, displayText[i].ToString(), customScale, color.WithAlpha(alpha));
+                currentX += handle.GetDimensions(font, displayText[i].ToString(), customScale).X;
+            }
+        }
+        else
+        {
+            var dimensions = handle.GetDimensions(font, popup.Text, scale);
+            handle.DrawString(font, updatedPosition - dimensions / 2f, popup.Text, scale, color.WithAlpha(alpha));
+        }
     }
 
     /// <summary>

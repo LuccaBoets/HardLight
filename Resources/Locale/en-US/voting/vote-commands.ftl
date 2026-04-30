@@ -33,6 +33,30 @@ cmd-vote-on-execute-error-invalid-option = Invalid option
 cmd-listvotes-desc = Lists currently active votes
 cmd-listvotes-help = Usage: listvotes
 
+## 'votehistory' command
+
+cmd-votehistory-desc = Lists active and recently finished votes
+cmd-votehistory-help = Usage: votehistory [count]
+                       Shows up to [count] active votes and recent historical votes.
+cmd-votehistory-error-invalid-count = Count must be a positive integer
+cmd-votehistory-arg-count = [count]
+cmd-votehistory-active-header = Active votes:
+cmd-votehistory-history-header = Recent finished votes:
+cmd-votehistory-empty = (none)
+
+## 'voteinspect' command
+
+cmd-voteinspect-desc = Shows who voted what for an active or recent vote
+cmd-voteinspect-help = Usage: voteinspect <id>
+                       Use votehistory to find recent vote IDs.
+cmd-voteinspect-error-missing-vote-id = Missing vote ID
+cmd-voteinspect-error-invalid-vote-id = Invalid vote ID
+cmd-voteinspect-arg-id = <id>
+cmd-voteinspect-options-header = Options:
+cmd-voteinspect-voters-header = Voters:
+cmd-voteinspect-no-votes = (no votes cast)
+cmd-voteinspect-unknown-option = <unknown option>
+
 ## 'cancelvote' command
 
 cmd-cancelvote-desc = Cancels an active vote

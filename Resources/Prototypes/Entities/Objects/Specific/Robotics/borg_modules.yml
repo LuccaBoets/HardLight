@@ -466,29 +466,26 @@
   - type: BorgModuleIcon
     icon: { sprite: Interface/Actions/actions_borg.rsi, state: wire-module }
 
-- type: entity
-  id: BorgModuleFireExtinguisher
-  parent: [ BaseBorgModule, BaseProviderBorgModule ]
-  name: fire extinguisher cyborg module
-  components:
-  - type: Sprite
-    layers:
-    - state: generic
-    - state: icon-fire-extinguisher
-  # Frontier: droppable borg items
-  #- type: ItemBorgModule
-  #  items:
-  #  - FireExtinguisher
-  - type: DroppableBorgModule
-    moduleId: FireExtinguisher
-    items:
-    - id: FireExtinguisher
-      whitelist:
-        tags:
-        - FireExtinguisher
-  # End Frontier
-  - type: BorgModuleIcon
-    icon: { sprite: Interface/Actions/actions_borg.rsi, state: extinguisher-module }
+# Hardlight start: The jetpack module is straight up better than this one.
+# - type: entity
+#   id: BorgModuleFireExtinguisher
+#   parent: [ BaseBorgModule, BaseProviderBorgModule ]
+#   name: thruster cyborg module
+#   description: NT assigned a team to design a jetpack for cyborg units, but they ran out of funding and just made a bigger fire extinguisher. It comes with a integrated GPS and mass scanner though!
+#   components:
+#   - type: Sprite
+#     layers:
+#     - state: generic
+#     - state: icon-fire-extinguisher
+#   - type: ItemBorgModule
+#     hands:
+#     - item: BorgFireExtinguisher
+#     - item: BorgHandheldGPSBasic
+#     - item: HandheldStationMapUnpowered
+#     - item: HandHeldMassScannerBorg
+#   - type: BorgModuleIcon
+#     icon: { sprite: Interface/Actions/actions_borg.rsi, state: extinguisher-module }
+# Hardlight end
 
 - type: entity
   id: BorgModuleGPS
@@ -561,6 +558,10 @@
     moduleId: Appraisal # Frontier
     items:
     - AppraisalTool
+    - Pen
+    - HandLabeler
+    - RubberStampApproved
+    - RubberStampDenied
   # Frontier: droppable items
   - type: DroppableBorgModule
     moduleId: Appraisal
@@ -596,7 +597,6 @@
     - Shovel
     - MineralScannerUnpowered
     # - OreBag # Frontier
-    - RadioHandheldNF # Frontier: RadioHandheld<RadioHandheldNF
   # Frontier: droppable borg items
   - type: DroppableBorgModule
     moduleId: Mining
@@ -605,14 +605,49 @@
       whitelist:
         components:
         - NFOreBag
+    placeholders: # Starlight
+    - id: GoldOre
+      whitelist:
+        tags:
+        - Ore
+    
   # End Frontier: droppable borg items
   - type: BorgModuleIcon
     icon: { sprite: Interface/Actions/actions_borg.rsi, state: mining-module }
 
 - type: entity
-  id: BorgModuleGrapplingGun
+  id: BorgModuleAdvancedMining
   parent: [ BaseBorgModuleCargo, BaseProviderBorgModule ]
-  name: grappling gun cyborg module
+  name: advanced mining cyborg module
+  description: Advanced cargo module containing advanced mining equipment. Studies show it advances productivity of a cyborg by 150%.
+  components:
+  - type: Sprite
+    layers:
+    - state: cargo
+    - state: icon-advancedmining
+      sprite: _NF/Objects/Specific/Robotics/borgmodule.rsi
+  - type: ItemBorgModule
+    moduleId: AdvancedMining
+    items:
+    - MiningDrillDiamond
+    - Shovel
+    - AdvancedMineralScannerUnpowered
+    - OreBagOfHolding
+  - type: DroppableBorgModule # Starlight
+    moduleId: AdvancedMining
+    items: []
+    placeholders: 
+    - id: GoldOre
+      whitelist:
+        tags:
+        - Ore
+  - type: BorgModuleIcon
+    icon: { sprite: _NF/Interface/Actions/actions_borg.rsi, state: adv-drill-module } # Frontier
+
+- type: entity
+  id: BorgModuleTraversal
+  parent: [ BaseBorgModuleCargo, BaseProviderBorgModule ]
+  name: traversal cyborg module
   components:
   - type: Sprite
     layers:
@@ -623,6 +658,17 @@
     items:
     - WeaponGrapplingGun
     - HandheldGPSBasic
+    - HandheldStationMapUnpowered # Hardlight: Parity with the thruster module
+    - HandHeldMassScannerBorg
+    - BorgClock
+    - RadioHandheldNF
+  - type: DroppableBorgModule # Hardlight
+    moduleId: GrapplingGun
+    items: 
+    - id: JetpackMiniFilled
+      whitelist:
+        components:
+        - Jetpack
   - type: BorgModuleIcon
     icon: { sprite: Interface/Actions/actions_borg.rsi, state: grappling-module }
 
@@ -641,11 +687,9 @@
     items:
     - JawsOfLife
     - PowerDrill
-    - Multitool
     - WelderExperimental
-    - RemoteSignaller
-    - GasAnalyzer
-    - GeigerCounter
+    - Multitool
+    - RemoteSignallerAdvanced
     - MaintenanceJack # Frontier
   - type: BorgModuleIcon
     icon: { sprite: Interface/Actions/actions_borg.rsi, state: adv-tools-module }
@@ -700,6 +744,14 @@
         components:
         - Flatpack
       displayName: borg-placeholder-display-name-flatpack
+    - id: PlasmaTank # Starlight
+      whitelist:
+        components:
+        - GasTank
+        - AmeFuelContainer
+        - NFFuel 
+        - ReactorPart # FH edit
+      displayName: borg-slot-fuel-empty
     # End Frontier
   - type: BorgModuleIcon
     icon: { sprite: Interface/Actions/actions_borg.rsi, state: construction-module }
@@ -718,6 +770,11 @@
     items:
     - RCDRecharging
     - ShipRepairDeviceRecharging # Mono
+    - BorgFireExtinguisher
+    - BorgHandheldGPSBasic
+    - GasAnalyzer
+    - HolofanProjectorBorg
+    - GeigerCounter
   - type: BorgModuleIcon
     icon: { sprite: Interface/Actions/actions_borg.rsi, state: rcd-module }
 
@@ -739,9 +796,9 @@
 
 # janitorial modules (this gets its own unique things because janis are epic)
 - type: entity
-  id: BorgModuleLightReplacer
+  id: BorgModuleCustodial
   parent: [ BaseBorgModuleJanitor, BaseProviderBorgModule ]
-  name: light replacer cyborg module
+  name: custodial cyborg module
   components:
   - type: Sprite
     layers:
@@ -751,8 +808,7 @@
     moduleId: LightReplacer # Frontier
     items:
     - LightReplacer
-    - Crowbar
-    - Screwdriver
+    - Plunger
   # Frontier: droppable items
   - type: DroppableBorgModule
     moduleId: LightReplacer
@@ -763,6 +819,10 @@
         components:
         - LightBulb
       displayName: borg-placeholder-display-name-lights
+    - id: SoapNT
+      whitelist:
+        tags:
+        - Soap
   # End Frontier
   - type: BorgModuleIcon
     icon: { sprite: Interface/Actions/actions_borg.rsi, state: light-replacer-module }
@@ -780,6 +840,7 @@
     moduleId: Cleaning # Frontier
     items:
     - MopItem
+    - BorgSprayBottle
     # - Bucket # Frontier
     # - TrashBag # Frontier
   # Frontier: droppable items
@@ -851,9 +912,9 @@
     icon: { sprite: Interface/Actions/actions_borg.rsi, state: diagnosis-module }
 
 - type: entity
-  id: BorgModuleTreatment
+  id: BorgModuleTopicals
   parent: [ BaseBorgModuleMedical, BaseProviderBorgModule ]
-  name: treatment cyborg module
+  name: topicals cyborg module
   components:
   - type: Sprite
     layers:
@@ -901,7 +962,7 @@
     icon: { sprite: Interface/Actions/actions_borg.rsi, state: treatment-module }
 
 - type: entity
-  id: BorgModuleDefibrillator
+  id: BorgModuleRescue
   parent: [ BaseBorgModuleMedical, BaseProviderBorgModule ]
   name: defibrillator cyborg module
   components:
@@ -912,21 +973,25 @@
   - type: ItemBorgModule
     moduleId: Defibrillator # Frontier
     items:
+    - HandheldHealthAnalyzerUnpowered
     - DefibrillatorOneHandedUnpowered
+    - BorgFireExtinguisher
+    - BorgHandheldGPSBasic
+    - HandLabeler
   - type: BorgModuleIcon
-    icon: { sprite: Interface/Actions/actions_borg.rsi, state: defib-module }
+    icon: { sprite: Interface/Actions/actions_borg.rsi, state: defib-module } 
 
 - type: entity
-  id: BorgModuleAdvancedTreatment
+  id: BorgModuleChemical
   parent: [ BaseBorgModuleMedical, BaseProviderBorgModule ]
-  name: advanced treatment cyborg module
+  name: chemical cyborg module
   components:
   - type: Sprite
     layers:
     - state: medical
     - state: icon-chemist
   - type: ItemBorgModule
-    moduleId: AdvancedTreatment # Frontier
+    moduleId: Chemical # Frontier
     items:
     - HandheldHealthAnalyzerUnpowered
     # - Beaker # Frontier
@@ -935,8 +1000,12 @@
     - BorgHypo
   # Frontier: droppable borg items
   - type: DroppableBorgModule
-    moduleId: AdvancedTreatment
+    moduleId: Chemical
     items:
+    - id: Beaker
+      whitelist:
+        tags:
+        - GlassBeaker
     - id: Beaker
       whitelist:
         tags:
@@ -947,7 +1016,39 @@
         - GlassBeaker
   # End Frontier: droppable borg items
   - type: BorgModuleIcon
-    icon: { sprite: Interface/Actions/actions_borg.rsi, state: adv-diagnosis-module }
+    icon: { sprite: Interface/Actions/actions_borg.rsi, state: chem-module }
+
+- type: entity
+  id: BorgModuleAdvancedChemical
+  parent: [ BaseBorgModuleMedical, BaseProviderBorgModule ]
+  name: advanced chemical cyborg module
+  description: Advanced medical module containing the cyborg adaptation of the highly coveted hypospray. Now your cyborgs can inject crew-harmers with chloral hydrate even faster!
+  components:
+  - type: Sprite
+    layers:
+    - state: medical
+    - state: icon-chemist
+  - type: ItemBorgModule
+    moduleId: AdvancedChemical
+    items:
+    - HandheldHealthAnalyzerUnpowered
+    - BorgHypo
+    - Syringe
+  - type: DroppableBorgModule
+    moduleId: AdvancedChemical
+    items:
+    - id: Beaker
+      whitelist:
+        tags:
+        - GlassBeaker
+    - id: Beaker
+      whitelist:
+        tags:
+        - GlassBeaker
+    - id: Beaker
+      whitelist:
+        tags:
+        - GlassBeaker
 
 # science modules
 # todo: if science ever gets their own custom robot, add more "sci" modules.
@@ -964,11 +1065,18 @@
     moduleId: Artifact # Frontier
     items:
     - NodeScanner
-    - Multitool
-    - Wrench
     - SprayBottle
-    - Beaker
+    - GasAnalyzer
+    - BorgDropper
     - Syringe
+    - GeigerCounter
+  - type: DroppableBorgModule
+    moduleId: Artifact
+    items:
+    - id: Beaker
+      whitelist:
+        tags:
+        - GlassBeaker
   - type: BorgModuleIcon
     icon: { sprite: Interface/Actions/actions_borg.rsi, state: node-scanner-module }
 
@@ -987,6 +1095,7 @@
     - AnomalyScanner
     - AnomalyLocatorUnpowered
     - AnomalyLocatorWideUnpowered
+    - HandLabeler
     - RemoteSignaller
     - Multitool
   - type: BorgModuleIcon

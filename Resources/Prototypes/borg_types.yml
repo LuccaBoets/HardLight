@@ -86,7 +86,7 @@
   defaultModules:
   - BorgModuleTool
   - BorgModuleMining
-  - BorgModuleGrapplingGun
+  - BorgModuleTraversal
   - BorgModuleAppraisal
 
   radioChannels:
@@ -122,7 +122,7 @@
 
   defaultModules:
   - BorgModuleTool # Starlight
-  - BorgModuleLightReplacer
+  - BorgModuleCustodial
   - BorgModuleCleaning
 
   radioChannels:
@@ -158,9 +158,9 @@
 
   defaultModules:
   - BorgModuleTool # Starlight
-  - BorgModuleTreatment
-  # - BorgModuleAdvancedTreatment # Frontier
-  - BorgModuleDefibrillator # Frontier
+  - BorgModuleTopicals
+  - BorgModuleChemical
+  - BorgModuleRescue
 
   radioChannels:
   - Science

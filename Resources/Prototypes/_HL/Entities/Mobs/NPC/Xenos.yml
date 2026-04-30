@@ -169,7 +169,7 @@
     makeSentient: true
     name: ghost-role-information-xeno-name
     description: ghost-role-information-xeno-description
-    rules: floof-ghost-role-information-solo-antag-rules # Floof station, setting ghost role rules
+    rules: ghost-role-information-team-antag-rules
     raffle:
       settings: default
   - type: GhostTakeoverAvailable
@@ -1392,7 +1392,7 @@
   - type: GhostRole
     name: ghost-role-information-friendlyxeno-name
     description: ghost-role-information-friendlyxeno-description
-    rules: floof-ghost-role-information-crew-aligned-rules # Floof station - Setting ghost role rules
+    rules: ghost-role-information-crew-aligned-rules
   - type: GhostTakeoverAvailable
   - type: Grammar
     attributes:
@@ -1436,7 +1436,7 @@
   - type: GhostRole
     name: ghost-role-information-friendlyxeno-name
     description: ghost-role-information-friendlyxeno-description
-    rules: floof-ghost-role-information-crew-aligned-rules # Floof station - Setting ghost role rules
+    rules: ghost-role-information-crew-aligned-rules
   - type: GhostTakeoverAvailable
   - type: Inventory
     templateId: friendxeno
@@ -1493,7 +1493,7 @@
   - type: GhostRole
     name: ghost-role-information-friendlyxeno-name
     description: ghost-role-information-friendlyxeno-description
-    rules: floof-ghost-role-information-crew-aligned-rules # Floof station - Setting ghost role rules
+    rules: ghost-role-information-crew-aligned-rules
   - type: GhostTakeoverAvailable
   - type: Inventory
     templateId: friendxeno
@@ -1550,7 +1550,7 @@
   - type: GhostRole
     name: ghost-role-information-friendlyxeno-name
     description: ghost-role-information-friendlyxeno-description
-    rules: floof-ghost-role-information-crew-aligned-rules # Floof station - Setting ghost role rules
+    rules: ghost-role-information-crew-aligned-rules
   - type: GhostTakeoverAvailable
   - type: Inventory
     templateId: friendxeno
@@ -1669,7 +1669,6 @@
     sprite: Mobs/Aliens/FXS/rouny.rsi
     scale: 0.6, 0.6
 
-# Floofstation - commented out for reasons unknown
 - type: entity
   name: Patriach
   parent: MobXenoNeutralPraetorian

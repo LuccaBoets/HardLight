@@ -22,6 +22,8 @@ public sealed partial class UnpoweredFlashlightComponent : Component
     [DataField]
     public EntProtoId ToggleAction = "ActionToggleLight";
 
+    // HardLight: persist across save/load. See ToggleableClothingComponent.ActionEntity.
+    [DataField]
     public EntityUid? ToggleActionEntity;
 
     /// <summary>

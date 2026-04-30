@@ -1,5 +1,4 @@
 using Content.Shared.Wieldable;
-using Content.Shared._HL.Traits.Physical.Systems; // HardLight
 using Robust.Shared.GameStates;
 
 namespace Content.Shared.Weapons.Ranged.Components;
@@ -8,7 +7,7 @@ namespace Content.Shared.Weapons.Ranged.Components;
 /// Indicates that this gun requires wielding to be useable.
 /// </summary>
 [RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
-[Access(typeof(SharedWieldableSystem), typeof(SharedTraitWeaponHandlingSystem))] // HardLight: Added typeof(SharedTraitWeaponHandlingSystem)
+[Access(typeof(SharedWieldableSystem))]
 public sealed partial class GunRequiresWieldComponent : Component
 {
     [DataField, AutoNetworkedField]

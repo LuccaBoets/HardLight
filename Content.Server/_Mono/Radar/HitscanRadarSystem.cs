@@ -61,9 +61,14 @@ public sealed partial class HitscanRadarSystem : EntitySystem
         var dir = ev.Angle.ToVec().Normalized();
         var endPos = startPos + dir * ev.Distance;
 
-        var color = Color.Magenta;
-        var thickness = 1.0f;
-        var lifeTime = 0.5f;
+        // HardLight: defaults sized so player ship lasers (which lack a
+        // HitscanRadar/Signature config block) actually render on the
+        // gunnery console radar instead of being a 1-pixel magenta line
+        // visible for a single client poll. Cyan + 2px + 1.0s matches the
+        // visibility of kinetic projectile RadarBlips.
+        var color = Color.Cyan;
+        var thickness = 2.0f;
+        var lifeTime = 1.0f;
 
         if (TryComp<HitscanRadarComponent>(ev.Gun.Value, out var shooterHitscanRadar))
         {

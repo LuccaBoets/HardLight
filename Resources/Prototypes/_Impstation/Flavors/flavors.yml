@@ -291,3 +291,7 @@
   flavorType: Complex
   description: flavor-complex-wizard
 
+- type: flavor
+  id: cigarettes
+  flavorType: Complex
+  description: flavor-complex-cigarettes

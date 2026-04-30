@@ -1,3 +1,4 @@
+using System.Linq;
 using Content.Server.Chat.Managers;
 using Content.Shared.Chat;
 using Content.Shared.Chat.Prototypes;
@@ -32,6 +33,8 @@ public sealed partial class ChatNotificationSystem : EntitySystem
     // Local cache for rate limiting chat notifications by type
     // (Recipient, ChatNotification) -> next allowed TOA
     private readonly Dictionary<(EntityUid, ProtoId<ChatNotificationPrototype>), TimeSpan> _chatNotificationsByType = new();
+    private TimeSpan _nextCacheSweep;
+    private static readonly TimeSpan CacheSweepInterval = TimeSpan.FromMinutes(10);
 
     public override void Initialize()
     {
@@ -49,6 +52,8 @@ public sealed partial class ChatNotificationSystem : EntitySystem
     /// <param name="args">The chat notification event</param>
     public void OnChatNotification(Entity<ActorComponent> ent, ref ChatNotificationEvent args)
     {
+        SweepExpiredCacheEntries();
+
         if (!_proto.TryIndex(args.ChatNotification, out var chatNotification))
         {
             _sawmill.Warning("Attempted to index ChatNotificationPrototype " + args.ChatNotification + " but the prototype does not exist.");
@@ -101,5 +106,31 @@ public sealed partial class ChatNotificationSystem : EntitySystem
 
         if (chatNotification.Sound != null && _mind.TryGetMind(ent, out var mindId, out _))
             _roles.MindPlaySound(mindId, chatNotification.Sound);
+    }
+
+    private void SweepExpiredCacheEntries()
+    {
+        if (_timing.CurTime < _nextCacheSweep)
+            return;
+
+        _nextCacheSweep = _timing.CurTime + CacheSweepInterval;
+
+        foreach (var (key, until) in _chatNotificationsByType.ToArray())
+        {
+            if (until <= _timing.CurTime)
+                _chatNotificationsByType.Remove(key);
+        }
+
+        foreach (var (key, trackedSources) in _chatNotificationsBySource.ToArray())
+        {
+            foreach (var (source, until) in trackedSources.ToArray())
+            {
+                if (until <= _timing.CurTime)
+                    trackedSources.Remove(source);
+            }
+
+            if (trackedSources.Count == 0)
+                _chatNotificationsBySource.Remove(key);
+        }
     }
 }

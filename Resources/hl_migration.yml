@@ -1,2 +1,12 @@
+# 13-04-2026
+BorgModuleFireExtinguisher: BorgModuleJetpack
+BorgModuleDefibrilator: BorgModuleRescue
+BorgModuleTreatment: BorgModuleTopicaks
+BorgModuleAdvancedTreatment: BorgModuleAdvancedChemical
+BorgModuleGrapplingGun: BorgModuleTraversal
+BorgModuleLightreplacer: BorgModuleCustodial
+#16-04-2026
+EncryptionKeyCentCom: EncryptionKeyColCom # Added because if we ever import a map with CentCom keys we should want to update it to a ColCom key.
+EncryptionKeyColComm: EncryptionKeyColCom
 # 22-04-2026 BEGONE EXPED COMPUTERS
 ComputerSalvageExpedition: null

@@ -129,6 +129,23 @@ namespace Content.Server.Administration.Systems
                     prayerVerb.Impact = LogImpact.Low;
                     args.Verbs.Add(prayerVerb);
 
+                    // Subtle Cryptic Messages
+                    Verb crypticVerb = new();
+                    crypticVerb.Text = Loc.GetString("prayer-verbs-subtle-cryptic-message");
+                    crypticVerb.Category = VerbCategory.Admin;
+                    crypticVerb.Icon = new SpriteSpecifier.Texture(new("/Textures/Interface/pray.svg.png"));
+                    crypticVerb.Act = () =>
+                    {
+                        _quickDialog.OpenDialog(player, "Subtle Cryptic Message", "Popup Message", "Scale (0.5-3.0)", (string popupMessage, float scale) =>
+                        {
+                            scale = Math.Clamp(scale, 0.5f, 3.0f);
+                            var scaledMessage = $"[scale:{scale:F1}]{popupMessage}";
+                            _prayerSystem.SendCrypticMessage(targetActor.PlayerSession, player, "", scaledMessage == "" ? Loc.GetString("prayer-popup-cryptic-default") : scaledMessage);
+                        });
+                    };
+                    crypticVerb.Impact = LogImpact.Low;
+                    args.Verbs.Add(crypticVerb);
+
                     // Spawn - Like respawn but on the spot.
                     args.Verbs.Add(new Verb()
                     {

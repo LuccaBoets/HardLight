@@ -185,6 +185,7 @@ loadout-group-medical-doctor-head = Medical Doctor head
 loadout-group-medical-doctor-jumpsuit = Medical Doctor jumpsuit
 loadout-group-medical-doctor-outerclothing = Medical Doctor outer clothing
 loadout-group-medical-doctor-backpack = Medical Doctor backpack
+loadout-group-medical-doctor-injector = Medical Doctor injector
 loadout-group-medical-doctor-shoes = Medical Doctor shoes
 loadout-group-medical-doctor-id = Medical Doctor ID
 

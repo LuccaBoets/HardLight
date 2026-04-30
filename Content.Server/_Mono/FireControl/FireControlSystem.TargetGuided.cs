@@ -117,6 +117,8 @@ public sealed partial class FireControlSystem
     {
         base.Update(frameTime);
 
+        CleanupVisualizationEntities();
+
         if (_activeMissiles.Count == 0 && _consoleMousePositions.Count == 0)
             return;
 

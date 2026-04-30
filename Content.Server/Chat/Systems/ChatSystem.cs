@@ -275,10 +275,10 @@ public sealed partial class ChatSystem : SharedChatSystem
                 SendEntityEmote(source, message, range, nameOverride, hideLog: hideLog, ignoreActionBlocker: ignoreActionBlocker);
                 break;
             case InGameICChatType.Subtle:
-                SendEntitySubtle(source, message, range, nameOverride, hideLog: hideLog, ignoreActionBlocker: true, color: color);
+                SendEntitySubtle(source, message, range, nameOverride, hideLog: hideLog, ignoreActionBlocker: true, color: color, channel: ChatChannel.Subtle);
                 break;
             case InGameICChatType.SubtleOOC:
-                SendEntitySubtle(source, $"OOC: {message}", range, nameOverride, hideLog: hideLog, ignoreActionBlocker: true, color: color); // HardLight: Capitalized OOC for consistency with other OOC chats.
+                SendEntitySubtle(source, $"OOC: {message}", range, nameOverride, hideLog: hideLog, ignoreActionBlocker: true, color: color, channel: ChatChannel.SubtleOOC); // HardLight: Capitalized OOC for consistency with other OOC chats.
                 break;
             //Nyano - Summary: case adds the telepathic chat sending ability.
             case InGameICChatType.Telepathic:
@@ -651,7 +651,8 @@ public sealed partial class ChatSystem : SharedChatSystem
         bool hideLog = false,
         bool ignoreActionBlocker = false,
         NetUserId? author = null,
-        string? color = null
+        string? color = null,
+        ChatChannel channel = ChatChannel.Subtle
         )
     {
         if (!_actionBlocker.CanEmote(source) && !ignoreActionBlocker)
@@ -672,7 +673,7 @@ public sealed partial class ChatSystem : SharedChatSystem
                 continue;
             if (MessageRangeCheck(session, data, range) == MessageRangeCheckResult.Disallowed)
                 continue;
-            _chatManager.ChatMessageToOne(ChatChannel.Emotes, action, wrappedMessage, source, false, session.Channel);
+            _chatManager.ChatMessageToOne(channel, action, wrappedMessage, source, false, session.Channel);
         }
         if (!hideLog)
             if (name != Name(source))

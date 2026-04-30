@@ -26,6 +26,18 @@ public sealed partial class GridSpawnerSystem : EntitySystem
     {
         var xform = Transform(ent.Owner);
 
+        // Per-spawner minimum-distance gate: keep hostile worldgen spawners
+        // (e.g. xenoborg drones) out of the inner trade-hub area.
+        if (TryComp<MinSpawnDistanceFromOriginComponent>(ent.Owner, out var minDist))
+        {
+            var pos = _transform.GetWorldPosition(xform);
+            if (pos.LengthSquared() < minDist.Distance * minDist.Distance)
+            {
+                QueueDel(ent.Owner);
+                return;
+            }
+        }
+
         if (_loader.TryLoadGrid(xform.MapID, ent.Comp.Path, out var grid, offset: _transform.GetWorldPosition(xform)))
         {
             if (ent.Comp.NameGrid)

@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2025 pheenty <fedorlukin2006@gmail.com>
+
 # region FRONTIER - IGNORED
 - type: entity
   id: BaseWeaponBattery
@@ -31,6 +33,10 @@
   - type: SurgeryTool # Shitmed
     endSound:
       path: /Audio/Weapons/Guns/Gunshots/laser.ogg
+  - type: Multishot # Goobstation
+    missChance: 0.4
+    spreadMultiplier: 3
+    spreadAddition: 40
 
 - type: entity
   id: BaseWeaponPowerCell
@@ -111,6 +117,10 @@
     quickEquip: false
     slots:
     - Belt
+  - type: Multishot # Goobstation
+    missChance: 0.4
+    spreadMultiplier: 2
+    spreadAddition: 40
 
 - type: entity
   name: svalinn laser pistol
@@ -505,7 +515,7 @@
     price: 100
   - type: Gun
     fireRate: 2
-    projectileSpeed: 35 # any higher and this causes issues in lag
+    # projectileSpeed: 35 # Goobstation: nuh uh
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/taser2.ogg
   - type: ProjectileBatteryAmmoProvider

@@ -368,7 +368,7 @@ entities:
     - type: Transform
       pos: 4.5,1.5
       parent: 1
-- proto: NpcStationAiAttacker
+- proto: NpcStationAiByte
   entities:
   - uid: 50
     components:

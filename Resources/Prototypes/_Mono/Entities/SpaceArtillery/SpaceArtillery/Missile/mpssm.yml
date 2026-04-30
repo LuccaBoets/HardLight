@@ -47,7 +47,7 @@
   - type: EmpOnTrigger
     range: 2
     energyConsumption: 2700000
-    disableDuration: 20
+    disableDuration: 40
 
 # HEAT
 

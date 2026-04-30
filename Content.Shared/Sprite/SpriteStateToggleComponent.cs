@@ -78,6 +78,10 @@ public sealed partial class SpriteStateToggleComponent : Component
     /// <summary>
     /// Instantiated action entity for toggling.
     /// </summary>
-    [AutoNetworkedField]
+    // HardLight: persist across save/load. Without [DataField], a stashed item with this
+    // component loses its toggle action on load because OnMapInit (where the action is
+    // ensured) only runs on entity creation. The action entity itself is saved as a child
+    // of the item via ActionsContainerComponent.
+    [DataField, AutoNetworkedField]
     public EntityUid? ToggleActionEntity;
 }

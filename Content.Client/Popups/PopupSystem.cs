@@ -52,7 +52,8 @@ namespace Content.Client.Popups
             { PopupType.Medium, "12" },
             { PopupType.MediumCaution, "12" },
             { PopupType.Large, "15" },
-            { PopupType.LargeCaution, "15" }
+            { PopupType.LargeCaution, "15" },
+            { PopupType.Cryptic, "15" }
         };
 
         private bool _shouldLogInChat;
@@ -114,7 +115,8 @@ namespace Content.Client.Popups
             // WD EDIT START
             if (_shouldLogInChat &&
                 _playerManager.LocalEntity != null &&
-                _examine.InRangeUnOccluded(_playerManager.LocalEntity.Value, coordinates, 10))
+                _examine.InRangeUnOccluded(_playerManager.LocalEntity.Value, coordinates, 10) &&
+                type != PopupType.Cryptic)
             {
                 var fontsize = FontSizeDict.GetValueOrDefault(type, "10");
                 var fontcolor = type is PopupType.LargeCaution or PopupType.MediumCaution or PopupType.SmallCaution
@@ -333,6 +335,13 @@ namespace Content.Client.Popups
 
         public static float GetPopupLifetime(PopupLabel label)
         {
+            if (label.Type == PopupType.Cryptic)
+            {
+                const float charsPerSecond = 5f;
+                var timeToDisplay = label.Text.Length / charsPerSecond;
+                return Math.Max(timeToDisplay + 4f, MinimumPopupLifetime);
+            }
+
             return Math.Clamp(PopupLifetimePerCharacter * label.Text.Length,
                 MinimumPopupLifetime,
                 MaximumPopupLifetime);

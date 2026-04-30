@@ -53,6 +53,7 @@
     - id: DrinkAleBottleFull
     - id: DrinkAleBottleFullGrowler
     - id: DrinkChampagneBottleFull
+    - id: DrinkAngobittersBottleFull # DeltaV
 
 - type: entityTable
   id: RandomRareAlcoholTable

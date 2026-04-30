@@ -64,6 +64,7 @@
        - id: UniformScrubsColorPurple
          weight: 0.05
     - id: ClothingMaskSterile
+    - id: JetInjector
 
 - type: entity
   parent: LockerMedical
@@ -130,6 +131,7 @@
     - id: ClothingHandsGlovesLatex
     - id: ClothingHeadsetMedical
     - id: ClothingMaskSterile
+    - id: JetInjector
     - id: HandheldGPSBasic
     - id: MedkitFilled
       prob: 0.3

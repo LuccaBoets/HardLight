@@ -82,6 +82,13 @@ public sealed partial class TargetSeekingComponent : Component
     /// Whether seeking has been disabled (e.g., after entering an enemy grid).
     /// </summary>
     public bool SeekingDisabled;
+
+    /// <summary>
+    /// Throttle: only attempt target acquisition after this game time to avoid a full
+    /// ShuttleConsoleComponent world-scan every tick when no target is held.
+    /// Not serialized; runtime-only.
+    /// </summary>
+    public TimeSpan NextAcquireAttempt;
 }
 
 /// <summary>

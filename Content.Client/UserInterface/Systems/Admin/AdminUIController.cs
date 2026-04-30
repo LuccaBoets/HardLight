@@ -48,7 +48,7 @@ public sealed class AdminUIController : UIController,
     {
         var showDialog = _panicBunker == null && msg.Status.Enabled;
         _panicBunker = msg.Status;
-        _window?.PanicBunkerControl.UpdateStatus(msg.Status);
+        _window?.AdminToolsControl.PanicBunkerControl.UpdateStatus(msg.Status);
 
         if (showDialog)
         {
@@ -58,20 +58,16 @@ public sealed class AdminUIController : UIController,
 
     public void OnStateEntered(GameplayState state)
     {
-        EnsureWindow();
         AdminStatusUpdated();
     }
 
     public void OnStateEntered(LobbyState state)
     {
-        EnsureWindow();
         AdminStatusUpdated();
     }
 
     public void OnSystemLoaded(AdminSystem system)
     {
-        EnsureWindow();
-
         _admin.AdminStatusUpdated += AdminStatusUpdated;
         _input.SetInputCommand(ContentKeyFunctions.OpenAdminMenu,
             InputCmdHandler.FromDelegate(_ => Toggle()));
@@ -99,7 +95,7 @@ public sealed class AdminUIController : UIController,
         LayoutContainer.SetAnchorPreset(_window, LayoutContainer.LayoutPreset.Center);
 
         if (_panicBunker != null)
-            _window.PanicBunkerControl.UpdateStatus(_panicBunker);
+            _window.AdminToolsControl.PanicBunkerControl.UpdateStatus(_panicBunker);
 
         _window.PlayerTabControl.OnEntryKeyBindDown += PlayerTabEntryKeyBindDown;
         _window.ObjectsTabControl.OnEntryKeyBindDown += ObjectsTabEntryKeyBindDown;
@@ -173,6 +169,7 @@ public sealed class AdminUIController : UIController,
         }
         else if (_conGroups.CanAdminMenu())
         {
+            EnsureWindow();
             _window?.Open();
         }
     }

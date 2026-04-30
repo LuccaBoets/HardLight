@@ -1,4 +1,5 @@
 using Content.Shared.Construction.Components;
+using Content.Shared.Construction.EntitySystems;
 using Content.Shared.Administration.Logs;
 using Content.Shared.Containers.ItemSlots;
 using Content.Shared.Database;
@@ -11,6 +12,7 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Network;
+using Robust.Shared.Physics;
 using Robust.Shared.Prototypes;
 
 namespace Content.Shared.Construction;
@@ -20,10 +22,10 @@ public abstract class SharedFlatpackSystem : EntitySystem
     [Dependency] private readonly ISharedAdminLogManager _adminLogger = default!;
     [Dependency] private readonly INetManager _net = default!;
     [Dependency] protected readonly IPrototypeManager PrototypeManager = default!;
+    [Dependency] private readonly AnchorableSystem _anchorable = default!;
     [Dependency] protected readonly SharedAppearanceSystem Appearance = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedContainerSystem _container = default!;
-    [Dependency] private readonly EntityLookupSystem _entityLookup = default!;
     [Dependency] private readonly SharedMapSystem _map = default!;
     [Dependency] protected readonly MachinePartSystem MachinePart = default!;
     [Dependency] protected readonly SharedMaterialStorageSystem MaterialStorage = default!;
@@ -77,16 +79,15 @@ public abstract class SharedFlatpackSystem : EntitySystem
         }
 
         var buildPos = _map.TileIndicesFor(grid, gridComp, xform.Coordinates);
-        var coords = _map.ToCenterCoordinates(grid, buildPos);
 
-        // TODO FLATPAK
-        // Make this logic smarter. This should eventually allow for shit like building microwaves on tables and such.
-        // Also: make it ignore ghosts
-        if (_entityLookup.AnyEntitiesIntersecting(coords, LookupFlags.Dynamic | LookupFlags.Static))
+        // Use the resulting machine's own hard collision layers/mask against anchored
+        // entities on the destination tile, instead of a broad lookup that always trips on
+        // the flatpack itself or on item-mask debris. Mirrors upstream Wizden behaviour.
+        var (layer, mask) = GetPrototypeHardCollision(comp.Entity);
+
+        if (!_anchorable.TileFree(gridComp, buildPos, layer, mask))
         {
-            // this popup is on the server because the predicts on the intersection is crazy
-            if (_net.IsServer)
-                _popup.PopupEntity(Loc.GetString("flatpack-unpack-no-room"), uid, args.User);
+            _popup.PopupPredicted(Loc.GetString("flatpack-unpack-no-room"), uid, args.User);
             return;
         }
 
@@ -109,6 +110,33 @@ public abstract class SharedFlatpackSystem : EntitySystem
         if (!args.IsInDetailsRange)
             return;
         args.PushMarkup(Loc.GetString("flatpack-examine"));
+    }
+
+    /// <summary>
+    /// Aggregates the hard collision layer/mask of a prototype's fixtures so that we can
+    /// check whether the destination tile is free for the resulting machine.
+    /// </summary>
+    private (int Layer, int Mask) GetPrototypeHardCollision(EntProtoId? protoId)
+    {
+        if (protoId == null || !PrototypeManager.TryIndex<EntityPrototype>(protoId, out var proto))
+            return (0, 0);
+
+        if (!proto.TryGetComponent<FixturesComponent>(out var fixtures, EntityManager.ComponentFactory))
+            return (0, 0);
+
+        var layer = 0;
+        var mask = 0;
+
+        foreach (var fixture in fixtures.Fixtures.Values)
+        {
+            if (!fixture.Hard)
+                continue;
+
+            layer |= fixture.CollisionLayer;
+            mask |= fixture.CollisionMask;
+        }
+
+        return (layer, mask);
     }
 
     protected void SetupFlatpack(Entity<FlatpackComponent?> ent, EntProtoId proto, EntityUid board)

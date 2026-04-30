@@ -126,7 +126,7 @@ public abstract class SharedIdCardSystem : EntitySystem
     /// </remarks>
     public bool TryChangeJobTitle(EntityUid uid, string? jobTitle, IdCardComponent? id = null, EntityUid? player = null)
     {
-        if (!Resolve(uid, ref id))
+        if (!Resolve(uid, ref id, logMissing: false))
             return false;
 
         if (!string.IsNullOrWhiteSpace(jobTitle))
@@ -157,7 +157,7 @@ public abstract class SharedIdCardSystem : EntitySystem
 
     public bool TryChangeJobIcon(EntityUid uid, JobIconPrototype jobIcon, IdCardComponent? id = null, EntityUid? player = null)
     {
-        if (!Resolve(uid, ref id))
+        if (!Resolve(uid, ref id, logMissing: false))
         {
             return false;
         }
@@ -181,7 +181,7 @@ public abstract class SharedIdCardSystem : EntitySystem
 
     public bool TryChangeJobDepartment(EntityUid uid, JobPrototype job, IdCardComponent? id = null)
     {
-        if (!Resolve(uid, ref id))
+        if (!Resolve(uid, ref id, logMissing: false))
             return false;
 
         id.JobDepartments.Clear();
@@ -205,7 +205,7 @@ public abstract class SharedIdCardSystem : EntitySystem
     /// </remarks>
     public bool TryChangeFullName(EntityUid uid, string? fullName, IdCardComponent? id = null, EntityUid? player = null)
     {
-        if (!Resolve(uid, ref id))
+        if (!Resolve(uid, ref id, logMissing: false))
             return false;
 
         if (!string.IsNullOrWhiteSpace(fullName))
@@ -242,7 +242,7 @@ public abstract class SharedIdCardSystem : EntitySystem
     /// </remarks>
     private void UpdateEntityName(EntityUid uid, IdCardComponent? id = null)
     {
-        if (!Resolve(uid, ref id))
+        if (!Resolve(uid, ref id, logMissing: false))
             return;
 
         var jobTitle = id.JobTitleText;

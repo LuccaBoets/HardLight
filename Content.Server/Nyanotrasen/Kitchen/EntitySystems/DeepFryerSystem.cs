@@ -104,6 +104,7 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
         _sawmill = Logger.GetSawmill("deepfryer");
 
         SubscribeLocalEvent<DeepFryerComponent, ComponentInit>(OnInitDeepFryer);
+        SubscribeLocalEvent<DeepFryerComponent, MapInitEvent>(OnMapInitDeepFryer);
         SubscribeLocalEvent<DeepFryerComponent, PowerChangedEvent>(OnPowerChange);
         SubscribeLocalEvent<DeepFryerComponent, RefreshPartsEvent>(OnRefreshParts);
         SubscribeLocalEvent<DeepFryerComponent, MachineDeconstructedEvent>(OnDeconstruct);
@@ -463,6 +464,19 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
     }
 
     /// <summary>
+    /// After map init, the SolutionContainerManager has migrated any prototype
+    /// solutions loaded from a save into live solution entities. The cached
+    /// reference grabbed during ComponentInit may now point at a discarded
+    /// prototype Solution, so re-resolve it here. Fixes the deep fryer
+    /// reporting empty oil after being loaded from a saved ship (issue #1364).
+    /// </summary>
+    private void OnMapInitDeepFryer(EntityUid uid, DeepFryerComponent component, MapInitEvent args)
+    {
+        if (_solutionContainerSystem.TryGetSolution(uid, component.SolutionName, out _, out var solution))
+            component.Solution = solution;
+    }
+
+    /// <summary>
     ///     Make sure the UI and interval tracker are updated anytime something
     ///     is inserted into one of the baskets.
     /// </summary>
@@ -560,6 +574,9 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
 
     private void OnSolutionChange(EntityUid uid, DeepFryerComponent component, SolutionChangedEvent args)
     {
+        if (args.Solution.Comp.Solution.Name == component.SolutionName)
+            component.Solution = args.Solution.Comp.Solution;
+
         UpdateUserInterface(uid, component);
         UpdateAmbientSound(uid, component);
     }

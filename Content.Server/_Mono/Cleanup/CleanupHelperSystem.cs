@@ -2,6 +2,7 @@ using System.Numerics;
 using Robust.Server.Player;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
+using Robust.Shared.Maths;
 
 namespace Content.Server._Mono.Cleanup;
 
@@ -12,6 +13,11 @@ public sealed class CleanupHelperSystem : EntitySystem
 {
     [Dependency] private readonly IPlayerManager _players = default!;
     [Dependency] private readonly SharedTransformSystem _xform = default!;
+    [Dependency] private readonly IMapManager _mapMan = default!;
+
+    // Reused per call to avoid allocating a fresh list every cleanup tick.
+    // Not readonly because FindGridsIntersecting takes the list by ref.
+    private List<Entity<MapGridComponent>> _scratchGrids = new();
 
     public bool HasNearbyPlayers(EntityCoordinates coordinates, float maxDistance)
     {
@@ -59,17 +65,27 @@ public sealed class CleanupHelperSystem : EntitySystem
         var position = mapCoords.Position;
         var maxDistanceSq = maxDistance * maxDistance;
 
-        var grids = EntityQueryEnumerator<MapGridComponent, TransformComponent>();
-        while (grids.MoveNext(out _, out _, out var gridXform))
+        // Use the broadphase to fetch only grids whose AABB overlaps the search box,
+        // then preserve original semantics ("any grid origin within maxDistance") by
+        // distance-checking each candidate. Avoids walking every MapGridComponent.
+        var box = Box2.CenteredAround(position, new Vector2(maxDistance * 2f, maxDistance * 2f));
+        _scratchGrids.Clear();
+        _mapMan.FindGridsIntersecting(mapId, box, ref _scratchGrids, approx: true);
+
+        foreach (var grid in _scratchGrids)
         {
-            if (gridXform.MapID != mapId)
+            if (!TryComp<TransformComponent>(grid.Owner, out var gridXform))
                 continue;
 
             var gridPos = _xform.GetWorldPosition(gridXform);
             if (Vector2.DistanceSquared(position, gridPos) <= maxDistanceSq)
+            {
+                _scratchGrids.Clear();
                 return true;
+            }
         }
 
+        _scratchGrids.Clear();
         return false;
     }
 }

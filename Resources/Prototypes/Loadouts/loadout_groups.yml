@@ -1478,6 +1478,15 @@
   - SeniorPhysicianPDA
 
 - type: loadoutGroup
+  id: MedicalDoctorInjector
+  name: loadout-group-medical-doctor-injector
+  minLimit: 1
+  maxLimit: 1
+  loadouts:
+  - MedicalJetInjector
+  - MedicalSyringe
+
+- type: loadoutGroup
   id: MedicalGloves
   name: loadout-group-medical-gloves
   minLimit: 0

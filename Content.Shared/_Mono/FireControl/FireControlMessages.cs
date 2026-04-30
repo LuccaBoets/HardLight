@@ -15,12 +15,17 @@ public sealed class FireControlConsoleBoundInterfaceState : BoundUserInterfaceSt
     public bool Connected;
     public FireControllableEntry[] FireControllables;
     public NavInterfaceState NavState;
+    /// <summary>
+    /// Shield health as 0–100 %. Null when no shield emitter is present on the grid.
+    /// </summary>
+    public float? ShieldHealthPercent;
 
-    public FireControlConsoleBoundInterfaceState(bool connected, FireControllableEntry[] fireControllables, NavInterfaceState navState)
+    public FireControlConsoleBoundInterfaceState(bool connected, FireControllableEntry[] fireControllables, NavInterfaceState navState, float? shieldHealthPercent = null)
     {
         Connected = connected;
         FireControllables = fireControllables;
         NavState = navState;
+        ShieldHealthPercent = shieldHealthPercent;
     }
 }
 

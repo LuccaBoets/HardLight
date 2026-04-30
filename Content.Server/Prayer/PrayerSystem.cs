@@ -91,6 +91,27 @@ public sealed class PrayerSystem : EntitySystem
     }
 
     /// <summary>
+    /// Subtly messages a player by giving them a cryptic popup and a chat message.
+    /// </summary>
+    /// <param name="target">The IPlayerSession that you want to send the message to</param>
+    /// <param name="source">The IPlayerSession that sent the message</param>
+    /// <param name="messageString">The main message sent to the player via the chatbox</param>
+    /// <param name="popupMessage">The popup to notify the player, also prepended to the messageString</param>
+    public void SendCrypticMessage(ICommonSession target, ICommonSession source, string messageString, string popupMessage)
+    {
+        if (target.AttachedEntity is not { } attached || !attached.Valid || !EntityManager.EntityExists(attached))
+            return;
+
+        messageString ??= string.Empty;
+        popupMessage ??= string.Empty;
+
+        var message = popupMessage == "" ? "" : popupMessage + (messageString == "" ? "" : $" \"{messageString}\"");
+
+        _popupSystem.PopupEntity(popupMessage, attached, target, PopupType.Cryptic);
+        _adminLogger.Add(LogType.AdminMessage, LogImpact.Low, $"{ToPrettyString(attached):player} received cryptic message from {source.Name}: {message}");
+    }
+
+    /// <summary>
     /// Sends a message to the admin channel with a message and username
     /// </summary>
     /// <param name="sender">The IPlayerSession who sent the original message</param>

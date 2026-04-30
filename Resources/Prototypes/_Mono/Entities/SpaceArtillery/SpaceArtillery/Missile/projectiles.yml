@@ -187,7 +187,7 @@
   - type: EmpOnTrigger
     range: 5
     energyConsumption: 2700000
-    disableDuration: 5
+    disableDuration: 10
   - type: ExplodeOnTrigger
   - type: Explosive
     explosionType: DefaultShipGun
@@ -307,7 +307,7 @@
   - type: EmpOnTrigger
     range: 7
     energyConsumption: 2900000
-    disableDuration: 7
+    disableDuration: 14
   # destructible components below
   - type: Damageable
     damageContainer: Inorganic

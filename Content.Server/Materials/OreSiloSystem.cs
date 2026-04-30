@@ -1,7 +1,9 @@
+using System.Linq;
 using Content.Server.Pinpointer;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Materials.OreSilo;
 using Robust.Server.GameStates;
+using Robust.Shared.Enums;
 using Robust.Shared.Player;
 using Robust.Shared.Timing;
 
@@ -18,13 +20,19 @@ public sealed class OreSiloSystem : SharedOreSiloSystem
 
     private const float OreSiloPreloadRangeSquared = 225f; // ~1 screen
     private const float ValidationInterval = 30f; // Validate connections every 30 seconds
+    private const float PvsPreloadInterval = 2f; // Re-check PVS preloads every 2s, not every tick
 
     private readonly HashSet<Entity<OreSiloClientComponent>> _clientLookup = new();
     private readonly HashSet<(NetEntity, string, string)> _clientInformation = new();
     private readonly HashSet<EntityUid> _silosToAdd = new();
     private readonly HashSet<EntityUid> _silosToRemove = new();
-    
+
+    // Tracks which silos each session had in range on the previous preload scan.
+    // We only call Add/Remove when the set actually changes, avoiding per-tick PVS churn.
+    private readonly Dictionary<ICommonSession, HashSet<EntityUid>> _sessionSilosInRange = new();
+
     private TimeSpan _nextValidation = TimeSpan.Zero;
+    private TimeSpan _nextPvsPreload = TimeSpan.Zero;
 
     protected override void UpdateOreSiloUi(Entity<OreSiloComponent> ent)
     {
@@ -85,13 +93,22 @@ public sealed class OreSiloSystem : SharedOreSiloSystem
     {
         base.Update(frameTime);
 
-        // Periodically validate all silo-client connections
         var curTime = _timing.CurTime;
+
+        // Periodically validate all silo-client connections
         if (curTime >= _nextValidation)
         {
             _nextValidation = curTime + TimeSpan.FromSeconds(ValidationInterval);
             ValidateAllConnections();
         }
+
+        // Rate-limit the PVS preload scan. This is an O(players × silo_clients) loop and does not
+        // need to run every tick — 2-second granularity is fine for ore silo visibility.
+        // Previously this ran 30×/sec and was a top-3 server CPU cost on populated maps.
+        if (curTime < _nextPvsPreload)
+            return;
+
+        _nextPvsPreload = curTime + TimeSpan.FromSeconds(PvsPreloadInterval);
 
         // Solving an annoying problem: we need to send the silo to people who are near the silo so that
         // Things don't start wildly mispredicting. We do this as cheaply as possible via grid-based local-pos checks.
@@ -107,6 +124,8 @@ public sealed class OreSiloSystem : SharedOreSiloSystem
             _silosToAdd.Clear();
             _silosToRemove.Clear();
 
+            // Build the set of silos currently in range for this session.
+            var nowInRange = new HashSet<EntityUid>();
             var clientQuery = EntityQueryEnumerator<OreSiloClientComponent, TransformComponent>();
             while (clientQuery.MoveNext(out _, out var clientComp, out var clientXform))
             {
@@ -118,23 +137,39 @@ public sealed class OreSiloSystem : SharedOreSiloSystem
                     continue;
 
                 if ((actorXform.LocalPosition - clientXform.LocalPosition).LengthSquared() <= OreSiloPreloadRangeSquared)
-                {
-                    _silosToAdd.Add(clientComp.Silo.Value);
-                }
-                else
-                {
-                    _silosToRemove.Add(clientComp.Silo.Value);
-                }
+                    nowInRange.Add(clientComp.Silo.Value);
+            }
+
+            // Only call Add/Remove for silos whose in-range status actually changed since the last scan.
+            if (!_sessionSilosInRange.TryGetValue(session, out var prevInRange))
+                prevInRange = new HashSet<EntityUid>();
+
+            foreach (var silo in nowInRange)
+            {
+                if (!prevInRange.Contains(silo))
+                    _silosToAdd.Add(silo);
+            }
+
+            foreach (var silo in prevInRange)
+            {
+                if (!nowInRange.Contains(silo))
+                    _silosToRemove.Add(silo);
             }
 
             foreach (var toRemove in _silosToRemove)
-            {
                 _pvsOverride.RemoveSessionOverride(toRemove, session);
-            }
+
             foreach (var toAdd in _silosToAdd)
-            {
                 _pvsOverride.AddSessionOverride(toAdd, session);
-            }
+
+            _sessionSilosInRange[session] = nowInRange;
+        }
+
+        // Prune sessions that have disconnected.
+        foreach (var session in _sessionSilosInRange.Keys.ToList())
+        {
+            if (session.Status == SessionStatus.Disconnected)
+                _sessionSilosInRange.Remove(session);
         }
     }
 

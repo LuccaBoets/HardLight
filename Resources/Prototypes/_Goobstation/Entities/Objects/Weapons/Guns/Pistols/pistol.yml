@@ -1,7 +1,68 @@
+# SPDX-FileCopyrightText: 2025 GoobBot <uristmchands@proton.me>
+# SPDX-FileCopyrightText: 2025 pheenty <fedorlukin2006@gmail.com>
+
+- type: entity
+  name: Dualetta
+  parent: [ BaseWeaponPistol, BaseSyndicateContraband ]
+  id: WeaponPistolDualetta
+  description: The coolest pistol in the sector. It is said that nobody is strong enough of will to tarnish this weapon's reputation by daring to fire it without another paired pistol. Though, some people have mustered the will to simply use a different gun in the other hand.
+  components:
+  - type: Sprite
+    sprite: _Goobstation/Objects/Weapons/Guns/Pistols/dualetta.rsi
+    layers:
+    - state: base
+      map: [ "enum.GunVisualLayers.Base" ]
+    - state: mag-0
+      map: [ "enum.GunVisualLayers.Mag" ]
+  - type: Clothing
+    sprite: _Goobstation/Objects/Weapons/Guns/Pistols/dualetta.rsi
+  - type: Gun
+    minAngle: 1
+    maxAngle: 5
+    angleIncrease: 1
+    angleDecay: 4
+    fireRate: 8
+    availableModes:
+    - SemiAuto
+    - FullAuto
+    soundGunshot:
+      path: /Audio/Weapons/Guns/Gunshots/mateba.ogg
+  - type: ItemSlots
+    slots:
+      gun_magazine:
+        name: Magazine
+        startingItem: MagazinePistolHighCapacity
+        insertSound: /Audio/Weapons/Guns/MagIn/pistol_magin.ogg
+        ejectSound: /Audio/Weapons/Guns/MagOut/pistol_magout.ogg
+        priority: 2
+        whitelist:
+          tags:
+          - MagazinePistol
+          - MagazinePistolHighCapacity
+        whitelistFailPopup: gun-magazine-whitelist-fail
+      gun_chamber:
+        name: Chamber
+        startingItem: CartridgePistol
+        priority: 1
+        whitelist:
+          tags:
+          - CartridgePistol
+  - type: Tag
+    tags:
+    - WeaponPistolDualetta
+  - type: Multishot
+    missChance: 0
+    spreadMultiplier: 1
+    spreadAddition: 0
+  - type: RequiresDualWield
+    whitelist:
+      tags:
+      - WeaponPistolDualetta
+
 - type: entity
   parent: [ BaseItem, BaseC3PirateContraband ]
   id: WeaponPistolAnaconda
-  name: Anaconda 
+  name: Anaconda
   description: A heavy pistol capable of supplying itself with the ammo on the way using a built-in fabricator.
   components:
   - type: Item
@@ -16,7 +77,7 @@
     sprite: _Goobstation/Objects/Weapons/Guns/Pistols/anaconda.rsi
     layers:
     - state: icon
-      map: ["enum.GunVisualLayers.Base"]
+      map: [ "enum.GunVisualLayers.Base" ]
   - type: Clothing
     sprite: _Goobstation/Objects/Weapons/Guns/Pistols/anaconda.rsi
     quickEquip: false
@@ -27,7 +88,7 @@
     fireRate: 3
     projectileSpeed: 40 # Mono
     availableModes:
-      - SemiAuto
+    - SemiAuto
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/hpistol.ogg
   - type: BasicEntityAmmoProvider
