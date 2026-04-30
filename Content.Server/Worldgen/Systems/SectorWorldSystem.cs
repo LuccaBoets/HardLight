@@ -503,6 +503,9 @@ public sealed class SectorWorldSystem : EntitySystem
         if (!Resolve(sectorMap, ref sector, false))
             return false;
 
+        if (sector == null)
+            return false;
+
         EnsureInitialized((sectorMap, sector));
 
         foreach (var candidate in sector.Planets)
