@@ -68,7 +68,11 @@ public sealed class SectorChunkCarverSystem : EntitySystem
             if (!string.IsNullOrWhiteSpace(_cacheDirectory) && Directory.Exists(_cacheDirectory))
                 Directory.Delete(_cacheDirectory, true);
         }
-        catch
+        catch (IOException)
+        {
+            // Temp cache cleanup is best-effort.
+        }
+        catch (UnauthorizedAccessException)
         {
             // Temp cache cleanup is best-effort.
         }
