@@ -2,7 +2,6 @@ using System.Linq;
 using System.Threading;
 using Content.Server.Salvage.Expeditions;
 using Content.Server.Salvage.Expeditions.Structure;
-using Content.Server.Worldgen.Components;
 using Content.Shared.CCVar;
 using Content.Shared.Examine;
 using Content.Shared.Random.Helpers;
@@ -23,6 +22,7 @@ using Content.Shared.Shuttles.Components; // Frontier
 using Robust.Shared.Configuration;
 using Content.Shared.Ghost;
 using System.Numerics; // Frontier
+using TimedDespawnComponent = Robust.Shared.Spawners.TimedDespawnComponent;
 
 namespace Content.Server.Salvage;
 
@@ -129,6 +129,9 @@ public sealed partial class SalvageSystem
     private void OnExpeditionMapInit(EntityUid uid, SalvageExpeditionComponent component, MapInitEvent args)
     {
         component.SelectedSong = _audio.ResolveSound(component.Sound);
+
+        var despawn = EnsureComp<TimedDespawnComponent>(uid);
+        despawn.Lifetime = (float) TimeSpan.FromMinutes(30).TotalSeconds;
     }
 
     private void OnExpeditionShutdown(EntityUid uid, SalvageExpeditionComponent component, ComponentShutdown args)
@@ -143,11 +146,6 @@ public sealed partial class SalvageSystem
                 _salvageJobs.Remove((job, cancelToken));
             }
         }
-
-        if (TryComp<SectorExpeditionSiteComponent>(uid, out var site))
-            _sectorWorld.CleanupHostedSite(uid, site);
-
-        CleanupHostedExpeditionContent(component);
 
         // HARDLIGHT: Handle round persistence - station might be deleted during round transitions
         if (Deleted(component.Station))
@@ -169,34 +167,6 @@ public sealed partial class SalvageSystem
             HandleExpeditionOutcome(uid, component);
             Log.Info($"Expedition shutdown: No expedition data on {component.Station}, used fallback outcome handling.");
         }
-    }
-
-    private void CleanupHostedExpeditionContent(SalvageExpeditionComponent component)
-    {
-        foreach (var generated in component.GeneratedEntities.Where(generated => Exists(generated)))
-        {
-            QueueDel(generated);
-        }
-
-        component.GeneratedEntities.Clear();
-
-        if (component.HostGridUid == EntityUid.Invalid || component.OriginalTiles.Count == 0)
-            return;
-
-        if (!TryComp<MapGridComponent>(component.HostGridUid, out var grid))
-        {
-            component.OriginalTiles.Clear();
-            return;
-        }
-
-        var tiles = new List<(Vector2i, Tile)>(component.OriginalTiles.Count);
-        foreach (var (indices, tile) in component.OriginalTiles)
-        {
-            tiles.Add((indices, tile));
-        }
-
-        _mapSystem.SetTiles(component.HostGridUid, grid, tiles);
-        component.OriginalTiles.Clear();
     }
 
     private void UpdateExpeditions()
@@ -446,17 +416,14 @@ public sealed partial class SalvageSystem
             EntityManager,
             _timing,
             _logManager,
-            _mapManager,
             _prototypeManager,
             _anchorable,
-            _audio,
             _biome,
             _dungeon,
             _metaData,
             _mapSystem,
             _station, // Frontier
             _shuttle, // Frontier
-            _sectorWorld,
             this, // Frontier
             station,
             console,
@@ -533,7 +500,7 @@ public sealed partial class SalvageSystem
         var newCoords = new MapCoordinates(Vector2.Zero, _gameTicker.DefaultMap);
         while (ghosts.MoveNext(out var ghostUid, out _, out var xform))
         {
-            if (IsEntityOnExpedition(ghostUid, uid, xform))
+            if (xform.MapUid == uid)
                 _transform.SetMapCoordinates(ghostUid, newCoords);
         }
     }

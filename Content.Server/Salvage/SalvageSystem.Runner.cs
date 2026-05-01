@@ -46,7 +46,7 @@ public sealed partial class SalvageSystem
     private void OnConsoleFTLAttempt(ref ConsoleFTLAttemptEvent ev)
     {
         if (!TryComp(ev.Uid, out TransformComponent? xform) ||
-            !TryGetExpeditionForEntity(ev.Uid, out var expeditionUid, out _, xform))
+            !TryComp<SalvageExpeditionComponent>(xform.MapUid, out var salvage))
         {
             return;
         }
@@ -56,7 +56,7 @@ public sealed partial class SalvageSystem
 
         while (query.MoveNext(out var uid, out _, out var mobState, out var mobXform))
         {
-            if (!IsEntityOnExpedition(uid, expeditionUid, mobXform))
+            if (mobXform.MapUid != xform.MapUid)
                 continue;
 
             // Don't count unidentified humans (loot) or anyone you murdered so you can still maroon them once dead.
@@ -83,14 +83,8 @@ public sealed partial class SalvageSystem
         // gone" and "MapId no longer registered" are normal during cleanup, so log at Debug.
         if (!TryComp<MapComponent>(mapUid, out var map))
         {
-            var xform = Transform(mapUid);
-            if (xform.MapUid is not { } parentMap || !TryComp<MapComponent>(parentMap, out map))
-            {
-                Log.Debug($"Skipping salvage announcement for {ToPrettyString(mapUid)} because the map component is no longer available.");
-                return;
-            }
-
-            mapUid = parentMap;
+            Log.Debug($"Skipping salvage announcement for {ToPrettyString(mapUid)} because the map component is no longer available.");
+            return;
         }
 
         var mapId = map.MapId;
@@ -133,7 +127,7 @@ public sealed partial class SalvageSystem
 
     private void OnFTLCompleted(ref FTLCompletedEvent args)
     {
-        if (!TryGetExpeditionForEntity(args.Entity, out var expeditionUid, out var component))
+        if (!TryComp<SalvageExpeditionComponent>(args.MapUid, out var component))
             return;
 
         EnsureComp<ExpeditionParticipantShuttleComponent>(args.Entity);
@@ -155,22 +149,21 @@ public sealed partial class SalvageSystem
         }
         else
         {
-            Log.Warning($"FTL completed but no valid console reference found for expedition on {expeditionUid}");
+            Log.Warning($"FTL completed but no valid console reference found for expedition on {args.MapUid}");
         }
 
-        if (component.EndTime is { } endTime)
-            Announce(expeditionUid, Loc.GetString("salvage-expedition-announcement-countdown-minutes", ("duration", (endTime - _timing.CurTime).Minutes)));
+        Announce(args.MapUid, Loc.GetString("salvage-expedition-announcement-countdown-minutes", ("duration", (component.EndTime - _timing.CurTime).Minutes)));
 
         var directionLocalization = ContentLocalizationManager.FormatDirection(component.DungeonLocation.GetDir()).ToLower();
 
         if (component.DungeonLocation != Vector2.Zero)
-            Announce(expeditionUid, Loc.GetString("salvage-expedition-announcement-dungeon", ("direction", directionLocalization)));
+            Announce(args.MapUid, Loc.GetString("salvage-expedition-announcement-dungeon", ("direction", directionLocalization)));
 
         // Frontier: type-specific announcement
         switch (component.MissionParams.MissionType)
         {
             case SalvageMissionType.Destruction:
-                if (TryComp<SalvageDestructionExpeditionComponent>(expeditionUid, out var destruction)
+                if (TryComp<SalvageDestructionExpeditionComponent>(args.MapUid, out var destruction)
                     && destruction.Structures.Count > 0
                     && TryComp(destruction.Structures[0], out MetaDataComponent? structureMeta)
                     && structureMeta.EntityPrototype != null)
@@ -179,11 +172,11 @@ public sealed partial class SalvageSystem
                     if (string.IsNullOrWhiteSpace(name))
                         name = Loc.GetString("salvage-expedition-announcement-destruction-entity-fallback");
                     // Assuming all structures are of the same type.
-                    Announce(expeditionUid, Loc.GetString("salvage-expedition-announcement-destruction", ("structure", name), ("count", destruction.Structures.Count)));
+                    Announce(args.MapUid, Loc.GetString("salvage-expedition-announcement-destruction", ("structure", name), ("count", destruction.Structures.Count)));
                 }
                 break;
             case SalvageMissionType.Elimination:
-                if (TryComp<SalvageEliminationExpeditionComponent>(expeditionUid, out var elimination)
+                if (TryComp<SalvageEliminationExpeditionComponent>(args.MapUid, out var elimination)
                     && elimination.Megafauna.Count > 0
                     && TryComp(elimination.Megafauna[0], out MetaDataComponent? targetMeta)
                     && targetMeta.EntityPrototype != null)
@@ -192,7 +185,7 @@ public sealed partial class SalvageSystem
                     if (string.IsNullOrWhiteSpace(name))
                         name = Loc.GetString("salvage-expedition-announcement-elimination-entity-fallback");
                     // Assuming all megafauna are of the same type.
-                    Announce(expeditionUid, Loc.GetString("salvage-expedition-announcement-elimination", ("target", name), ("count", elimination.Megafauna.Count)));
+                    Announce(args.MapUid, Loc.GetString("salvage-expedition-announcement-elimination", ("target", name), ("count", elimination.Megafauna.Count)));
                 }
                 break;
             default:
@@ -201,12 +194,12 @@ public sealed partial class SalvageSystem
         // End Frontier
 
         component.Stage = ExpeditionStage.Running;
-        Dirty(expeditionUid, component);
+        Dirty(args.MapUid, component);
     }
 
     private void OnFTLStarted(ref FTLStartedEvent ev)
     {
-        if (!TryGetExpeditionForEntity(ev.Entity, out var expeditionMapUid, out var expedition))
+        if (ev.FromMapUid is not { } expeditionMapUid || !TryComp<SalvageExpeditionComponent>(expeditionMapUid, out var expedition))
             return;
 
         // HardLight: only the wall SalvageExpeditionConsole flow keeps station-side
@@ -248,10 +241,7 @@ public sealed partial class SalvageSystem
         // Run the basic mission timers (e.g. announcements, auto-FTL, completion, etc)
         while (query.MoveNext(out var uid, out var comp))
         {
-            if (comp.EndTime == null)
-                continue;
-
-            var remaining = comp.EndTime.Value - _timing.CurTime;
+            var remaining = comp.EndTime - _timing.CurTime;
             var audioLength = _audio.GetAudioLength(comp.SelectedSong);
 
             if (comp.Stage < ExpeditionStage.FinalCountdown && remaining < TimeSpan.FromSeconds(45))
@@ -303,7 +293,7 @@ public sealed partial class SalvageSystem
                 // This ensures shuttles get sent home even with the new console system
                 while (shuttleQuery.MoveNext(out var shuttleUid, out var shuttle, out var shuttleXform, out _))
                 {
-                    if (!IsEntityOnExpedition(shuttleUid, uid, shuttleXform) || HasComp<FTLComponent>(shuttleUid))
+                    if (shuttleXform.MapUid != uid || HasComp<FTLComponent>(shuttleUid))
                         continue;
 
                     var dropLocation = PickExpeditionReturnDropLocation(existingPositions); // HardLight
@@ -561,9 +551,9 @@ public sealed partial class SalvageSystem
     {
         var shuttleQuery = EntityQueryEnumerator<ShuttleComponent, TransformComponent, ExpeditionParticipantShuttleComponent>();
 
-        while (shuttleQuery.MoveNext(out var shuttleUid, out _, out var shuttleXform, out _))
+        while (shuttleQuery.MoveNext(out _, out _, out var shuttleXform, out _))
         {
-            if (IsEntityOnExpedition(shuttleUid, expeditionMapUid, shuttleXform))
+            if (shuttleXform.MapUid == expeditionMapUid)
                 return true;
         }
 
@@ -589,7 +579,7 @@ public sealed partial class SalvageSystem
 
         while (shuttleQuery.MoveNext(out var shuttleUid, out var shuttle, out var shuttleXform, out _))
         {
-            if (!IsEntityOnExpedition(shuttleUid, expeditionMapUid, shuttleXform) || HasComp<FTLComponent>(shuttleUid))
+            if (shuttleXform.MapUid != expeditionMapUid || HasComp<FTLComponent>(shuttleUid))
                 continue;
 
             var dropLocation = PickExpeditionReturnDropLocation(existingPositions);

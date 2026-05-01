@@ -120,14 +120,14 @@ public sealed partial class DungeonJob
 
                     if (flank != null && nodeDistances.Count - i <= 2)
                     {
-                        SpawnAnchoredStructureCollection(node, EntitySpawnCollection.GetSpawns(flank.Entries, random));
+                        _entManager.SpawnEntities(gridPos, EntitySpawnCollection.GetSpawns(flank.Entries, random));
                     }
                     else
                     {
                         // Iterate neighbors and check for blockers, if so bulldoze
                         ClearDoor(dungeon, _grid, node);
 
-                        SpawnAnchoredStructureCollection(node, EntitySpawnCollection.GetSpawns(entrance.Entries, random));
+                        _entManager.SpawnEntities(gridPos, EntitySpawnCollection.GetSpawns(entrance.Entries, random));
                     }
 
                     if (width == 0)

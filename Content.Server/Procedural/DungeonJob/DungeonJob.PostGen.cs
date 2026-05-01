@@ -1,9 +1,7 @@
-using System.Linq;
 using System.Numerics;
 using Content.Shared.Procedural;
 using Content.Shared.Tag;
 using Robust.Shared.Collections;
-using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Physics.Components;
 using Robust.Shared.Prototypes;
@@ -17,67 +15,6 @@ public sealed partial class DungeonJob
      */
 
     private static readonly ProtoId<TagPrototype> WallTag = "Wall";
-
-    private HashSet<EntityUid> GetTileEntities(Vector2i tile)
-    {
-        var tileRef = _maps.GetTileRef(_gridUid, _grid, tile);
-        var entities = new HashSet<EntityUid>();
-
-        foreach (var entity in _lookup.GetLocalEntitiesIntersecting(tileRef, flags: LookupFlags.Dynamic | LookupFlags.Static | LookupFlags.StaticSundries | LookupFlags.Sundries | LookupFlags.Approximate))
-        {
-            entities.Add(entity);
-        }
-
-        return entities;
-    }
-
-    private void SpawnAnchoredStructureCollection(Vector2i tile, List<string?> prototypes)
-    {
-        var before = GetTileEntities(tile);
-        _entManager.SpawnEntities(_maps.GridTileToLocal(_gridUid, _grid, tile), prototypes);
-        AnchorNewStructuralTileEntities(tile, before);
-    }
-
-    private void SpawnAnchoredStructure(Vector2i tile, string prototype)
-    {
-        var entity = _entManager.SpawnEntity(prototype, _maps.GridTileToLocal(_gridUid, _grid, tile));
-
-        if (ShouldAnchorDungeonStructure(entity))
-        {
-            var xform = _xformQuery.Comp(entity);
-            if (!xform.Anchored)
-                _transform.AnchorEntity((entity, xform), (_gridUid, _grid), tile);
-        }
-    }
-
-    private void AnchorNewStructuralTileEntities(Vector2i tile, HashSet<EntityUid> before)
-    {
-        var after = GetTileEntities(tile);
-
-        foreach (var entity in after.Where(entity => !before.Contains(entity) && ShouldAnchorDungeonStructure(entity)))
-        {
-            var xform = _xformQuery.Comp(entity);
-            if (!xform.Anchored)
-                _transform.AnchorEntity((entity, xform), (_gridUid, _grid), tile);
-        }
-    }
-
-    private bool ShouldAnchorDungeonStructure(EntityUid entity)
-    {
-        if (!_entManager.TryGetComponent<MetaDataComponent>(entity, out var meta) || meta.EntityPrototype == null)
-            return false;
-
-        var prototypeId = meta.EntityPrototype.ID;
-        return prototypeId.Contains("Wall", StringComparison.OrdinalIgnoreCase)
-            || prototypeId.Contains("Window", StringComparison.OrdinalIgnoreCase)
-            || prototypeId.Contains("Windoor", StringComparison.OrdinalIgnoreCase)
-            || prototypeId.Contains("Door", StringComparison.OrdinalIgnoreCase)
-            || prototypeId.Contains("Airlock", StringComparison.OrdinalIgnoreCase)
-            || prototypeId.Contains("Grille", StringComparison.OrdinalIgnoreCase)
-            || (prototypeId.Contains("Cable", StringComparison.OrdinalIgnoreCase)
-                && !prototypeId.Contains("Stack", StringComparison.OrdinalIgnoreCase)
-                && !prototypeId.Contains("Placer", StringComparison.OrdinalIgnoreCase));
-    }
 
     private bool HasWall(Vector2i tile)
     {

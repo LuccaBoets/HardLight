@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
-using Content.Server._Mono.Cleanup;
 using Content.Server.Atmos;
 using Content.Server.Atmos.Components;
 using Content.Server.Atmos.EntitySystems;
@@ -9,8 +8,6 @@ using Content.Server.Decals;
 using Content.Server.Ghost.Roles.Components;
 using Content.Server.Shuttles.Events;
 using Content.Server.Shuttles.Systems;
-using Content.Server.Worldgen.Components;
-using Content.Server.Worldgen.Systems;
 using Content.Shared.Atmos;
 using Content.Shared.Decals;
 using Content.Shared.Ghost;
@@ -52,7 +49,6 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
     [Dependency] private readonly DecalSystem _decals = default!;
     [Dependency] private readonly SharedMapSystem _mapSystem = default!;
     [Dependency] private readonly SharedPhysicsSystem _physics = default!;
-    [Dependency] private readonly SectorWorldSystem _sectorWorld = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly ShuttleSystem _shuttles = default!;
     [Dependency] private readonly TagSystem _tags = default!;
@@ -94,7 +90,6 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
         _ghostQuery = GetEntityQuery<GhostComponent>();
         _xformQuery = GetEntityQuery<TransformComponent>();
         SubscribeLocalEvent<BiomeComponent, MapInitEvent>(OnBiomeMapInit);
-        SubscribeLocalEvent<BiomeComponent, ComponentShutdown>(OnBiomeShutdown);
         SubscribeLocalEvent<FTLStartedEvent>(OnFTLStarted);
         SubscribeLocalEvent<ShuttleFlattenEvent>(OnShuttleFlatten);
         Subs.CVar(_configManager, CVars.NetMaxUpdateRange, SetLoadRange, true);
@@ -165,32 +160,13 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
         }
     }
 
-    private void OnBiomeShutdown(EntityUid uid, BiomeComponent component, ComponentShutdown args)
-    {
-        if (!TryComp<MapGridComponent>(uid, out var grid) || component.LoadedChunks.Count == 0 || component.Seed == -1)
-            return;
-
-        FlushLoadedChunks(component, uid, grid, component.Seed);
-    }
-
     public void SetEnabled(Entity<BiomeComponent?> ent, bool enabled = true)
     {
         if (!Resolve(ent, ref ent.Comp) || ent.Comp.Enabled == enabled)
             return;
 
-        if (!enabled && ent.Comp.LoadedChunks.Count > 0 && ent.Comp.Seed != -1 && TryComp<MapGridComponent>(ent.Owner, out var grid))
-            FlushLoadedChunks(ent.Comp, ent.Owner, grid, ent.Comp.Seed);
-
         ent.Comp.Enabled = enabled;
         Dirty(ent, ent.Comp);
-    }
-
-    public bool IsChunkLoaded(EntityUid uid, Vector2i chunkOrigin, BiomeComponent? component = null)
-    {
-        if (!Resolve(uid, ref component, false) || component == null)
-            return false;
-
-        return component.LoadedChunks.Contains(chunkOrigin);
     }
 
     public void SetSeed(EntityUid uid, BiomeComponent component, int seed, bool dirty = true)
@@ -406,27 +382,6 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
             }
         }
 
-        var loaderEnum = EntityQueryEnumerator<WorldLoaderComponent, TransformComponent>();
-
-        while (loaderEnum.MoveNext(out _, out var loader, out var xform))
-        {
-            if (loader.Disabled ||
-                !_biomeQuery.TryGetComponent(xform.MapUid, out var biome) ||
-                !biome.Enabled)
-            {
-                continue;
-            }
-
-            var worldPos = _transform.GetWorldPosition(xform);
-            AddChunksInRange(biome, worldPos, loader.Radius);
-
-            foreach (var layer in biome.MarkerLayers)
-            {
-                var layerProto = ProtoManager.Index(layer);
-                AddMarkerChunksInRange(biome, worldPos, layerProto, loader.Radius);
-            }
-        }
-
         var loadBiomes = AllEntityQuery<BiomeComponent, MapGridComponent>();
 
         while (loadBiomes.MoveNext(out var gridUid, out var biome, out var grid))
@@ -457,14 +412,7 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
 
     private void AddChunksInRange(BiomeComponent biome, Vector2 worldPos)
     {
-        AddChunksInRange(biome, worldPos, _loadRange);
-    }
-
-    private void AddChunksInRange(BiomeComponent biome, Vector2 worldPos, float range)
-    {
-        var loadRange = MathF.Ceiling(range / ChunkSize) * ChunkSize;
-        var loadArea = new Box2(-loadRange, -loadRange, loadRange, loadRange);
-        var enumerator = new ChunkIndicesEnumerator(loadArea.Translated(worldPos), ChunkSize);
+        var enumerator = new ChunkIndicesEnumerator(_loadArea.Translated(worldPos), ChunkSize);
 
         while (enumerator.MoveNext(out var chunkOrigin))
         {
@@ -474,14 +422,8 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
 
     private void AddMarkerChunksInRange(BiomeComponent biome, Vector2 worldPos, IBiomeMarkerLayer layer)
     {
-        AddMarkerChunksInRange(biome, worldPos, layer, _loadRange);
-    }
-
-    private void AddMarkerChunksInRange(BiomeComponent biome, Vector2 worldPos, IBiomeMarkerLayer layer, float range)
-    {
         // Offset the load area so it's centralised.
-        var loadRange = MathF.Ceiling(range / ChunkSize) * ChunkSize;
-        var loadArea = new Box2(-loadRange, -loadRange, loadRange, loadRange);
+        var loadArea = new Box2(0, 0, layer.Size, layer.Size);
         var halfLayer = new Vector2(layer.Size / 2f);
 
         var enumerator = new ChunkIndicesEnumerator(loadArea.Translated(worldPos - halfLayer), layer.Size);
@@ -923,8 +865,6 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
             }
         }
 
-        _sectorWorld.RestoreHostedChunkContent(gridUid, grid, chunk, ChunkSize);
-
         if (modified.Count == 0)
         {
             _tilePool.Return(modified);
@@ -959,20 +899,6 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
         }
     }
 
-    private void FlushLoadedChunks(BiomeComponent component, EntityUid gridUid, MapGridComponent grid, int seed)
-    {
-        if (component.LoadedChunks.Count == 0)
-            return;
-
-        var tiles = new List<(Vector2i, Tile)>(ChunkSize * ChunkSize);
-        var chunks = component.LoadedChunks.ToArray();
-
-        foreach (var chunk in chunks.Where(component.LoadedChunks.Contains))
-        {
-            UnloadChunk(component, gridUid, grid, chunk, seed, tiles);
-        }
-    }
-
     /// <summary>
     /// Unloads a specific biome chunk.
     /// </summary>
@@ -981,8 +907,6 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
         // Reverse order to loading
         component.ModifiedTiles.TryGetValue(chunk, out var modified);
         modified ??= new HashSet<Vector2i>();
-
-        _sectorWorld.SaveHostedChunkContent(gridUid, grid, chunk, ChunkSize);
 
         // Delete decals
         foreach (var (dec, indices) in component.LoadedDecals[chunk])
@@ -1086,9 +1010,7 @@ public sealed partial class BiomeSystem : SharedBiomeSystem
         if (!Resolve(mapUid, ref metadata))
             return;
 
-        var mapGrid = EnsureComp<MapGridComponent>(mapUid);
-        mapGrid.CanSplit = false;
-        EnsureComp<CleanupImmuneComponent>(mapUid);
+        EnsureComp<MapGridComponent>(mapUid);
         var biome = (BiomeComponent) EntityManager.ComponentFactory.GetComponent(typeof(BiomeComponent));
         seed ??= _random.Next();
         SetSeed(mapUid, biome, seed.Value, false);

@@ -1,10 +1,7 @@
-using System.Collections.Generic;
 using System.Numerics;
 using Content.Shared.Salvage;
 using Content.Shared.Salvage.Expeditions;
 using Robust.Shared.Audio;
-using Robust.Shared.Maths;
-using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype.List;
@@ -30,7 +27,7 @@ public sealed partial class SalvageExpeditionComponent : SharedSalvageExpedition
     /// </summary>
     [ViewVariables(VVAccess.ReadWrite), DataField("endTime", customTypeSerializer: typeof(TimeOffsetSerializer))]
     [AutoPausedField]
-    public TimeSpan? EndTime;
+    public TimeSpan EndTime;
 
     /// <summary>
     /// Station whose mission this is.
@@ -52,24 +49,6 @@ public sealed partial class SalvageExpeditionComponent : SharedSalvageExpedition
     /// </summary>
     [ViewVariables]
     public bool ReturnTriggered = false;
-
-    /// <summary>
-    /// Persistent grid that physically hosts the expedition content.
-    /// </summary>
-    [ViewVariables]
-    public EntityUid HostGridUid = EntityUid.Invalid;
-
-    /// <summary>
-    /// Runtime-only entity snapshot for content stamped onto a persistent host grid.
-    /// </summary>
-    [ViewVariables]
-    public HashSet<EntityUid> GeneratedEntities = new();
-
-    /// <summary>
-    /// Runtime-only tile snapshot used to restore the host grid when the expedition is removed.
-    /// </summary>
-    [ViewVariables]
-    public Dictionary<Vector2i, Tile> OriginalTiles = new();
 
     // Frontier: moved to Client
     /// <summary>

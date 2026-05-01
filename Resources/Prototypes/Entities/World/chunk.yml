@@ -8,30 +8,6 @@
   categories: [ HideSpawnMenu ]
   components:
     - type: WorldChunk
-    - type: SectorChunkCarver
-      densityNoiseChannel: SectorDensity
-      islandNoiseChannel: SectorSparse
-      biomes:
-        - SectorRock
-        - SectorIce
-        - SectorAndesite
-        - SectorBasalt
-        - SectorSand
-        - SectorChromite
-        - SectorRust
-        - SectorScrap
-        - SectorWreck
-        - SectorBrass
-      sparseFieldScale: 54
-      chunkFieldScale: 5
-      chunkThreshold: 0.47
-      islandFieldScale: 18
-      detailFieldScale: 10
-      sparseThreshold: 0.66
-      densityThreshold: 0.5
-      islandThreshold: 0.56
-      densitySharpness: 2.6
-      planetFalloff: 0.04
     - type: Sprite
       sprite: Markers/cross.rsi
       layers:

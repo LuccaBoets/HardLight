@@ -38,23 +38,6 @@
   outputMultiplier: 0.35 # Frontier: fewer wrecks
 
 - type: noiseChannel
-  id: SectorDensity
-  noiseType: Perlin
-  fractalLacunarityByPi: 0.666666666
-  remapTo0Through1: true
-  inputMultiplier: 6
-
-- type: noiseChannel
-  id: SectorSparse
-  noiseType: Perlin
-  fractalLacunarityByPi: 0.666666666
-  clippingRanges:
-    - 0.0, 0.4
-  clippedValue: 0
-  remapTo0Through1: true
-  inputMultiplier: 16
-
-- type: noiseChannel
   id: Temperature
   noiseType: Perlin
   fractalLacunarityByPi: 0.666666666

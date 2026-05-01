@@ -160,7 +160,7 @@ public sealed partial class DungeonJob
             if (found)
                 continue;
 
-            SpawnAnchoredStructure(tile, ent);
+            _entManager.SpawnEntity(ent, _maps.GridTileToLocal(_gridUid, _grid, tile));
         }
     }
 }

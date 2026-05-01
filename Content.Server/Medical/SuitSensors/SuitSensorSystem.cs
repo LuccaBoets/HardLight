@@ -26,7 +26,6 @@ using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Content.Shared.DeviceNetwork.Components;
 using Content.Server.Salvage.Expeditions; // Frontier
-using Content.Server.Salvage;
 using Content.Server._NF.Medical.SuitSensors; // Frontier
 using Content.Shared.Emp;
 using Content.Shared.FloofStation;
@@ -51,7 +50,6 @@ public sealed class SuitSensorSystem : EntitySystem
     [Dependency] private readonly ActionBlockerSystem _actionBlocker = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly InventorySystem _inventory = default!;
-    [Dependency] private readonly SalvageSystem _salvage = default!;
 
     public override void Initialize()
     {
@@ -477,7 +475,7 @@ public sealed class SuitSensorSystem : EntitySystem
                             _transform.GetInvWorldMatrix(xformQuery.GetComponent(transform.GridUid.Value), xformQuery)));
 
                     // Frontier: check if sensor is on expedition
-                    if (_salvage.IsOnExpedition(uid, transform))
+                    if (TryComp<SalvageExpeditionComponent>(transform.MapUid, out var salvageComp))
                         locationName = Loc.GetString("suit-sensor-location-expedition");
                     else if (TryComp(transform.GridUid, out MetaDataComponent? meta))
                         locationName = meta.EntityName;

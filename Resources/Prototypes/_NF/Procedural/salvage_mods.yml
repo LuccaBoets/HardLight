@@ -105,13 +105,13 @@
 - type: salvageWeatherMod
   id: SnowfallHeavy
   desc: salvage-weather-mod-heavy-snowfall
-  weather: WeatherSnowfallHeavy
+  weather: SnowfallHeavy
   cost: 1
 
 - type: salvageWeatherMod
   id: Rain
   desc: salvage-weather-mod-rain
-  weather: WeatherRain
+  weather: Rain
 
 # Air mixtures
 - type: salvageAirMod

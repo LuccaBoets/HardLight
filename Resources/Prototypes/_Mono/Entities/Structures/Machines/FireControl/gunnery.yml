@@ -227,7 +227,7 @@
   - type: RadarConsole
     maxRange: 1500
   - type: WorldLoader
-    radius: 64 # Mono
+    radius: 256 # Mono
   - type: Computer
     board: GunneryControlComputerCircuitboard
   - type: PointLight
