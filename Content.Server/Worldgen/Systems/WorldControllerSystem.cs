@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Numerics;
 using Content.Server.Worldgen.Components;
 using Content.Shared.Ghost;
 using Content.Shared.Mind.Components;
@@ -50,6 +51,30 @@ public sealed class WorldControllerSystem : EntitySystem
 
         loader.Disabled = !enabled;
         Dirty(uid, loader);
+    }
+
+    public void EnsureChunksLoaded(EntityUid mapUid, Vector2 worldPos, int radius, EntityUid? loaderUid = null, WorldControllerComponent? controller = null)
+    {
+        if (!Resolve(mapUid, ref controller))
+            return;
+
+        var loadedQuery = GetEntityQuery<LoadedChunkComponent>();
+        var coords = WorldGen.WorldToChunkCoords(worldPos);
+        var chunkRadius = (int) Math.Ceiling(radius / (float) WorldGen.ChunkSize) + 1;
+        var chunks = new GridPointsNearEnumerator(coords.Floored(), chunkRadius);
+
+        while (chunks.MoveNext(out var chunk))
+        {
+            var ent = GetOrCreateChunk(chunk.Value, mapUid, controller);
+            if (ent is not { } chunkUid)
+                continue;
+
+            if (!loadedQuery.TryGetComponent(chunkUid, out var loaded))
+                loaded = AddComp<LoadedChunkComponent>(chunkUid);
+
+            if (loaderUid is { } loader && Exists(loader))
+                loaded.Loaders = [loader];
+        }
     }
 
     /// <summary>

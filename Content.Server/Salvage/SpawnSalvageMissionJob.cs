@@ -18,6 +18,7 @@ using Content.Shared.Construction.EntitySystems;
 using Content.Shared.Dataset;
 using Content.Shared.Gravity;
 using Content.Shared.Parallax.Biomes;
+using Content.Shared.Parallax.Biomes.Markers;
 using Content.Shared.Physics;
 using Content.Shared.Procedural;
 using Content.Shared.Procedural.Loot;
@@ -30,6 +31,7 @@ using Content.Shared.Storage;
 using Robust.Shared.Collections;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
+using Robust.Shared.Maths;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
@@ -271,8 +273,10 @@ public sealed class SpawnSalvageMissionJob : Job<bool>
         var captureRadius = placement.ReservationRadius + 32f;
         _entManager.EnsureComponent<WorldLoaderComponent>(mapUid);
         var worldController = _entManager.System<WorldControllerSystem>();
-        worldController.SetLoaderRadius(mapUid, (int) MathF.Ceiling(captureRadius + WorldGen.ChunkSize));
+        var loadRadius = (int) MathF.Ceiling(captureRadius + WorldGen.ChunkSize);
+        worldController.SetLoaderRadius(mapUid, loadRadius);
         worldController.SetLoaderEnabled(mapUid, true);
+        worldController.EnsureChunksLoaded(hostMapUid, placement.Center, loadRadius, mapUid);
 
         _sectorWorld.CaptureHostedSiteBaseline((mapUid, site), hostGridUid, grid, placement.Center, captureRadius);
         CaptureOriginalTiles(expedition, hostGridUid, grid, placement.Center, captureRadius);
@@ -398,7 +402,7 @@ public sealed class SpawnSalvageMissionJob : Job<bool>
 
             try
             {
-                await SpawnDungeonLoot(lootProto, hostGridUid);
+                await SpawnDungeonLoot(lootProto, (hostGridUid, grid), dungeon, random);
             }
             catch (Exception e)
             {
@@ -592,7 +596,7 @@ public sealed class SpawnSalvageMissionJob : Job<bool>
         // oh noooooooooooo
     }
 
-    private async Task SpawnDungeonLoot(SalvageLootPrototype loot, EntityUid gridUid)
+    private async Task SpawnDungeonLoot(SalvageLootPrototype loot, Entity<MapGridComponent> grid, Dungeon dungeon, Random random)
     {
         for (var i = 0; i < loot.LootRules.Count; i++)
         {
@@ -602,20 +606,149 @@ public sealed class SpawnSalvageMissionJob : Job<bool>
             {
                 case BiomeMarkerLoot biomeLoot:
                     {
-                        if (_entManager.TryGetComponent<BiomeComponent>(gridUid, out var biome))
-                        {
-                            _biome.AddMarkerLayer(gridUid, biome, biomeLoot.Prototype);
-                        }
+                        await SpawnDungeonMarkerLoot(grid, dungeon, biomeLoot.Prototype, new Random(_missionParams.Seed + i));
                     }
                     break;
                 case BiomeTemplateLoot biomeLoot:
                     {
-                        if (_entManager.TryGetComponent<BiomeComponent>(gridUid, out var biome))
+                        if (_entManager.TryGetComponent<BiomeComponent>(grid.Owner, out var biome))
                         {
-                            _biome.AddTemplate(gridUid, biome, "Loot", _prototypeManager.Index<BiomeTemplatePrototype>(biomeLoot.Prototype), i);
+                            _biome.AddTemplate(grid.Owner, biome, "Loot", _prototypeManager.Index<BiomeTemplatePrototype>(biomeLoot.Prototype), i);
                         }
                     }
                     break;
+            }
+        }
+    }
+
+    private async Task SpawnDungeonMarkerLoot(Entity<MapGridComponent> grid, Dungeon dungeon, string markerId, Random random)
+    {
+        if (!_prototypeManager.TryIndex<BiomeMarkerLayerPrototype>(markerId, out var markerTemplate))
+            return;
+
+        Box2i? bounds = null;
+        foreach (var tile in dungeon.RoomTiles)
+        {
+            bounds = bounds == null ? new Box2i(tile, tile + Vector2i.One) : bounds.Value.UnionTile(tile);
+        }
+
+        if (bounds == null)
+            return;
+
+        var availableTiles = new List<Vector2i>();
+        var replaceEntities = new Dictionary<Vector2i, EntityUid>();
+
+        for (var x = bounds.Value.Left; x < bounds.Value.Right; x++)
+        {
+            for (var y = bounds.Value.Bottom; y < bounds.Value.Top; y++)
+            {
+                var tile = new Vector2i(x, y);
+
+                if (!_map.TryGetTileRef(grid.Owner, grid.Comp, tile, out var tileRef) || tileRef.Tile.IsEmpty)
+                    continue;
+
+                var enumerator = _map.GetAnchoredEntitiesEnumerator(grid.Owner, grid.Comp, tile);
+
+                if (markerTemplate.EntityMask.Count > 0)
+                {
+                    var found = false;
+                    var blocked = false;
+
+                    while (enumerator.MoveNext(out var uid))
+                    {
+                        var prototype = _entManager.GetComponent<MetaDataComponent>(uid.Value).EntityPrototype?.ID;
+                        if (prototype == null)
+                            continue;
+
+                        if (markerTemplate.EntityMask.ContainsKey(prototype))
+                        {
+                            if (!found)
+                                replaceEntities[tile] = uid.Value;
+
+                            found = true;
+                            continue;
+                        }
+
+                        blocked = true;
+                        break;
+                    }
+
+                    if (!found || blocked)
+                        continue;
+                }
+                else
+                {
+                    if (!_anchorable.TileFree(grid, tile, DungeonSystem.CollisionLayer, DungeonSystem.CollisionMask))
+                        continue;
+
+                    if (enumerator.MoveNext(out _))
+                        continue;
+                }
+
+                availableTiles.Add(tile);
+            }
+        }
+
+        if (availableTiles.Count == 0)
+            return;
+
+        var area = Math.Max(bounds.Value.Area, 1);
+        var count = Math.Min(markerTemplate.MaxCount, Math.Max(1, (int) (area / Math.Max(markerTemplate.Radius * markerTemplate.Radius, 1f))));
+        var frontier = new ValueList<Vector2i>(32);
+
+        for (var i = 0; i < count; i++)
+        {
+            await SuspendIfOutOfTime();
+
+            var groupSize = random.Next(markerTemplate.MinGroupSize, markerTemplate.MaxGroupSize + 1);
+
+            while (groupSize > 0 && availableTiles.Count > 0)
+            {
+                var startNode = availableTiles.RemoveSwap(random.Next(availableTiles.Count));
+                frontier.Clear();
+                frontier.Add(startNode);
+
+                while (frontier.Count > 0 && groupSize > 0)
+                {
+                    var frontierIndex = random.Next(frontier.Count);
+                    var node = frontier[frontierIndex];
+                    frontier.RemoveSwap(frontierIndex);
+                    availableTiles.Remove(node);
+
+                    for (var x = -1; x <= 1; x++)
+                    {
+                        for (var y = -1; y <= 1; y++)
+                        {
+                            var neighbor = new Vector2i(node.X + x, node.Y + y);
+
+                            if (frontier.Contains(neighbor) || !availableTiles.Contains(neighbor))
+                                continue;
+
+                            frontier.Add(neighbor);
+                        }
+                    }
+
+                    string? prototype = markerTemplate.Prototype;
+
+                    if (replaceEntities.TryGetValue(node, out var existingEnt))
+                    {
+                        var existingProto = _entManager.GetComponent<MetaDataComponent>(existingEnt).EntityPrototype?.ID;
+                        _entManager.DeleteEntity(existingEnt);
+
+                        if (existingProto != null && markerTemplate.EntityMask.TryGetValue(existingProto, out var remapped))
+                            prototype = remapped;
+                    }
+
+                    if (!string.IsNullOrEmpty(prototype))
+                    {
+                        var spawned = _entManager.SpawnAtPosition(prototype, _map.GridTileToLocal(grid.Owner, grid.Comp, node));
+                        var xform = _entManager.GetComponent<TransformComponent>(spawned);
+                        if (!xform.Anchored)
+                            _entManager.System<SharedTransformSystem>().AnchorEntity(spawned, xform);
+                    }
+
+                    groupSize--;
+                }
             }
         }
     }

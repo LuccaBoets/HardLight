@@ -6,6 +6,8 @@ using Content.Server._NF.Shuttles.Components;
 using Content.Server.Atmos.EntitySystems;
 using Content.Server.GameTicking;
 using Content.Server.Parallax;
+using Content.Server.Shuttles.Components;
+using Content.Server.Shuttles.Systems;
 using Content.Server.Weather;
 using Content.Server.Worldgen.Components;
 using Content.Shared.GameTicking;
@@ -25,6 +27,7 @@ using Robust.Shared.Physics.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Utility;
+using Content.Server.Worldgen;
 
 namespace Content.Server.Worldgen.Systems;
 
@@ -43,9 +46,11 @@ public sealed class SectorWorldSystem : EntitySystem
     [Dependency] private readonly MetaDataSystem _metaData = default!;
     [Dependency] private readonly SharedMapSystem _mapSystem = default!;
     [Dependency] private readonly PhysicsSystem _physics = default!;
+    [Dependency] private readonly ShuttleSystem _shuttle = default!;
     [Dependency] private readonly ITileDefinitionManager _tileDefs = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly WeatherSystem _weather = default!;
+    [Dependency] private readonly WorldControllerSystem _worldController = default!;
 
     private static readonly string[] TimeOfDayStates = ["Dawn", "Day", "Dusk", "Night"];
     private bool _roundRestartCleanupActive;
@@ -844,16 +849,48 @@ public sealed class SectorWorldSystem : EntitySystem
 
     private void EnsureStartupPlanetLoaders(Entity<SectorWorldComponent> ent)
     {
-        if (ent.Comp.StartupLoaders.Count == 0)
-            return;
+        var desiredMaps = new HashSet<EntityUid>();
+
+        if (ent.Comp.FtlMap is { } ftlMap && Exists(ftlMap))
+            desiredMaps.Add(ftlMap);
+
+        foreach (var mapUid in ent.Comp.PlanetTypeMaps.Values)
+        {
+            if (Exists(mapUid))
+                desiredMaps.Add(mapUid);
+        }
+
+        var retainedLoaders = new List<EntityUid>(desiredMaps.Count);
 
         foreach (var loader in ent.Comp.StartupLoaders)
         {
-            if (Exists(loader))
+            if (!Exists(loader))
+                continue;
+
+            var xform = Transform(loader);
+            if (xform.MapUid is not { } mapUid || !desiredMaps.Remove(mapUid))
+            {
                 QueueDel(loader);
+                continue;
+            }
+
+            _worldController.SetLoaderRadius(loader, WorldGen.ChunkSize * 2);
+            _worldController.SetLoaderEnabled(loader, true);
+            retainedLoaders.Add(loader);
+        }
+
+        foreach (var mapUid in desiredMaps)
+        {
+            var loader = Spawn(null, new MapCoordinates(Vector2.Zero, Comp<MapComponent>(mapUid).MapId));
+            EnsureComp<CleanupImmuneComponent>(loader);
+            EnsureComp<WorldLoaderComponent>(loader);
+            _worldController.SetLoaderRadius(loader, WorldGen.ChunkSize * 2);
+            _worldController.SetLoaderEnabled(loader, true);
+            retainedLoaders.Add(loader);
         }
 
         ent.Comp.StartupLoaders.Clear();
+        ent.Comp.StartupLoaders.AddRange(retainedLoaders);
     }
 
     private void EnsurePersistentLayerMaps(Entity<SectorWorldComponent> ent)
@@ -885,15 +922,19 @@ public sealed class SectorWorldSystem : EntitySystem
                 continue;
             }
 
+            var planetType = ent.Comp.PlanetTypes.FirstOrDefault(type => type.Id == planet.PlanetTypeId);
+
             ent.Comp.PlanetTypeMaps[planet.PlanetTypeId] = CreateLayerMap(
                 $"{planet.Name} Surface",
                 space: false,
                 gravity: true,
+                createFtlDestination: true,
                 mixture: CreatePlanetMixture(planet),
                 timeOfDay: planet.TimeOfDay,
                 weatherPrototype: planet.WeatherPrototype,
                 biomeTemplateId: planet.BiomeTemplate,
-                biomeSeed: planet.Seed);
+                biomeSeed: planet.Seed,
+                hiddenSurfaceTileIds: planetType?.SurfaceTiles);
 
             EnsurePersistentWorldGrid(ent.Comp.PlanetTypeMaps[planet.PlanetTypeId]);
         }
@@ -945,15 +986,18 @@ public sealed class SectorWorldSystem : EntitySystem
         string name,
         bool space,
         bool gravity,
+        bool createFtlDestination = false,
         GasMixture? mixture = null,
         string? timeOfDay = null,
         string? weatherPrototype = null,
         string? biomeTemplateId = null,
-        int? biomeSeed = null)
+        int? biomeSeed = null,
+        IReadOnlyList<string>? hiddenSurfaceTileIds = null)
     {
         var mapUid = _mapSystem.CreateMap(out _);
         EnsureComp<FTLMapComponent>(mapUid);
         EnsureComp<CleanupImmuneComponent>(mapUid);
+        EnsureComp<WorldControllerComponent>(mapUid);
         _metaData.SetEntityName(mapUid, name);
 
         if (!space && !string.IsNullOrWhiteSpace(biomeTemplateId) && _proto.TryIndex<BiomeTemplatePrototype>(biomeTemplateId, out var biomeTemplate))
@@ -976,6 +1020,20 @@ public sealed class SectorWorldSystem : EntitySystem
         EnsureComp<LightCycleComponent>(mapUid);
         EnsureComp<SunShadowComponent>(mapUid);
         EnsureComp<SunShadowCycleComponent>(mapUid);
+
+        if (hiddenSurfaceTileIds is { Count: > 0 })
+        {
+            var mask = EnsureComp<RadarTileMaskComponent>(mapUid);
+            mask.HiddenTileIds.Clear();
+            mask.HiddenTileIds.AddRange(hiddenSurfaceTileIds);
+            Dirty(mapUid, mask);
+        }
+
+        if (createFtlDestination && TryComp<MapComponent>(mapUid, out var ftlMapComp))
+        {
+            _shuttle.TryAddFTLDestination(ftlMapComp.MapId, true, requireDisk: false, beaconsOnly: false, out _);
+            EnsureComp<FTLBeaconComponent>(mapUid);
+        }
 
         var resolvedWeatherPrototype = ResolveWeatherPrototype(weatherPrototype);
 

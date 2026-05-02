@@ -60,13 +60,13 @@ public sealed class WeatherSystem : SharedWeatherSystem
             if (weather.Sound == null || status.AppliedTo != playerXform.MapUid)
             {
                 weather.Stream = _audio.Stop(weather.Stream);
-                return;
+                continue;
             }
 
             weather.Stream ??= _audio.PlayGlobal(weather.Sound, Filter.Local(), true)?.Entity;
 
             if (!_audioQuery.TryComp(weather.Stream, out var audio))
-                return;
+                continue;
 
             var occlusion = 0f;
 

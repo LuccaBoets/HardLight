@@ -3,14 +3,14 @@ using System.Threading.Tasks;
 using Content.Server.Gateway.Components;
 using Content.Server.Parallax;
 using Content.Server.Procedural;
+using Content.Server.Shuttles.Components;
+using Content.Server.Worldgen;
 using Content.Server.Worldgen.Components;
 using Content.Server.Worldgen.Systems;
 using Content.Shared.CCVar;
-using Content.Shared.Dataset;
 using Content.Shared.Maps;
 using Content.Shared.Parallax.Biomes;
 using Content.Shared.Procedural;
-using Content.Shared.Salvage;
 using Robust.Shared.Configuration;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
@@ -37,13 +37,11 @@ public sealed class GatewayGeneratorSystem : EntitySystem
     [Dependency] private readonly GatewaySystem _gateway = default!;
     [Dependency] private readonly MetaDataSystem _metadata = default!;
     [Dependency] private readonly SharedMapSystem _maps = default!;
-    [Dependency] private readonly SharedSalvageSystem _salvage = default!;
     [Dependency] private readonly TileSystem _tile = default!;
     [Dependency] private readonly SectorWorldSystem _sectorWorld = default!;
     [Dependency] private readonly SharedTransformSystem _xform = default!;
+    [Dependency] private readonly WorldControllerSystem _worldController = default!;
 
-    private static readonly ProtoId<LocalizedDatasetPrototype> PlanetNamesId = "NamesBorer";
-    private static readonly ProtoId<BiomeTemplatePrototype> ContinentalId = "Continental";
     private static readonly ProtoId<DungeonConfigPrototype> ExperimentDungeonId = "Experiment";
 
     // TODO:
@@ -106,15 +104,20 @@ public sealed class GatewayGeneratorSystem : EntitySystem
 
         var generatorComp = generator;
 
-        var tileDef = _tileDefManager["FloorSteel"];
-        var tiles = new List<(Vector2i Index, Tile Tile)>();
         var seed = _random.Next();
         var random = new Random(seed);
 
         if (!_sectorWorld.TryGetDefaultSectorMap(out _, out var sector) || sector.Planets.Count == 0)
             return;
 
-        var hostPlanet = sector.Planets[random.Next(sector.Planets.Count)];
+        var availablePlanets = sector.Planets
+            .Where(planet => _sectorWorld.TryGetPersistentMap(planet.PlanetTypeId, out _, out _, sector))
+            .ToList();
+
+        if (availablePlanets.Count == 0)
+            return;
+
+        var hostPlanet = availablePlanets[random.Next(availablePlanets.Count)];
         if (!_sectorWorld.TryGetPersistentMap(hostPlanet.PlanetTypeId, out var hostMapUid, out _))
             return;
 
@@ -128,7 +131,7 @@ public sealed class GatewayGeneratorSystem : EntitySystem
             return;
         }
 
-        var gatewayName = _salvage.GetFTLName(_protoManager.Index(PlanetNamesId), seed);
+        var gatewayName = placement.Planet.Name;
         _metadata.SetEntityName(gatewayUid, gatewayName);
         _xform.SetCoordinates(gatewayUid, new EntityCoordinates(hostGridUid, placement.Center));
 
@@ -138,27 +141,10 @@ public sealed class GatewayGeneratorSystem : EntitySystem
         site.Center = placement.Center;
         site.Radius = placement.ReservationRadius;
 
-        _sectorWorld.CaptureHostedSiteBaseline((gatewayUid, site), hostGridUid, grid, placement.Center, placement.ReservationRadius + 32f);
-
-        var biome = EnsureComp<BiomeComponent>(hostGridUid);
-        var biomeTemplate = string.IsNullOrWhiteSpace(hostPlanet.BiomeTemplate)
-            ? ContinentalId
-            : new ProtoId<BiomeTemplatePrototype>(hostPlanet.BiomeTemplate);
-        _biome.SetTemplate(hostGridUid, biome, _protoManager.Index(biomeTemplate));
-        _biome.SetSeed(hostGridUid, biome, seed);
+        EnsureComp<WorldLoaderComponent>(gatewayUid);
+        _worldController.SetLoaderEnabled(gatewayUid, false);
 
         var origin = placement.Center.Floored();
-
-        for (var x = -2; x <= 2; x++)
-        {
-            for (var y = -2; y <= 2; y++)
-            {
-                tiles.Add((new Vector2i(x, y) + origin, new Tile(tileDef.TileId, variant: _tile.PickVariant((ContentTileDefinition) tileDef, random))));
-            }
-        }
-
-        // Clear area nearby as a sort of landing pad.
-        _maps.SetTiles(hostGridUid, grid, tiles);
 
         var genDest = AddComp<GatewayGeneratorDestinationComponent>(gatewayUid);
         genDest.Origin = origin;
@@ -199,8 +185,16 @@ public sealed class GatewayGeneratorSystem : EntitySystem
         }
 
         var xform = Transform(ent.Owner);
-        if (xform.GridUid is not { } gridUid || !TryComp(gridUid, out MapGridComponent? grid))
+        var gridUid = xform.GridUid ?? xform.MapUid;
+        if (gridUid is not { } resolvedGridUid || !TryComp(resolvedGridUid, out MapGridComponent? grid))
             return;
+
+        if (TryComp<SectorExpeditionSiteComponent>(ent.Owner, out var siteComp))
+        {
+            PrepareDestinationSite(ent, (ent.Owner, siteComp), xform.MapUid ?? resolvedGridUid, resolvedGridUid, grid);
+            var loadRadius = (int) MathF.Ceiling((siteComp.ContentRadius > 0f ? siteComp.ContentRadius : siteComp.Radius) + WorldGen.ChunkSize);
+            _worldController.EnsureChunksLoaded(xform.MapUid ?? resolvedGridUid, siteComp.Center, loadRadius, ent.Owner);
+        }
 
         ent.Comp.Locked = false;
         ent.Comp.Loaded = true;
@@ -209,7 +203,7 @@ public sealed class GatewayGeneratorSystem : EntitySystem
         var seed = ent.Comp.Seed;
         var origin = ent.Comp.Origin;
         var dungeonPosition = origin;
-        _ = FinishGeneratorOpenAsync(ent, gridUid, grid, xform.MapUid ?? gridUid, dungeonPosition, seed, generatorComp);
+        _ = FinishGeneratorOpenAsync(ent, resolvedGridUid, grid, xform.MapUid ?? resolvedGridUid, dungeonPosition, seed, generatorComp);
     }
 
     private async Task FinishGeneratorOpenAsync(
@@ -258,5 +252,41 @@ public sealed class GatewayGeneratorSystem : EntitySystem
             if (TryComp<SectorExpeditionSiteComponent>(ent.Owner, out siteComp))
                 _sectorWorld.CaptureHostedSiteGeneratedEntities((ent.Owner, siteComp), hostMapUid, siteComp.Center, siteComp.ContentRadius > 0f ? siteComp.ContentRadius : siteComp.Radius);
         }
+    }
+
+    private void PrepareDestinationSite(
+        Entity<GatewayGeneratorDestinationComponent> ent,
+        Entity<SectorExpeditionSiteComponent> site,
+        EntityUid hostMapUid,
+        EntityUid hostGridUid,
+        MapGridComponent grid)
+    {
+        if (site.Comp.HostGridUid != EntityUid.Invalid)
+            return;
+
+        var captureRadius = site.Comp.Radius + 32f;
+        var loadRadius = (int) MathF.Ceiling(captureRadius + WorldGen.ChunkSize);
+        _worldController.SetLoaderRadius(ent.Owner, loadRadius);
+        _worldController.SetLoaderEnabled(ent.Owner, true);
+        _worldController.EnsureChunksLoaded(hostMapUid, site.Comp.Center, loadRadius, ent.Owner);
+        _sectorWorld.CaptureHostedSiteBaseline(site, hostGridUid, grid, site.Comp.Center, captureRadius);
+        StampLandingPad(hostGridUid, grid, ent.Comp.Origin, ent.Comp.Seed);
+    }
+
+    private void StampLandingPad(EntityUid hostGridUid, MapGridComponent grid, Vector2i origin, int seed)
+    {
+        var tileDef = _tileDefManager["FloorSteel"];
+        var random = new Random(seed);
+        var tiles = new List<(Vector2i Index, Tile Tile)>(25);
+
+        for (var x = -2; x <= 2; x++)
+        {
+            for (var y = -2; y <= 2; y++)
+            {
+                tiles.Add((new Vector2i(x, y) + origin, new Tile(tileDef.TileId, variant: _tile.PickVariant((ContentTileDefinition) tileDef, random))));
+            }
+        }
+
+        _maps.SetTiles(hostGridUid, grid, tiles);
     }
 }
