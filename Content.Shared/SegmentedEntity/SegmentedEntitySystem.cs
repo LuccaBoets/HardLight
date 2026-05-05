@@ -186,6 +186,10 @@ public sealed partial class LamiaSystem : EntitySystem
             ? segmentedComponent.InitialSegmentId
             : segmentedComponent.SegmentId, Transform(segmentuid).Coordinates);
 
+        // Segments are positioned explicitly and constrained to the body by joints, so
+        // grid traversal only adds recursive reparent work when the head crosses grids.
+        Transform(segment).GridTraversal = false;
+
         var segmentComponent = EnsureComp<SegmentedEntitySegmentComponent>(segment);
 
         segmentComponent.Lamia = parentuid;

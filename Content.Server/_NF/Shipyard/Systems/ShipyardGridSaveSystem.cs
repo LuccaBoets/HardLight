@@ -76,6 +76,11 @@ public sealed class ShipyardGridSaveSystem : EntitySystem
         "Doubloon",
     };
 
+    private static readonly HashSet<string> NonPersistentShipSaveEntityPrototypes = new(StringComparer.Ordinal)
+    {
+        "PillAmbuzolPlus",
+    };
+
     [Dependency] private readonly IEntityManager _entityManager = default!;
     [Dependency] private readonly IEntitySystemManager _entitySystemManager = default!;
     [Dependency] private readonly IPlayerManager _playerManager = default!;
@@ -500,6 +505,8 @@ public sealed class ShipyardGridSaveSystem : EntitySystem
                 var hidden = stashComp.ItemContainer?.ContainedEntity;
                 if (hidden == null)
                     continue;
+                if (IsNonPersistentShipSavePrototype(hidden.Value))
+                    continue;
                 // If already a stash, skip.
                 if (_secretStashQuery.HasComp(hidden.Value))
                     continue;
@@ -597,6 +604,8 @@ public sealed class ShipyardGridSaveSystem : EntitySystem
                 var hidden = stashComp.ItemContainer?.ContainedEntity;
                 if (hidden != null && _entityManager.EntityExists(hidden.Value))
                 {
+                    if (IsNonPersistentShipSavePrototype(hidden.Value))
+                        continue;
                     // Mark the hidden item as processed so fallback scans won't queue it for deletion.
                     processed.Add(hidden.Value);
                     preservedStashItemCount++;
@@ -723,6 +732,9 @@ public sealed class ShipyardGridSaveSystem : EntitySystem
         // HardLight: Remove uplink currencies
         if (IsNonPersistentShipSaveCurrency(uid))
             return true;
+        // HardLight: Remove specific item prototypes that should not persist in stashes/apartments.
+        if (IsNonPersistentShipSavePrototype(uid))
+            return true;
         // HardLight: Remove used disposable implanters
         if (IsSpentDisposableImplanter(uid))
             return true;
@@ -787,6 +799,14 @@ public sealed class ShipyardGridSaveSystem : EntitySystem
             return false;
 
         return implanter.ImplanterSlot.ContainerSlot?.ContainedEntity is not { Valid: true };
+    }
+
+    private bool IsNonPersistentShipSavePrototype(EntityUid uid)
+    {
+        if (!TryComp<MetaDataComponent>(uid, out var meta) || meta.EntityPrototype is not { } proto)
+            return false;
+
+        return NonPersistentShipSaveEntityPrototypes.Contains(proto.ID);
     }
     // HardLight end
 

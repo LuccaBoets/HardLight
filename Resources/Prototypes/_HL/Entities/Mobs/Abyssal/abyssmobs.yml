@@ -225,3 +225,28 @@
   - type: OnUseTimerTrigger
     delay: 20
   - type: DeleteOnTrigger
+  
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare
+  parent: [ BaseMobAbyssGhost ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: Mobs/Aliens/flesh.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: clamp
+  - type: Bloodstream
+    bloodReagent: AbyssalBlood
+    bloodMaxVolume: 0
+  - type: MeleeWeapon
+    altDisarm: false
+    angle: 0
+    animation: WeaponArcSlash
+    soundHit:
+      path: /Audio/Effects/demon_attack1.ogg
+    damage:
+      types:
+        Slash: 50

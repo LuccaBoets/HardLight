@@ -34,3 +34,16 @@
         Heat: 10
   - type: Damageable
     damageContainer: ShadowHaze
+  - type: DragonRift
+    spawnPrototype: BaseMobAbyssHand
+    spawnCooldown: 30
+
+- type: entity
+  id: PortalAbyssalGhost
+  parent: PortalAbyssal
+  name: abyssal portal
+  description: "A black portal to the abyss. It seems to draw in light and hope."
+  components:
+  - type: DragonRift
+    spawnPrototype: BaseMobAbyssGhost
+    spawnCooldown: 30
