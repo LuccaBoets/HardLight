@@ -6,6 +6,7 @@ using Content.Server.Mind.Commands;
 using Content.Server.Polymorph.Components;
 using Content.Shared.Actions;
 using Content.Shared.Buckle;
+using Content.Shared.Buckle.Components;
 using Content.Shared.Coordinates;
 using Content.Shared.Damage;
 using Content.Shared.Destructible;
@@ -208,7 +209,8 @@ public sealed partial class PolymorphSystem : EntitySystem
             return null;
 
         // mostly just for vehicles
-        _buckle.TryUnbuckle(uid, uid, true);
+        if (TryComp<BuckleComponent>(uid, out var buckle) && buckle.Buckled)
+            _buckle.TryUnbuckle(uid, uid, buckle, true);
 
         var targetTransformComp = Transform(uid);
 

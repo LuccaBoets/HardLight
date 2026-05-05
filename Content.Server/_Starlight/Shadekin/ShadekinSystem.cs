@@ -66,6 +66,10 @@ public sealed partial class ShadekinSystem : EntitySystem
     {
         new LightCone { Direction = 0, InnerWidth = 30, OuterWidth = 60 },
         new LightCone { Direction = 180, InnerWidth = 30, OuterWidth = 60 }
+    },
+        ["/Textures/_NF/Effects/LightMasks/beam.png"] = new List<LightCone>
+    {
+        new LightCone { Direction = 0, InnerWidth = 7.5f, OuterWidth = 15f }
     }
     };
 
@@ -169,10 +173,10 @@ public sealed partial class ShadekinSystem : EntitySystem
             var attenuation = 1 - (denom * denom);
             var calculatedLight = 0f;
 
-            if (light.Comp.MaskPath is not null)
+            if (light.Comp.MaskPath is not null && lightMasks.TryGetValue(light.Comp.MaskPath, out var cones))
             {
                 var angleToTarget = GetAngle(light, light.Comp, uid);
-                foreach (var cone in lightMasks[light.Comp.MaskPath])
+                foreach (var cone in cones)
                 {
                     var coneLight = 0f;
                     var angleAttenuation = (float)Math.Min((float)Math.Max(cone.OuterWidth - angleToTarget, 0f), cone.InnerWidth) / cone.OuterWidth;

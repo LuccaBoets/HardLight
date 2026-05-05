@@ -32,7 +32,7 @@ public sealed partial class HumanoidAppearanceSystem : SharedHumanoidAppearanceS
     public void CloneAppearance(EntityUid source, EntityUid target, HumanoidAppearanceComponent? sourceHumanoid = null,
         HumanoidAppearanceComponent? targetHumanoid = null)
     {
-        if (!Resolve(source, ref sourceHumanoid) || !Resolve(target, ref targetHumanoid))
+        if (!Resolve(source, ref sourceHumanoid, false) || !Resolve(target, ref targetHumanoid, false))
         {
             return;
         }

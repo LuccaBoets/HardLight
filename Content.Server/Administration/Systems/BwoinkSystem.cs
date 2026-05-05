@@ -57,6 +57,7 @@ namespace Content.Server.Administration.Systems
     public sealed partial class BwoinkSystem : SharedBwoinkSystem
     {
         private const string RateLimitKey = "AdminHelp";
+        private const int MinimumMessageLength = 10;
 
         [Dependency] private readonly IPlayerManager _playerManager = default!;
         [Dependency] private readonly IAdminManager _adminManager = default!;
@@ -806,6 +807,18 @@ namespace Content.Server.Administration.Systems
             if (!authorized)
             {
                 // Unauthorized bwoink (log?)
+                return;
+            }
+
+            if (message.Text.Trim().Length < MinimumMessageLength)
+            {
+                RaiseNetworkEvent(
+                    new BwoinkTextMessage(
+                        message.UserId,
+                        SystemUserId,
+                        Loc.GetString("bwoink-system-message-too-short", ("length", MinimumMessageLength)),
+                        playSound: false),
+                    senderSession.Channel);
                 return;
             }
 

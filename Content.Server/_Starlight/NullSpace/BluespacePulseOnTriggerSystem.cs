@@ -31,7 +31,9 @@ public sealed class BluespacePulseOnTriggerSystem : EntitySystem
         }
         else
         {
-            Del(ent.Comp.CurrentDome);
+            if (ent.Comp.CurrentDome is { } dome && !TerminatingOrDeleted(dome))
+                Del(dome);
+
             ent.Comp.CurrentDome = null;
         }
     }

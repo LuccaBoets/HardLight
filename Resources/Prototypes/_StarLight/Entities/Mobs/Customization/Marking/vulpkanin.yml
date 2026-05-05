@@ -443,6 +443,7 @@
   id: VulpTailAlt
   bodyPart: Tail
   markingCategory: Tail
+  waggingId: VulpTailAltAnimated
   speciesRestriction: [Skrell, Thaven,Dwarf, Diona, Human, SlimePerson, Felinid, Oni, Harpy, Reptilian, Vulpkanin, ProtoVulp, Rodentia, Goblin, Sheleg, IPC, Feroxi, Moth, Arachnid, Kitsune, Chitinid]
   sprites:
     - sprite: _Starlight/Mobs/Customization/vulpkanin/tail_markings.rsi
@@ -454,12 +455,37 @@
   id: VulpTailAltTip
   bodyPart: Tail
   markingCategory: Tail
+  waggingId: VulpTailAltTipAnimated
   speciesRestriction: [Skrell, Thaven,Dwarf, Diona, Human, SlimePerson, Felinid, Oni, Harpy, Reptilian, Vulpkanin, ProtoVulp, Rodentia, Goblin, Sheleg, IPC, Feroxi, Moth, Arachnid, Kitsune, Chitinid]
   sprites:
     - sprite: _Starlight/Mobs/Customization/vulpkanin/tail_markings.rsi
       state: vulp_alt
     - sprite: _Starlight/Mobs/Customization/vulpkanin/tail_markings.rsi
       state: vulp_alt-tip
+
+- type: marking
+  id: VulpTailAltAnimated
+  bodyPart: Tail
+  markingCategory: Tail
+  staticId: VulpTailAlt
+  speciesRestriction: [Skrell, Thaven,Dwarf, Diona, Human, SlimePerson, Felinid, Oni, Harpy, Reptilian, Vulpkanin, ProtoVulp, Rodentia, Goblin, Sheleg, IPC, Feroxi, Moth, Arachnid, Kitsune, Chitinid]
+  sprites:
+    - sprite: _Starlight/Mobs/Customization/vulpkanin/tail_markings.rsi
+      state: vulp_wag
+    - sprite: _Starlight/Mobs/Customization/vulpkanin/tail_markings.rsi
+      state: vulp_wag-fade
+
+- type: marking
+  id: VulpTailAltTipAnimated
+  bodyPart: Tail
+  markingCategory: Tail
+  staticId: VulpTailAltTip
+  speciesRestriction: [Skrell, Thaven,Dwarf, Diona, Human, SlimePerson, Felinid, Oni, Harpy, Reptilian, Vulpkanin, ProtoVulp, Rodentia, Goblin, Sheleg, IPC, Feroxi, Moth, Arachnid, Kitsune, Chitinid]
+  sprites:
+    - sprite: _Starlight/Mobs/Customization/vulpkanin/tail_markings.rsi
+      state: vulp_wag
+    - sprite: _Starlight/Mobs/Customization/vulpkanin/tail_markings.rsi
+      state: vulp_wag-tip
 
 - type: marking
   id: VulpTailLong
