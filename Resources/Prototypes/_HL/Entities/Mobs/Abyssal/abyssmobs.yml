@@ -254,7 +254,7 @@
 - type: entity
   name: Nightmare
   id: BaseMobNightmare1
-  parent: [ Nightmare ]
+  parent: [ BaseMobNightmare ]
   description: What the FUCK is that?!
   components:
   - type: Sprite
@@ -267,7 +267,7 @@
 - type: entity
   name: Nightmare
   id: BaseMobNightmare2
-  parent: [ Nightmare ]
+  parent: [ BaseMobNightmare ]
   description: What the FUCK is that?!
   components:
   - type: Sprite
@@ -280,7 +280,7 @@
 - type: entity
   name: Nightmare
   id: BaseMobNightmare3
-  parent: [ Nightmare ]
+  parent: [ BaseMobNightmare ]
   description: What the FUCK is that?!
   components:
   - type: Sprite
@@ -293,7 +293,7 @@
 - type: entity
   name: Nightmare
   id: BaseMobNightmare4
-  parent: [ Nightmare ]
+  parent: [ BaseMobNightmare ]
   description: What the FUCK is that?!
   components:
   - type: Sprite
@@ -306,7 +306,7 @@
 - type: entity
   name: Nightmare
   id: BaseMobNightmare5
-  parent: [ Nightmare ]
+  parent: [ BaseMobNightmare ]
   description: What the FUCK is that?!
   components:
   - type: Sprite
@@ -319,7 +319,7 @@
 - type: entity
   name: Nightmare
   id: BaseMobNightmare6
-  parent: [ Nightmare ]
+  parent: [ BaseMobNightmare ]
   description: What the FUCK is that?!
   components:
   - type: Sprite
@@ -332,7 +332,7 @@
 - type: entity
   name: Nightmare
   id: BaseMobNightmare7
-  parent: [ Nightmare ]
+  parent: [ BaseMobNightmare ]
   description: What the FUCK is that?!
   components:
   - type: Sprite
@@ -345,7 +345,7 @@
 - type: entity
   name: Nightmare
   id: BaseMobNightmare8
-  parent: [ Nightmare ]
+  parent: [ BaseMobNightmare ]
   description: What the FUCK is that?!
   components:
   - type: Sprite
@@ -358,7 +358,7 @@
 - type: entity
   name: Nightmare
   id: BaseMobNightmare9
-  parent: [ Nightmare ]
+  parent: [ BaseMobNightmare ]
   description: What the FUCK is that?!
   components:
   - type: Sprite
@@ -371,7 +371,7 @@
 - type: entity
   name: Nightmare
   id: BaseMobNightmare10
-  parent: [ Nightmare ]
+  parent: [ BaseMobNightmare ]
   description: What the FUCK is that?!
   components:
   - type: Sprite
@@ -384,7 +384,7 @@
 - type: entity
   name: Nightmare
   id: BaseMobNightmare11
-  parent: [ Nightmare ]
+  parent: [ BaseMobNightmare ]
   description: What the FUCK is that?!
   components:
   - type: Sprite
@@ -397,7 +397,7 @@
 - type: entity
   name: Nightmare
   id: BaseMobNightmare12
-  parent: [ Nightmare ]
+  parent: [ BaseMobNightmare ]
   description: What the FUCK is that?!
   components:
   - type: Sprite
@@ -410,7 +410,7 @@
 - type: entity
   name: Nightmare
   id: BaseMobNightmare13
-  parent: [ Nightmare ]
+  parent: [ BaseMobNightmare ]
   description: What the FUCK is that?!
   components:
   - type: Sprite
@@ -423,7 +423,7 @@
 - type: entity
   name: Nightmare
   id: BaseMobNightmare14
-  parent: [ Nightmare ]
+  parent: [ BaseMobNightmare ]
   description: What the FUCK is that?!
   components:
   - type: Sprite
@@ -436,7 +436,7 @@
 - type: entity
   name: Nightmare
   id: BaseMobNightmare15
-  parent: [ Nightmare ]
+  parent: [ BaseMobNightmare ]
   description: What the FUCK is that?!
   components:
   - type: Sprite
@@ -449,7 +449,7 @@
 - type: entity
   name: Nightmare
   id: BaseMobNightmare16
-  parent: [ Nightmare ]
+  parent: [ BaseMobNightmare ]
   description: What the FUCK is that?!
   components:
   - type: Sprite
