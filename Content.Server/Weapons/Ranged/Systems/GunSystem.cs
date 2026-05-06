@@ -392,13 +392,17 @@ public sealed partial class GunSystem : SharedGunSystem
         }
 
         // Do a throw
-        if (!HasComp<ProjectileComponent>(uid))
+        if (!TryComp(uid, out ProjectileComponent? projectileComp))
         {
             RemoveShootable(uid);
             // TODO: Someone can probably yeet this a billion miles so need to pre-validate input somewhere up the call stack.
             ThrowingSystem.TryThrow(uid, mapDirection, gun.ProjectileSpeedModified, user);
             return;
         }
+
+        // VRS (Triad #3731): apply per-gun damage modifier
+        if (gun.DamageModifier != 1f)
+            projectileComp.Damage *= gun.DamageModifier;
 
         if (GunPrediction && user != null && TryComp<ActorComponent>(user, out var actor))
         {
