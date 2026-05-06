@@ -1,13 +1,5 @@
 ## Component example
-- type: spawnCharacterOverrideRule
-  id: DrakebornComponentOnSpawn
-  match: Drakeborn
-  checkProfileName: true
-  checkEntityName: true
-  logins:
-  - Drakeborn
-  components:
-  - type: HLDrakeborn
+# (DrakebornComponentOnSpawn removed - HLDrakeborn component no longer exists)
 
 ## Entity example
 - type: spawnCharacterOverrideRule

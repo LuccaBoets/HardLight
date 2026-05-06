@@ -96,7 +96,6 @@
         enum.StrippingUiKey.Key:
          type: StrippableBoundUserInterface
     removeComponentsOnDeath:
-    - type: Timer
     - type: TimedSpawner
     - type: Jittering
 

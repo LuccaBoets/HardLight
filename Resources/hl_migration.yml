@@ -1,7 +1,7 @@
 # 13-04-2026
 BorgModuleFireExtinguisher: BorgModuleJetpack
 BorgModuleDefibrilator: BorgModuleRescue
-BorgModuleTreatment: BorgModuleTopicaks
+BorgModuleTreatment: BorgModuleTopicals
 BorgModuleAdvancedTreatment: BorgModuleAdvancedChemical
 BorgModuleGrapplingGun: BorgModuleTraversal
 BorgModuleLightreplacer: BorgModuleCustodial

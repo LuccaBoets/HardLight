@@ -58,11 +58,3 @@
   injectSound:
     path: /Audio/Items/Medical/jet_injector.ogg
 
-- type: injectorMode
-  id: InjectorModeDynamicInjectMeditech
-  parent: InjectorModeBase
-  name: injector-mode-dynamic-name
-  behavior: Dynamic
-  transferAmounts: [] # No selectable amounts; always injects full reservoir
-  injectSound:
-    path: /Audio/Items/Medical/jet_injector.ogg

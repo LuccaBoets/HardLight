@@ -1,0 +1,59 @@
+# Minimal company roster restored after NSFW/Community Content cleanup deleted
+# the original _HL/companies.yml and _Mono/companies.yml. The lobby UI editor
+# crashes if no `company` prototypes are loaded (empty CompanyButton).
+#
+# Per FORK_PLAN/07: keep "None" + a vanilla-baseline corporate roster only.
+
+# "None" - DO NOT REMOVE! The lobby editor selects this when a profile has no
+# valid company assignment.
+- type: company
+  id: None
+  form: Neutral # Do NOT apply "Neutral" anywhere outside "None"
+  name: None
+  color: "#FFFFFF"
+
+# Admin / station-staff companies. Disabled = not selectable in the lobby.
+- type: company
+  id: StationCommand
+  form: Protagonist
+  name: Station Command
+  color: "#00709C"
+  disabled: true
+
+- type: company
+  id: Rogue
+  form: Antagonist
+  name: Rogue
+  color: "#8B0000"
+  disabled: true
+
+# ===== Canon Companies (vanilla SS14) =====
+- type: company
+  id: NanoTrasen
+  form: Protagonist
+  name: NanoTrasen
+  color: "#334E6D"
+
+- type: company
+  id: Cybersun
+  form: Antagonist
+  name: Cybersun Industries
+  color: "#9B0000"
+
+- type: company
+  id: DonkCo
+  form: Neutral
+  name: Donk Co.
+  color: "#A23B22"
+
+- type: company
+  id: WaffleCo
+  form: Neutral
+  name: Waffle Co.
+  color: "#E0B130"
+
+- type: company
+  id: VeyMed
+  form: Neutral
+  name: Vey-Med
+  color: "#7A88B5"

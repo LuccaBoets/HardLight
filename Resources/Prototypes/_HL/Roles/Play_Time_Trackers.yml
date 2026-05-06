@@ -14,12 +14,6 @@
   id: JobSalvageQuadBorg
 
 - type: playTimeTracker
-  id: JobMeditech
-
-- type: playTimeTracker
-  id: JobMeditechHead
-
-- type: playTimeTracker
   id: JobCentralCommandDirectorate
 
 - type: playTimeTracker

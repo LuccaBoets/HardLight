@@ -109,31 +109,6 @@
 # Meditech Hardsuit (Lighter)
 - type: entity
   parent: [ClothingOuterHardsuitSyndie, BaseC2ContrabandUnredeemable, ContrabandClothing]
-  id: ClothingOuterHardsuitMeditech
-  name: meditech hardsuit
-  description: A specialized hardsuit with advanced biological protection systems for hazardous research environments.
-  components:
-  - type: Sprite
-    sprite: _HL/Clothing/OuterClothing/Hardsuits/meditechHS.rsi
-  - type: Clothing
-    sprite: _HL/Clothing/OuterClothing/Hardsuits/meditechHS.rsi
-  - type: Armor
-    modifiers:
-      coefficients:
-        Blunt: 0.6
-        Slash: 0.6
-        Piercing: 0.6
-        Heat: 0.6
-        Radiation: 0.6
-  - type: ClothingSpeedModifier
-    walkModifier: 0.9
-    sprintModifier: 0.95
-  - type: ToggleableClothing
-    clothingPrototype: ClothingHeadHelmetHardsuitMeditech
-
-# Ramzi Clique Hardsuit
-- type: entity
-  parent: [ClothingOuterHardsuitSyndie, BaseC2ContrabandUnredeemable, ContrabandClothing]
   id: ClothingOuterHardsuitRamzi
   name: ramzi clique hardsuit
   description: A hardsuit bearing the colors and insignia of the Ramzi Clique organization.
@@ -393,27 +368,6 @@
 # Meditech Hardsuit Helmet (Enhanced bio resistance)
 - type: entity
   parent: [ClothingHeadHelmetHardsuitSyndie, BaseC2ContrabandUnredeemable, ContrabandClothing]
-  id: ClothingHeadHelmetHardsuitMeditech
-  name: meditech hardsuit helmet
-  description: A hardsuit helmet with advanced biological protection systems.
-  components:
-  - type: Sprite
-    sprite: _HL/Clothing/OuterClothing/Hardsuits/meditechHSHelm.rsi
-  - type: Clothing
-    sprite: _HL/Clothing/OuterClothing/Hardsuits/meditechHSHelm.rsi
-  - type: Armor
-    modifiers:
-      coefficients:
-        Blunt: 0.9
-        Slash: 0.9
-        Piercing: 0.9
-        Heat: 0.9
-        Radiation: 0.9
-        Caustic: 0.45  # Enhanced bio/caustic resistance
-
-# Ramzi Clique Hardsuit Helmet
-- type: entity
-  parent: [ClothingHeadHelmetHardsuitSyndie, BaseC2ContrabandUnredeemable, ContrabandClothing]
   id: ClothingHeadHelmetHardsuitRamzi
   name: ramzi clique hardsuit helmet
   description: A hardsuit helmet manufactured by the Ramzi Clique organization.
@@ -501,76 +455,7 @@
   - type: StaticPrice # Frontier
     vendPrice: 7500
 
-# Inderdyne Director Hardsuit
-
-- type: entity
-  parent: [ClothingOuterHardsuitSyndieElite, BaseC3SyndicateContraband, ContrabandClothing]
-  id: ClothingOuterHardsuitInderdyneDirector
-  name: meditech director hardsuit
-  description: A custom-made hardsuit with biological protection for the directors of meditech.
-  components:
-  - type: Sprite
-    sprite: _HL/Clothing/OuterClothing/Hardsuits/meditech-director.rsi
-  - type: Clothing
-    sprite: _HL/Clothing/OuterClothing/Hardsuits/meditech-director.rsi
-  - type: ToggleableClothing
-    clothingPrototype: ClothingHeadHelmetHardsuitMeditechDirector
-  - type: ZombificationResistance
-    zombificationResistanceCoefficient: 0.5
-  - type: HideLayerClothing
-    slots:
-    - Tail
-
-# Meditech Director Hardsuit Helmet
-- type: entity
-  parent: [ClothingHeadHelmetHardsuitSyndieElite, BaseC3SyndicateContraband, ContrabandClothing]
-  id: ClothingHeadHelmetHardsuitMeditechDirector
-  name: meditech director hardsuit helmet
-  description: A hardsuit helmet with biological protection for the directors of meditech.
-  components:
-  - type: Sprite
-    sprite: _HL/Clothing/Head/Hardsuits/meditech-director.rsi
-  - type: Clothing
-    sprite: _HL/Clothing/Head/Hardsuits/meditech-director.rsi
-  - type: ZombificationResistance
-    zombificationResistanceCoefficient: 0.8
-
-# Inderdyne Crew Hardsuit
-
-- type: entity
-  parent: [ClothingOuterHardsuitSyndieMedic, BaseC3SyndicateContraband, ContrabandClothing]
-  id: ClothingOuterHardsuitInderdyneCrew
-  name: meditech hardsuit
-  description: A custom-made hardsuit with biological protection for the members of meditech.
-  components:
-  - type: Sprite
-    sprite: _HL/Clothing/OuterClothing/Hardsuits/meditech-crew.rsi
-  - type: Clothing
-    sprite: _HL/Clothing/OuterClothing/Hardsuits/meditech-crew.rsi
-  - type: ToggleableClothing
-    clothingPrototype: ClothingHeadHelmetHardsuitMeditechCrew
-  - type: ZombificationResistance
-    zombificationResistanceCoefficient: 0.7
-  - type: HideLayerClothing
-    slots:
-    - Tail
-
-
 # Meditech Crew Hardsuit Helmet
-- type: entity
-  parent: [ClothingHeadHelmetHardsuitSyndieMedic, BaseC3SyndicateContraband, ContrabandClothing]
-  id: ClothingHeadHelmetHardsuitMeditechCrew
-  name: meditech hardsuit helmet
-  description: A hardsuit helmet with biological protection for the members of meditech.
-  components:
-  - type: Sprite
-    sprite: _HL/Clothing/Head/Hardsuits/meditech-crew.rsi
-  - type: Clothing
-    sprite: _HL/Clothing/Head/Hardsuits/meditech-crew.rsi
-  - type: ZombificationResistance
-    zombificationResistanceCoefficient: 0.9
-
-# Forged Hardsuit Helmet
 - type: entity
   parent: ClothingHeadHardsuitBase
   id: ClothingHeadHelmetForgedHardsuit

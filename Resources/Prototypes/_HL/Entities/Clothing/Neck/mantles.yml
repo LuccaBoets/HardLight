@@ -138,13 +138,3 @@
     sprite: _HL/Clothing/Neck/mantles/sinmantle.rsi
 
 # Dusk Enclave Mantle
-- type: entity
-  parent: ClothingNeckBase
-  id: ClothingNeckMantleSectorEnclave
-  name: Dusk Enclave mantle
-  description: A distinctive mantle bearing the colors of the Dusk Enclave.
-  components:
-  - type: Sprite
-    sprite: _HL/Clothing/Neck/mantles/duskenclavemandle.rsi
-  - type: Clothing
-    sprite: _HL/Clothing/Neck/mantles/duskenclavemandle.rsi

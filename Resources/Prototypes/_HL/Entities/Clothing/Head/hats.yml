@@ -52,24 +52,3 @@
     tags:
     - WhitelistChameleon
 
-- type: entity
-  parent: ClothingHeadHatBeret
-  id: ClothingHeadHatBeretMeditech
-  name: meditech beret
-  description: A beret in meditech style.
-  components:
-    - type: Sprite
-      sprite: _HL/Clothing/Head/meditechberet.rsi
-    - type: Clothing
-      sprite: _HL/Clothing/Head/meditechberet.rsi
-
-- type: entity
-  parent: ClothingHeadHatBeret
-  id: ClothingHeadHatBeretSectorEnclave
-  name: dusk enclave beret
-  description: A Dusk Enclave beret.
-  components:
-  - type: Sprite
-    sprite: _HL/Clothing/Head/sectorenclaveberet.rsi
-  - type: Clothing
-    sprite: _HL/Clothing/Head/sectorenclaveberet.rsi
