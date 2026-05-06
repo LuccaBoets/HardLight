@@ -45,9 +45,7 @@ public abstract class SharedConveyorController : VirtualController
     // Refreshed via OnValueChanged so behavior is identical.
     private float _netMaxUpdateRange;
 
-    // Reused per-tick scratch buffers for UpdateBeforeSolve. Replaces a fresh Dictionary +
-    // HashSet allocation every physics tick. Cleared at the top of each call.
-    private readonly Dictionary<EntityUid, int> _selected = new();
+    // Reused per-tick scratch buffer for UpdateBeforeSolve.
     private readonly HashSet<EntityUid> _refreshConveyors = new();
 
     public override void Initialize()
@@ -147,33 +145,6 @@ public abstract class SharedConveyorController : VirtualController
         }
 
         _parallel.ProcessNow(_job, _job.Conveyed.Count);
-
-        // Reuse the per-tick scratch dictionary instead of allocating a fresh one.
-        _selected.Clear();
-
-        for (var i = 0; i < _job.Conveyed.Count; i++)
-        {
-            var ent = _job.Conveyed[i];
-
-            if (!ent.Result || ent.BestConveyor == null)
-                continue;
-
-            if (!_selected.TryGetValue(ent.BestConveyor.Value, out var existing) || ent.Priority > _job.Conveyed[existing].Priority)
-            {
-                _selected[ent.BestConveyor.Value] = i;
-            }
-        }
-
-        for (var i = 0; i < _job.Conveyed.Count; i++)
-        {
-            var ent = _job.Conveyed[i];
-
-            if (ent.BestConveyor != null && ent.Result && _selected[ent.BestConveyor.Value] != i)
-            {
-                ent.Result = false;
-                _job.Conveyed[i] = ent;
-            }
-        }
 
         // Reuse the per-tick scratch hashset.
         _refreshConveyors.Clear();
