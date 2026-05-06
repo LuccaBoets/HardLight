@@ -88,6 +88,8 @@
           components:
             - FitsInDispenser
   - type: ItemToggle
+    onUse: false # VRS: keep use behavior from conflicting with analyzer activation
+    onActivate: false # VRS: allow activation key to open analyzer UI
   - type: HealthAnalyzer
     scanDelay: 0
   - type: UserInterface

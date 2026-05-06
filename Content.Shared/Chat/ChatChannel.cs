@@ -87,8 +87,9 @@ namespace Content.Shared.Chat
 
         /// <summary>
         ///     Subtle - Floofstation
+        ///     VRS: placed at high bit positions to avoid future upstream channel collisions.
         /// </summary>
-        Subtle = 1 << 15,
+        Subtle = 1u << 31,
 
 
         /// <summary>
@@ -97,9 +98,10 @@ namespace Content.Shared.Chat
         Telepathic = 1 << 16,
 
         /// <summary>
-        ///     Subtle - Floofstation
+        ///     Subtle OOC - Floofstation
+        ///     VRS: placed at high bit positions to avoid future upstream channel collisions.
         /// </summary>
-        SubtleOOC = 1 << 17,
+        SubtleOOC = 1u << 30,
 
         /// <summary>
         ///     Channels considered to be IC.
