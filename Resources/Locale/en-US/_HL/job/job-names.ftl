@@ -13,6 +13,5 @@ job-title-colonial-engineer = Colonial Engineer
 # Role timers
 JobForensicMantis = Mantis
 
-# meditech
-job-name-meditech = Meditech Doctor
-job-name-meditech-head = Meditech Head
+job-name-meditech = Medical Doctor
+job-name-meditech-head = Medical Lead

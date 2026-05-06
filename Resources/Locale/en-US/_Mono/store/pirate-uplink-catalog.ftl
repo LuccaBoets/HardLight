@@ -1,9 +1,9 @@
 # MARK: Medical
 
-uplink-pirate-medical-bundle-name = Meditech Medical Bundle
+uplink-pirate-medical-bundle-name = Elite Medical Bundle
 uplink-pirate-medical-bundle-desc = An assortment of autoinjectors and premium medical equipment to cover for every possible situation. Contains an elite compact defibrillator that can be used as a weapon.
 
-uplink-pirate-meditech-defibrillator-name = Meditech Defibrillator
+uplink-pirate-meditech-defibrillator-name = Elite Compact Defibrillator
 uplink-pirate-meditech-defibrillator-desc = An elite compact defibrillator that can be used as a weapon, now sold separately. Surprisingly deadly.
 
 uplink-pirate-chemical-synthesis-kit-name = Chemical Synthesis Kit
