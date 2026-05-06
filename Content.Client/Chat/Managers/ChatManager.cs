@@ -62,7 +62,7 @@ internal sealed class ChatManager : IChatManager
             break;
 
                 case ChatSelectChannel.SubtleOOC: // Den
-                    _consoleHost.ExecuteCommand($"subtleooc \"{CommandParsing.Escape(str)}\"");
+                    _consoleHost.ExecuteCommand($"sooc \"{CommandParsing.Escape(str)}\"");
                     break;
 
                 case ChatSelectChannel.Dead:

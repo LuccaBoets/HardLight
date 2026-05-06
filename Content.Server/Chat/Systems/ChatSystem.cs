@@ -230,23 +230,14 @@ public sealed partial class ChatSystem : SharedChatSystem
         bool shouldCapitalizeTheWordI = (!CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Parent.Name == "en")
             || (CultureInfo.CurrentCulture.IsNeutralCulture && CultureInfo.CurrentCulture.Name == "en");
 
-        // HardLight start: Corrected SubtleOOC performing IC emotes.
         string? emoteStr = null;
-        if (desiredType == InGameICChatType.SubtleOOC)
-        {
-            message = SanitizeInGameOOCMessage(message);
-        }
-        else
-        {
-            message = SanitizeInGameICMessage(source, message, out emoteStr, shouldCapitalize, shouldPunctuate, shouldCapitalizeTheWordI);
+        message = SanitizeInGameICMessage(source, message, out emoteStr, shouldCapitalize, shouldPunctuate, shouldCapitalizeTheWordI);
 
-            // Was there an emote in the message? If so, send it.
-            if (player != null && emoteStr != message && emoteStr != null)
-            {
-                SendEntityEmote(source, emoteStr, range, nameOverride, ignoreActionBlocker);
-            }
+        // Was there an emote in the message? If so, send it.
+        if (player != null && emoteStr != message && emoteStr != null)
+        {
+            SendEntityEmote(source, emoteStr, range, nameOverride, ignoreActionBlocker);
         }
-        // HardLight end
 
         // This can happen if the entire string is sanitized out.
         if (string.IsNullOrEmpty(message))
@@ -276,9 +267,6 @@ public sealed partial class ChatSystem : SharedChatSystem
                 break;
             case InGameICChatType.Subtle:
                 SendEntitySubtle(source, message, range, nameOverride, hideLog: hideLog, ignoreActionBlocker: true, color: color, channel: ChatChannel.Subtle);
-                break;
-            case InGameICChatType.SubtleOOC:
-                SendEntitySubtle(source, $"OOC: {message}", range, nameOverride, hideLog: hideLog, ignoreActionBlocker: true, color: color, channel: ChatChannel.SubtleOOC); // HardLight: Capitalized OOC for consistency with other OOC chats.
                 break;
             //Nyano - Summary: case adds the telepathic chat sending ability.
             case InGameICChatType.Telepathic:
@@ -330,6 +318,9 @@ public sealed partial class ChatSystem : SharedChatSystem
                 break;
             case InGameOOCChatType.Looc:
                 SendLOOC(source, player, message, hideChat);
+                break;
+            case InGameOOCChatType.SubtleLOOC: // VRS: Floofstation — subtle OOC routed as proper OOC
+                SendSubtleLOOC(source, player, message, hideChat);
                 break;
         }
     }
@@ -671,6 +662,10 @@ public sealed partial class ChatSystem : SharedChatSystem
         {
             if (session.AttachedEntity is not { Valid: true } listener)
                 continue;
+            // VRS: Floofstation — subtle messages only reach those with LOS, unless they are observers or admins.
+            // Ported from Triad #27 (71eede6).
+            if (data.Observer == ObserverType.NoObserver && !data.InLOS && !_adminManager.IsAdmin(session))
+                continue;
             if (MessageRangeCheck(session, data, range) == MessageRangeCheckResult.Disallowed)
                 continue;
             _chatManager.ChatMessageToOne(channel, action, wrappedMessage, source, false, session.Channel);
@@ -703,6 +698,31 @@ public sealed partial class ChatSystem : SharedChatSystem
 
         SendInVoiceRange(ChatChannel.LOOC, message, wrappedMessage, source, hideChat ? ChatTransmitRange.HideChat : ChatTransmitRange.Normal, player.UserId);
         _adminLogger.Add(LogType.Chat, LogImpact.Low, $"LOOC from {player:Player}: {message}");
+    }
+
+    /// <summary>
+    ///     Sends a Subtle LOOC message — an OOC message visible to players in range with line-of-sight.
+    ///     Ported from Triad #27 (71eede6) — VRS Floofstation feature.
+    /// </summary>
+    private void SendSubtleLOOC(EntityUid source, ICommonSession player, string message, bool hideChat)
+    {
+        var name = FormattedMessage.EscapeText(Identity.Name(source, EntityManager));
+
+        var wrappedMessage = Loc.GetString("chat-manager-entity-subtle-looc-wrap-message",
+            ("entityName", name),
+            ("message", FormattedMessage.EscapeText(message)));
+
+        foreach (var (session, data) in GetRecipients(source, WhisperClearRange))
+        {
+            // Only reach those in LOS (or observers / admins).
+            if (data.Observer == ObserverType.NoObserver && !data.InLOS && !_adminManager.IsAdmin(session))
+                continue;
+            if (MessageRangeCheck(session, data, hideChat ? ChatTransmitRange.HideChat : ChatTransmitRange.Normal) == MessageRangeCheckResult.Disallowed)
+                continue;
+            _chatManager.ChatMessageToOne(ChatChannel.SubtleOOC, message, wrappedMessage, source, hideChat, session.Channel, author: player.UserId);
+        }
+
+        _adminLogger.Add(LogType.Chat, LogImpact.Low, $"Subtle LOOC from {player:Player}: {message}");
     }
 
     private void SendDeadChat(EntityUid source, ICommonSession player, string message, bool hideChat)
@@ -945,12 +965,13 @@ public sealed partial class ChatSystem : SharedChatSystem
             // even if they are a ghost hearer, in some situations we still need the range
             if (sourceCoords.TryDistance(EntityManager, transformEntity.Coordinates, out var distance) && distance < voiceGetRange)
             {
-                recipients.Add(player, new ICChatRecipientData(distance, observer));
+                var inLos = _examineSystem.InRangeUnOccluded(source, playerEntity, voiceGetRange);
+                recipients.Add(player, new ICChatRecipientData(distance, observer, InLOS: inLos));
                 continue;
             }
 
             if (observer == ObserverType.Observer)
-                recipients.Add(player, new ICChatRecipientData(-1, ObserverType.Observer));
+                recipients.Add(player, new ICChatRecipientData(-1, ObserverType.Observer, InLOS: false));
         }
 
         RaiseLocalEvent(new ExpandICChatRecipientsEvent(source, voiceGetRange, recipients));
@@ -964,7 +985,7 @@ public sealed partial class ChatSystem : SharedChatSystem
         ObserverNoGhostHearing
     }
 
-    public readonly record struct ICChatRecipientData(float Range, ObserverType Observer, bool? HideChatOverride = null)
+    public readonly record struct ICChatRecipientData(float Range, ObserverType Observer, bool? HideChatOverride = null, bool InLOS = true)
     {
     }
 

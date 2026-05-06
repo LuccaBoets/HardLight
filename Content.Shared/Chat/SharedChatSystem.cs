@@ -302,7 +302,6 @@ public enum InGameICChatType : byte
     Speak,
     Emote,
     Subtle, // Floofstation
-    SubtleOOC, // Den
     Whisper,
     Telepathic
 }
@@ -314,7 +313,8 @@ public enum InGameICChatType : byte
 public enum InGameOOCChatType : byte
 {
     Looc,
-    Dead
+    Dead,
+    SubtleLOOC, // VRS: Floofstation — Subtle OOC is an OOC channel, not IC. Ported from Triad #27 (71eede6).
 }
 
 /// <summary>
