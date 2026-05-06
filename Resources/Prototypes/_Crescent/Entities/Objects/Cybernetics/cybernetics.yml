@@ -198,7 +198,7 @@
   id: CyberneticsPainEditor
   parent: [HullrotCyberneticBase, BaseC3ContrabandNoValue]
   name: IPM TT-46 pain editor
-  description: A miniaturized, optimized version of the average humanoid liver. Developed by Meditech Pharmaceuticals, this cybernetic organ interfaces with the spinal nerves to nullify pain signals from reaching the brain, allowing the user to fight longer.
+  description: A miniaturized, optimized version of the average humanoid liver. Developed for civilian medical use, this cybernetic organ interfaces with the spinal nerves to nullify pain signals from reaching the brain, allowing the user to fight longer.
   components:
     - type: Sprite
       sprite: _Crescent/Objects/Misc/cybernetics.rsi
