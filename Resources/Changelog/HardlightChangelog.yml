@@ -3624,3 +3624,11 @@ Entries:
         map load time.
   id: 391
   time: '2026-05-06T02:41:00.0000000+00:00'
+- author: VRS-Sync
+  changes:
+    - type: Tweak
+      message: Chemical dispenser and ChemMaster now have additional volume options (15u, 20u, 30u, 40u, 60u, 120u).
+    - type: Fix
+      message: Gun upgrades now immediately apply their effects when inserted into a weapon.
+  id: 392
+  time: '2026-05-06T12:00:00.0000000+00:00'
