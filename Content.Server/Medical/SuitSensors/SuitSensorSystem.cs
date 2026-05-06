@@ -28,7 +28,6 @@ using Content.Shared.DeviceNetwork.Components;
 using Content.Server.Salvage.Expeditions; // Frontier
 using Content.Server._NF.Medical.SuitSensors; // Frontier
 using Content.Shared.Emp;
-using Content.Shared.FloofStation;
 using Content.Shared.SSDIndicator; // Frontier
 
 namespace Content.Server.Medical.SuitSensors;

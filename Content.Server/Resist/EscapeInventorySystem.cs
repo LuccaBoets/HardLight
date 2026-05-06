@@ -13,9 +13,7 @@ using Content.Server.Carrying; // Frontier
 using Content.Shared.Actions; // Frontier
 using Robust.Shared.Prototypes; // Frontier
 using Content.Shared.Movement.Systems; // Frontier
-using Content.Server.FloofStation;
 using Content.Shared.Contests;
-using Content.Shared.FloofStation; // Floofstation
 
 namespace Content.Server.Resist;
 
@@ -32,7 +30,6 @@ public sealed class EscapeInventorySystem : EntitySystem
 
     // Frontier - cancel inventory escape
     private readonly EntProtoId _escapeCancelAction = "ActionCancelEscape";
-    [Dependency] private readonly VoreSystem _vore = default!;
 
     /// <summary>
     /// You can't escape the hands of an entity this many times more massive than you.

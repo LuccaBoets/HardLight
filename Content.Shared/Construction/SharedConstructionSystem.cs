@@ -1,6 +1,7 @@
 using System.Linq;
 using Content.Shared.Construction.Components;
 using Robust.Shared.Map;
+using Robust.Shared.Map.Components;
 using Robust.Shared.Prototypes;
 using static Content.Shared.Interaction.SharedInteractionSystem;
 
@@ -11,6 +12,7 @@ namespace Content.Shared.Construction
         [Dependency] private readonly IMapManager _mapManager = default!;
         [Dependency] protected readonly IPrototypeManager PrototypeManager = default!;
         [Dependency] protected readonly SharedTransformSystem TransformSystem = default!;
+        [Dependency] private readonly SharedMapSystem _map = default!; // VRS: needed for new MapGrid extension methods (RT v276)
 
         /// <summary>
         ///     Get predicate for construction obstruction checks.
@@ -20,10 +22,11 @@ namespace Content.Shared.Construction
             if (!canBuildInImpassable)
                 return null;
 
-            if (!_mapManager.TryFindGridAt(coords, out _, out var grid))
+            if (!_mapManager.TryFindGridAt(coords, out var gridUid, out var grid))
                 return null;
 
-            var ignored = grid.GetAnchoredEntities(coords).ToHashSet();
+            // VRS: SharedMapSystem replacement for grid.GetAnchoredEntities (RT v276)
+            var ignored = _map.GetAnchoredEntities((gridUid, grid), coords).ToHashSet();
             return e => ignored.Contains(e);
         }
 
