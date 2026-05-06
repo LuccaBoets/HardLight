@@ -17,6 +17,7 @@ public abstract class SharedBiomeSystem : EntitySystem
     [Dependency] private readonly ISerializationManager _serManager = default!;
     [Dependency] protected readonly ITileDefinitionManager TileDefManager = default!;
     [Dependency] private readonly TileSystem _tile = default!;
+    [Dependency] private readonly SharedMapSystem _map = default!; // VRS: needed for new MapGrid extension methods (RT v276)
 
     protected const byte ChunkSize = 8;
 
@@ -69,7 +70,8 @@ public abstract class SharedBiomeSystem : EntitySystem
 
     public bool TryGetBiomeTile(EntityUid uid, MapGridComponent grid, Vector2i indices, [NotNullWhen(true)] out Tile? tile)
     {
-        if (grid.TryGetTileRef(indices, out var tileRef) && !tileRef.Tile.IsEmpty)
+        // VRS: SharedMapSystem replacement for grid.TryGetTileRef (RT v276)
+        if (_map.TryGetTileRef(uid, grid, indices, out var tileRef) && !tileRef.Tile.IsEmpty)
         {
             tile = tileRef.Tile;
             return true;
@@ -89,7 +91,8 @@ public abstract class SharedBiomeSystem : EntitySystem
     /// </summary>
     public bool TryGetBiomeTile(Vector2i indices, List<IBiomeLayer> layers, int seed, MapGridComponent? grid, [NotNullWhen(true)] out Tile? tile)
     {
-        if (grid?.TryGetTileRef(indices, out var tileRef) == true && !tileRef.Tile.IsEmpty)
+        // VRS: SharedMapSystem replacement for grid.TryGetTileRef; uses grid.Owner for backward-compat (RT v276)
+        if (grid != null && _map.TryGetTileRef(grid.Owner, grid, indices, out var tileRef) && !tileRef.Tile.IsEmpty)
         {
             tile = tileRef.Tile;
             return true;

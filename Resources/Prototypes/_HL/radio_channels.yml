@@ -59,14 +59,6 @@
   longRange: true
 
 - type: radioChannel
-  id: MeditechPharma
-  name: chat-radio-meditech
-  keycode: '7'
-  frequency: 1373
-  color: "#EA7FC7"
-  longRange: true
-
-- type: radioChannel
   id: Pirate
   name: chat-radio-pirate
   keycode: 'l'
@@ -91,10 +83,3 @@
   color: "#005dbf"
   longRange: true
 
-- type: radioChannel
-  id: SectorEnclave
-  name: chat-radio-dusk-enclave
-  keycode: "'"
-  frequency: 1375
-  color: "#00ff95"
-  longRange: true

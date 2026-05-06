@@ -8,17 +8,17 @@
     },
     "states": [
         {
-            "name": "meditech"
+            "name": "interdyne"
         },
         {
-            "name": "meditech-head"
+            "name": "interdyne-head"
         },
         {
-            "name": "meditech-inhand-left",
+            "name": "interdyne-inhand-left",
             "directions": 4
         },
         {
-            "name": "meditech-inhand-right",
+            "name": "interdyne-inhand-right",
             "directions": 4
         }
     ]

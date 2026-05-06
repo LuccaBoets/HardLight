@@ -154,28 +154,6 @@
 
 - type: entity
   parent: [BaseCyberneticEyes, BaseC3ContrabandNoValue]
-  id: MeditechOptics
-  name: IPM Kiroshi mk.I smart optics
-  description: A pair of cybernetic replacements for the human optics network. Offers protection from welding flare and flashbangs and gives live diagnostic data to the user. Developed by Meditech Pharmaceuticals for domestic use.
-  components:
-    - type: Organ
-      onAdd:
-        - type: FlashImmunity
-        - type: EyeProtection
-        - type: ShowHealthBars
-          damageContainers:
-            - Biological
-            - Synth #HL
-        - type: ShowHealthIcons
-          damageContainers:
-            - Biological
-    - type: Sprite
-      sprite: _Crescent/Objects/Misc/cybernetics.rsi
-      layers:
-        - state: meditechoptics
-
-- type: entity
-  parent: [BaseCyberneticEyes, BaseC3ContrabandNoValue]
   id: ShinoharaOptics
   name: ColCom Overseer mk.I smart optics
   description: A pair of cybernetic replacements for the human optics network. Offers protection from welding flare and flashbangs and gives live diagnostic data to the user. Developed by Sector Command for their civilian line.
@@ -220,7 +198,7 @@
   id: CyberneticsPainEditor
   parent: [HullrotCyberneticBase, BaseC3ContrabandNoValue]
   name: IPM TT-46 pain editor
-  description: A miniaturized, optimized version of the average humanoid liver. Developed by Meditech Pharmaceuticals, this cybernetic organ interfaces with the spinal nerves to nullify pain signals from reaching the brain, allowing the user to fight longer.
+  description: A miniaturized, optimized version of the average humanoid liver. Developed for civilian medical use, this cybernetic organ interfaces with the spinal nerves to nullify pain signals from reaching the brain, allowing the user to fight longer.
   components:
     - type: Sprite
       sprite: _Crescent/Objects/Misc/cybernetics.rsi

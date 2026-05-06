@@ -12,7 +12,7 @@
   id: Apollo
   parent: BaseVessel
   name: ID Apollo
-  description: A medium, high-performance armoured medevac and search and rescue shuttle, with an armoury and frontal boarding ramp. Manufactured by Meditech for the civilian market.
+  description: A medium, high-performance armoured medevac and search and rescue shuttle, with an armoury and frontal boarding ramp. Manufactured for the civilian market.
   price: 116250 # ~93000$ on mapinit + 25% markup
   category: Medium
   group: Medical

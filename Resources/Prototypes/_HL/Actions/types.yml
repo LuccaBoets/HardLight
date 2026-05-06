@@ -24,17 +24,6 @@
     event: !type:SpriteStateToggleActionEvent
 
 - type: entity
-  id: ActionLewdLayEgg
-  name: Lay your eggs
-  description: Kneel and push with all your might.
-  categories: [ HideSpawnMenu ]
-  components:
-  - type: InstantAction
-    icon: { sprite: Objects/Consumable/Food/egg.rsi, state: icon }
-    useDelay: 5
-    event: !type:LewdEggLayingActionEvent
-
-- type: entity
   id: ActionResomiGravityJump
   name: Leap
   description: Use your short but agile legs to leap an equally short distance. Be careful not to bump into anything!

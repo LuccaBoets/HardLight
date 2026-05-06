@@ -170,7 +170,7 @@
       baseWalkSpeed: 2
       baseSprintSpeed: 5
     - type: HitscanBatteryAmmoProvider
-      proto: Abysslaser # Frontier: use NF variant
+      proto: NFRedLaserPractice # Frontier: was Abysslaser (NSFW removed)
       fireCost: 50
     - type: BatterySelfRecharger
       autoRecharge: true

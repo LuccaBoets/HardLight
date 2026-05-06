@@ -138,3 +138,30 @@ bounty-description-microwave-machine-board = Mr. Giggles thought it'd be funny t
 bounty-description-flashes = GREETINGS \[Station] WE REQUIRE 6 FLASHES DUE TO A NORMAL \[TrainingExercise] WITH SECURITY. EVERYTHING IS \[Normal].
 bounty-description-tooth-space-carp = Some lads from "down unda" need some teeth to make their traditional apparel. Send them a few from some space carp.
 bounty-description-tooth-sharkminnow = The chef is claiming that the teeth of sharkminnows are some kind of high-quality knife. I don't know what they're on about, but they want a set. Send it to them.
+
+bounty-description-diamond = We need you to acquire a few diamonds for some advanced fabrication. These can either be found in the mining asteroid nearby or cut out of the basilisk creature. Whichever way you want to do it, get us some.
+bounty-description-plates = We need you to get a couple sheets of Goliath hide. These guys are pretty slow, but be careful about the tentacles: they'll grab you and pull you to the ground. You don't want to know what happens next.
+bounty-description-remains = We need you to get a sample of a few Hivelord cores. Be aware that Hivelords can replicate infinitely if the core is not destroyed. Take care not to get overwhelmed.
+bounty-description-salvage-ore-bananium = We have an ongoing project to decode the mystifying clown genomic sequence. We believe a sample of raw bananium will help us achieve this. Note that this only comes from the rarest of deep-space asteroids.
+bounty-description-salvage-ore-gold = We are engaging in an experimental new electronics manufacturing process. Deliver us a large sum of unrefined gold ore. It can come from any source.
+bounty-description-salvage-ore-plasma = We need a shipment of plasma ore to send over to the research station. Please provide us with some so that we can continue our testing. It can come from any source.
+bounty-description-salvage-ore-silver = We are studying the material effects of silver based on the refining methods. Send us a large amount of unrefined silver ore. It can come from any source.
+bounty-description-salvage-ore-uranium = We need a sample of uranium ore for our ongoing experiments on nuclear devices. Be aware that while the uranium does glow slightly, it will probably not harm you. It can come from any source.
+bounty-description-salvage-scrap = We are researching the effects of deep space on station materials, and we need some samples. Find some old junk off of debris and bring it to us.
+job-board-label-text = [head=2]Salvage Job Shipment[/head]
+    {"[italic]For use only on official off-station salvage shipments.[/italic]"}
+
+    {"[bold]Target:[/bold]"} {$target}
+    {"[bold]Reward:[/bold]"} ${$reward}
+
+
+    {"[italic]Shipments are subject to inspection by the Donk corporation[/italic]"}
+job-board-radio-announce = Salvager rank increased to [bold]{$rank}[/bold]! New orders can be purchased from Cargo.
+job-board-ui-label-items = Target: [color=red]{$item}[/color]
+job-board-ui-label-rank = [bold]Rank:[/bold]
+job-board-ui-window-title = Job Board
+salv-job-board-name-BountySalvageDiamond = Diamond
+salvage-job-rank-title-MAX = [color=gold]Supreme Salvager[/color]
+salvage-job-rank-title-0 = [color=gray]Scavenger[/color]
+salvage-job-rank-title-1 = [color=white]Scrapper[/color]
+salvage-job-rank-title-2 = [color=yellow]Specialist[/color]

@@ -86,25 +86,6 @@
     sprite: _HL/Clothing/OuterClothing/pmc_armored_jacket_olive.rsi
 
 - type: entity
-  parent: [ BaseC2Contraband, ClothingOuterVestWebMercenary ]
-  id: ClothingOuterArmoredVestMeditech
-  name: Meditech armored vest
-  description: A high-quality armored vest with ceramic plates and chemically resistant fabric.
-  components:
-  - type: Sprite
-    sprite: _HL/Clothing/OuterClothing/meditechbodyarmor.rsi
-  - type: Clothing
-    sprite: _HL/Clothing/OuterClothing/meditechbodyarmor.rsi
-  - type: Armor
-    modifiers:
-      coefficients:
-        Blunt: 0.75
-        Slash: 0.75
-        Piercing: 0.75
-        Heat: 0.8
-        Caustic: 0.7
-        
-- type: entity
   parent: [ ClothingOuterBaseLarge, BaseC3ExpeditionContraband, AllowSuitStorageClothing ] # Frontier: BaseMajorContraband<BaseC3Contraband
   id: ClothingOuterArmorAberrant
   name: aberrant armor

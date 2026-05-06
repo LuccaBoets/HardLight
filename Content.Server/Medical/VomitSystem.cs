@@ -14,7 +14,6 @@ using Content.Shared.StatusEffect;
 using Robust.Server.Audio;
 using Robust.Shared.Audio;
 using Robust.Shared.Prototypes;
-using Content.Shared.FloofStation;
 using Robust.Shared.Containers;
 
 namespace Content.Server.Medical

@@ -3,7 +3,7 @@
   id: security
 
   # Description
-  dummyPrototype: BorgChassisSecurity
+  dummyPrototype: BorgChassisQuadSec # was BorgChassisSecurity (not present)
 
   # Functional
   extraModuleCount: 3

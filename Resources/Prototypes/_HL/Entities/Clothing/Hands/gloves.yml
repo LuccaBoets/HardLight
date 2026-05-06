@@ -72,22 +72,6 @@
   - type: FingerprintMask
 
 - type: entity
-  parent: ClothingHandsGlovesSyntheticBase
-  id: ClothingHandsGlovesMeditech
-  name: meditech surgical gloves
-  description: shock resistant gloves with a self-sterilizing surface for meditech surgeons.
-  components:
-  - type: Sprite
-    sprite: _HL/Clothing/Gloves/meditech-surgical.rsi
-  - type: Clothing
-    sprite: _HL/Clothing/Gloves/meditech-surgical.rsi
-  - type: Insulated
-  - type: Fiber
-    fiberMaterial: fibers-durathread
-    fiberColor: fibers-pink
-  - type: FingerprintMask
- 
-- type: entity
   parent: [ClothingHandsBase, BaseC3ExpeditionContraband]
   id: ClothingHandsGlovesAberrant
   name: aberrant gloves
