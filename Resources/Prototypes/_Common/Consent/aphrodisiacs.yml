@@ -1,0 +1,20 @@
+# Stub re-added to keep referenced consent toggles valid after NSFW cleanup.
+# Consumers (yaml + C#):
+#   _CS/Traits/Abilities/aphrodesiac_bite.yml,
+#   FloofStation/Reagents/Aphrodisiacs/{medicine,narcotics}.yml,
+#   Content.Shared/_Floof/Examine/CustomExamineSystem.cs,
+#   Content.Client/Overlays/ShowNonconIconsSystem.cs
+- type: consentToggle
+  id: Aphrodisiacs
+  name: Aphrodisiacs
+  description: Allow yourself to be affected by aphrodisiac chemicals and abilities.
+
+- type: consentToggle
+  id: NSFWDescriptions
+  name: NSFW Descriptions
+  description: Allow examining you to reveal NSFW descriptions.
+
+- type: consentToggle
+  id: NonconIcon
+  name: Non-Consent Icon
+  description: Display a non-consent icon visible to other players.

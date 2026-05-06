@@ -14,7 +14,7 @@
   startingGear: MedicalQuadBorgGear
   icon: JobIconMedicalBorg
   supervisors: job-supervisors-cmo
-  jobEntity: PlayerBorgQuadmed
+  jobEntity: PlayerBorgBattery # was PlayerBorgQuadmed (HL custom borg removed)
   special:
   - !type:AddComponentSpecial
     components:
@@ -34,7 +34,7 @@
   startingGear: ServiceQuadBorgGear
   icon: JobIconServiceBorg
   supervisors: job-supervisors-hop
-  jobEntity: PlayerBorgQuadserv
+  jobEntity: PlayerBorgBattery # was PlayerBorgQuadserv
 
 - type: job
   id: SalvageQuadBorg
@@ -52,7 +52,7 @@
   startingGear: SalvageQuadBorgGear
   icon: JobIconSalvageBorg
   supervisors: job-supervisors-Quartermaster
-  jobEntity: PlayerBorgQuadsalv
+  jobEntity: PlayerBorgBattery # was PlayerBorgQuadsalv
 
 - type: job
   id: SecurityQuadBorg
@@ -69,7 +69,7 @@
   startingGear: SecurityQuadBorgGear
   icon: JobIconSecurityBorg
   supervisors: job-supervisors-hos
-  jobEntity: PlayerBorgQuad
+  jobEntity: PlayerBorgBattery # was PlayerBorgQuad
 
 - type: job
   id: EngineeringQuadBorg
@@ -86,7 +86,7 @@
   startingGear: EngineeringQuadBorgGear
   icon: JobIconEngineeringBorg
   supervisors: job-supervisors-ChiefEngineer
-  jobEntity: PlayerBorgQuadEngineer
+  jobEntity: PlayerBorgBattery # was PlayerBorgQuadEngineer
 
 - type: startingGear
   id: MedicalQuadBorgGear

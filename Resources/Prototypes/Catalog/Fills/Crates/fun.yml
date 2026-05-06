@@ -103,7 +103,6 @@
     - id: PlushieCarp
     - id: PlushieThrongler
     - id: PlushieCarp
-    - id: PlushieVytian
 
 - type: entity
   id: CrateFunPlushie

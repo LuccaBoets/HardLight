@@ -225,7 +225,6 @@
     clothes: MoodClothes
   conflicts:
     - HardsuitsGood
-    - BirthdaySuit
 
 # Hats and helmets make your hair look bad. You cannot wear them.
 - type: thavenMood

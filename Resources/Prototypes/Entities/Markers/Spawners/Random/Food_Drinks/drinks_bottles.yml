@@ -32,7 +32,6 @@
   table: !type:GroupSelector
     children:
     - id: DrinkAbsintheBottleFull
-    - id: DrinkAnisetteBottleFull # Floofstation
     - id: DrinkBlueCuracaoBottleFull
     - id: DrinkCognacBottleFull
     - id: DrinkGrenadineBottleFull
