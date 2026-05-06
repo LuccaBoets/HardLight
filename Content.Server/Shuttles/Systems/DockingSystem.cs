@@ -420,16 +420,18 @@ namespace Content.Server.Shuttles.Systems
 
             var shuttleUid = Transform(console.Value).GridUid;
 
-            if (!CanShuttleDock(shuttleUid))
+            if (!TryGetEntity(args.DockEntity, out var ourDock) ||
+                !TryGetEntity(args.TargetDockEntity, out var targetDock) ||
+                !TryComp(ourDock, out DockingComponent? ourDockComp) ||
+                !TryComp(targetDock, out DockingComponent? targetDockComp))
             {
                 _popup.PopupCursor(Loc.GetString("shuttle-console-dock-fail"));
                 return;
             }
 
-            if (!TryGetEntity(args.DockEntity, out var ourDock) ||
-                !TryGetEntity(args.TargetDockEntity, out var targetDock) ||
-                !TryComp(ourDock, out DockingComponent? ourDockComp) ||
-                !TryComp(targetDock, out DockingComponent? targetDockComp))
+            // VRS: check both shuttles; gas docks bypass PreventPilotComponent (Triad #3817)
+            var otherShuttleUid = Transform(targetDock.Value).GridUid;
+            if (!CanShuttleDock(shuttleUid, ourDockComp) || !CanShuttleDock(otherShuttleUid, targetDockComp))
             {
                 _popup.PopupCursor(Loc.GetString("shuttle-console-dock-fail"));
                 return;
