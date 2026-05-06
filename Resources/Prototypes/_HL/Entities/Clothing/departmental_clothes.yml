@@ -1139,12 +1139,12 @@
 
 
 #Misc Outfits
-#Colonial Command
+#Sector Command
 - type: entity
   parent: ClothingHandsBase
   id: ClothingHandsCCWarmers
   name: CC arm-warmers
-  description: A pair of rather nice arm-warmers, styled for Colonial Command roles.
+  description: A pair of rather nice arm-warmers, styled for Sector Command roles.
   components:
   - type: Sprite
     sprite: _HL/Clothing/Departmental/Misc/CCwarmer.rsi
@@ -1161,7 +1161,7 @@
   parent: [ ClothingShoesBase, ClothingShoesMilitaryBase ]
   id: ClothingUnderSocksCC
   name: CC thigh-high socks
-  description: A pair of thigh-high socks, styled for Colonial Command roles.
+  description: A pair of thigh-high socks, styled for Sector Command roles.
   components:
   - type: Sprite
     sprite: _HL/Clothing/Departmental/Misc/CCsocks.rsi
@@ -1176,7 +1176,7 @@
   parent: ClothingUniformBaseThongs
   id: ClothingUniformCCThong
   name: CC thong
-  description: Styled for a Colonial Command, but is this even considered a piece of clothing?
+  description: Styled for a Sector Command, but is this even considered a piece of clothing?
   components:
   - type: Sprite
     sprite: _HL/Clothing/Departmental/Misc/CCthong.rsi

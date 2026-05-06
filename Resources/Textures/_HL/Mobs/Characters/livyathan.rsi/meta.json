@@ -5,18 +5,18 @@
     "y": 64
   },
   "license": "CC-BY-SA-3.0",
-  "copyright": "by GitHub ItsDzordz / Discord dzordz (310775535984836609), edited by GitHub NotLivyathan / Discord livyathan (298907041198637067)",
+  "copyright": "by GitHub ItsDzordz / Discord dzordz (310775535984836609), edited by GitHub NotDrakeborn / Discord drakeborn (298907041198637067)",
   "states": [
     {
-      "name": "livyathan",
+      "name": "drakeborn",
       "directions": 4
     },
     {
-      "name": "livyathan-unshaded",
+      "name": "drakeborn-unshaded",
       "directions": 4
     },
     {
-      "name": "livyathan_wings",
+      "name": "drakeborn_wings",
       "directions": 4
     }
   ]

@@ -75,17 +75,17 @@
   - type: Tag
     tags:
     - ClothMade
-# Interdyne Bodysuit
+# Meditech Bodysuit
 - type: entity
   parent: BodysuitBase
-  id: BodysuitInterdyne
-  name: interdyne bodysuit
-  description: A specialized bodysuit designed for research environments with Interdyne's distinctive styling.
+  id: BodysuitMeditech
+  name: meditech bodysuit
+  description: A specialized bodysuit designed for research environments with Meditech's distinctive styling.
   components:
   - type: Sprite
-    sprite: _HL/Clothing/UnderClothing/interdyneskinsuit.rsi
+    sprite: _HL/Clothing/UnderClothing/meditechskinsuit.rsi
   - type: Clothing
-    sprite: _HL/Clothing/UnderClothing/interdyneskinsuit.rsi
+    sprite: _HL/Clothing/UnderClothing/meditechskinsuit.rsi
 
 # Ramzi Bodysuit
 - type: entity

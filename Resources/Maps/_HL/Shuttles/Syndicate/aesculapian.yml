@@ -5310,7 +5310,7 @@ entities:
       rot: 3.141592653589793 rad
       pos: 3.5,20.5
       parent: 1
-- proto: PosterContrabandInterdyne
+- proto: PosterContrabandMeditech
   entities:
   - uid: 716
     components:

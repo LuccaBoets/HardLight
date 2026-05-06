@@ -104,9 +104,6 @@
   - type: Speech
     speechVerb: Robotic
   - type: LayingDown
-  - type: CumProducer
-    maxVol: 250
-    reVol: 50
   - type: AccessReader
     access: [["Security"], ["Command"], ["Research"], ["Mercenary"]]
   - type: SiliconLawProvider

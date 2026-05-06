@@ -133,7 +133,7 @@
 - type: entity
   parent: BunnyJacketBase
   id: BunnyJacketColComm
-  name: colonial command bunnysuit jacket
+  name: sector command bunnysuit jacket
   components:
   - type: Sprite
     sprite: _HL/Clothing/Bunnysuit/Jackets/colcomm.rsi

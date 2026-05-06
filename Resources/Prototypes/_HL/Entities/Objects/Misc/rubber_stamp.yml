@@ -1,13 +1,13 @@
 ﻿- type: entity
-  name: interdyne rubber stamp
+  name: meditech rubber stamp
   parent: RubberStampBase
-  id: RubberStampInterdyne
-  description: Represents the entire bureaucratic might of the Interdyne Pharmaceutical Corporation.
+  id: RubberStampMeditech
+  description: Represents the entire bureaucratic might of the Meditech Pharmaceutical Corporation.
   categories: [ DoNotMap ]
   components:
   - type: Stamp
-    stampedName: Interdyne
+    stampedName: Meditech
     stampedColor: "#EA7FC7"
-    stampState: "paper_stamp-interdyne"
+    stampState: "paper_stamp-meditech"
   - type: Sprite
-    state: stamp-interdyne
+    state: stamp-meditech

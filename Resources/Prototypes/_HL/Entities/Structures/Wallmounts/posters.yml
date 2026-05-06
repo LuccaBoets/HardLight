@@ -2,7 +2,7 @@
   parent: PosterBase
   id: PosterLegitCCAttention
   name: CC PSA - Attention!
-  description: A PSA from Hardlight sector's Colonial Command featuring a familiar unsettling plushie. The text reads "See something? Say something. Report all sightings of unusual phenomena to the ColComm Ministry of Anomalous Objects."
+  description: A PSA from Frontier sector's Sector Command featuring a familiar unsettling plushie. The text reads "See something? Say something. Report all sightings of unusual phenomena to the ColComm Ministry of Anomalous Objects."
   components:
   - type: Sprite
     sprite: _HL/Structures/Wallmounts/Posters/Attention.rsi
@@ -13,7 +13,7 @@
   parent: PosterBase
   id: PosterLegitCCShh
   name: CC PSA - Shh!
-  description: A PSA from Hardlight sector's Colonial Command featuring a sleeping CC operator. The text reads "People are sleeping! Please keep voices down between the hours of 8 PM and 8 AM. Residential Hub B6."
+  description: A PSA from Frontier sector's Sector Command featuring a sleeping CC operator. The text reads "People are sleeping! Please keep voices down between the hours of 8 PM and 8 AM. Residential Hub B6."
   components:
   - type: Sprite
     sprite: _HL/Structures/Wallmounts/Posters/Shh.rsi
@@ -24,7 +24,7 @@
   parent: PosterBase
   id: PosterLegitCCEnlist
   name: CC PSA - Enlist!
-  description: A PSA from Hardlight sector's Colonial Command featuring a smiling CC operator. The text reads "Serve your community! Colonial Command is always looking for new motivated individuals!"
+  description: A PSA from Frontier sector's Sector Command featuring a smiling CC operator. The text reads "Serve your community! Sector Command is always looking for new motivated individuals!"
   components:
   - type: Sprite
     sprite: _HL/Structures/Wallmounts/Posters/Enlist.rsi
@@ -35,7 +35,7 @@
   parent: PosterBase
   id: PosterLegitCCBekind
   name: CC PSA - Be Kind!
-  description: A PSA from Hardlight sector's Colonial Command featuring a soggy, crying CC operator. The text reads "Tensions run high- Try to remember that everyone's struggles are as complex as your own."
+  description: A PSA from Frontier sector's Sector Command featuring a soggy, crying CC operator. The text reads "Tensions run high- Try to remember that everyone's struggles are as complex as your own."
   components:
   - type: Sprite
     sprite: _HL/Structures/Wallmounts/Posters/Bekind.rsi
@@ -44,14 +44,14 @@
 
 - type: entity
   parent: PosterBase
-  id: PosterDuskEnclave
+  id: PosterSectorEnclave
   name: Dusk Enclave poster
   description: A Dusk Enclave poster educating on interdimensional travellers.
   components:
   - type: Sprite
-    sprite: _HL/Structures/Wallmounts/Posters/DuskEnclave.rsi
-    state: poster_duskenclave
+    sprite: _HL/Structures/Wallmounts/Posters/SectorEnclave.rsi
+    state: poster_sectorenclave
     scale: 0.9, 0.9
   - type: Construction
     graph: Poster
-    node: PosterDuskEnclave
+    node: PosterSectorEnclave

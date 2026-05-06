@@ -13,7 +13,7 @@
   parent: ClothingNeckCloakHop
   id: ClothingNeckCloakSr
   name: Harbor Master's cloak
-  description: A top of the line cloak for the Harbor Master. Made from exquisite fibers and furs, this thing must have cost a fortune! The fact this cloak was even issued shows the trust Colonial Command is placing in the Harbor Master on this outpost.
+  description: A top of the line cloak for the Harbor Master. Made from exquisite fibers and furs, this thing must have cost a fortune! The fact this cloak was even issued shows the trust Sector Command is placing in the Harbor Master on this outpost.
   components:
   - type: Sprite
     sprite: _NF/Clothing/Neck/Cloaks/sr.rsi

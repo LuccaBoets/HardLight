@@ -4,9 +4,6 @@ hl-trait-robot-voice-desc = Through a synthetic larynx or some other way, you so
 hl-trait-borg-voice-name = Borg Voice
 hl-trait-borg-voice-desc = Through a synthetic larynx or some other way, you sound like a cyborg.
 
-hl-trait-horny-name = Horny
-hl-trait-horny-desc = Your moods have a tendency to be erotic, and drive you to act accordingly.
-
 lead-footed-name = Lead-footed
 lead-footed-text = Somehow able to stay standing during the rigors of FTL.
 inoculated-name = Inoculated
@@ -25,18 +22,6 @@ natural-regen-name = Natural Regeneration
 natural-regen-text = Through unknown means, your body is slightly more capable of naturally healing injuries.
 unnatural-regen-name = Unnatural Regeneration
 unnatural-regen-text = Through illegal means or otherwise, your body is significantly more capable of naturally healing injuries.
-
-hl-trait-egglayer-fertile-name = Egg Layer (very fertile)
-hl-trait-egglayer-fertile-desc = Your body is a machine that turns cum into eggs. (5 cum per egg)
-
-hl-trait-egglayer-name = Egg Layer
-hl-trait-egglayer-desc = You produce and lay eggs (10 cum per egg)
-
-hl-trait-egglayer-infertile-name = Egg Layer (very infertile)
-hl-trait-egglayer-infertile-desc = You produce eggs very slowly and seldomly (50 cum per egg)
-
-hl-trait-Brainwasher-name = Brainwasher
-hl-trait-Brainwasher-desc = Through natural or artificial means, you have the ability to brainwash peoples.
 
 pooltoy-name = Pool Toy!
 pooltoy-text = You're a living inflatable, whether by some weird mutation or by being a synthetic being. You are quite resillient to blunt and naturally insulated, but are extra susceptible to pierce and slash, and you are easily knocked about by sudden forces!
@@ -74,15 +59,3 @@ hl-trait-extreme-shadekin-regeneration-desc = In TOTAL darkness, your essence ra
 
 hl-trait-mild-light-sensitivity-name = Mild Light Sensitivity
 hl-trait-mild-light-sensitivity-desc = You are somewhat sensitive to EXTREME light, just like shadekin.
-
-## Erotic mood trait category
-trait-category-erotic-moods = Erotic Moods
-
-hl-trait-vanilla-erotic-moods-name = Vanilla Moods
-hl-trait-vanilla-erotic-moods-desc = Every half hour or so you receive a private reminder of two randomly drawn erotic preferences — positions, acts, dynamics. They rotate every one to two and a half hours.
-
-hl-trait-kinky-erotic-moods-name = Kinky Moods
-hl-trait-kinky-erotic-moods-desc = Every half hour or so you receive a private reminder of two randomly drawn kink preferences. Consent-gated moods (vore, CnC, brainwashing, etc.) are skipped if you haven't enabled that consent toggle. Preferences rotate every one to two and a half hours.
-
-hl-trait-romantic-moods-name = Romantic Moods
-hl-trait-romantic-moods-desc = Every half hour or so you receive a private reminder of two randomly drawn romantic inclinations — tenderness, dates, closeness. Preferences rotate every one to two and a half hours.

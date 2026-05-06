@@ -404,8 +404,7 @@ public sealed class SuitSensorSystem : EntitySystem
         // Frontier: sensors work off grids
         if (sensor.Mode == SuitSensorMode.SensorOff
             || sensor.User == null
-            || !HasComp<MobStateComponent>(sensor.User) // vored? hide from pesky medics
-            || HasComp<VoredComponent>(sensor.User)) // || transform.GridUid == null
+            || !HasComp<MobStateComponent>(sensor.User))
             return null;
         // End Frontier
 

@@ -17,4 +17,4 @@ reagent-name-nuclear-fuel = Nuclear Fuel
 reagent-desc-nuclear-fuel = A isotope of fissile material, made in much too small of samples to be useful for large scale power generation...   what are you using this for?
 
 reagent-name-inert-mechanites = Inert Mechanites
-reagent-desc-inert-mechanites = Tiny microscopic mechanites produced by Colonial Command's experimental research division, Unsafe for consumption while inert.
+reagent-desc-inert-mechanites = Tiny microscopic mechanites produced by Sector Command's experimental research division, Unsafe for consumption while inert.

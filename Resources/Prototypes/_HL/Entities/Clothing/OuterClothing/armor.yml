@@ -87,14 +87,14 @@
 
 - type: entity
   parent: [ BaseC2Contraband, ClothingOuterVestWebMercenary ]
-  id: ClothingOuterArmoredVestInterdyne
-  name: Interdyne armored vest
+  id: ClothingOuterArmoredVestMeditech
+  name: Meditech armored vest
   description: A high-quality armored vest with ceramic plates and chemically resistant fabric.
   components:
   - type: Sprite
-    sprite: _HL/Clothing/OuterClothing/interdynebodyarmor.rsi
+    sprite: _HL/Clothing/OuterClothing/meditechbodyarmor.rsi
   - type: Clothing
-    sprite: _HL/Clothing/OuterClothing/interdynebodyarmor.rsi
+    sprite: _HL/Clothing/OuterClothing/meditechbodyarmor.rsi
   - type: Armor
     modifiers:
       coefficients:

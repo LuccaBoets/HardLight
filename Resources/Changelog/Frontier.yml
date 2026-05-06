@@ -175,7 +175,7 @@ Entries:
     - message: >-
         Nanotrasen has managed to extend the time it takes for food to rot away
         and with it all biological related products like passengers of all
-        species, somehow this has produced delayed times on the Colonial Command
+        species, somehow this has produced delayed times on the Sector Command
         cloning facilities too.
       type: Tweak
   id: 4852
@@ -490,7 +490,7 @@ Entries:
 - author: Leander
   changes:
     - message: >-
-        Colonial Command has just finished building the latest version of The
+        Sector Command has just finished building the latest version of The
         Empress.
       type: Add
   id: 4891

@@ -40,9 +40,6 @@
     UndergarmentBottom: MobHumanoidAnyMarking
     Tail: MobHumanoidAnyMarking
     Chest: MobThavenTorso
-    Genital: MobHumanoidAnyMarking
-    Penis: MobHumanoidAnyMarking
-    Breasts: MobHumanoidAnyMarking
     LArm: MobThavenLArm
     RArm: MobThavenRArm
     LHand: MobThavenLHand

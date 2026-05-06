@@ -35,13 +35,8 @@ public abstract partial class SharedConsentSystem : EntitySystem
 
     public bool HasConsent(Entity<ConsentComponent?> ent, ProtoId<ConsentTogglePrototype> consentId)
     {
-        if (!Resolve(ent, ref ent.Comp, false))
-        {
-            // Entities that have never been controlled by a player consent to all mechanics.
-            return true;
-        }
-
-        return ent.Comp.ConsentSettings.Toggles.TryGetValue(consentId, out var val) && val == "on";
+        // Consent toggles are disabled in the sanitized fork.
+        return true;
     }
 
     private void OnGetExamineVerbs(Entity<ConsentComponent> ent, ref GetVerbsEvent<ExamineVerb> args)

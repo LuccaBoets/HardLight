@@ -9,16 +9,16 @@ SPDX-License-Identifier: AGPL-3.0-or-later
   # Station Alert - Omicron - RAGNARÖK
 
   <Box>
-    [italic]Called by: Colonial Command Only.[/italic]
+    [italic]Called by: Sector Command Only.[/italic]
   </Box>
 
   [bold]Conditions:[/bold]
 
-  Colonial Command has decided to take direct control of the station.
+  Sector Command has decided to take direct control of the station.
 
   [bold]Security:[/bold]
 
-  All security members are to de-arm and await further instructions from Colonial Command.
+  All security members are to de-arm and await further instructions from Sector Command.
 
   [bold]Secure Areas:[/bold]
 
@@ -30,6 +30,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
   All personnel should remain in their department, and await further orders.
 
-  Personnel are required to follow all Colonial Command orders.
+  Personnel are required to follow all Sector Command orders.
 
 </Document>

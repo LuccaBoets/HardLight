@@ -754,10 +754,10 @@
     - !type:WallmountCondition
 
 - type: construction
-  id: PosterContrabandInterdyne
+  id: PosterContrabandMeditech
   graph: Poster
   startNode: start
-  targetNode: PosterContrabandInterdyne
+  targetNode: PosterContrabandMeditech
   category: construction-category-Poster
   objectType: Structure
   placementMode: SnapgridCenter
@@ -1558,10 +1558,10 @@
     - !type:WallmountCondition
 
 - type: construction
-  id: PosterDuskEnclave
+  id: PosterSectorEnclave
   graph: Poster
   startNode: start
-  targetNode: PosterDuskEnclave
+  targetNode: PosterSectorEnclave
   category: construction-category-Poster
   objectType: Structure
   placementMode: SnapgridCenter

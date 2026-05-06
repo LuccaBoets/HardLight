@@ -30,45 +30,45 @@
 
 - type: entity
   parent: ClothingUniformBase
-  id: ClothingUniformJumpsuitInterdyne
-  name: interdyne jumpsuit
-  description: A high-quality jumpsuit designed for Interdyne personnel.
+  id: ClothingUniformJumpsuitMeditech
+  name: meditech jumpsuit
+  description: A high-quality jumpsuit designed for Meditech personnel.
   components:
     - type: Sprite
-      sprite: _HL/Clothing/Uniforms/interdynejumpsuit.rsi
+      sprite: _HL/Clothing/Uniforms/meditechjumpsuit.rsi
     - type: Clothing
-      sprite: _HL/Clothing/Uniforms/interdynejumpsuit.rsi
+      sprite: _HL/Clothing/Uniforms/meditechjumpsuit.rsi
 
 - type: entity
   parent: ClothingUniformBase
-  id: ClothingUniformJumpskirtInterdyne
-  name: interdyne jumpskirt
-  description: A high-quality jumpskirt designed for Interdyne personnel.
+  id: ClothingUniformJumpskirtMeditech
+  name: meditech jumpskirt
+  description: A high-quality jumpskirt designed for Meditech personnel.
   components:
   - type: Sprite
-    sprite: _HL/Clothing/Uniforms/interdynejumpskirt.rsi
+    sprite: _HL/Clothing/Uniforms/meditechjumpskirt.rsi
   - type: Clothing
-    sprite: _HL/Clothing/Uniforms/interdynejumpskirt.rsi
+    sprite: _HL/Clothing/Uniforms/meditechjumpskirt.rsi
 
 - type: entity
   parent: ClothingUniformBase
-  id: ClothingUniformJumpsuitInterdyneDirector
-  name: interdyne director jumpsuit
-  description: A high-quality jumpsuit designed for Interdyne heads.
+  id: ClothingUniformJumpsuitMeditechDirector
+  name: meditech director jumpsuit
+  description: A high-quality jumpsuit designed for Meditech heads.
   components:
   - type: Sprite
-    sprite: _HL/Clothing/Uniforms/interdynedirectorjumpsuit.rsi
+    sprite: _HL/Clothing/Uniforms/meditechdirectorjumpsuit.rsi
   - type: Clothing
-    sprite: _HL/Clothing/Uniforms/interdynedirectorjumpsuit.rsi
+    sprite: _HL/Clothing/Uniforms/meditechdirectorjumpsuit.rsi
 
 - type: entity
   parent: ClothingUniformBase
-  id: ClothingUniformJumpskirtInterdyneDirector
-  name: interdyne director jumpskirt
-  description: A high-quality jumpskirt designed for Interdyne heads.
+  id: ClothingUniformJumpskirtMeditechDirector
+  name: meditech director jumpskirt
+  description: A high-quality jumpskirt designed for Meditech heads.
   components:
   - type: Sprite
-    sprite: _HL/Clothing/Uniforms/interdynedirectorjumpskirt.rsi
+    sprite: _HL/Clothing/Uniforms/meditechdirectorjumpskirt.rsi
   - type: Clothing
-    sprite: _HL/Clothing/Uniforms/interdynedirectorjumpskirt.rsi
+    sprite: _HL/Clothing/Uniforms/meditechdirectorjumpskirt.rsi
 

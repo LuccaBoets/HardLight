@@ -21,10 +21,7 @@
     - map: [ "enum.HumanoidVisualLayers.LArm" ]
     - map: [ "enum.HumanoidVisualLayers.RLeg" ]
     - map: [ "enum.HumanoidVisualLayers.LLeg" ]
-    - map: [ "enum.HumanoidVisualLayers.Genital" ]
-    - map: [ "enum.HumanoidVisualLayers.Breasts" ] # HL: Add breasts layer
     - map: [ "enum.HumanoidVisualLayers.UndergarmentTop" ]
-    - map: [ "enum.HumanoidVisualLayers.Penis" ]
     - map: [ "enum.HumanoidVisualLayers.UndergarmentBottom" ]
     - map: [ "accessory1" ]
     - map: [ "accessory2" ]
@@ -92,9 +89,6 @@
     hideLayersOnEquip:
     - Hair
     # HL start: Hide genital markings on equip
-    - Genital
-    - Penis
-    - Breasts
     # HL end
   - type: SlowOnDamage
     speedModifierThresholds:
@@ -234,7 +228,6 @@
     price: 1500 # Kidnapping a living person and selling them for cred is a good move.
     deathPenalty: 0.01 # However they really ought to be living and intact, otherwise they're worth 100x less.
   - type: CanEscapeInventory # Carrying system from nyanotrasen.
-  - type: Vore # Floofstation - Vore
   - type: Tag
     tags:
     - CanPilot
@@ -243,7 +236,6 @@
     - AnomalyHost
   - type: Targeting # Shitmed Change
   - type: SurgeryTarget # Shitmed Change
-  - type: ModifyMarkings # Hardlight
   - type: ExaminableCharacter # WWDP
   - type: PseudoItem # Hardlight change, technically cribbed from Den
     shape:
@@ -350,10 +342,7 @@
     - map: [ "enum.HumanoidVisualLayers.LArm" ]
     - map: [ "enum.HumanoidVisualLayers.RLeg" ]
     - map: [ "enum.HumanoidVisualLayers.LLeg" ]
-    - map: [ "enum.HumanoidVisualLayers.Genital" ]
-    - map: [ "enum.HumanoidVisualLayers.Breasts" ]
     - map: [ "enum.HumanoidVisualLayers.UndergarmentTop" ]
-    - map: [ "enum.HumanoidVisualLayers.Penis" ]
     - map: [ "enum.HumanoidVisualLayers.UndergarmentBottom" ]
     - map: [ "accessory1" ]
     - map: [ "accessory2" ]

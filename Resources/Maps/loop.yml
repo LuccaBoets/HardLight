@@ -79657,7 +79657,7 @@ entities:
     - type: Transform
       pos: -41.5,13.5
       parent: 2
-- proto: PosterContrabandInterdyne
+- proto: PosterContrabandMeditech
   entities:
   - uid: 5677
     components:

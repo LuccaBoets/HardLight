@@ -59,7 +59,7 @@
     path: /Audio/Items/Medical/jet_injector.ogg
 
 - type: injectorMode
-  id: InjectorModeDynamicInjectInterdyne
+  id: InjectorModeDynamicInjectMeditech
   parent: InjectorModeBase
   name: injector-mode-dynamic-name
   behavior: Dynamic

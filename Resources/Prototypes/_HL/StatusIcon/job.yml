@@ -41,19 +41,19 @@
 
 - type: jobIcon
   parent: JobIcon
-  id: JobIconInterdyne
+  id: JobIconMeditech
   icon:
     sprite: /Textures/_HL/Interface/Misc/job_icons.rsi
-    state: interdyne-doctor-icon
-  jobName: job-name-interdyne
+    state: meditech-doctor-icon
+  jobName: job-name-meditech
 
 - type: jobIcon
   parent: JobIcon
-  id: JobIconInterdyneHead
+  id: JobIconMeditechHead
   icon:
     sprite: /Textures/_HL/Interface/Misc/job_icons.rsi
-    state: interdyne-head-icon
-  jobName: job-name-interdyne-head
+    state: meditech-head-icon
+  jobName: job-name-meditech-head
 
 - type: jobIcon
   parent: JobIcon

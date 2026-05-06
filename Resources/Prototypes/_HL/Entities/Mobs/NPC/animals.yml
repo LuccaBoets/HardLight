@@ -173,8 +173,3 @@
     damage:
       types:
         Slash: 15
-  - type: CumProducer
-    maxVol: 250
-    reagentId: Cum
-    reVol: 50
-    reHunger: 1

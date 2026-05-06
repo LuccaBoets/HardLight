@@ -539,7 +539,7 @@
       - NamesMilitaryLast
       nameFormat: name-format-ert
 
-## Colonial Command
+## Sector Command
 
 - type: entity
   name: ColComm official

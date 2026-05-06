@@ -51,7 +51,7 @@ entities:
   - uid: 2
     components:
     - type: MetaData
-      name: Colonial Command
+      name: Sector Command
     - type: Transform
       pos: -1.078125,-0.47654724
       parent: invalid
@@ -114912,21 +114912,21 @@ entities:
     - type: Transform
       pos: -7.5,55.5
       parent: 2
-- proto: PlushieAbyssal
+- proto: PlushieCarp
   entities:
   - uid: 22997
     components:
     - type: Transform
       pos: -0.2375288,-10.768802
       parent: 2
-- proto: PlushieAvali
+- proto: PlushieCarp
   entities:
   - uid: 23001
     components:
     - type: Transform
       pos: 2.6116672,-10.005608
       parent: 2
-- proto: PlushieBountyHunter
+- proto: PlushieCarp
   entities:
   - uid: 22998
     components:
@@ -114955,28 +114955,28 @@ entities:
     - type: Transform
       pos: 0.53223133,-10.096927
       parent: 2
-- proto: PlushieLivyathan
+- proto: PlushieDrakeborn
   entities:
   - uid: 16602
     components:
     - type: Transform
       pos: 1.5433594,-10.034427
       parent: 2
-- proto: PlushieLizardCCO
+- proto: PlushieCarp
   entities:
   - uid: 22994
     components:
     - type: Transform
       pos: 2.0277343,-9.940677
       parent: 2
-- proto: PlushieLizardHoS
+- proto: PlushieCarp
   entities:
   - uid: 22996
     components:
     - type: Transform
       pos: -0.38964367,-10.050052
       parent: 2
-- proto: PlushieLizardMaid
+- proto: PlushieCarp
   entities:
   - uid: 23000
     components:
@@ -114995,7 +114995,7 @@ entities:
     - type: Transform
       pos: -22.66746,51.69545
       parent: 2
-- proto: PlushieNirouJol
+- proto: PlushieCarp
   entities:
   - uid: 16605
     components:
@@ -115010,7 +115010,7 @@ entities:
       rot: -1.5707963267948966 rad
       pos: 7.349538,-17.65631
       parent: 2
-- proto: PlushieSharkCaptain
+- proto: PlushieCarp
   entities:
   - uid: 22999
     components:
@@ -115025,7 +115025,7 @@ entities:
       rot: -1.5707963267948966 rad
       pos: 7.257808,-19.41874
       parent: 2
-- proto: PlushieSlimeVulp
+- proto: PlushieCarp
   entities:
   - uid: 23002
     components:
@@ -115040,7 +115040,7 @@ entities:
       rot: 3.141592653589793 rad
       pos: -6.5,37.5
       parent: 2
-- proto: PosterContrabandInterdyne
+- proto: PosterContrabandMeditech
   entities:
   - uid: 16610
     components:
@@ -115247,7 +115247,7 @@ entities:
   - uid: 16640
     components:
     - type: MetaData
-      desc: A poster depicting the Hardlight sector Logo
+      desc: A poster depicting the Frontier sector Logo
       name: Hardlight Logo
     - type: Transform
       rot: 3.141592653589793 rad
@@ -115320,7 +115320,7 @@ entities:
   - uid: 16650
     components:
     - type: MetaData
-      desc: This poster provides information on some of the prizes available through the Colonial Command employee retention program, including a two week stay on a resort planet!
+      desc: This poster provides information on some of the prizes available through the Sector Command employee retention program, including a two week stay on a resort planet!
       name: 'ColComm Corporate Perks: Vacation!'
     - type: Transform
       pos: 2.5,16.5

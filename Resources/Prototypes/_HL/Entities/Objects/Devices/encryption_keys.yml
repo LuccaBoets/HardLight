@@ -120,17 +120,17 @@
 
 - type: entity
   parent: [EncryptionKey, RecyclableItemDeviceTiny]
-  id: EncryptionKeyInterdyne
-  name: Interdyne Pharmaceuticals Encryption Key
+  id: EncryptionKeyMeditech
+  name: Meditech Pharmaceuticals Encryption Key
   description: An encyption key used Viper Cell operatives to communicate securely.
   components:
   - type: EncryptionKey
     channels:
-    - InterdynePharma
-    defaultChannel: InterdynePharma
+    - MeditechPharma
+    defaultChannel: MeditechPharma
   - type: Sprite
     layers:
-    - state: crypt-interdyne
+    - state: crypt-meditech
 
 - type: entity
   parent: [EncryptionKey, RecyclableItemDeviceTiny]
@@ -178,17 +178,17 @@
 
 - type: entity
   parent: [EncryptionKey, RecyclableItemDeviceTiny]
-  id: EncryptionKeyDuskEnclave
+  id: EncryptionKeySectorEnclave
   name: Dusk Enclave encryption key
   description: An encryption key used by Dusk Enclave members.
   components:
     - type: EncryptionKey
       channels:
-        - DuskEnclave
-      defaultChannel: DuskEnclave
+        - SectorEnclave
+      defaultChannel: SectorEnclave
     - type: Sprite
       layers:
         - state: crypt_purple
-        - state: duskenclave_label
+        - state: sectorenclave_label
 
 

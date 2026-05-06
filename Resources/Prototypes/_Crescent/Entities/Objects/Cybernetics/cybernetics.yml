@@ -128,7 +128,7 @@
   id: CyberneticsMantisBladeLeft
   parent: [LeftArmCybernetic, BaseC3ContrabandNoValue]
   name: NT CL-20 mantis bladearm
-  description: Developed by NanoTrasen as part of their MaxSec line of personal protection equipment, the mantis bladearm is a simple concept -- a plasteel sabre hidden in the user's forearm that unfolds via a specific neural signal. Rugged and easy to replace or maintain, the mantis blade is a popular sight among mercenaries in the Hardlight Sector.
+  description: Developed by NanoTrasen as part of their MaxSec line of personal protection equipment, the mantis bladearm is a simple concept -- a plasteel sabre hidden in the user's forearm that unfolds via a specific neural signal. Rugged and easy to replace or maintain, the mantis blade is a popular sight among mercenaries in the Frontier Sector.
   components:
     - type: Sprite
       sprite: _Crescent/Objects/Misc/cybernetics.rsi
@@ -142,7 +142,7 @@
   id: CyberneticsMantisBladeRight
   parent: [RightArmCybernetic, BaseC3ContrabandNoValue]
   name: NT CR-20 mantis bladearm
-  description: Developed by NanoTrasen as part of their MaxSec line of personal protection equipment, the mantis bladearm is a simple concept -- a plasteel sabre hidden in the user's forearm that unfolds via a specific neural signal. Rugged and easy to replace or maintain, the mantis blade is a popular sight among mercenaries in the Hardlight Sector.
+  description: Developed by NanoTrasen as part of their MaxSec line of personal protection equipment, the mantis bladearm is a simple concept -- a plasteel sabre hidden in the user's forearm that unfolds via a specific neural signal. Rugged and easy to replace or maintain, the mantis blade is a popular sight among mercenaries in the Frontier Sector.
   components:
     - type: Sprite
       sprite: _Crescent/Objects/Misc/cybernetics.rsi
@@ -154,9 +154,9 @@
 
 - type: entity
   parent: [BaseCyberneticEyes, BaseC3ContrabandNoValue]
-  id: InterdyneOptics
+  id: MeditechOptics
   name: IPM Kiroshi mk.I smart optics
-  description: A pair of cybernetic replacements for the human optics network. Offers protection from welding flare and flashbangs and gives live diagnostic data to the user. Developed by Interdyne Pharmaceuticals for domestic use.
+  description: A pair of cybernetic replacements for the human optics network. Offers protection from welding flare and flashbangs and gives live diagnostic data to the user. Developed by Meditech Pharmaceuticals for domestic use.
   components:
     - type: Organ
       onAdd:
@@ -172,13 +172,13 @@
     - type: Sprite
       sprite: _Crescent/Objects/Misc/cybernetics.rsi
       layers:
-        - state: interdyneoptics
+        - state: meditechoptics
 
 - type: entity
   parent: [BaseCyberneticEyes, BaseC3ContrabandNoValue]
   id: ShinoharaOptics
   name: ColCom Overseer mk.I smart optics
-  description: A pair of cybernetic replacements for the human optics network. Offers protection from welding flare and flashbangs and gives live diagnostic data to the user. Developed by Colonial Command for their civilian line.
+  description: A pair of cybernetic replacements for the human optics network. Offers protection from welding flare and flashbangs and gives live diagnostic data to the user. Developed by Sector Command for their civilian line.
   components:
     - type: Organ
       onAdd:
@@ -220,7 +220,7 @@
   id: CyberneticsPainEditor
   parent: [HullrotCyberneticBase, BaseC3ContrabandNoValue]
   name: IPM TT-46 pain editor
-  description: A miniaturized, optimized version of the average humanoid liver. Developed by Interdyne Pharmaceuticals, this cybernetic organ interfaces with the spinal nerves to nullify pain signals from reaching the brain, allowing the user to fight longer.
+  description: A miniaturized, optimized version of the average humanoid liver. Developed by Meditech Pharmaceuticals, this cybernetic organ interfaces with the spinal nerves to nullify pain signals from reaching the brain, allowing the user to fight longer.
   components:
     - type: Sprite
       sprite: _Crescent/Objects/Misc/cybernetics.rsi

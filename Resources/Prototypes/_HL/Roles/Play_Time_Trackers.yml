@@ -14,10 +14,10 @@
   id: JobSalvageQuadBorg
 
 - type: playTimeTracker
-  id: JobInterdyne
+  id: JobMeditech
 
 - type: playTimeTracker
-  id: JobInterdyneHead
+  id: JobMeditechHead
 
 - type: playTimeTracker
   id: JobCentralCommandDirectorate

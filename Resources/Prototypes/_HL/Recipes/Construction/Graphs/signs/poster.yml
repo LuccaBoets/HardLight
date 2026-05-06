@@ -7,7 +7,7 @@
         - !type:DestroyEntity {}
       edges:
         # Dusk Enclave
-        - to: PosterDuskEnclave
+        - to: PosterSectorEnclave
           steps:
             - material: Paper
               amount: 1
@@ -303,7 +303,7 @@
             - material: Paper
               amount: 1
               doAfter: 1
-        - to: PosterContrabandInterdyne
+        - to: PosterContrabandMeditech
           steps:
             - material: Paper
               amount: 1
@@ -1296,8 +1296,8 @@
           steps:
             - tool: Prying
               doAfter: 1
-    - node: PosterContrabandInterdyne
-      entity: PosterContrabandInterdyne
+    - node: PosterContrabandMeditech
+      entity: PosterContrabandMeditech
       edges:
         - to: start
           completed:
@@ -1947,8 +1947,8 @@
           steps:
             - tool: Prying
               doAfter: 1
-    - node: PosterDuskEnclave
-      entity: PosterDuskEnclave
+    - node: PosterSectorEnclave
+      entity: PosterSectorEnclave
       edges:
         - to: start
           completed:

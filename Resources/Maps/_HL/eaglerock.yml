@@ -119198,7 +119198,7 @@ entities:
     - type: Transform
       pos: 3.183121,38.65213
       parent: 2
-- proto: PlushieLizardDetective
+- proto: PlushieCarp
   entities:
   - uid: 15404
     components:
@@ -137612,7 +137612,7 @@ entities:
   - uid: 18011
     components:
     - type: MetaData
-      name: Colonial Command Towel
+      name: Sector Command Towel
     - type: Transform
       pos: -11.320627,3.325151
       parent: 2

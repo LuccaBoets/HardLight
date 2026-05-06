@@ -30,7 +30,7 @@ public sealed class NFCCVars
     /// Whether or not returning from cryosleep is enabled.
     /// </summary>
     public static readonly CVarDef<bool> CryoReturnEnabled =
-        CVarDef.Create("nf14.uncryo.enabled", true, CVar.SERVER | CVar.REPLICATED); // Livyathan: false<true; bodies in cryospace persist for 10 minutes. Might as well let them come back since the body is there, anyway.
+        CVarDef.Create("nf14.uncryo.enabled", true, CVar.SERVER | CVar.REPLICATED); // Keep enabled so bodies in cryospace can still be reclaimed within the configured expiration window.
 
     /// <summary>
     /// The time in seconds after which a cryosleeping body is considered expired and can be deleted from the storage map.

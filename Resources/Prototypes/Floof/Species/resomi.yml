@@ -39,9 +39,6 @@
     Tail: MobHumanoidAnyMarking
     UndergarmentTop: MobHumanoidAnyMarking
     UndergarmentBottom: MobHumanoidAnyMarking
-    Genital: MobHumanoidAnyMarking
-    Penis: MobHumanoidAnyMarking
-    Breasts: MobHumanoidAnyMarking
   # Unsupported layers removed: UndershirtUnderclothes / UndershirtOverclothes
 
 - type: markingPoints

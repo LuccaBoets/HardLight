@@ -284,8 +284,8 @@
       - id: ModularReceiver
       - id: WeaponFlareGun
       - id: BarberScissors
-      - id: PlushieMaints
-      - id: PlushieShadekin
+      - id: PlushieCarp
+      - id: PlushieCarp
       - !type:GroupSelector
         children:
         - id: DrinkSpaceGlue

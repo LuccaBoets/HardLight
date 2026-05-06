@@ -1,4 +1,4 @@
-department-CentralCommand = Colonial Command
+department-CentralCommand = Sector Command
 department-Command = Command
 department-Silicon = Silicon
 department-Security = Security

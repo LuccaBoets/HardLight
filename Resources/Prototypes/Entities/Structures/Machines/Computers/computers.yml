@@ -854,7 +854,7 @@
 - type: entity
   parent: ComputerComms
   id: ColcommComputerComms
-  name: Colonial Command communications computer
+  name: Sector Command communications computer
   description: A computer used to make world wide announcements via keyboard. The superior cousin of the regular communications computer.
   components:
   - type: Sprite
@@ -1082,7 +1082,7 @@
   id: StationComputerCargoOrders
   parent: [BaseStructureDisableToolUse, BaseStructureIndestructible, BaseComputerAiAccess] # Frontier: add BaseStructureDisableToolUse, BaseStructureIndestructible
   name: cargo request computer
-  description: Used to purchase supplies in from colonial command. # Frontier
+  description: Used to purchase supplies in from sector command. # Frontier
   components:
   - type: Sprite
     layers:

@@ -55,7 +55,6 @@ reagent-effect-aphrodisiac-strong5 = You ache to fuck someone, urgently and with
 reagent-effect-aphrodisiac-strong6 = Your mind floods with primal, carnal fantasies.
 reagent-effect-aphrodisiac-strong7 = The craving to dominate and take becomes almost irresistible.
 reagent-effect-aphrodisiac-strong8 = Your body throbs with frantic, elated need.
-reagent-effect-aphrodisiac-strong9 = You feel uncontrollably horny and completely uninhibited.
 reagent-effect-aphrodisiac-strong10 = All you can think about is finding someone to ravish right now.
 reagent-effect-aphrodisiac-strong11 = A wild, animalistic lust takes complete hold of you.
 reagent-effect-aphrodisiac-strong12 = Your skin burns with the desperate need to be touched and groped.

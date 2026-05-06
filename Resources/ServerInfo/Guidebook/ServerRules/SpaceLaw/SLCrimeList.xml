@@ -835,7 +835,7 @@ SPDX-License-Identifier: MIT
     </ColorBox>
     <ColorBox>
       <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
-        To knowingly commit an act which is in direct opposition to the interests of Colonial Command, Or to directly assist a known enemy of the Government.
+        To knowingly commit an act which is in direct opposition to the interests of Sector Command, Or to directly assist a known enemy of the Government.
       </Box>
     </ColorBox>
     <ColorBox>
@@ -1085,7 +1085,7 @@ SPDX-License-Identifier: MIT
     </ColorBox>
     <ColorBox>
       <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="2">
-        Permanent confinement or transportation to Colonial Command for Interrogation.
+        Permanent confinement or transportation to Sector Command for Interrogation.
       </Box>
     </ColorBox>
     <ColorBox>

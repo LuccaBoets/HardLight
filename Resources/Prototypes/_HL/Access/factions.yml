@@ -35,12 +35,12 @@
   name: id-card-access-level-nanotrasen-admiral
 
 - type: accessLevel
-  id: Interdyne
-  name: id-card-access-level-interdyne
+  id: Meditech
+  name: id-card-access-level-meditech
 
 - type: accessLevel
-  id: InterdyneHead
-  name: id-card-access-level-interdyne-head
+  id: MeditechHead
+  name: id-card-access-level-meditech-head
 
 - type: accessLevel
   id: Directorate

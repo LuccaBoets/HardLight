@@ -1,5 +1,5 @@
 
-station-event-bluespace-dungeon-start-announcement = Signatures of a large inbound object have been detected. Investigate with caution, Colonial Command is not liable for damages sustained or loss of life.
+station-event-bluespace-dungeon-start-announcement = Signatures of a large inbound object have been detected. Investigate with caution, Sector Command is not liable for damages sustained or loss of life.
 station-event-bluespace-dungeon-warning-announcement = Bluespace instability detected on foreign object, five minutes until estimated departure.
 station-event-bluespace-dungeon-end-announcement = Critical bluespace instability detected, the foreign object has exited the sector.
 
@@ -15,11 +15,11 @@ station-event-bluespace-cache-start-announcement = A Syndicate weapons cache is 
 station-event-bluespace-cache-warning-announcement = Remote FTL procedures initialized, five minutes until weapons cache extraction.
 station-event-bluespace-cache-end-announcement = We have retrieved the Syndicate weapons cache from your sector. Station accounts have been paid.
 
-station-event-bluespace-asteroid-start-announcement = Long range scans indicate an unusually large asteroid entering the sector. Colonial Command advises prospectors to divert operations for maximum profit potential.
+station-event-bluespace-asteroid-start-announcement = Long range scans indicate an unusually large asteroid entering the sector. Sector Command advises prospectors to divert operations for maximum profit potential.
 station-event-bluespace-asteroid-warning-announcement = Bluespace instability detected on asteroid, five minutes until estimated departure.
 station-event-bluespace-asteroid-end-announcement = Critical bluespace instability detected, the asteroid has exited the sector.
 
-station-event-bluespace-ship-start-announcement = We have detected an unusual FTL signature - long range scans indicate an unknown ship. Colonial Command cannot confirm safety for prospectors within its vicinity, be advised.
+station-event-bluespace-ship-start-announcement = We have detected an unusual FTL signature - long range scans indicate an unknown ship. Sector Command cannot confirm safety for prospectors within its vicinity, be advised.
 station-event-bluespace-ship-warning-announcement = Remote FTL procedures initialized, five minutes until ship dissipation.
 station-event-bluespace-ship-end-announcement = In compliance with Colonial FTL traffic patterns, the unknown ship has been dissipated to ensure non-collision.
 
@@ -35,7 +35,7 @@ station-event-bluespace-bloodmoon-start-announcement = Attention all available C
 station-event-bluespace-bloodmoon-warning-announcement = Remote FTL procedures initialized, five minutes until Blood Cult vessel dissipation.
 station-event-bluespace-bloodmoon-end-announcement = In compliance with Colonial FTL traffic patterns, the Blood Cult vessel has been dissipated to ensure non-collision.
 
-station-event-bluespace-generic-ftl-start-announcement = Attention all Colonial personnel! Colonial Naval Command has detected an unidentified vessel entering the Frontier Sector. Investigate with caution, Colonial Command is not liable for damages sustained or loss of life.
+station-event-bluespace-generic-ftl-start-announcement = Attention all Colonial personnel! Colonial Naval Command has detected an unidentified vessel entering the Frontier Sector. Investigate with caution, Sector Command is not liable for damages sustained or loss of life.
 station-event-bluespace-generic-ftl-warning-announcement = Remote FTL procedures initialized, five minutes until unidentified vessel dissipation.
 station-event-bluespace-generic-ftl-end-announcement = In compliance with Colonial FTL traffic patterns, the unidentified vessel has been dissipated to ensure non-collision.
 

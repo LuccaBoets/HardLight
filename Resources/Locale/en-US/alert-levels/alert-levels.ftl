@@ -37,9 +37,9 @@ alert-level-yellow-announcement = Sector infrastructure has been structurally or
 alert-level-yellow-instructions = Crews are advised to stay away from the threat and cooperate with sector command.
 
 alert-level-gamma = Gamma - FAST PACE
-# alert-level-gamma-announcement = Colonial Command has ordered the Gamma security level on the station. Security is to have weapons equipped at all times, and all civilians are to immediately seek their nearest head for transportation to a secure location.
+# alert-level-gamma-announcement = Sector Command has ordered the Gamma security level on the station. Security is to have weapons equipped at all times, and all civilians are to immediately seek their nearest head for transportation to a secure location.
 # alert-level-gamma-instructions = All civilians are to immediately seek their nearest head for transportation to a secure location.
-alert-level-gamma-announcement = Colonial Command has ordered the Gamma security level in the sector. ColSec officers are to be on high alert, and crews are to avoid areas of conflict where possible.
+alert-level-gamma-announcement = Sector Command has ordered the Gamma security level in the sector. ColSec officers are to be on high alert, and crews are to avoid areas of conflict where possible.
 alert-level-gamma-instructions = Crews are to avoid areas of conflict where possible.
 
 alert-level-delta = Delta - COCKED PISTOL
@@ -49,13 +49,13 @@ alert-level-delta-announcement = Sector infrastructure is currently under threat
 alert-level-delta-instructions = Crews are advised to listen to sector command for more information.
 
 alert-level-epsilon = Epsilon
-# alert-level-epsilon-announcement = Colonial Command has ordered the Epsilon security level on the station. Consider all contracts terminated.
+# alert-level-epsilon-announcement = Sector Command has ordered the Epsilon security level on the station. Consider all contracts terminated.
 # alert-level-epsilon-instructions = Consider all contracts terminated.
-alert-level-epsilon-announcement = Colonial Command has ordered the Epsilon security level in the sector and now supersedes all Station authority. Compliance is mandatory.
+alert-level-epsilon-announcement = Sector Command has ordered the Epsilon security level in the sector and now supersedes all Station authority. Compliance is mandatory.
 alert-level-epsilon-instructions = Compliance is mandatory.
 
 alert-level-omicron = Omicron - RAGNARÖK
-alert-level-omicron-announcement = Station override activated. Await further orders from Colonial Command staff, stay in your departments.
+alert-level-omicron-announcement = Station override activated. Await further orders from Sector Command staff, stay in your departments.
 alert-level-omicron-instructions = Await further orders.
 
 alert-level-white = White - MIND FLAYER

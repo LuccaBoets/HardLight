@@ -92,7 +92,7 @@ public sealed partial class ShadekinSystem : EntitySystem
             foreach (var slot in slots)
                 _inventorySystem.TryUnequip(uid, slot.Name, true, true, false, inventoryComponent);
 
-        // Vore
+        // devour
         _container.EmptyContainer(_container.GetContainer(uid, "stomach"));
 
         QueueDel(uid);

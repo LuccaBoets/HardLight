@@ -30,11 +30,6 @@
   - type: Tag
     tags:
     - Abyssal
-  - type: CumProducer
-    maxVol: 1000
-    reVol: 200
-    reHunger: 1
-  - type: Vore
 
 - type: entity
   name: abyss ghost

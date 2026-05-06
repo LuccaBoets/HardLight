@@ -59,8 +59,8 @@
   longRange: true
 
 - type: radioChannel
-  id: InterdynePharma
-  name: chat-radio-interdyne
+  id: MeditechPharma
+  name: chat-radio-meditech
   keycode: '7'
   frequency: 1373
   color: "#EA7FC7"
@@ -92,7 +92,7 @@
   longRange: true
 
 - type: radioChannel
-  id: DuskEnclave
+  id: SectorEnclave
   name: chat-radio-dusk-enclave
   keycode: "'"
   frequency: 1375

@@ -1,4 +1,4 @@
-job-supervisors-centcom = Colonial Command
+job-supervisors-centcom = Sector Command
 job-supervisors-captain = the Captain
 job-supervisors-hop = the Head of Personnel
 job-supervisors-hos = the Head of Security

@@ -121,7 +121,7 @@
   parent: SyntheticBorgArmorLightShield #Inherit all changes from this. Hopefully will prevent compatability issues in the future
   id: SyntheticBorgArmorHealSlutShield # Unobtainable currently.
   name: ERPS-01 'PARA'
-  description: Designed as a particular experiment between Zheng-Hu Pharmaceuticals and Interdyne Medical; this shield was designed to be fast, nimble, and a means of support for operatives in the field. Due to the extensive, and unique modifications to this shield set, it replaces a synthetic's flash lamp entirely.
+  description: Designed as a particular experiment between Zheng-Hu Pharmaceuticals and Meditech Medical; this shield was designed to be fast, nimble, and a means of support for operatives in the field. Due to the extensive, and unique modifications to this shield set, it replaces a synthetic's flash lamp entirely.
   components:
   - type: Sprite
     sprite: _HL/Objects/BorgArmor/physarmor/defaultarmor.rsi
