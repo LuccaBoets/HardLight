@@ -63,6 +63,7 @@ using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Events;
 using Content.Shared.Weapons.Ranged.Systems;
 using Content.Shared.Weapons.Hitscan.Components;
+using Content.Shared.Weapons.Hitscan.Events;
 using Content.Shared.Weapons.Reflect;
 using Robust.Server.GameObjects;
 using Robust.Server.Player;
@@ -331,6 +332,10 @@ public sealed partial class GunSystem : SharedGunSystem
                                 Logs.Add(LogType.HitScanHit,
                                     $"{hitName:target} hit by hitscan dealing {dmg.GetTotal():damage} damage");
                             }
+
+                            // Mono: notify gatherable systems about hitscan damage dealt
+                            var hitscanDmgEv = new HitscanDamageDealtEvent { Target = hitEntity, DamageDealt = dmg };
+                            RaiseLocalEvent(gunUid, ref hitscanDmgEv);
                         }
                     }
                     else
