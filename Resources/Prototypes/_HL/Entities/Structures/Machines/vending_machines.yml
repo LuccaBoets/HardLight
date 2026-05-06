@@ -49,17 +49,23 @@
 - type: entity
   parent: VendingMachine
   id: passionDrobe
-  name: PassionDrobe
-  description: A vending machine for naughty toys.
+  name: AutoDrobe
+  description: A vending machine containing costumes.
   components:
   - type: VendingMachine
-    pack: passionDrobeInventory
+    pack: AutoDrobeInventory
     offState: off
+    brokenState: broken
     normalState: normal-unshaded
+    ejectState: eject-unshaded
+    denyState: deny-unshaded
+    screenState: screen
+  - type: Advertise
+    pack: AutoDrobeAds
   - type: SpeakOnUIClosed
     pack: GenericVendGoodbyes
   - type: Sprite
-    sprite: _HL/Structures/Machines/VendingMachines/passiondrobe.rsi
+    sprite: Structures/Machines/VendingMachines/theater.rsi
     layers:
     - state: "off"
       map: ["enum.VendingMachineVisualLayers.Base"]
@@ -71,7 +77,7 @@
   - type: PointLight
     radius: 1.8
     energy: 1.6
-    color: "#B63BB8"
+    color: "#ad86ad"
 
 - type: entity
   parent: [BaseStructureDisableAnchoring, VendingMachine]

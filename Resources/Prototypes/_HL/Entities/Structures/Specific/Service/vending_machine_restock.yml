@@ -1,16 +1,15 @@
 - type: entity
   parent: BaseVendingMachineRestock
   id: VendingMachineRestockPassionDrobe
-  name: PassionDrobe restock box
-  description: A box containing various "naughty" toys, accessories, and drugs. Can be used to restock a PassionDrobe vending machine.
+  name: AutoDrobe restock box
+  description: A restock box for costume vending machines.
   components:
   - type: VendingMachineRestock
     canRestock:
-    - passionDrobeInventory
+    - AutoDrobeInventory
   - type: Sprite
-    sprite: _HL/Objects/Specific/Service/vending_machine_restock.rsi
     layers:
     - state: base
     - state: green_bit
       shader: unshaded
-    - state: refill_passiondrobe
+    - state: refill_costume
