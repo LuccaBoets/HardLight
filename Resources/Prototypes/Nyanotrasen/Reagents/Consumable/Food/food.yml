@@ -8,7 +8,7 @@
   metabolisms:
     Food:
       effects:
-      - !type:Vomit
+      - !type:ChemVomit
         probability: 0.9
         conditions:
         - !type:ReagentThreshold # HardLight: ReagentCondition<ReagentThreshold

@@ -284,21 +284,21 @@
         !type:String
         pda-meditech
   - type: Sprite
-    sprite: _HL/Objects/Devices/meditech_pda.rsi
+    sprite: Objects/Devices/pda.rsi
     layers:
     - map: [ "enum.PdaVisualLayers.Base" ]
-      state: "pda-meditech"
-    - state: "light-overlay"
+      state: "pda-medical"
+    - state: "light_overlay"
       map: [ "enum.PdaVisualLayers.Flashlight" ]
       shader: "unshaded"
       visible: false
-    - state: "id-overlay"
+    - state: "id_overlay"
       map: [ "enum.PdaVisualLayers.IdLight" ]
       shader: "unshaded"
       visible: false
   - type: Icon
-    sprite: _HL/Objects/Devices/meditech_pda.rsi
-    state: pda-meditech
+    sprite: Objects/Devices/pda.rsi
+    state: pda-medical
   - type: PdaBorderColor
     borderColor: "#4C4C4C"
     accentVColor: "#CC70B5"
@@ -317,21 +317,21 @@
         !type:String
         pda-meditechhead
   - type: Sprite
-    sprite: _HL/Objects/Devices/meditech_pda.rsi
+    sprite: Objects/Devices/pda.rsi
     layers:
     - map: [ "enum.PdaVisualLayers.Base" ]
-      state: "pda-meditechhead"
-    - state: "light-overlay"
+      state: "pda-cmo"
+    - state: "light_overlay"
       map: [ "enum.PdaVisualLayers.Flashlight" ]
       shader: "unshaded"
       visible: false
-    - state: "id-overlay"
+    - state: "id_overlay"
       map: [ "enum.PdaVisualLayers.IdLight" ]
       shader: "unshaded"
       visible: false
   - type: Icon
-    sprite: _HL/Objects/Devices/meditech_pda.rsi
-    state: pda-meditechhead
+    sprite: Objects/Devices/pda.rsi
+    state: pda-cmo
   - type: PdaBorderColor
     borderColor: "#A59DA5"
     accentVColor: "#CC70B5"

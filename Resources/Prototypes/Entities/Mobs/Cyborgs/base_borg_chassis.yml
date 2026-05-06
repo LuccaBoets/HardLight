@@ -593,9 +593,3 @@
   - type: Xenoborg
   - type: BypassLock
     bypassDelay: 15 # We don't want people to easily be able to remove xenoborg brains.
-  - type: Brainwasher
-    bypassMindshield: true
-    chardingDuration: 10
-    configureText: Configure Brainwashing Module
-    engageSound:
-      path: /Audio/Machines/warning_buzzer_xenoborg.ogg
