@@ -299,9 +299,6 @@
 
 # fun / plushies!
 - type: Tag
-  id: PlushieCarp
-
-- type: Tag
   id: SpeedLoaderBulletFoam
 
 # Batteries

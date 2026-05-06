@@ -610,12 +610,14 @@ public abstract partial class SharedMoverController : VirtualController
             return sound != null;
         }
 
-        var position = grid.LocalToTile(xform.Coordinates);
+        // VRS: SharedMapSystem replacement for grid.LocalToTile/grid.GetAnchoredEntitiesEnumerator/grid.TryGetTileRef (RT v276)
+        var gridUid = xform.GridUid!.Value;
+        var position = _mapSystem.LocalToTile(gridUid, grid, xform.Coordinates);
         var soundEv = new GetFootstepSoundEvent(uid);
 
         // If the coordinates have a FootstepModifier component
         // i.e. component that emit sound on footsteps emit that sound
-        var anchored = grid.GetAnchoredEntitiesEnumerator(position);
+        var anchored = _mapSystem.GetAnchoredEntitiesEnumerator(gridUid, grid, position);
 
         while (anchored.MoveNext(out var maybeFootstep))
         {
@@ -638,7 +640,7 @@ public abstract partial class SharedMoverController : VirtualController
         // Walking on a tile.
         // Tile def might have been passed in already from previous methods, so use that
         // if we have it
-        if (tileDef == null && grid.TryGetTileRef(position, out var tileRef))
+        if (tileDef == null && _mapSystem.TryGetTileRef(gridUid, grid, position, out var tileRef)) // VRS: SharedMapSystem replacement (RT v276)
         {
             tileDef = (ContentTileDefinition) _tileDefinitionManager[tileRef.Tile.TypeId];
         }

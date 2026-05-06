@@ -120,20 +120,6 @@
 
 - type: entity
   parent: [EncryptionKey, RecyclableItemDeviceTiny]
-  id: EncryptionKeyMeditech
-  name: Meditech Pharmaceuticals Encryption Key
-  description: An encyption key used Viper Cell operatives to communicate securely.
-  components:
-  - type: EncryptionKey
-    channels:
-    - MeditechPharma
-    defaultChannel: MeditechPharma
-  - type: Sprite
-    layers:
-    - state: crypt-meditech
-
-- type: entity
-  parent: [EncryptionKey, RecyclableItemDeviceTiny]
   id: EncryptionKeyDominosRobotics
   name: Dominos Robotics Encryption Key
   description: An encyption key used by members of Dominos Robotics to communicate securely.
@@ -175,20 +161,4 @@
       layers:
         - state: crypt_blue
         - state: starbound_label
-
-- type: entity
-  parent: [EncryptionKey, RecyclableItemDeviceTiny]
-  id: EncryptionKeySectorEnclave
-  name: Dusk Enclave encryption key
-  description: An encryption key used by Dusk Enclave members.
-  components:
-    - type: EncryptionKey
-      channels:
-        - SectorEnclave
-      defaultChannel: SectorEnclave
-    - type: Sprite
-      layers:
-        - state: crypt_purple
-        - state: sectorenclave_label
-
 

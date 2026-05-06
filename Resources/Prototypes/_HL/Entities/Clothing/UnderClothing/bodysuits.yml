@@ -78,18 +78,6 @@
 # Meditech Bodysuit
 - type: entity
   parent: BodysuitBase
-  id: BodysuitMeditech
-  name: meditech bodysuit
-  description: A specialized bodysuit designed for research environments with Meditech's distinctive styling.
-  components:
-  - type: Sprite
-    sprite: _HL/Clothing/UnderClothing/meditechskinsuit.rsi
-  - type: Clothing
-    sprite: _HL/Clothing/UnderClothing/meditechskinsuit.rsi
-
-# Ramzi Bodysuit
-- type: entity
-  parent: BodysuitBase
   id: BodysuitRamzi
   name: ramzi bodysuit
   description: A bodysuit bearing the colors and insignia of the Ramzi Clique organization.

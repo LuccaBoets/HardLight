@@ -29,7 +29,7 @@
         visualType: Medium
         messages: [ "generic-reagent-effect-damnation" ]
         probability: 0.2
-      - !type:Vomit
+      - !type:ChemVomit
         conditions:
         - !type:ReagentThreshold # HardLight: ReagentCondition<ReagentThreshold
           reagent: HealthViolation

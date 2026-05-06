@@ -77,18 +77,6 @@
     tags:
     - ClothMade
 
-# Meditech Mantle
-- type: entity
-  parent: ClothingNeckBase
-  id: ClothingNeckMantleMeditech
-  name: meditech mantle
-  description: A research-oriented mantle featuring Meditech's distinctive styling and professional appearance.
-  components:
-  - type: Sprite
-    sprite: _HL/Clothing/Neck/mantles/meditechmantle.rsi
-  - type: Clothing
-    sprite: _HL/Clothing/Neck/mantles/meditechmantle.rsi
-
 # SUNS Mantle
 - type: entity
   parent: ClothingNeckBase
@@ -150,13 +138,3 @@
     sprite: _HL/Clothing/Neck/mantles/sinmantle.rsi
 
 # Dusk Enclave Mantle
-- type: entity
-  parent: ClothingNeckBase
-  id: ClothingNeckMantleSectorEnclave
-  name: Dusk Enclave mantle
-  description: A distinctive mantle bearing the colors of the Dusk Enclave.
-  components:
-  - type: Sprite
-    sprite: _HL/Clothing/Neck/mantles/sectorenclavemandle.rsi
-  - type: Clothing
-    sprite: _HL/Clothing/Neck/mantles/sectorenclavemandle.rsi

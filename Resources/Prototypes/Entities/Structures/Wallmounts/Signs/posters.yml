@@ -753,18 +753,6 @@
 
 - type: entity
   parent: PosterBase
-  id: PosterContrabandMeditech
-  name: "Meditech Pharmaceutics: For the Health of Humankind"
-  description: "An advertisement for Meditech Pharmaceutics' GeneClean clinics. 'Become the master of your own body!'"
-  components:
-  - type: Construction # HardLight
-    graph: Poster
-    node: PosterContrabandMeditech
-  - type: Sprite
-    state: poster61_contraband
-
-- type: entity
-  parent: PosterBase
   id: PosterContrabandWaffleCorp
   name: "Make Mine a Waffle Corp: Fine Rifles, Economic Prices"
   description: "An old advertisement for Waffle Corp rifles. 'Better weapons, lower prices!'"

@@ -35,14 +35,6 @@
   name: id-card-access-level-nanotrasen-admiral
 
 - type: accessLevel
-  id: Meditech
-  name: id-card-access-level-meditech
-
-- type: accessLevel
-  id: MeditechHead
-  name: id-card-access-level-meditech-head
-
-- type: accessLevel
   id: Directorate
   name: id-card-access-level-directorate
 

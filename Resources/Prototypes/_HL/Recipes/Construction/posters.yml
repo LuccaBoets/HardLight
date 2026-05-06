@@ -754,19 +754,6 @@
     - !type:WallmountCondition
 
 - type: construction
-  id: PosterContrabandMeditech
-  graph: Poster
-  startNode: start
-  targetNode: PosterContrabandMeditech
-  category: construction-category-Poster
-  objectType: Structure
-  placementMode: SnapgridCenter
-  canRotate: true
-  canBuildInImpassable: true
-  conditions:
-    - !type:WallmountCondition
-
-- type: construction
   id: PosterContrabandWaffleCorp
   graph: Poster
   startNode: start
@@ -1549,19 +1536,6 @@
   graph: Poster
   startNode: start
   targetNode: PosterLegitHelio
-  category: construction-category-Poster
-  objectType: Structure
-  placementMode: SnapgridCenter
-  canRotate: true
-  canBuildInImpassable: true
-  conditions:
-    - !type:WallmountCondition
-
-- type: construction
-  id: PosterSectorEnclave
-  graph: Poster
-  startNode: start
-  targetNode: PosterSectorEnclave
   category: construction-category-Poster
   objectType: Structure
   placementMode: SnapgridCenter

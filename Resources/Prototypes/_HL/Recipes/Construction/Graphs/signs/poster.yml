@@ -6,12 +6,6 @@
       actions:
         - !type:DestroyEntity {}
       edges:
-        # Dusk Enclave
-        - to: PosterSectorEnclave
-          steps:
-            - material: Paper
-              amount: 1
-              doAfter: 1
         # Contraband Posters
         - to: PosterContrabandFreeTonto
           steps:
@@ -299,11 +293,6 @@
               amount: 1
               doAfter: 1
         - to: PosterContrabandEnlistGorlex
-          steps:
-            - material: Paper
-              amount: 1
-              doAfter: 1
-        - to: PosterContrabandMeditech
           steps:
             - material: Paper
               amount: 1
@@ -1296,17 +1285,6 @@
           steps:
             - tool: Prying
               doAfter: 1
-    - node: PosterContrabandMeditech
-      entity: PosterContrabandMeditech
-      edges:
-        - to: start
-          completed:
-            - !type:SpawnPrototype
-              prototype: SheetPaper
-              amount: 1
-          steps:
-            - tool: Prying
-              doAfter: 1
     - node: PosterContrabandWaffleCorp
       entity: PosterContrabandWaffleCorp
       edges:
@@ -1938,17 +1916,6 @@
               doAfter: 1
     - node: PosterLegitHelio
       entity: PosterLegitHelio
-      edges:
-        - to: start
-          completed:
-            - !type:SpawnPrototype
-              prototype: SheetPaper
-              amount: 1
-          steps:
-            - tool: Prying
-              doAfter: 1
-    - node: PosterSectorEnclave
-      entity: PosterSectorEnclave
       edges:
         - to: start
           completed:
