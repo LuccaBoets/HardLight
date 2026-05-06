@@ -507,3 +507,9 @@
   parent: [ BaseCircuitboardRecipe, BaseGeneralMachineRecipeCategory ]
   id: HolopadMachineCircuitboard
   result: HolopadMachineCircuitboard
+
+# Mono - #3899 organ harvesting
+- type: latheRecipe
+  parent: BaseCircuitboardRecipe
+  id: OrganHarvesterMachineCircuitboard
+  result: OrganHarvesterMachineCircuitboard

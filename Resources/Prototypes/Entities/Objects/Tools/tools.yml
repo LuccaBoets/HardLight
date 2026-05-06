@@ -484,6 +484,38 @@
     - WallShuttleDiagonal
     - WallReinforcedDiagonal
     - WallSolidDiagonal
+    # Mono - #3919
+    - Lattice
+    - LatticeCornerNE
+    - LatticeCornerNW
+    - LatticeCornerSE
+    - LatticeCornerSW
+    - LatticeHalfV
+    - LatticeHalfH
+    - LatticeWedgeN
+    - LatticeWedgeE
+    - LatticeWedgeS
+    - LatticeWedgeW
+    - LatticeHalfTiltNESLower
+    - LatticeHalfTiltSEWLower
+    - LatticeHalfTiltSWNLower
+    - LatticeHalfTiltNWELower
+    - LatticeHalfTiltNESUpper
+    - LatticeHalfTiltSEWUpper
+    - LatticeHalfTiltSWNUpper
+    - LatticeHalfTiltNWEUpper
+    - LatticeHalfTiltNEWLower
+    - LatticeHalfTiltSENLower
+    - LatticeHalfTiltSWELower
+    - LatticeHalfTiltNWSLower
+    - LatticeHalfTiltNEWUpper
+    - LatticeHalfTiltSENUpper
+    - LatticeHalfTiltSWEUpper
+    - LatticeHalfTiltNWSUpper
+    - PlatingCornerNE
+    - PlatingCornerNW
+    - PlatingCornerSE
+    - PlatingCornerSW
   - type: LimitedCharges
     maxCharges: 30
   - type: Sprite

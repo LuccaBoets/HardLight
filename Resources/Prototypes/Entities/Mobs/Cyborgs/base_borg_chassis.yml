@@ -298,6 +298,7 @@
   id: BaseBorgChassis
   components:
   - type: IonStormTarget
+  - type: RetroMonitorView # Mono - #3902
 
 - type: entity
   abstract: true

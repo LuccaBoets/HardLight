@@ -29,6 +29,8 @@ public sealed class RCDMenuBoundUserInterface : BoundUserInterface
             ["PlumbingDucts"] = ("rpld-component-ducts", new SpriteSpecifier.Texture(new ResPath("/Textures/_Starlight/Interface/Radial/RPLD/category_ducts.png"))),
             ["PlumbingSupply"] = ("rpld-component-supply", new SpriteSpecifier.Texture(new ResPath("/Textures/_Starlight/Interface/Radial/RPLD/tank.png"))),
             ["PlumbingProduction"] = ("rpld-component-production", new SpriteSpecifier.Texture(new ResPath("/Textures/_Starlight/Interface/Radial/RPLD/reaction_chamber.png"))),
+            ["LatticeTiles"] = ("rcd-component-latticetiles", new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/Radial/RCD/lattice.png"))), // Mono - #3919
+            ["PlatingTiles"] = ("rcd-component-platingtiles", new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/Radial/RCD/plating.png"))), // Mono - #3919
         };
 
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;

@@ -1652,7 +1652,7 @@ namespace Content.Client.Lobby.UI
 
             _loadoutWindow = new LoadoutWindow(Profile, roleLoadout, roleLoadoutProto, _playerManager.LocalSession, collection)
             {
-                Title = jobProto?.ID + "-loadout",
+                Title = jobProto?.LocalizedName + " loadout", // VRS: show localized job name instead of raw ID (Mono #3878)
             };
 
             // Refresh the buttons etc.
