@@ -186,6 +186,7 @@
     - type: Tag
       tags:
         - HideContextMenu
+    - type: Dispellable
 
 - type: entity
   name: dark net

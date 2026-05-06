@@ -130,6 +130,23 @@
     state: impact_blue
 
 - type: hitscan
+  id: NoosphericZapBeam
+  damage:
+    types:
+      Heat: 0
+  staminaDamage: 15
+  muzzleFlash:
+    sprite: _NF/Effects/bloodcultbeams.rsi
+    state: red_lightning
+  travelFlash:
+    sprite: _NF/Effects/bloodcultbeams.rsi
+    state: red_lightning
+  impactFlash:
+    sprite: _NF/Effects/bloodcultbeams.rsi
+    state: red_lightning
+  maxLength: 21
+
+- type: hitscan
   id: RedShuttleLaser
   maxLength: 60
   damage:

@@ -53,6 +53,7 @@
   - type: NpcFactionMember
     factions:
     - Dragon
+  - type: Dispellable
   - type: Sprite
     drawdepth: Mobs
     sprite: _HL/Mobs/Abyssal/abyssghost.rsi
@@ -149,6 +150,7 @@
   - type: NpcFactionMember
     factions:
     - Dragon
+  - type: Dispellable
   - type: Sprite
     drawdepth: Mobs
     sprite: _HL/Mobs/Abyssal/abysshand.rsi

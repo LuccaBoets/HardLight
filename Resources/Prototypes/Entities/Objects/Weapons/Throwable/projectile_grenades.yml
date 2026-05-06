@@ -28,6 +28,7 @@
   - type: Tag
     tags:
     - HandGrenade
+  - type: Dispellable
 
 - type: entity
   parent: [ProjectileGrenadeBase, BaseC2ContrabandUnredeemable] # Frontier: BaseSecurityContraband<BaseC2ContrabandUnredeemable

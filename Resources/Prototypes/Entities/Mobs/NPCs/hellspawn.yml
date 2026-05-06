@@ -32,6 +32,7 @@
   - type: Damageable
     damageContainer: BiologicalMetaphysical
     damageModifierSet: HellSpawn
+  - type: Dispellable
   - type: MovementSpeedModifier
     baseWalkSpeed: 2
     baseSprintSpeed: 3

@@ -62,7 +62,7 @@
   components:
   - type: InstantAction
     icon: Interface/VerbIcons/mind_swap_return.png
-    useDelay: 20
+    useDelay: 30
     checkCanInteract: false
     event: !type:MindSwapPowerReturnActionEvent
 
@@ -82,6 +82,21 @@
         - PsionicInsulation
         - Mindbroken
     event: !type:NoosphericZapPowerActionEvent
+
+- type: entity
+  id: NoosphericZapGun
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: HitscanBatteryAmmoProvider
+    proto: NoosphericZapBeam
+    fireCost: 1
+  - type: Battery
+    maxCharge: 10
+    startingCharge: 10
+  - type: Gun
+    soundGunshot:
+      path: /Audio/Effects/Lightning/lightningshock.ogg
+    projectileSpeed: 5
 
 - type: entity
   id: ActionPyrokinesis

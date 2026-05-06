@@ -19,6 +19,7 @@
     - type: HTN
       rootTask:
         task: SimpleRangedHostileCompound
+    - type: Dispellable
     - type: HitscanBatteryAmmoProvider
       proto: NFRedMediumLaser # Frontier: RedLaser<NFRedMediumLaser
       fireCost: 62.5

@@ -2,6 +2,7 @@ using Content.Server.Chat.Systems;
 using Content.Server.Emp;
 using Content.Server.Radio.Components;
 using Content.Shared.Inventory.Events;
+using Content.Shared.Abilities.Psionics;
 using Content.Shared.Radio;
 using Content.Shared.Radio.Components;
 using Content.Shared.Radio.EntitySystems;
@@ -35,7 +36,7 @@ public sealed class HeadsetSystem : SharedHeadsetSystem
             && activeRadio.Channels.Contains(args.Channel.ID))
         // HardLight end
         {
-            _radio.SendRadioMessage(uid, args.Message, args.Channel, component.Headset);
+            _radio.SendRadioMessage(uid, args.Message, args.Channel, component.Headset, originalMessage: args.OriginalMessage);
             args.Channel = null; // prevent duplicate messages from other listeners.
         }
     }
@@ -101,7 +102,14 @@ public sealed class HeadsetSystem : SharedHeadsetSystem
     private void OnHeadsetReceive(EntityUid uid, HeadsetComponent component, ref RadioReceiveEvent args)
     {
         if (TryComp(Transform(uid).ParentUid, out ActorComponent? actor))
-            _netMan.ServerSendMessage(args.ChatMsg, actor.PlayerSession.Channel);
+        {
+            var attached = actor.PlayerSession.AttachedEntity;
+            var message = attached is { Valid: true } listener && RadioSystem.HasXenoglossy(listener, EntityManager) && args.OriginalChatMsg != null
+                ? args.OriginalChatMsg
+                : args.ChatMsg;
+
+            _netMan.ServerSendMessage(message, actor.PlayerSession.Channel);
+        }
     }
 
     private void OnEmpPulse(EntityUid uid, HeadsetComponent component, ref EmpPulseEvent args)

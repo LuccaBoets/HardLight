@@ -1,9 +1,11 @@
+using System.Linq;
 using Content.Server._NF.Radio; // Frontier
 using Content.Server.Administration.Logs;
 using Content.Server.Chat.Systems;
 using Content.Server.Power.Components;
 using Content.Server.Radio.Components;
 using Content.Shared.Chat;
+using Content.Shared.Abilities.Psionics;
 using Content.Shared.Database;
 using Content.Shared.Radio;
 using Content.Shared.Radio.Components;
@@ -50,7 +52,7 @@ public sealed class RadioSystem : EntitySystem
     {
         if (args.Channel != null && component.Channels.Contains(args.Channel.ID))
         {
-            SendRadioMessage(uid, args.Message, args.Channel, uid);
+            SendRadioMessage(uid, args.Message, args.Channel, uid, originalMessage: args.OriginalMessage);
             args.Channel = null; // prevent duplicate messages from other listeners.
         }
     }
@@ -76,9 +78,9 @@ public sealed class RadioSystem : EntitySystem
     /// <summary>
     /// Send radio message to all active radio listeners
     /// </summary>
-    public void SendRadioMessage(EntityUid messageSource, string message, ProtoId<RadioChannelPrototype> channel, EntityUid radioSource, int? frequency = null, bool escapeMarkup = true) // Frontier: added frequency
+    public void SendRadioMessage(EntityUid messageSource, string message, ProtoId<RadioChannelPrototype> channel, EntityUid radioSource, int? frequency = null, bool escapeMarkup = true, string? originalMessage = null) // Frontier: added frequency
     {
-        SendRadioMessage(messageSource, message, _prototype.Index(channel), radioSource, frequency: frequency, escapeMarkup: escapeMarkup); // Frontier: added frequency
+        SendRadioMessage(messageSource, message, _prototype.Index(channel), radioSource, frequency: frequency, escapeMarkup: escapeMarkup, originalMessage: originalMessage); // Frontier: added frequency
     }
 
     /// <summary>
@@ -86,7 +88,7 @@ public sealed class RadioSystem : EntitySystem
     /// </summary>
     /// <param name="messageSource">Entity that spoke the message</param>
     /// <param name="radioSource">Entity that picked up the message and will send it, e.g. headset</param>
-    public void SendRadioMessage(EntityUid messageSource, string message, RadioChannelPrototype channel, EntityUid radioSource, int? frequency = null, bool escapeMarkup = true) // Nuclear-14: add frequency
+    public void SendRadioMessage(EntityUid messageSource, string message, RadioChannelPrototype channel, EntityUid radioSource, int? frequency = null, bool escapeMarkup = true, string? originalMessage = null) // Nuclear-14: add frequency
     {
         // TODO if radios ever garble / modify messages, feedback-prevention needs to be handled better than this.
         if (!_messages.Add(message))
@@ -132,6 +134,32 @@ public sealed class RadioSystem : EntitySystem
             ("name", name),
             ("message", content));
 
+        MsgChatMessage? originalChatMsg = null;
+        if (originalMessage != null && originalMessage != message)
+        {
+            var originalContent = escapeMarkup
+                ? FormattedMessage.EscapeText(originalMessage)
+                : originalMessage;
+
+            var wrappedOriginalMessage = Loc.GetString(speech.Bold ? "chat-radio-message-wrap-bold" : "chat-radio-message-wrap",
+                ("color", channel.Color),
+                ("fontType", speech.FontId),
+                ("fontSize", speech.FontSize),
+                ("verb", Loc.GetString(_random.Pick(speech.SpeechVerbStrings))),
+                ("channel", channelText),
+                ("name", name),
+                ("message", originalContent));
+
+            var originalChat = new ChatMessage(
+                ChatChannel.Radio,
+                originalMessage,
+                wrappedOriginalMessage,
+                NetEntity.Invalid,
+                null);
+
+            originalChatMsg = new MsgChatMessage { Message = originalChat };
+        }
+
         // most radios are relayed to chat, so lets parse the chat message beforehand
         var chat = new ChatMessage(
             ChatChannel.Radio,
@@ -140,7 +168,7 @@ public sealed class RadioSystem : EntitySystem
             NetEntity.Invalid,
             null);
         var chatMsg = new MsgChatMessage { Message = chat };
-        var ev = new RadioReceiveEvent(message, messageSource, channel, radioSource, chatMsg);
+        var ev = new RadioReceiveEvent(message, originalMessage, messageSource, channel, radioSource, chatMsg, originalChatMsg);
 
         var sendAttemptEv = new RadioSendAttemptEvent(channel, radioSource);
         RaiseLocalEvent(ref sendAttemptEv);
@@ -194,6 +222,12 @@ public sealed class RadioSystem : EntitySystem
 
         _replay.RecordServerMessage(chat);
         _messages.Remove(message);
+    }
+
+    public static bool HasXenoglossy(EntityUid uid, IEntityManager entManager)
+    {
+        return entManager.TryGetComponent<PsionicComponent>(uid, out var psionic)
+            && psionic.ActivePowers.Any(power => power.ID == "XenoglossyPower");
     }
 
     /// <inheritdoc cref="TelecomServerComponent"/>

@@ -14,6 +14,7 @@ using Content.Server.Station.Components;
 using Content.Server.Station.Systems;
 using Content.Shared.ActionBlocker;
 using Content.Shared.Administration;
+using Content.Shared.Abilities.Psionics;
 using Content.Shared.CCVar;
 using Content.Shared.Chat;
 using Content.Shared.Database;
@@ -46,6 +47,8 @@ namespace Content.Server.Chat.Systems;
 /// </summary>
 public sealed partial class ChatSystem : SharedChatSystem
 {
+    private const string XenoglossyPowerId = "XenoglossyPower";
+
     [Dependency] private readonly IReplayRecordingManager _replay = default!;
     [Dependency] private readonly IConfigurationManager _configurationManager = default!;
     [Dependency] private readonly IChatManager _chatManager = default!;
@@ -481,9 +484,18 @@ public sealed partial class ChatSystem : SharedChatSystem
             ("fontSize", speech.FontSize),
             ("message", FormattedMessage.EscapeText(message)));
 
-        SendInVoiceRange(ChatChannel.Local, message, wrappedMessage, source, range);
+        var wrappedOriginalMessage = originalMessage == message
+            ? wrappedMessage
+            : Loc.GetString(speech.Bold ? "chat-manager-entity-say-bold-wrap-message" : "chat-manager-entity-say-wrap-message",
+                ("entityName", name),
+                ("verb", Loc.GetString(_random.Pick(speech.SpeechVerbStrings))),
+                ("fontType", speech.FontId),
+                ("fontSize", speech.FontSize),
+                ("message", FormattedMessage.EscapeText(originalMessage)));
 
-        var ev = new EntitySpokeEvent(source, message, null, null);
+        SendInVoiceRange(ChatChannel.Local, message, wrappedMessage, source, range, null, originalMessage, wrappedOriginalMessage);
+
+        var ev = new EntitySpokeEvent(source, message, originalMessage, null, null, null);
         RaiseLocalEvent(source, ev, true);
 
         // To avoid logging any messages sent by entities that are not players, like vendors, cloning, etc.
@@ -547,6 +559,11 @@ public sealed partial class ChatSystem : SharedChatSystem
         var wrappedMessage = Loc.GetString("chat-manager-entity-whisper-wrap-message",
             ("entityName", name), ("message", FormattedMessage.EscapeText(message)));
 
+        var wrappedOriginalMessage = originalMessage == message
+            ? wrappedMessage
+            : Loc.GetString("chat-manager-entity-whisper-wrap-message",
+                ("entityName", name), ("message", FormattedMessage.EscapeText(originalMessage)));
+
         var wrappedobfuscatedMessage = Loc.GetString("chat-manager-entity-whisper-wrap-message",
             ("entityName", nameIdentity), ("message", FormattedMessage.EscapeText(obfuscatedMessage)));
 
@@ -566,7 +583,11 @@ public sealed partial class ChatSystem : SharedChatSystem
                 continue; // Won't get logged to chat, and ghosts are too far away to see the pop-up, so we just won't send it to them.
 
             if (data.Range <= WhisperClearRange)
-                _chatManager.ChatMessageToOne(ChatChannel.Whisper, message, wrappedMessage, source, false, session.Channel);
+            {
+                var understoodMessage = HasXenoglossy(listener) ? originalMessage : message;
+                var understoodWrappedMessage = HasXenoglossy(listener) ? wrappedOriginalMessage : wrappedMessage;
+                _chatManager.ChatMessageToOne(ChatChannel.Whisper, understoodMessage, understoodWrappedMessage, source, false, session.Channel);
+            }
             //If listener is too far, they only hear fragments of the message
             else if (_examineSystem.InRangeUnOccluded(source, listener, WhisperMuffledRange))
                 _chatManager.ChatMessageToOne(ChatChannel.Whisper, obfuscatedMessage, wrappedobfuscatedMessage, source, false, session.Channel);
@@ -577,7 +598,11 @@ public sealed partial class ChatSystem : SharedChatSystem
 
         _replay.RecordServerMessage(new ChatMessage(ChatChannel.Whisper, message, wrappedMessage, GetNetEntity(source), null, MessageRangeHideChatForReplay(range)));
 
-        var ev = new EntitySpokeEvent(source, message, channel, obfuscatedMessage);
+        var originalObfuscatedMessage = originalMessage == message
+            ? obfuscatedMessage
+            : ObfuscateMessageReadability(originalMessage, 0.2f);
+
+        var ev = new EntitySpokeEvent(source, message, originalMessage, channel, obfuscatedMessage, originalObfuscatedMessage);
         RaiseLocalEvent(source, ev, true);
         if (!hideLog)
             if (originalMessage == message)
@@ -785,7 +810,15 @@ public sealed partial class ChatSystem : SharedChatSystem
     /// <summary>
     ///     Sends a chat message to the given players in range of the source entity.
     /// </summary>
-    private void SendInVoiceRange(ChatChannel channel, string message, string wrappedMessage, EntityUid source, ChatTransmitRange range, NetUserId? author = null)
+    private void SendInVoiceRange(
+        ChatChannel channel,
+        string message,
+        string wrappedMessage,
+        EntityUid source,
+        ChatTransmitRange range,
+        NetUserId? author = null,
+        string? originalMessage = null,
+        string? wrappedOriginalMessage = null)
     {
         foreach (var (session, data) in GetRecipients(source, VoiceRange))
         {
@@ -793,10 +826,27 @@ public sealed partial class ChatSystem : SharedChatSystem
             if (entRange == MessageRangeCheckResult.Disallowed)
                 continue;
             var entHideChat = entRange == MessageRangeCheckResult.HideChat;
-            _chatManager.ChatMessageToOne(channel, message, wrappedMessage, source, entHideChat, session.Channel, author: author);
+
+            var listener = session.AttachedEntity;
+            var visibleMessage = message;
+            var visibleWrappedMessage = wrappedMessage;
+
+            if (originalMessage != null && wrappedOriginalMessage != null && listener is { Valid: true } attached && HasXenoglossy(attached))
+            {
+                visibleMessage = originalMessage;
+                visibleWrappedMessage = wrappedOriginalMessage;
+            }
+
+            _chatManager.ChatMessageToOne(channel, visibleMessage, visibleWrappedMessage, source, entHideChat, session.Channel, author: author);
         }
 
         _replay.RecordServerMessage(new ChatMessage(channel, message, wrappedMessage, GetNetEntity(source), null, MessageRangeHideChatForReplay(range)));
+    }
+
+    private bool HasXenoglossy(EntityUid uid)
+    {
+        return TryComp<PsionicComponent>(uid, out var psionic)
+            && psionic.ActivePowers.Any(power => power.ID == XenoglossyPowerId);
     }
 
     /// <summary>
@@ -1043,7 +1093,9 @@ public sealed class EntitySpokeEvent : EntityEventArgs
 {
     public readonly EntityUid Source;
     public readonly string Message;
+    public readonly string? OriginalMessage;
     public readonly string? ObfuscatedMessage; // not null if this was a whisper
+    public readonly string? OriginalObfuscatedMessage;
 
     /// <summary>
     ///     If the entity was trying to speak into a radio, this was the channel they were trying to access. If a radio
@@ -1051,12 +1103,14 @@ public sealed class EntitySpokeEvent : EntityEventArgs
     /// </summary>
     public RadioChannelPrototype? Channel;
 
-    public EntitySpokeEvent(EntityUid source, string message, RadioChannelPrototype? channel, string? obfuscatedMessage)
+    public EntitySpokeEvent(EntityUid source, string message, string? originalMessage, RadioChannelPrototype? channel, string? obfuscatedMessage, string? originalObfuscatedMessage)
     {
         Source = source;
         Message = message;
+        OriginalMessage = originalMessage;
         Channel = channel;
         ObfuscatedMessage = obfuscatedMessage;
+        OriginalObfuscatedMessage = originalObfuscatedMessage;
     }
 }
 

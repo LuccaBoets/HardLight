@@ -32,6 +32,7 @@
     shootMaxInterval: 10
     shootRange: 3
     lightningPrototype: Lightning
+  - type: Dispellable
 
 - type: entity
   id: TeslaEnergyBall

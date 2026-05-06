@@ -198,7 +198,7 @@
   - type: AntagRandomObjectives
     sets:
     - groups: TraitorObjectiveGroups
-    maxDifficulty: 5
+    maxDifficulty: 8
   - type: AntagSelection
     agentName: traitor-round-end-agent-name
 

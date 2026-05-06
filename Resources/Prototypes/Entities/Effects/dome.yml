@@ -31,6 +31,7 @@
   - type: Tag
     tags:
       - HideContextMenu
+  - type: Dispellable
 
 - type: entity
   id: EnergyDomeSmallPink

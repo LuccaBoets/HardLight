@@ -153,6 +153,7 @@
     color: "#FFFFFFFF"
     length: 3
   - type: LagCompensation
+  - type: Dispellable
 
 - type: entity
   id: BaseBulletTrigger # Trigger-on-collide bullets
