@@ -34,8 +34,8 @@
   components:
   - type: Paper
     content: |2
-      [color=#f39f27]░░▄▀░░ [head=2][/head][/color] [bold]Hardlight Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]EN-1[/color]
-      [color=#f39f27]░▄█▄▄▀ [head=3][/head][/color] [color=#AAAAAA][italic]Brought to you by Colonial Command[/color][/italic]
+      [color=#f39f27]░░▄▀░░ [head=2][/head][/color] [bold]Frontier Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]EN-1[/color]
+      [color=#f39f27]░▄█▄▄▀ [head=3][/head][/color] [color=#AAAAAA][italic]Brought to you by Sector Command[/color][/italic]
       [color=#f39f27]██▀░░░ [head=3][/head][/color] [color=#AAAAAA][italic]Written By: [bold]Colonial Engineer, CYN-182[/bold][/color][/italic]
       [color=#383838]▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄[/color]
       [color=#f39f27]▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀[/color]
@@ -88,8 +88,8 @@
   components:
   - type: Paper
     content: |2
-      [color=#f39f27]░░▄▀░░ [head=2][/head][/color] [bold]Hardlight Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]BA-1[/color]
-      [color=#f39f27]░▄█▄▄▀ [head=3][/head][/color] [color=#AAAAAA][italic]Brought to you by Colonial Command[/color][/italic]
+      [color=#f39f27]░░▄▀░░ [head=2][/head][/color] [bold]Frontier Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]BA-1[/color]
+      [color=#f39f27]░▄█▄▄▀ [head=3][/head][/color] [color=#AAAAAA][italic]Brought to you by Sector Command[/color][/italic]
       [color=#f39f27]██▀░░░ [head=3][/head][/color] [color=#AAAAAA][italic]Written By: [bold]Colonial Engineer, CYN-182[/bold][/color][/italic]
       [color=#383838]▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄[/color]
       [color=#f39f27]▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀[/color]
@@ -120,8 +120,8 @@
   components:
   - type: Paper
     content: |2
-      [color=#f39f27]░░▄▀░░ [/color] [bold]Hardlight Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]SE-1[/color]
-      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Colonial Command[/color][/italic]
+      [color=#f39f27]░░▄▀░░ [/color] [bold]Frontier Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]SE-1[/color]
+      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Sector Command[/color][/italic]
       [color=#f39f27]██▀░░░ [/color] [color=#AAAAAA][italic]Written By: [bold]Colonial Engineer, CYN-182[/bold][/color][/italic]
       [color=#383838]▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄[/color]
       [color=#f39f27]▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀[/color]
@@ -167,8 +167,8 @@
   components:
   - type: Paper
     content: |2
-      [color=#f39f27]░░▄▀░░ [/color] [bold]Hardlight Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]TE-1[/color]
-      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Colonial Command[/color][/italic]
+      [color=#f39f27]░░▄▀░░ [/color] [bold]Frontier Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]TE-1[/color]
+      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Sector Command[/color][/italic]
       [color=#f39f27]██▀░░░ [/color] [color=#AAAAAA][italic]Written By: [bold]Colonial Engineer, CYN-182[/bold][/color][/italic]
       [color=#383838]▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄[/color]
       [color=#f39f27]▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀[/color]
@@ -214,8 +214,8 @@
   components:
   - type: Paper
     content: |2
-      [color=#f39f27]░░▄▀░░ [/color] [bold]Hardlight Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]AP-1[/color]
-      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Colonial Command[/color][/italic]
+      [color=#f39f27]░░▄▀░░ [/color] [bold]Frontier Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]AP-1[/color]
+      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Sector Command[/color][/italic]
       [color=#f39f27]██▀░░░ [/color] [color=#AAAAAA][italic]Written By: [bold]Colonial Engineer, CYN-182[/bold][/color][/italic]
       [color=#383838]▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄[/color]
       [color=#f39f27]▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀[/color]
@@ -295,8 +295,8 @@
   components:
   - type: Paper
     content: |2
-      [color=#f39f27]░░▄▀░░ [/color] [bold]Hardlight Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]AP-2[/color]
-      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Colonial Command[/color][/italic]
+      [color=#f39f27]░░▄▀░░ [/color] [bold]Frontier Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]AP-2[/color]
+      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Sector Command[/color][/italic]
       [color=#f39f27]██▀░░░ [/color] [color=#AAAAAA][italic]Written By: [bold]Colonial Engineer, CYN-182[/bold][/color][/italic]
       [color=#383838]▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄[/color]
       [color=#f39f27]▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀[/color]
@@ -341,8 +341,8 @@
   components:
   - type: Paper
     content: |2
-      [color=#f39f27]░░▄▀░░ [/color] [bold]Hardlight Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]AP-3[/color]
-      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Colonial Command[/color][/italic]
+      [color=#f39f27]░░▄▀░░ [/color] [bold]Frontier Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]AP-3[/color]
+      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Sector Command[/color][/italic]
       [color=#f39f27]██▀░░░ [/color] [color=#AAAAAA][italic]Written By: [bold]Colonial Engineer, CYN-182[/bold][/color][/italic]
       [color=#383838]▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄[/color]
       [color=#f39f27]▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀[/color]
@@ -380,8 +380,8 @@
   components:
   - type: Paper
     content: |2
-      [color=#f39f27]░░▄▀░░ [/color] [bold]Hardlight Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]TG-1[/color]
-      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Colonial Command[/color][/italic]
+      [color=#f39f27]░░▄▀░░ [/color] [bold]Frontier Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]TG-1[/color]
+      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Sector Command[/color][/italic]
       [color=#f39f27]██▀░░░ [/color] [color=#AAAAAA][italic]Written By: [bold]Colonial Engineer, CYN-182[/bold][/color][/italic]
       [color=#383838]▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄[/color]
       [color=#f39f27]▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀[/color]
@@ -424,8 +424,8 @@
   components:
   - type: Paper
     content: |2
-      [color=#f39f27]░░▄▀░░ [/color] [bold]Hardlight Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]SM-1[/color]
-      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Colonial Command[/color][/italic]
+      [color=#f39f27]░░▄▀░░ [/color] [bold]Frontier Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]SM-1[/color]
+      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Sector Command[/color][/italic]
       [color=#f39f27]██▀░░░ [/color] [color=#AAAAAA][italic]Written By: [bold]Colonial Engineer, CYN-182[/bold][/color][/italic]
       [color=#383838]▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄[/color]
       [color=#f39f27]▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀[/color]
@@ -465,8 +465,8 @@
   components:
   - type: Paper
     content: |2
-      [color=#f39f27]░░▄▀░░ [/color] [bold]Hardlight Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]NE-1[/color]
-      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Colonial Command[/color][/italic]
+      [color=#f39f27]░░▄▀░░ [/color] [bold]Frontier Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]NE-1[/color]
+      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Sector Command[/color][/italic]
       [color=#f39f27]██▀░░░ [/color] [color=#AAAAAA][italic]Written By: [bold]Colonial Engineer, CYN-182[/bold][/color][/italic]
       [color=#383838]▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄[/color]
       [color=#f39f27]▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀[/color]
@@ -565,8 +565,8 @@
   components:
   - type: Paper
     content: |2
-      [color=#f39f27]░░▄▀░░ [/color] [bold]Hardlight Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]NE-2[/color]
-      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Colonial Command[/color][/italic]
+      [color=#f39f27]░░▄▀░░ [/color] [bold]Frontier Sector: Engineering 101[/bold]       [bold]Form: [/bold][color=#f39f27]NE-2[/color]
+      [color=#f39f27]░▄█▄▄▀ [/color] [color=#AAAAAA][italic]Brought to you by Sector Command[/color][/italic]
       [color=#f39f27]██▀░░░ [/color] [color=#AAAAAA][italic]Written By: [bold]Colonial Engineer, CYN-182[/bold][/color][/italic]
       [color=#383838]▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄[/color]
       [color=#f39f27]▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀[/color]

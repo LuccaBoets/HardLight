@@ -81,29 +81,28 @@
       - id: PlushieCatTabby
       - id: PlushieCatTuxedo
       - id: PlushieCatWhite
-      - id: PlushieCatAndroid
-    - id: PlushieAnomalous
-    - id: PlushieAvali
-    - id: PlushieBountyHunter
+      - id: PlushieCarp
+    - id: PlushieCarp
+    - id: PlushieCarp
+    - id: PlushieCarp
     - id: PlushieFDrone
     - id: PlushieFPraetorian
     - id: PlushieFRavager
     - id: PlushieFRouny
     - id: PlushieGalio
     - id: PlushieGhost
-    - id: PlushieLizardCultist
-    - id: PlushieLizardDetective
-    - id: PlushieLizardHoS
-    - id: PlushieLizardLotl
-    - id: PlushieLizardMaid
-    - id: PlushieMercenary
-    - id: PlushieNemesis
-    - id: PlushieNightmare
-    - id: PlushieSharkCaptain
-    - id: PlushieSlimeVulp
+    - id: PlushieCarp
+    - id: PlushieCarp
+    - id: PlushieCarp
+    - id: PlushieCarp
+    - id: PlushieCarp
+    - id: PlushieCarp
+    - id: PlushieCarp
+    - id: PlushieCarp
+    - id: PlushieCarp
+    - id: PlushieCarp
     - id: PlushieThrongler
-    - id: PlushieShadekin
-    - id: PlushieSgaeyl
+    - id: PlushieCarp
     - id: PlushieVytian
 
 - type: entity

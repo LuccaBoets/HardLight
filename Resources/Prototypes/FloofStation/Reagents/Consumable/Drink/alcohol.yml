@@ -673,7 +673,7 @@
         - !type:ReagentThreshold
           min: 1
         - !type:OrganType
-          type: Moth # Get them moffy fucks horny
+          type: Moth # Moths get alternate effect
           shouldHave: true
         reagent: Philterex
         amount: 0.25

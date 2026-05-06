@@ -87,6 +87,5 @@
 
 - type: quickPhrase
   id: BaseLewdPhrase
-  group: Lewd
   styleClass: LewdButton
   abstract: true

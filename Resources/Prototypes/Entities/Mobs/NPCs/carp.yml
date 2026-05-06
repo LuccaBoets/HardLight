@@ -103,7 +103,6 @@
     interfaces:
       enum.SurgeryUIKey.Key:
         type: SurgeryBui
-  - type: Vore 
   - type: Xeno
     allowPlantWeeds: false
   - type: XenoAIAutoEvolve

@@ -306,7 +306,7 @@
 - type: entity
   parent: AirlockCentralCommand
   id: AirlockCentralCommandLocked
-  suffix: Colonial Command, Locked
+  suffix: Sector Command, Locked
   components:
   - type: ContainerFill
     containers:
@@ -718,7 +718,7 @@
 - type: entity
   parent: AirlockCentralCommandGlass
   id: AirlockCentralCommandGlassLocked
-  suffix: Colonial Command, Locked
+  suffix: Sector Command, Locked
   components:
   - type: ContainerFill
     containers:
@@ -1338,7 +1338,7 @@
 - type: entity
   parent: HighSecDoor
   id: HighSecCentralCommandLocked
-  suffix: Colonial Command, Locked
+  suffix: Sector Command, Locked
   components:
   - type: ContainerFill
     containers:

@@ -73,14 +73,14 @@
 
 - type: entity
   parent: ClothingHandsGlovesSyntheticBase
-  id: ClothingHandsGlovesInterdyne
-  name: interdyne surgical gloves
-  description: shock resistant gloves with a self-sterilizing surface for interdyne surgeons.
+  id: ClothingHandsGlovesMeditech
+  name: meditech surgical gloves
+  description: shock resistant gloves with a self-sterilizing surface for meditech surgeons.
   components:
   - type: Sprite
-    sprite: _HL/Clothing/Gloves/interdyne-surgical.rsi
+    sprite: _HL/Clothing/Gloves/meditech-surgical.rsi
   - type: Clothing
-    sprite: _HL/Clothing/Gloves/interdyne-surgical.rsi
+    sprite: _HL/Clothing/Gloves/meditech-surgical.rsi
   - type: Insulated
   - type: Fiber
     fiberMaterial: fibers-durathread

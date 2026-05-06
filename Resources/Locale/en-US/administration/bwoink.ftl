@@ -67,10 +67,10 @@ bwoink-banking-reason-placeholder = Admin adjustment reason (optional)
 bwoink-banking-add-button = Add Money
 bwoink-banking-remove-button = Remove Money
 bwoink-banking-confiscate-button = Confiscate all for CC
-bwoink-banking-confiscate-confirm = Seize for Colonial Command?
-bwoink-banking-confiscate-tooltip = Drains the player's entire bank balance to zero. Funds are deemed reclaimed by NT Colonial Command for "asset reallocation".
-bwoink-banking-confiscate-reason-default = Assets reallocated by Colonial Command audit
-bwoink-banking-confiscate-nothing = Account already empty - Colonial Command finds nothing to seize.
+bwoink-banking-confiscate-confirm = Seize for Sector Command?
+bwoink-banking-confiscate-tooltip = Drains the player's entire bank balance to zero. Funds are deemed reclaimed by NT Sector Command for "asset reallocation".
+bwoink-banking-confiscate-reason-default = Assets reallocated by Sector Command audit
+bwoink-banking-confiscate-nothing = Account already empty - Sector Command finds nothing to seize.
 bwoink-banking-close-button = Close
 bwoink-banking-invalid-amount = Please enter a valid positive amount.
 bwoink-banking-sending = Processing...
@@ -81,7 +81,7 @@ bwoink-banking-not-supported = Balance modifications are managed through in-game
 bwoink-banking-audit-no-reason = no reason given
 bwoink-banking-audit-add = Deposited {$amount} spesos. New balance: {$balance}. Reason: {$reason}
 bwoink-banking-audit-remove = Withdrew {$amount} spesos. New balance: {$balance}. Reason: {$reason}
-bwoink-banking-audit-confiscate = Confiscated {$amount} spesos for Colonial Command (account drained). Reason: {$reason}
+bwoink-banking-audit-confiscate = Confiscated {$amount} spesos for Sector Command (account drained). Reason: {$reason}
 
 # Unstick ship (admin tool)
 bwoink-triage-action-unstick-ship = Unstick Ship

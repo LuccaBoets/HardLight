@@ -26,7 +26,6 @@
     intervalSeconds: 1
     healPerSecond: .5
     critMultiplier: .25
-  - type: Vore
   - type: TrapAvoider
   - type: HTN
     rootTask:
@@ -205,10 +204,6 @@
   - type: ThermalVision # Starlight
   - type: PotentialPsionic #Nyano - Summary: makes potentially psionic.
     chance: -2
-  - type: CumProducer
-    maxVol: 250
-    reVol: 50
-    reHunger: 1
 
 - type: entity
   name: Praetorian

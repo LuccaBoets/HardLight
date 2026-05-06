@@ -98,21 +98,21 @@
     sprite: _HL/Clothing/Ears/Headsets/nanotrasen.rsi
 
 - type: entity
-  id: ClothingHeadsetInterdyne
+  id: ClothingHeadsetMeditech
   parent: ClothingHeadset
-  name: Interdyne headset
+  name: Meditech headset
   components:
   - type: Sprite
-    sprite: _HL/Clothing/Ears/Headsets/interdyne.rsi
+    sprite: _HL/Clothing/Ears/Headsets/meditech.rsi
   - type: Clothing
-    sprite: _HL/Clothing/Ears/Headsets/interdyne.rsi
+    sprite: _HL/Clothing/Ears/Headsets/meditech.rsi
   - type: ActiveRadio
     intrinsicChannels:
     - Common
-    - InterdynePharma
+    - MeditechPharma
     - Medical
   - type: EncryptionKeyHolder
     intrinsicChannels:
     - Common
-    - InterdynePharma
+    - MeditechPharma
     - Medical

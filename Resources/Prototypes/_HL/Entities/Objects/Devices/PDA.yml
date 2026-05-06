@@ -269,25 +269,25 @@
   suffix: Contractor
 
 
-### Interdyne PDAs
+### Meditech PDAs
 - type: entity
   parent: BasePDA
-  id: InterdynePDA
-  name: interdyne doctor PDA
-  description: A medical PDA issued to Interdyne personnel. Smells like medical malpractice.
+  id: MeditechPDA
+  name: meditech doctor PDA
+  description: A medical PDA issued to Meditech personnel. Smells like medical malpractice.
   components:
   - type: Pda
-    id: InterdyneIDCard
+    id: MeditechIDCard
   - type: Appearance
     appearanceDataInit:
       enum.PdaVisuals.PdaType:
         !type:String
-        pda-interdyne
+        pda-meditech
   - type: Sprite
-    sprite: _HL/Objects/Devices/interdyne_pda.rsi
+    sprite: _HL/Objects/Devices/meditech_pda.rsi
     layers:
     - map: [ "enum.PdaVisualLayers.Base" ]
-      state: "pda-interdyne"
+      state: "pda-meditech"
     - state: "light-overlay"
       map: [ "enum.PdaVisualLayers.Flashlight" ]
       shader: "unshaded"
@@ -297,30 +297,30 @@
       shader: "unshaded"
       visible: false
   - type: Icon
-    sprite: _HL/Objects/Devices/interdyne_pda.rsi
-    state: pda-interdyne
+    sprite: _HL/Objects/Devices/meditech_pda.rsi
+    state: pda-meditech
   - type: PdaBorderColor
     borderColor: "#4C4C4C"
     accentVColor: "#CC70B5"
 
 - type: entity
   parent: BasePDA
-  id: InterdyneHeadPDA
-  name: interdyne head PDA
-  description: A medical PDA issued to Interdyne head personnel. Smells like orchestrating medical malpractice.
+  id: MeditechHeadPDA
+  name: meditech head PDA
+  description: A medical PDA issued to Meditech head personnel. Smells like orchestrating medical malpractice.
   components:
   - type: Pda
-    id: InterdyneHeadIDCard
+    id: MeditechHeadIDCard
   - type: Appearance
     appearanceDataInit:
       enum.PdaVisuals.PdaType:
         !type:String
-        pda-interdynehead
+        pda-meditechhead
   - type: Sprite
-    sprite: _HL/Objects/Devices/interdyne_pda.rsi
+    sprite: _HL/Objects/Devices/meditech_pda.rsi
     layers:
     - map: [ "enum.PdaVisualLayers.Base" ]
-      state: "pda-interdynehead"
+      state: "pda-meditechhead"
     - state: "light-overlay"
       map: [ "enum.PdaVisualLayers.Flashlight" ]
       shader: "unshaded"
@@ -330,8 +330,8 @@
       shader: "unshaded"
       visible: false
   - type: Icon
-    sprite: _HL/Objects/Devices/interdyne_pda.rsi
-    state: pda-interdynehead
+    sprite: _HL/Objects/Devices/meditech_pda.rsi
+    state: pda-meditechhead
   - type: PdaBorderColor
     borderColor: "#A59DA5"
     accentVColor: "#CC70B5"

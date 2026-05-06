@@ -172,7 +172,7 @@
 - type: entity
   parent: BunnysuitBase
   id: BunnysuitColComm
-  name: colonial command bunnysuit
+  name: sector command bunnysuit
   components:
   - type: Sprite
     sprite: _HL/Clothing/Bunnysuit/Suits/colcomm.rsi

@@ -1,7 +1,7 @@
 {
     "version": 1,
     "license": "CC-BY-SA-3.0",
-    "copyright": "Created by Sera for Hardlight, HarborMaster by Livyathan",
+    "copyright": "Created by Sera for Hardlight, HarborMaster by Drakeborn",
     "size": {
         "x": 8,
         "y": 8
@@ -23,10 +23,10 @@
             "name": "HarborMaster"
         },
         {
-            "name": "interdyne-doctor-icon"
+            "name": "meditech-doctor-icon"
         },
         {
-            "name": "interdyne-head-icon"
+            "name": "meditech-head-icon"
         },
         {
             "name": "Nanotrasen"

@@ -101,7 +101,7 @@ The [color=#ba292c]Red Alert[/color] will appear for major hostile activities an
   </ColorBox>
   <ColorBox>
     <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="10">
-      Attention! Station alert level is now gamma! Colonial Command has ordered the Gamma security level on the station. Security is to have weapons at all times, and all civilians are to immediately seek their nearest head for transportation to a secure location.
+      Attention! Station alert level is now gamma! Sector Command has ordered the Gamma security level on the station. Security is to have weapons at all times, and all civilians are to immediately seek their nearest head for transportation to a secure location.
     </Box>
   </ColorBox>
 </Table>
@@ -116,12 +116,12 @@ The [color=#db7093]Gamma Alert[/color] is rare and often only used in extreme ca
   </ColorBox>
   <ColorBox>
     <Box HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="10">
-      Attention! Colonial Command has enacted Omicron alert on station, Security personel are to disarm and await further instructions from Colonial Command. All personnel must maximise their suit sensors and remain in their department until further notice.
+      Attention! Sector Command has enacted Omicron alert on station, Security personel are to disarm and await further instructions from Sector Command. All personnel must maximise their suit sensors and remain in their department until further notice.
     </Box>
   </ColorBox>
 </Table>
 
-The [color=#FFFFF0]Omicron Alert[/color] is Extremely rare and called only by Colonial Command.
+The [color=#FFFFF0]Omicron Alert[/color] is Extremely rare and called only by Sector Command.
 
 <Table Columns="1">
   <ColorBox Color="#8b0000">

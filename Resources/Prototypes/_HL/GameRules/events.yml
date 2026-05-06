@@ -117,7 +117,6 @@
     - id: MagicDragonSpawn
     - id: HoloDragonSpawn
     - id: XenoQueenSpawn
-    - id: FatkidSpawn
     - id: KingRatMigration
     - id: NinjaSpawn
     - id: ParadoxCloneSpawn
@@ -407,36 +406,6 @@
   - type: AntagSelection
     definitions:
     - spawnerPrototype: SpawnPointGhostXenoQueen
-      min: 1
-      max: 1
-      pickPlayer: false
-      mindRoles:
-      - MindRoleGhostRoleSoloAntagonist
-
-- type: entity
-  parent: BaseGameRule
-  id: FatkidSpawn
-  components:
-  - type: StationEvent
-    startAnnouncement: station-event-vent-creatures-start-announcement
-    startAudio:
-      path: /Audio/Announcements/outbreak7.ogg
-    weight: 6
-    earliestStart: 40
-    reoccurrenceDelay: 400
-    minimumPlayers: 15
-    duration: null
-    requiredJobs:
-      HeadOfSecurity: 1
-      SecurityOfficer: 1
-      Warden: 1
-  - type: SpaceSpawnRule
-    spawnDistance: 0
-  - type: AntagSpawner
-    prototype: Fatkid
-  - type: AntagSelection
-    definitions:
-    - spawnerPrototype: SpawnPointGhostFatkid
       min: 1
       max: 1
       pickPlayer: false

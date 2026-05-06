@@ -136,11 +136,6 @@
       types:
         Slash: 33
         Radiation: 10
-  - type: CumProducer
-    maxVol: 250
-    reagentId: Radium
-    reVol: 50
-    reHunger: 1
   - type: JumpAbility
     action: ActionVulpkaninGravityJump
     canCollide: true

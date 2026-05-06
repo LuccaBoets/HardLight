@@ -2,7 +2,7 @@
   parent: BaseAvaliPlushie
   id: PlushieNebula
   name: Nebula plushie
-  description: A marketable plushie of the Hardlight sector's lovable ColComm Domestic Division official, you swear you can almost hear music playing. Toy "Deckard" revolver not included.
+  description: A marketable plushie of the Frontier sector's lovable ColComm Domestic Division official, you swear you can almost hear music playing. Toy "Deckard" revolver not included.
   components:
   - type: Item
     size: Small

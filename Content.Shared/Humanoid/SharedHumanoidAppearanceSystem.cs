@@ -585,27 +585,6 @@ public abstract class SharedHumanoidAppearanceSystem : EntitySystem
         };
         humanoid.MarkingSet.AddBack(prototype.MarkingCategory, markingObject);
 
-        if (prototype.BodyPart == HumanoidVisualLayers.Penis
-            && humanoid.MarkingSet.TryGetCategory(MarkingCategories.UndergarmentBottom, out var undies))
-        {
-            // If we're wearing underwear, hide the penis.
-            if (undies.Any(undie => !humanoid.HiddenMarkings.Contains(undie.MarkingId)))
-                humanoid.HiddenMarkings.Add(marking);
-        }
-
-        if (prototype.MarkingCategory == MarkingCategories.UndergarmentBottom
-            && humanoid.MarkingSet.TryGetCategory(MarkingCategories.Genital, out var genitals))
-        {
-            // If we have a penis, hide it.
-            foreach (var genital in genitals)
-            {
-                if (!_markingManager.Markings.TryGetValue(genital.MarkingId, out var genitalProto))
-                    continue;
-                if (genitalProto.BodyPart == HumanoidVisualLayers.Penis)
-                    humanoid.HiddenMarkings.Add(genital.MarkingId);
-            }
-        }
-
         if (sync)
             Dirty(uid, humanoid);
     }

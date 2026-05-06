@@ -76,13 +76,6 @@ public sealed class EscapeInventorySystem : EntitySystem
             return;
         }
 
-        // Vore - Floofstation
-        if (HasComp<VoredComponent>(uid))
-        {
-            AttemptEscape(uid, container.Owner, component, 5f);
-            return;
-        }
-
         // Uncontested
         if (HasComp<StorageComponent>(container.Owner) || HasComp<InventoryComponent>(container.Owner) || HasComp<SecretStashComponent>(container.Owner))
             AttemptEscape(uid, container.Owner, component);

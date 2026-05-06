@@ -4,7 +4,6 @@
   parent: [BaseMob, MobDamageable, MobCombat, MobAtmosExposed, MobFlammable]
   abstract: true
   components:
-    - type: Vore # Floofstation - Vore
     - type: ContentEye
     - type: CameraRecoil
     - type: Fixtures

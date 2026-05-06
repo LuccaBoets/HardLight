@@ -11,9 +11,9 @@
     duration: 20
 
 - type: polymorph
-  id: LivyathanDragonMorph
+  id: DrakebornDragonMorph
   configuration:
-    entity: MobDragonLivyathan
+    entity: MobDragonDrakeborn
     delay: 2
     forced: false
     inventory: None

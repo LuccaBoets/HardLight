@@ -130,7 +130,6 @@
 #MARK: Chaplain spells
 # Sorted by discpline/domain
 
-# Horny
 
 - type: entity
   id: ActionHornyBomb
@@ -398,7 +397,7 @@
       drink:
         maxVol: 1
         reagents:
-        - ReagentId: Cum
+        - ReagentId: Water
           Quantity: 501
   - type: TimedDespawn
     lifetime: 0

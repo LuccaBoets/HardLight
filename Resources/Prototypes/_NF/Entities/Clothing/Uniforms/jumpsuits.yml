@@ -219,7 +219,7 @@
   parent: ClothingUniformJumpsuitHoP
   id: ClothingUniformJumpsuitSr
   name: Harbor Master's uniform
-  description: A top of the line outfit for the Harbor Master. No expense was spared in the tailoring, every stitch is a masterpiece. The fact this suit was even issued shows the trust Colonial Command is placing in the Harbor Master on this outpost.
+  description: A top of the line outfit for the Harbor Master. No expense was spared in the tailoring, every stitch is a masterpiece. The fact this suit was even issued shows the trust Sector Command is placing in the Harbor Master on this outpost.
   components:
   - type: Sprite
     sprite: _NF/Clothing/Uniforms/Jumpsuit/sr.rsi

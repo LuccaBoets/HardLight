@@ -251,7 +251,7 @@
 - type: entity
   parent: WindoorSecureCommandLocked
   id: WindoorSecureCentralCommandLocked
-  suffix: Colonial Command, Locked
+  suffix: Sector Command, Locked
   components:
   - type: ContainerFill
     containers:
@@ -260,7 +260,7 @@
 - type: entity
   parent: PlasmaWindoorSecureCommandLocked
   id: PlasmaWindoorSecureCentralCommandLocked
-  suffix: Colonial Command, Locked, Plasma
+  suffix: Sector Command, Locked, Plasma
   components:
   - type: ContainerFill
     containers:
@@ -269,7 +269,7 @@
 - type: entity
   parent: WindoorSecureUranium
   id: UraniumWindoorSecureCentralCommandLocked
-  suffix: Colonial Command, Locked, Uranium
+  suffix: Sector Command, Locked, Uranium
   components:
   - type: ContainerFill
     containers:

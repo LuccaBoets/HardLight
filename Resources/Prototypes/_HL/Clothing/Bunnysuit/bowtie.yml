@@ -352,7 +352,7 @@
 - type: entity
   parent: BowtieBase
   id: BowtieColComm
-  name: colonial command bowtie
+  name: sector command bowtie
   components:
   - type: Sprite
     sprite: _HL/Clothing/Bunnysuit/Bowties/colcomm.rsi

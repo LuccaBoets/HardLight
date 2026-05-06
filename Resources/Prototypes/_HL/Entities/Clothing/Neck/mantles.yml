@@ -77,17 +77,17 @@
     tags:
     - ClothMade
 
-# Interdyne Mantle
+# Meditech Mantle
 - type: entity
   parent: ClothingNeckBase
-  id: ClothingNeckMantleInterdyne
-  name: interdyne mantle
-  description: A research-oriented mantle featuring Interdyne's distinctive styling and professional appearance.
+  id: ClothingNeckMantleMeditech
+  name: meditech mantle
+  description: A research-oriented mantle featuring Meditech's distinctive styling and professional appearance.
   components:
   - type: Sprite
-    sprite: _HL/Clothing/Neck/mantles/interdynemantle.rsi
+    sprite: _HL/Clothing/Neck/mantles/meditechmantle.rsi
   - type: Clothing
-    sprite: _HL/Clothing/Neck/mantles/interdynemantle.rsi
+    sprite: _HL/Clothing/Neck/mantles/meditechmantle.rsi
 
 # SUNS Mantle
 - type: entity
@@ -118,7 +118,7 @@
   parent: ClothingNeckBase
   id: ClothingNeckMantleDirectorate
   name: directorate's mantle
-  description: Worn by the acting and previous directors of the Colonial Command.
+  description: Worn by the acting and previous directors of the Sector Command.
   components:
   - type: Sprite
     sprite: _HL/Clothing/Neck/mantles/ccdirectoratemantle.rsi
@@ -130,7 +130,7 @@
   parent: ClothingNeckBase
   id: ClothingNeckMantleColComm
   name: Colcomm's manica
-  description: A segmented arm covering for any colonial command personel. Almost exactly like the chief engineers, As you've earned the right to wear this!
+  description: A segmented arm covering for any sector command personel. Almost exactly like the chief engineers, As you've earned the right to wear this!
   components:
   - type: Sprite
     sprite: _HL/Clothing/Neck/mantles/colcommmantle.rsi
@@ -152,11 +152,11 @@
 # Dusk Enclave Mantle
 - type: entity
   parent: ClothingNeckBase
-  id: ClothingNeckMantleDuskEnclave
+  id: ClothingNeckMantleSectorEnclave
   name: Dusk Enclave mantle
   description: A distinctive mantle bearing the colors of the Dusk Enclave.
   components:
   - type: Sprite
-    sprite: _HL/Clothing/Neck/mantles/duskenclavemandle.rsi
+    sprite: _HL/Clothing/Neck/mantles/sectorenclavemandle.rsi
   - type: Clothing
-    sprite: _HL/Clothing/Neck/mantles/duskenclavemandle.rsi
+    sprite: _HL/Clothing/Neck/mantles/sectorenclavemandle.rsi

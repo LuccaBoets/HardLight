@@ -1,23 +1,23 @@
 ## Component example
 - type: spawnCharacterOverrideRule
-  id: LivyathanComponentOnSpawn
-  match: Livyathan
+  id: DrakebornComponentOnSpawn
+  match: Drakeborn
   checkProfileName: true
   checkEntityName: true
   logins:
-  - Livyathan
+  - Drakeborn
   components:
-  - type: HLLivyathan
+  - type: HLDrakeborn
 
 ## Entity example
 - type: spawnCharacterOverrideRule
-  id: MobDragonLivyathanOnSpawn
-  match: LivyathanDragon
+  id: MobDragonDrakebornOnSpawn
+  match: DrakebornDragon
   checkProfileName: true
   checkEntityName: true
   logins:
-  - Livyathan
-  entity: MobDragonLivyathan
+  - Drakeborn
+  entity: MobDragonDrakeborn
   
 # - type: spawnCharacterOverrideRule
   # id: Bananatalononspawn
@@ -54,15 +54,6 @@
   logins:
   - MyNameIsRune 
   entity: PlayerBorgQuaddog
-  
-- type: spawnCharacterOverrideRule
-  id: Petalborgonspawn
-  match: Petalpool
-  checkProfileName: true
-  checkEntityName: true
-  logins:
-  - Petalpool
-  entity: BorgChassisPetal
   
 - type: spawnCharacterOverrideRule
   id: mossborgonspawn

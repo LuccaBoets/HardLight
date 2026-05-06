@@ -66,56 +66,56 @@
 
 - type: entity
   parent: IDCardStandard
-  id: InterdyneIDCard
-  name: interdyne doctor ID card
+  id: MeditechIDCard
+  name: meditech doctor ID card
   components:
   - type: PresetIdCard
-    job: Interdyne
+    job: Meditech
   - type: Sprite
-    sprite: _HL/Objects/Devices/interdyne_id.rsi
+    sprite: _HL/Objects/Devices/meditech_id.rsi
     layers:
-    - state: interdyne
+    - state: meditech
   - type: Item
-    sprite: _HL/Objects/Devices/interdyne_id.rsi
+    sprite: _HL/Objects/Devices/meditech_id.rsi
     inhandVisuals:
       left:
-      - state: interdyne-inhand-left
+      - state: meditech-inhand-left
       right:
-      - state: interdyne-inhand-right
+      - state: meditech-inhand-right
   - type: Access
     tags:
     - Maintenance
     - Medical
     - Chemistry
     - Paramedic
-    - Interdyne
+    - Meditech
 
 - type: entity
   parent: IDCardStandard
-  id: InterdyneHeadIDCard
-  name: interdyne head ID card
+  id: MeditechHeadIDCard
+  name: meditech head ID card
   components:
   - type: PresetIdCard
-    job: InterdyneHead
+    job: MeditechHead
   - type: Sprite
-    sprite: _HL/Objects/Devices/interdyne_id.rsi
+    sprite: _HL/Objects/Devices/meditech_id.rsi
     layers:
-    - state: interdyne-head
+    - state: meditech-head
   - type: Item
-    sprite: _HL/Objects/Devices/interdyne_id.rsi
+    sprite: _HL/Objects/Devices/meditech_id.rsi
     inhandVisuals:
       left:
-      - state: interdyne-inhand-left
+      - state: meditech-inhand-left
       right:
-      - state: interdyne-inhand-right
+      - state: meditech-inhand-right
   - type: Access
     tags:
     - Maintenance
     - Medical
     - Chemistry
     - Paramedic
-    - Interdyne
-    - InterdyneHead
+    - Meditech
+    - MeditechHead
 
 
 - type: entity

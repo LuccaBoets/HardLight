@@ -990,7 +990,7 @@
   parent: [ ClothingHeadBase, BaseColcommContraband ]
   id: ClothingHeadHatCentcomcap
   name: ColComm cap
-  description: An extravagant, fancy Colonial Commander cap.
+  description: An extravagant, fancy Sector Commander cap.
   components:
   - type: Sprite
     sprite: Clothing/Head/Hats/comcap.rsi

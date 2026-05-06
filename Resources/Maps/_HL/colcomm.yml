@@ -114799,7 +114799,7 @@ entities:
       rot: 1.5707963267948966 rad
       pos: 7.7164555,-18.812904
       parent: 2
-- proto: PlushieLivyathan
+- proto: PlushieDrakeborn
   entities:
   - uid: 16602
     components:
@@ -114818,7 +114818,7 @@ entities:
     - type: Transform
       pos: -22.66746,51.69545
       parent: 2
-- proto: PlushieNirouJol
+- proto: PlushieCarp
   entities:
   - uid: 16605
     components:
@@ -114856,7 +114856,7 @@ entities:
       rot: 3.141592653589793 rad
       pos: -6.5,37.5
       parent: 2
-- proto: PosterContrabandInterdyne
+- proto: PosterContrabandMeditech
   entities:
   - uid: 16610
     components:
@@ -115063,7 +115063,7 @@ entities:
   - uid: 16640
     components:
     - type: MetaData
-      desc: A poster depicting the Hardlight sector Logo
+      desc: A poster depicting the Frontier sector Logo
       name: Hardlight Logo
     - type: Transform
       rot: 3.141592653589793 rad
@@ -115136,7 +115136,7 @@ entities:
   - uid: 16650
     components:
     - type: MetaData
-      desc: This poster provides information on some of the prizes available through the Colonial Command employee retention program, including a two week stay on a resort planet!
+      desc: This poster provides information on some of the prizes available through the Sector Command employee retention program, including a two week stay on a resort planet!
       name: 'ColComm Corporate Perks: Vacation!'
     - type: Transform
       pos: 2.5,16.5

@@ -61,20 +61,20 @@
 
 # Dusk Enclave Banners
 - type: construction
-  id: BannerDuskEnclave
-  graph: DuskEnclaveBannersGraph
+  id: BannerSectorEnclave
+  graph: SectorEnclaveBannersGraph
   startNode: start
-  targetNode: BannerDuskEnclaveNode
+  targetNode: BannerSectorEnclaveNode
   category: construction-category-furniture
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: true
 
 - type: construction
-  id: FlagDuskEnclave
-  graph: DuskEnclaveBannersGraph
+  id: FlagSectorEnclave
+  graph: SectorEnclaveBannersGraph
   startNode: start
-  targetNode: FlagDuskEnclaveNode
+  targetNode: FlagSectorEnclaveNode
   category: construction-category-furniture
   objectType: Structure
   placementMode: SnapgridCenter

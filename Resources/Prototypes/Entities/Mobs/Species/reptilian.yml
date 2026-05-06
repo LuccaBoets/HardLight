@@ -13,9 +13,6 @@
     - HeadSide
     - Hair
     # HL start: Hide genital markings on equip
-    - Genital
-    - Penis
-    - Breasts
     # HL end
     undergarmentBottom: UndergarmentBottomBoxersReptilian
   - type: Hunger
@@ -136,9 +133,6 @@
     - HeadTop
     - HeadSide
     # HL start: Hide genital markings on equip
-    - Genital
-    - Penis
-    - Breasts
     # HL end
     undergarmentBottom: UndergarmentBottomBoxersReptilian
   - type: Inventory

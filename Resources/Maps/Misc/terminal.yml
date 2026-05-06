@@ -9119,7 +9119,7 @@ entities:
   - uid: 542
     components:
     - type: MetaData
-      desc: An Experimental modification of an RTG that outputs extreme power by the power of destabilised normality crystals. Colonial Command's Science Division bluespaced this in to help with power needs. DANGER, DO NOT TAMPER WITH, EXTREMELY HIGH VOLTAGE.
+      desc: An Experimental modification of an RTG that outputs extreme power by the power of destabilised normality crystals. Sector Command's Science Division bluespaced this in to help with power needs. DANGER, DO NOT TAMPER WITH, EXTREMELY HIGH VOLTAGE.
       name: Experimental Hyper RTG
     - type: Transform
       pos: 79.5,80.5
@@ -9630,7 +9630,7 @@ entities:
     paused: true
     components:
     - type: MetaData
-      desc: A Note to the Barkeep from Colonial Command.
+      desc: A Note to the Barkeep from Sector Command.
       name: Note To Barkeep
     - type: Transform
       pos: 87.43694,92.64717
@@ -14839,7 +14839,7 @@ entities:
       pos: 82.5,87.5
       parent: 2
     - type: WarpPoint
-      location: Colonial Command Docks
+      location: Sector Command Docks
 - proto: WaterCooler
   entities:
   - uid: 486

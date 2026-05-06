@@ -3,7 +3,7 @@
 # Dusk Enclave Pin
 - type: entity
   parent: ClothingNeckBase
-  id: ClothingNeckPinDuskEnclave
+  id: ClothingNeckPinSectorEnclave
   name: Dusk Enclave pin
   description: A small pin bearing the sigil of the Dusk Enclave.
   components:

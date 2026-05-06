@@ -1,8 +1,8 @@
 - type: entity
   parent: ClothingOuterWinterCoat
   id: ClothingOuterWinterCCWarden
-  name: Colonial Command's armored winter coat
-  description: A tough, utilitarian coat designed for the wardens of Colonial Command. Reinforced kevlar plating and high quality fur allow the user to look stylish while staying protected.
+  name: Sector Command's armored winter coat
+  description: A tough, utilitarian coat designed for the wardens of Sector Command. Reinforced kevlar plating and high quality fur allow the user to look stylish while staying protected.
   components:
   - type: Sprite
     sprite: DeltaV/Clothing/OuterClothing/WinterCoats/cc_warden_winter_coat.rsi

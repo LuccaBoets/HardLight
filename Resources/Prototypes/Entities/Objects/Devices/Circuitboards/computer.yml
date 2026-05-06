@@ -544,8 +544,8 @@
 - type: entity
   parent: [ BaseComputerCircuitboard, BaseColcommContraband ]
   id: ColcommCommsComputerCircuitboard
-  name: Colonial Command communications computer board
-  description: A computer printed circuit board for a Colonial Command communications console.
+  name: Sector Command communications computer board
+  description: A computer printed circuit board for a Sector Command communications console.
   components:
   - type: Sprite
     state: cpu_colcomm

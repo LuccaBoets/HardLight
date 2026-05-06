@@ -263,16 +263,16 @@
       - id: PlushieArachind
         orGroup: Prize
         prob: 0.80
-      - id: PlushieAnomalous
+      - id: PlushieCarp
         orGroup: Prize
         prob: 0.80
-      - id: PlushieAvali
+      - id: PlushieCarp
         orGroup: Prize
         prob: 0.80
-      - id: PlushieBountyHunter
+      - id: PlushieCarp
         orGroup: Prize
         prob: 0.80
-      - id: PlushieCatAndroid
+      - id: PlushieCarp
         orGroup: Prize
         prob: 0.80
       - id: PlushieExperiment
@@ -299,40 +299,40 @@
       - id: PlushieHuman
         orGroup: Prize
         prob: 0.80
-      - id: PlushieLizardCultist
+      - id: PlushieCarp
         orGroup: Prize
         prob: 0.80
-      - id: PlushieLizardDetective
+      - id: PlushieCarp
         orGroup: Prize
         prob: 0.80
-      - id: PlushieLizardHoS
+      - id: PlushieCarp
         orGroup: Prize
         prob: 0.80
-      - id: PlushieLizardLotl
+      - id: PlushieCarp
         orGroup: Prize
         prob: 0.80
-      - id: PlushieLizardMaid
+      - id: PlushieCarp
         orGroup: Prize
         prob: 0.80
-      - id: PlushieMercenary
+      - id: PlushieCarp
         orGroup: Prize
         prob: 0.80
       - id: PlushieMoffRandom
         orGroup: Prize
         prob: 0.80
-      - id: PlushieNemesis
+      - id: PlushieCarp
         orGroup: Prize
         prob: 0.80
-      - id: PlushieNightmare
+      - id: PlushieCarp
         orGroup: Prize
         prob: 0.80
       - id: PlushiePenguin
         orGroup: Prize
         prob: 0.80
-      - id: PlushieSharkCaptain
+      - id: PlushieCarp
         orGroup: Prize
         prob: 0.80
-      - id: PlushieSlimeVulp
+      - id: PlushieCarp
         orGroup: Prize
         prob: 0.80
       - id: PlushieThrongler

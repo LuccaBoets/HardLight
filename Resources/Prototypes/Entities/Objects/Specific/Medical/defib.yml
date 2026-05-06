@@ -135,13 +135,13 @@
 
 
 - type: entity
-  id: DefibrillatorInterdyne
+  id: DefibrillatorMeditech
   parent: [ DefibrillatorCompact ]
-  name: interdyne defibrillator
-  description: A compact defibrillator bearing the colors of Interdyne Pharmaceuticals. Comes with a microreactor.
+  name: meditech defibrillator
+  description: A compact defibrillator bearing the colors of Meditech Pharmaceuticals. Comes with a microreactor.
   components:
   - type: Sprite
-    sprite: _HL/Objects/Specific/Interdyne/defib.rsi
+    sprite: _HL/Objects/Specific/Meditech/defib.rsi
     layers:
     - state: icon
     - state: screen

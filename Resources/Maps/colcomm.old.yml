@@ -52,7 +52,7 @@ entities:
   - uid: 1668
     components:
     - type: MetaData
-      name: Colonial Command
+      name: Sector Command
     - type: Transform
       pos: 1.7854652,-0.9889641
     - type: MapGrid
@@ -43228,7 +43228,7 @@ entities:
     - type: Transform
       pos: -16.5,17.5
       parent: 1668
-- proto: PosterContrabandInterdyne
+- proto: PosterContrabandMeditech
   entities:
   - uid: 9294
     components:

@@ -49,10 +49,10 @@
 	{"name": "a_label"},
 	{"name": "b_label"},
 	{"name": "c_label"},
-    {"name": "crypt-interdyne"},
+    {"name": "crypt-meditech"},
 	{"name": "crypt_avali"},
 	{"name": "crypt_avaliblue"},
     {"name": "starbound_label"},
-	{"name": "duskenclave_label"}
+	{"name": "sectorenclave_label"}
   ]
 }

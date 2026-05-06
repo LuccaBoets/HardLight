@@ -2,7 +2,7 @@
   parent: ClothingUniformBase
   id: ClothingUniformJumpskirtCentcomDirector
   name: CC Director's jumpskirt
-  description: A sharp and professional jumpskirt worn by a high-ranking member of Colonial Command.
+  description: A sharp and professional jumpskirt worn by a high-ranking member of Sector Command.
   components:
   - type: Sprite
     sprite: DeltaV/Clothing/Uniforms/Jumpskirt/centcom_officer.rsi
