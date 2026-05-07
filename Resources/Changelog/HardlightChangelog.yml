@@ -3644,3 +3644,9 @@ Entries:
       message: Fixed where Clothwarp could not be crafted.
   id: 394
   time: '2026-05-07T05:08:03.0000000+00:00'
+- author: Sully669
+  changes:
+    - type: Fix
+      message: jet injectors now fit in medical bags
+  id: 395
+  time: '2026-05-07T05:08:28.0000000+00:00'
