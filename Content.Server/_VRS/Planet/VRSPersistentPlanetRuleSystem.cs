@@ -1,13 +1,18 @@
 using System.Numerics;
 using Content.Server.GameTicking.Rules;
 using Content.Server.Parallax;
+using Content.Server.Shuttles.Components;
+using Content.Server.Shuttles.Systems;
 using Content.Server.Station.Systems;
 using Content.Shared._VRS.Planet;
 using Content.Shared.GameTicking.Components;
 using Content.Shared.Parallax.Biomes;
+using Content.Shared.Shuttles.Components;
 using Content.Shared.Shuttles.Systems;
 using Robust.Server.GameObjects;
+using Robust.Shared.GameStates;
 using Robust.Shared.Map;
+using Robust.Shared.Map.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 
@@ -26,8 +31,10 @@ public sealed class VRSPersistentPlanetRuleSystem : GameRuleSystem<VRSPersistent
     [Dependency] private readonly MetaDataSystem _meta = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly SharedShuttleSystem _shuttle = default!;
+    [Dependency] private readonly ShuttleSystem _serverShuttle = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
+    [Dependency] private readonly SharedPvsOverrideSystem _pvs = default!;
 
     /// <summary>
     /// Beacon prototype used to make the planet appear in the shuttle console
@@ -53,6 +60,9 @@ public sealed class VRSPersistentPlanetRuleSystem : GameRuleSystem<VRSPersistent
         _map.CreateMap(out var mapId);
         var mapUid = _mapManager.GetMapEntityId(mapId);
 
+        // Ensure the map has a grid component so PVS chunks can be properly created.
+        EnsureComp<MapGridComponent>(mapUid);
+
         var seed = component.Seed ?? _random.Next();
         _biome.EnsurePlanet(mapUid, template, seed);
 
@@ -76,11 +86,33 @@ public sealed class VRSPersistentPlanetRuleSystem : GameRuleSystem<VRSPersistent
         EnsureComp<Content.Shared.Shuttles.Components.IFFComponent>(mapUid);
         _shuttle.SetIFFColor(mapUid, component.IffColor);
 
+        // Register this map as a valid FTL destination via the server ShuttleSystem helper,
+        // which also refreshes any open shuttle consoles.
+        if (!_serverShuttle.TryAddFTLDestination(mapId, true, requireDisk: false, beaconsOnly: true, out var destination))
+        {
+            Log.Error($"VRSPersistentPlanet: failed to add FTL destination for map {mapId}.");
+        }
+        else
+        {
+            Log.Info($"VRSPersistentPlanet: FTL destination registered (Enabled={destination!.Enabled}, BeaconsOnly={destination.BeaconsOnly}).");
+        }
+
+        // Add a beacon directly on the map entity so it can be selected even before
+        // any extra planet-side entities are generated.
+        EnsureComp<FTLBeaconComponent>(mapUid);
+
         // FTL beacon at the origin so the shuttle console GetBeacons() loop
         // finds the planet and surfaces it as a selectable destination.
         var beaconCoords = new EntityCoordinates(mapUid, Vector2.Zero);
         var beacon = Spawn(FtlBeaconProto, beaconCoords);
         _meta.SetEntityName(beacon, name);
+
+        // Mark the map entity and beacon as globally visible so clients on other maps
+        // can see this destination in the FTL console scan. Biome planets start with
+        // 0 tiles (lazy-loaded), so they generate no PVS chunks and would otherwise
+        // never be sent to clients.
+        _pvs.AddGlobalOverride(mapUid);
+        _pvs.AddGlobalOverride(beacon);
 
         component.SpawnedPlanet = mapUid;
         Log.Info($"VRSPersistentPlanet '{name}' spawned (map {mapId}, biome {template.ID}, seed {seed}).");
