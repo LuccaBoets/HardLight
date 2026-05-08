@@ -261,6 +261,7 @@
     - BasicRoundstartVariation
 #    - NFRoundstartVariation
     - DynamicJobAllocation
+    - VRSPersistentPlanet # VRS — adds the persistent biome planet at round start
 
 - type: gamePreset
   id: NFPirate

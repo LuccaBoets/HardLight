@@ -269,6 +269,14 @@ public sealed partial class ShuttleMapControl : BaseShuttleControl
         var matty = Matrix3Helpers.CreateInverseTransform(Offset, Angle.Zero);
         var realTime = _timing.RealTime;
         var viewBox = new Box2(Offset - WorldRangeVector, Offset + WorldRangeVector);
+
+        // VRS: render biome tiles + Landgrab disk markers under everything else
+        // so existing IFF/grid/beacon overlays stay on top.
+        DrawPlanetBiomeOverlay(handle, viewedMapUid, viewBox, matty);
+        DrawLandgrabDiskMarkers(handle, viewedMapUid, matty);
+        DrawLandgrabPlotMarkers(handle, viewedMapUid, matty);
+        DrawDungeonMarkers(handle, viewedMapUid, matty);
+
         var viewportObjects = GetViewportMapObjects(matty, mapObjects);
         _viewportExclusions.Clear();
 
