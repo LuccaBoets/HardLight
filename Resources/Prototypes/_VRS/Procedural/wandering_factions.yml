@@ -1,13 +1,13 @@
 # VRS: ambient wandering mob packs that populate persistent biome planets.
 # Each layer uses Poisson-disc placement with `radius` minimum spacing and a
-# huge `size` (marker chunk) so packs stay sparse and rarely cluster. Group
+# `size` (marker chunk) so packs stay sparse and rarely cluster. Group
 # sizes are intentionally small — these are *encounters*, not raids.
 
 - type: biomeMarkerLayer
   id: VRSWanderingXenos
   prototype: MobXeno
-  radius: 600
-  size: 256
+  radius: 150
+  size: 64
   maxCount: 6
   minGroupSize: 2
   maxGroupSize: 3
@@ -15,8 +15,8 @@
 - type: biomeMarkerLayer
   id: VRSWanderingXenoDrones
   prototype: MobXenoDroneNPC
-  radius: 600
-  size: 256
+  radius: 150
+  size: 64
   maxCount: 6
   minGroupSize: 2
   maxGroupSize: 4
@@ -24,8 +24,8 @@
 - type: biomeMarkerLayer
   id: VRSWanderingXenoRunners
   prototype: MobXenoRunnerNPC
-  radius: 600
-  size: 256
+  radius: 150
+  size: 64
   maxCount: 6
   minGroupSize: 2
   maxGroupSize: 3
@@ -33,8 +33,8 @@
 - type: biomeMarkerLayer
   id: VRSWanderingExplorersMelee
   prototype: MobExplorerMeleeT1
-  radius: 800
-  size: 256
+  radius: 200
+  size: 64
   maxCount: 4
   minGroupSize: 1
   maxGroupSize: 2
@@ -42,8 +42,8 @@
 - type: biomeMarkerLayer
   id: VRSWanderingExplorersRanged
   prototype: MobExplorerRangedT1
-  radius: 800
-  size: 256
+  radius: 200
+  size: 64
   maxCount: 4
   minGroupSize: 1
   maxGroupSize: 2
@@ -51,8 +51,8 @@
 - type: biomeMarkerLayer
   id: VRSWanderingCarpsSalvage
   prototype: MobCarpSalvage
-  radius: 600
-  size: 256
+  radius: 150
+  size: 64
   maxCount: 5
   minGroupSize: 2
   maxGroupSize: 3

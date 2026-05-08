@@ -74,11 +74,11 @@ public sealed partial class PlanetSpawnerComponent : Component
 
     /// <summary>Minimum world-tile distance from any player plot or shuttle.</summary>
     [DataField]
-    public float MinDistFromActivity = 4000f;
+    public float MinDistFromActivity = 300f;
 
     /// <summary>Minimum world-tile distance between any two spawned dungeons.</summary>
     [DataField]
-    public float MinDistBetweenDungeons = 2000f;
+    public float MinDistBetweenDungeons = 600f;
 
     /// <summary>
     /// Radius (world tiles) checked around an existing dungeon to decide if it

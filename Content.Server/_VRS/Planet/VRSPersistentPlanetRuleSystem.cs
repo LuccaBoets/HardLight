@@ -88,7 +88,7 @@ public sealed class VRSPersistentPlanetRuleSystem : GameRuleSystem<VRSPersistent
 
         // Register this map as a valid FTL destination via the server ShuttleSystem helper,
         // which also refreshes any open shuttle consoles.
-        if (!_serverShuttle.TryAddFTLDestination(mapId, true, requireDisk: false, beaconsOnly: true, out var destination))
+        if (!_serverShuttle.TryAddFTLDestination(mapId, true, requireDisk: false, beaconsOnly: false, out var destination))
         {
             Log.Error($"VRSPersistentPlanet: failed to add FTL destination for map {mapId}.");
         }
