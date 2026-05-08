@@ -28,6 +28,7 @@ public sealed partial class ShuttleMapControl : BaseShuttleControl
     [Dependency] private readonly IInputManager _inputs = default!;
     [Dependency] private readonly IMapManager _mapManager = default!;
     [Dependency] private readonly IEntityManager _entManager = default!; // Frontier
+    [Dependency] private readonly Robust.Client.Player.IPlayerManager _playerManager = default!;
     private readonly ShuttleSystem _shuttles;
     private readonly SharedTransformSystem _xformSystem;
 

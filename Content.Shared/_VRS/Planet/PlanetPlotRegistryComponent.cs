@@ -1,4 +1,5 @@
 using Robust.Shared.GameObjects;
+using Robust.Shared.GameStates;
 using Robust.Shared.Serialization.Manager.Attributes;
 
 namespace Content.Shared._VRS.Planet;
@@ -7,7 +8,7 @@ namespace Content.Shared._VRS.Planet;
 /// Placed on the planet map entity. Marks the map as one where the Landgrab
 /// PDA app can purchase plots, and configures purchase / load pricing.
 /// </summary>
-[RegisterComponent]
+[RegisterComponent, NetworkedComponent]
 public sealed partial class PlanetPlotRegistryComponent : Component
 {
     /// <summary>Friendly name of this planet shown in the Landgrab UI.</summary>

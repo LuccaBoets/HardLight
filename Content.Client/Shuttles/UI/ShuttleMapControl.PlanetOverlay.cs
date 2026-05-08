@@ -200,18 +200,29 @@ public sealed partial class ShuttleMapControl
 
     /// <summary>
     /// Draws a cyan box approximating each player plot's footprint plus the
-    /// owner's name. Plots are real grids that already render via the standard
-    /// map-grid pass, but the explicit marker makes ownership and footprint
-    /// instantly readable when a pilot is choosing where to land.
+    /// owner's name. The local player's own plot is drawn in white so it
+    /// stands out from other players' plots. Plots are real grids that already
+    /// render via the standard map-grid pass, but the explicit marker makes
+    /// ownership and footprint instantly readable when a pilot is choosing
+    /// where to land.
     /// </summary>
     private void DrawLandgrabPlotMarkers(DrawingHandleScreen handle, EntityUid viewedMapUid, Matrix3x2 matty)
     {
-        var color = new Color(0.30f, 0.85f, 0.95f, 0.85f);
+        var otherColor = new Color(0.30f, 0.85f, 0.95f, 0.85f);
+        var ownColor   = new Color(1.0f,  1.0f,  1.0f,  1.0f);
+
+        var localCKey = _playerManager.LocalSession?.Name ?? string.Empty;
+
         var enumerator = EntManager.AllEntityQueryEnumerator<LandgrabPlotComponent, TransformComponent>();
         while (enumerator.MoveNext(out var plotUid, out var plot, out var xform))
         {
             if (xform.MapUid != viewedMapUid)
                 continue;
+
+            var isOwn = !string.IsNullOrEmpty(localCKey)
+                && string.Equals(plot.OwnerCKey, localCKey, StringComparison.OrdinalIgnoreCase);
+
+            var color = isOwn ? ownColor : otherColor;
 
             var worldPos = _xformSystem.GetWorldPosition(plotUid);
             var local = Vector2.Transform(worldPos, matty);
