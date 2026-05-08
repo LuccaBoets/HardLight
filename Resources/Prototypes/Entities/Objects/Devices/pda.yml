@@ -97,6 +97,7 @@
       - BountyContractsCartridge # Frontier
       - AstroNavCartridge # Frontier
       - NanoChatCartridge # DeltaV
+      - LandgrabCartridge # VRS
     cartridgeSlot:
       priority: -1
       name: device-pda-slot-component-slot-name-cartridge
