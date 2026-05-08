@@ -18,7 +18,9 @@ namespace Content.Client._VRS.Planet;
 /// </summary>
 public sealed class LandgrabPlotBorderOverlay : Overlay
 {
-    public override OverlaySpace Space => OverlaySpace.WorldSpaceBelowEntities;
+    // Draw on top of world entities/tiles so biome floors and walls don't
+    // hide the ghosted plot border.
+    public override OverlaySpace Space => OverlaySpace.WorldSpace;
 
     [Dependency] private readonly IEntityManager _entities = default!;
     [Dependency] private readonly IPlayerManager _player = default!;
@@ -26,11 +28,17 @@ public sealed class LandgrabPlotBorderOverlay : Overlay
 
     private readonly SharedTransformSystem _xform;
 
-    /// <summary>White used for the local player's own plot.</summary>
-    private static readonly Color OwnPlotColor = new Color(1.0f, 1.0f, 1.0f, 0.55f);
+    /// <summary>Bright white used for the local player's own plot.</summary>
+    private static readonly Color OwnPlotColor = new Color(1.0f, 1.0f, 1.0f, 0.85f);
+
+    /// <summary>Soft fill drawn inside the local player's own plot.</summary>
+    private static readonly Color OwnPlotFillColor = new Color(1.0f, 1.0f, 1.0f, 0.10f);
 
     /// <summary>Muted teal used for all other players' plots.</summary>
-    private static readonly Color OtherPlotColor = new Color(0.30f, 0.80f, 0.85f, 0.35f);
+    private static readonly Color OtherPlotColor = new Color(0.40f, 0.95f, 1.00f, 0.65f);
+
+    /// <summary>Border thickness in world units (≈ tiles).</summary>
+    private const float BorderThickness = 0.25f;
 
     public LandgrabPlotBorderOverlay()
     {
@@ -58,20 +66,29 @@ public sealed class LandgrabPlotBorderOverlay : Overlay
             var worldPos = _xform.GetWorldPosition(xform);
             var half = plot.PlotSize * 0.5f;
 
-            var color = string.Equals(plot.OwnerCKey, localCKey, StringComparison.OrdinalIgnoreCase)
-                ? OwnPlotColor
-                : OtherPlotColor;
+            var isOwn = string.Equals(plot.OwnerCKey, localCKey, StringComparison.OrdinalIgnoreCase);
+            var color = isOwn ? OwnPlotColor : OtherPlotColor;
 
-            // Draw the four border lines of the plot square.
-            var tl = new Vector2(worldPos.X - half, worldPos.Y + half);
-            var tr = new Vector2(worldPos.X + half, worldPos.Y + half);
-            var br = new Vector2(worldPos.X + half, worldPos.Y - half);
-            var bl = new Vector2(worldPos.X - half, worldPos.Y - half);
+            var min = new Vector2(worldPos.X - half, worldPos.Y - half);
+            var max = new Vector2(worldPos.X + half, worldPos.Y + half);
 
-            args.WorldHandle.DrawLine(tl, tr, color);
-            args.WorldHandle.DrawLine(tr, br, color);
-            args.WorldHandle.DrawLine(br, bl, color);
-            args.WorldHandle.DrawLine(bl, tl, color);
+            // Soft tint inside our own plot makes it instantly recognisable.
+            if (isOwn)
+            {
+                args.WorldHandle.DrawRect(new Box2(min, max), OwnPlotFillColor);
+            }
+
+            // Thick border drawn as four filled rects so the line is visible at
+            // any zoom regardless of biome textures underneath.
+            var t = BorderThickness;
+            // Top
+            args.WorldHandle.DrawRect(new Box2(min.X, max.Y - t, max.X, max.Y), color);
+            // Bottom
+            args.WorldHandle.DrawRect(new Box2(min.X, min.Y, max.X, min.Y + t), color);
+            // Left
+            args.WorldHandle.DrawRect(new Box2(min.X, min.Y, min.X + t, max.Y), color);
+            // Right
+            args.WorldHandle.DrawRect(new Box2(max.X - t, min.Y, max.X, max.Y), color);
         }
     }
 }

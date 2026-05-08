@@ -12,12 +12,14 @@ using Content.Shared.Procedural;
 using Content.Shared.Shuttles.Components;
 using Content.Shared._VRS.Planet;
 using Robust.Server.GameObjects;
+using Robust.Server.Player;
 using Robust.Shared.GameObjects;
 using Robust.Shared.IoC;
 using Robust.Shared.Log;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Maths;
+using Robust.Shared.Player;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
@@ -34,11 +36,19 @@ public sealed class PlanetSpawnerSystem : EntitySystem
     [Dependency] private readonly BiomeSystem _biome = default!;
     [Dependency] private readonly DungeonSystem _dungeon = default!;
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
+    [Dependency] private readonly MetaDataSystem _meta = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly IPlayerManager _players = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
+
+    /// <summary>
+    /// Beacon prototype spawned at each dungeon center so the shuttle console
+    /// surfaces them as selectable FTL destinations alongside the planet itself.
+    /// </summary>
+    private const string DungeonBeaconProto = "FTLPoint";
 
     private ISawmill _sawmill = default!;
 
@@ -59,7 +69,86 @@ public sealed class PlanetSpawnerSystem : EntitySystem
     private void OnMapInit(Entity<PlanetSpawnerComponent> ent, ref MapInitEvent args)
     {
         EnsureMarkerLayers(ent);
+        EnsurePreseeded(ent);
         ent.Comp.NextRoll = _timing.CurTime + ent.Comp.RollInterval;
+        ent.Comp.RampStart = _timing.CurTime;
+        ent.Comp.NextRampSpawn = _timing.CurTime + TimeSpan.FromSeconds(ent.Comp.RampStartIntervalSeconds);
+    }
+
+    /// <summary>
+    /// Pre-seeds <see cref="PlanetSpawnerComponent.PreseedDungeonCount"/> dungeons
+    /// at random offsets from the planet origin in a configurable ring. Submits
+    /// all jobs in one go; the dungeon system processes them off the hot path.
+    /// </summary>
+    private void EnsurePreseeded(Entity<PlanetSpawnerComponent> ent)
+    {
+        if (ent.Comp.Preseeded)
+            return;
+        if (!TryComp<MapGridComponent>(ent.Owner, out var grid))
+            return;
+
+        var registry = EnsureComp<PlanetDungeonRegistryComponent>(ent.Owner);
+
+        for (var i = 0; i < ent.Comp.PreseedDungeonCount; i++)
+        {
+            var sliceAngle = (i + _random.NextFloat()) * (MathF.Tau / Math.Max(1, ent.Comp.PreseedDungeonCount));
+            var radius = _random.NextFloat(ent.Comp.PreseedRingMin, ent.Comp.PreseedRingMax);
+
+            var x = MathF.Cos(sliceAngle) * radius;
+            var y = MathF.Sin(sliceAngle) * radius;
+
+            var snappedTile = new Vector2i(
+                (int)MathF.Round(x / CandidateStride) * CandidateStride,
+                (int)MathF.Round(y / CandidateStride) * CandidateStride);
+
+            var configId = _random.Pick(ent.Comp.DungeonConfigs);
+            if (!_proto.TryIndex(configId, out var config))
+            {
+                _sawmill.Warning($"PlanetSpawner missing dungeon config '{configId}' (preseed).");
+                continue;
+            }
+
+            var seed = HashCode.Combine(_timing.CurTime.Ticks, snappedTile.X, snappedTile.Y, i);
+            _dungeon.GenerateDungeon(config, configId.Id, ent.Owner, grid, snappedTile, seed);
+            ent.Comp.SpawnedDungeons.Add(new Vector2(snappedTile.X, snappedTile.Y));
+
+            var beaconCoords = new EntityCoordinates(ent.Owner, new Vector2(snappedTile.X, snappedTile.Y));
+            var beacon = Spawn(DungeonBeaconProto, beaconCoords);
+            _meta.SetEntityName(beacon, configId.Id);
+
+            registry.Dungeons.Add(new DungeonMarker(new Vector2(snappedTile.X, snappedTile.Y), configId.Id));
+            _sawmill.Info($"Pre-seeded planet dungeon {i + 1}/{ent.Comp.PreseedDungeonCount} '{configId}' at ({snappedTile.X}, {snappedTile.Y}) on {ToPrettyString(ent.Owner)}.");
+
+            PopulateDungeonGarrison(ent, snappedTile);
+        }
+
+        Dirty(ent.Owner, registry);
+        ent.Comp.Preseeded = true;
+    }
+
+    /// <summary>
+    /// Spawns a baseline garrison of mobs in a ring around a freshly-placed
+    /// dungeon. Counts and ring sizes come from
+    /// <see cref="PlanetSpawnerComponent.PreseedMobsPerDungeon"/> and friends.
+    /// </summary>
+    private void PopulateDungeonGarrison(Entity<PlanetSpawnerComponent> ent, Vector2i centerTile)
+    {
+        if (ent.Comp.PreseedMobsPerDungeon <= 0 || ent.Comp.RampingMobs.Count == 0)
+            return;
+        if (!TryComp<TransformComponent>(ent.Owner, out _))
+            return;
+
+        var center = new Vector2(centerTile.X, centerTile.Y);
+        for (var i = 0; i < ent.Comp.PreseedMobsPerDungeon; i++)
+        {
+            var angle = _random.NextFloat() * MathF.Tau;
+            var dist = _random.NextFloat(ent.Comp.PreseedMobInnerRadius, ent.Comp.PreseedMobOuterRadius);
+            var offset = new Vector2(MathF.Cos(angle) * dist, MathF.Sin(angle) * dist);
+
+            var coords = new EntityCoordinates(ent.Owner, center + offset);
+            var proto = _random.Pick(ent.Comp.RampingMobs);
+            Spawn(proto, coords);
+        }
     }
 
     private void EnsureMarkerLayers(Entity<PlanetSpawnerComponent> ent)
@@ -95,6 +184,21 @@ public sealed class PlanetSpawnerSystem : EntitySystem
             // (e.g. when added at runtime via admin tooling).
             if (!spawner.MarkerLayersAdded)
                 EnsureMarkerLayers((uid, spawner));
+
+            // Fallback in case MapInit didn't fire for this component (e.g.
+            // EnsureComp added after the map was already initialised by the rule).
+            if (!spawner.Preseeded)
+                EnsurePreseeded((uid, spawner));
+
+            // Time-scaled ambient mob spawns. Independent of the dungeon roll
+            // cadence — fires on its own ramping cooldown.
+            if (spawner.RampStart == TimeSpan.Zero)
+                spawner.RampStart = now;
+            if (now >= spawner.NextRampSpawn)
+            {
+                TrySpawnRampMob((uid, spawner), now);
+                spawner.NextRampSpawn = now + TimeSpan.FromSeconds(GetRampInterval(spawner, now));
+            }
 
             if (now < spawner.NextRoll)
                 continue;
@@ -170,6 +274,13 @@ public sealed class PlanetSpawnerSystem : EntitySystem
 
             _dungeon.GenerateDungeon(config, configId.Id, ent.Owner, grid, snappedTile, seed);
             ent.Comp.SpawnedDungeons.Add(new Vector2(snappedTile.X, snappedTile.Y));
+
+            // Spawn an FTL beacon at the dungeon center so it appears in the
+            // shuttle console destination list (the GetBeacons enumerator on
+            // SharedShuttleSystem is what populates the MAP tab sidebar).
+            var beaconCoords = new EntityCoordinates(ent.Owner, new Vector2(snappedTile.X, snappedTile.Y));
+            var beacon = Spawn(DungeonBeaconProto, beaconCoords);
+            _meta.SetEntityName(beacon, configId.Id);
 
             // Mirror to the networked registry so clients (shuttle console map
             // preview) can draw dungeon markers even when the biome chunks
@@ -288,6 +399,103 @@ public sealed class PlanetSpawnerSystem : EntitySystem
         for (var i = 0; i < max; i++)
             result.Add(pool[_random.Next(pool.Length)]);
         return result;
+    }
+
+    // ── Ramping ambient mob spawner ──────────────────────────────────────────────
+
+    /// <summary>
+    /// Returns the current ramp progress in [0, 1] based on elapsed time since
+    /// <see cref="PlanetSpawnerComponent.RampStart"/>.
+    /// </summary>
+    private static float GetRampProgress(PlanetSpawnerComponent spawner, TimeSpan now)
+    {
+        var peak = MathF.Max(1f, spawner.RampPeakMinutes * 60f);
+        var elapsed = (float)(now - spawner.RampStart).TotalSeconds;
+        return Math.Clamp(elapsed / peak, 0f, 1f);
+    }
+
+    /// <summary>
+    /// Linearly interpolates the spawn interval from
+    /// <see cref="PlanetSpawnerComponent.RampStartIntervalSeconds"/> down to
+    /// <see cref="PlanetSpawnerComponent.RampMinIntervalSeconds"/> as the ramp
+    /// progresses.
+    /// </summary>
+    private static float GetRampInterval(PlanetSpawnerComponent spawner, TimeSpan now)
+    {
+        var t = GetRampProgress(spawner, now);
+        return MathHelper.Lerp(spawner.RampStartIntervalSeconds, spawner.RampMinIntervalSeconds, t);
+    }
+
+    /// <summary>
+    /// Picks a random player on the planet, picks a random offset around them
+    /// inside <see cref="PlanetSpawnerComponent.RampSpawnRadius"/>, and spawns
+    /// a small pack of mobs there. The pack size grows linearly with ramp
+    /// progress. Skipped silently if there are no players, no live cap headroom,
+    /// or no valid candidate.
+    /// </summary>
+    private void TrySpawnRampMob(Entity<PlanetSpawnerComponent> ent, TimeSpan now)
+    {
+        // Trim dead/missing entries first so the cap isn't permanently saturated.
+        for (var i = ent.Comp.LiveRampMobs.Count - 1; i >= 0; i--)
+        {
+            var mob = ent.Comp.LiveRampMobs[i];
+            if (!Exists(mob))
+            {
+                ent.Comp.LiveRampMobs.RemoveAt(i);
+                continue;
+            }
+            if (TryComp<MobStateComponent>(mob, out var state) && !_mobState.IsAlive(mob, state))
+                ent.Comp.LiveRampMobs.RemoveAt(i);
+        }
+
+        if (ent.Comp.LiveRampMobs.Count >= ent.Comp.RampLiveCap)
+            return;
+        if (ent.Comp.RampingMobs.Count == 0)
+            return;
+        if (!TryComp<TransformComponent>(ent.Owner, out var planetXform))
+            return;
+
+        // Find players currently on this planet map.
+        var planetMapId = planetXform.MapID;
+        Vector2? anchor = null;
+        var anchorCount = 0;
+        foreach (var session in _players.Sessions)
+        {
+            if (session.AttachedEntity is not { } playerEnt)
+                continue;
+            if (!TryComp<TransformComponent>(playerEnt, out var pxform) || pxform.MapID != planetMapId)
+                continue;
+
+            anchorCount++;
+            // Reservoir-style pick so any player on the planet has equal chance.
+            if (_random.Next(anchorCount) == 0)
+                anchor = _transform.GetWorldPosition(playerEnt);
+        }
+
+        if (anchor is not { } anchorPos)
+            return;
+
+        // Random point in the ring [RampMinSpawnDistance, RampSpawnRadius] around the player.
+        var angle = _random.NextFloat() * MathF.Tau;
+        var dist = _random.NextFloat(ent.Comp.RampMinSpawnDistance, ent.Comp.RampSpawnRadius);
+        var spawnWorld = anchorPos + new Vector2(MathF.Cos(angle) * dist, MathF.Sin(angle) * dist);
+
+        var groupCap = ent.Comp.RampStartGroup
+            + (int)MathF.Round(ent.Comp.RampMaxExtraGroup * GetRampProgress(ent.Comp, now));
+        var groupSize = _random.Next(ent.Comp.RampStartGroup, Math.Max(ent.Comp.RampStartGroup + 1, groupCap + 1));
+
+        var mobProto = _random.Pick(ent.Comp.RampingMobs);
+        var room = ent.Comp.RampLiveCap - ent.Comp.LiveRampMobs.Count;
+        groupSize = Math.Min(groupSize, room);
+
+        for (var i = 0; i < groupSize; i++)
+        {
+            // Light per-mob jitter so the pack doesn't stack on one tile.
+            var jitter = new Vector2(_random.NextFloat(-1.5f, 1.5f), _random.NextFloat(-1.5f, 1.5f));
+            var coords = new MapCoordinates(spawnWorld + jitter, planetMapId);
+            var mob = Spawn(mobProto, coords);
+            ent.Comp.LiveRampMobs.Add(mob);
+        }
     }
 
     /// <summary>
