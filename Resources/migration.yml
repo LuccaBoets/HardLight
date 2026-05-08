@@ -625,3 +625,6 @@ PosterSectorEnclave: PosterContrabandFreeTonto
 
 # 2026-05-06 Phase 4 sanitization: redirect removed lewd crate placements
 CrateLewdToys: CrateFunToyBox
+
+# 2026-05-08 HL community-content cleanup: redirect removed PlushieDrakeborn (Colcomm map)
+PlushieDrakeborn: PlushieCarp
