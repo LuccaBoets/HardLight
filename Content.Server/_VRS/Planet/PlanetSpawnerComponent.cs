@@ -58,7 +58,7 @@ public sealed partial class PlanetSpawnerComponent : Component
     /// far fewer wasted exclusion scans.
     /// </summary>
     [DataField]
-    public TimeSpan RollInterval = TimeSpan.FromMinutes(5);
+    public TimeSpan RollInterval = TimeSpan.FromSeconds(45);
 
     /// <summary>Probability per roll of *attempting* placement (capped by exclusions).</summary>
     [DataField]
@@ -72,9 +72,44 @@ public sealed partial class PlanetSpawnerComponent : Component
     [DataField]
     public int MaxDungeons = 6;
 
+    /// <summary>
+    /// Number of dungeons pre-seeded immediately when the planet is created,
+    /// at random offsets from the origin in <see cref="PreseedRingMin"/>..<see cref="PreseedRingMax"/>.
+    /// Guarantees dungeons exist (and have FTL beacons) before any player
+    /// exploration triggers a chunk-driven roll.
+    /// </summary>
+    [DataField]
+    public int PreseedDungeonCount = 4;
+
+    /// <summary>Inner radius (world tiles) for the pre-seeded dungeon ring.</summary>
+    [DataField]
+    public float PreseedRingMin = 350f;
+
+    /// <summary>Outer radius (world tiles) for the pre-seeded dungeon ring.</summary>
+    [DataField]
+    public float PreseedRingMax = 1200f;
+
+    /// <summary>
+    /// Number of mobs spawned around each dungeon at preseed time. Mobs are
+    /// drawn from <see cref="RampingMobs"/> and placed in a ring around the
+    /// dungeon center; this gives every dungeon a baseline garrison since
+    /// <see cref="Content.Server.Procedural.DungeonSystem.GenerateDungeon"/>
+    /// only places terrain/structures.
+    /// </summary>
+    [DataField]
+    public int PreseedMobsPerDungeon = 25;
+
+    /// <summary>Inner ring radius (tiles) for dungeon garrison spawn.</summary>
+    [DataField]
+    public float PreseedMobInnerRadius = 6f;
+
+    /// <summary>Outer ring radius (tiles) for dungeon garrison spawn.</summary>
+    [DataField]
+    public float PreseedMobOuterRadius = 28f;
+
     /// <summary>Minimum world-tile distance from any player plot or shuttle.</summary>
     [DataField]
-    public float MinDistFromActivity = 300f;
+    public float MinDistFromActivity = 96f;
 
     /// <summary>Minimum world-tile distance between any two spawned dungeons.</summary>
     [DataField]
@@ -93,6 +128,102 @@ public sealed partial class PlanetSpawnerComponent : Component
     /// <summary>Set true once <see cref="WanderingMobLayers"/> have been registered.</summary>
     [ViewVariables]
     public bool MarkerLayersAdded;
+
+    // ── Ramping ambient mob density ─────────────────────────────────────────
+
+    /// <summary>
+    /// Pool of mob prototypes the ramping ambient spawner draws from. By
+    /// default mirrors the species used in <see cref="WanderingMobLayers"/>
+    /// so the density curve looks consistent.
+    /// </summary>
+    [DataField]
+    public List<EntProtoId> RampingMobs = new()
+    {
+        "MobXeno",
+        "MobXenoDroneNPC",
+        "MobXenoRunnerNPC",
+        "MobExplorerMeleeT1",
+        "MobExplorerRangedT1",
+        "MobCarpSalvage",
+    };
+
+    /// <summary>Server time the planet started ramping (set on map init).</summary>
+    [ViewVariables]
+    public TimeSpan RampStart;
+
+    /// <summary>Server time of the next ramping ambient mob spawn.</summary>
+    [ViewVariables]
+    public TimeSpan NextRampSpawn;
+
+    /// <summary>
+    /// Interval at the very start of the round between ambient ramping spawns.
+    /// Decays linearly toward <see cref="RampMinIntervalSeconds"/> across
+    /// <see cref="RampPeakMinutes"/>.
+    /// </summary>
+    [DataField]
+    public float RampStartIntervalSeconds = 60f;
+
+    /// <summary>Floor for the spawn interval after fully ramping up.</summary>
+    [DataField]
+    public float RampMinIntervalSeconds = 8f;
+
+    /// <summary>
+    /// Pack size at round start; the upper bound rises with time. Per-spawn
+    /// pack size is rolled in [RampStartGroup, RampStartGroup + extra(time)].
+    /// </summary>
+    [DataField]
+    public int RampStartGroup = 1;
+
+    /// <summary>
+    /// Maximum extra mobs added to the pack roll at full ramp. So a pack at
+    /// peak ramp can be up to <see cref="RampStartGroup"/> + this in size.
+    /// </summary>
+    [DataField]
+    public int RampMaxExtraGroup = 4;
+
+    /// <summary>
+    /// Real-time minutes from <see cref="RampStart"/> at which the ramp is
+    /// fully scaled. Beyond this point the spawner stays at peak density.
+    /// </summary>
+    [DataField]
+    public float RampPeakMinutes = 60f;
+
+    /// <summary>
+    /// Maximum simultaneous live ambient ramp mobs. Once reached, new spawns
+    /// are skipped until older ones die or wander out of tracking.
+    /// </summary>
+    [DataField]
+    public int RampLiveCap = 80;
+
+    /// <summary>
+    /// Maximum world-tile distance from a player at which a ramping ambient
+    /// mob can be spawned. Keeps spawns relevant rather than seeding empty
+    /// regions of the planet.
+    /// </summary>
+    [DataField]
+    public float RampSpawnRadius = 96f;
+
+    /// <summary>
+    /// Minimum world-tile distance from a player for a ramping spawn so the
+    /// player isn't ambushed inside their own viewport.
+    /// </summary>
+    [DataField]
+    public float RampMinSpawnDistance = 24f;
+
+    /// <summary>
+    /// Live entities the ramping spawner has placed. Used for the live cap
+    /// check; cleaned up lazily as entries are missing/dead.
+    /// </summary>
+    [ViewVariables]
+    public List<EntityUid> LiveRampMobs = new();
+
+    /// <summary>Set true once initial dungeons have been pre-seeded for this planet.</summary>
+    [ViewVariables]
+    public bool Preseeded;
+
+    /// <summary>Index of the next pre-seed dungeon to place; staggered across ticks.</summary>
+    [ViewVariables]
+    public int PreseedIndex;
 
     /// <summary>Server time of the next dungeon-spawn roll.</summary>
     [ViewVariables]

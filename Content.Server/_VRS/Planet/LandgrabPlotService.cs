@@ -12,6 +12,7 @@ using Robust.Shared.ContentPack;
 using Robust.Shared.EntitySerialization;
 using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.GameObjects;
+using Robust.Shared.GameStates;
 using Robust.Shared.IoC;
 using Robust.Shared.Log;
 using Robust.Shared.Map;
@@ -40,6 +41,7 @@ public sealed class LandgrabPlotService : EntitySystem
     [Dependency] private readonly MetaDataSystem _metaData = default!;
     [Dependency] private readonly IResourceManager _resourceManager = default!;
     [Dependency] private readonly BankSystem _bank = default!;
+    [Dependency] private readonly SharedPvsOverrideSystem _pvs = default!;
 
     private ISawmill _sawmill = default!;
 
@@ -55,6 +57,17 @@ public sealed class LandgrabPlotService : EntitySystem
         _sawmill = Logger.GetSawmill("landgrab");
 
         SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestart);
+        SubscribeLocalEvent<LandgrabPlotComponent, ComponentInit>(OnPlotInit);
+    }
+
+    /// <summary>
+    /// Whenever a plot becomes active (purchase, load from save, restored from
+    /// a serialised map), make sure clients receive it regardless of distance
+    /// so the border overlay can render it.
+    /// </summary>
+    private void OnPlotInit(Entity<LandgrabPlotComponent> ent, ref ComponentInit args)
+    {
+        _pvs.AddGlobalOverride(ent.Owner);
     }
 
     private void OnRoundRestart(RoundRestartCleanupEvent ev)
@@ -181,6 +194,11 @@ public sealed class LandgrabPlotService : EntitySystem
         plot.OwnerName = ownerName;
         plot.PlotSize = registry.PlotSize;
         Dirty(grid.Owner, plot);
+
+        // Send the plot grid (and therefore its LandgrabPlotComponent) to all
+        // clients regardless of distance, so the border overlay can render it
+        // even when the camera is far away.
+        _pvs.AddGlobalOverride(grid.Owner);
 
         _sawmill.Info($"Purchased plot for {ckey} at ({worldPos.X:F0}, {worldPos.Y:F0}).");
         return true;
@@ -395,6 +413,10 @@ public sealed class LandgrabPlotService : EntitySystem
         plot.OwnerName = ownerName;
         plot.PlotSize = registry.PlotSize;
         Dirty(newGrid, plot);
+
+        // Mirror the purchase path: keep the loaded plot grid globally visible
+        // so the border overlay always renders it.
+        _pvs.AddGlobalOverride(newGrid);
 
         _metaData.SetEntityName(newGrid, $"{ownerName}'s outpost");
         _sawmill.Info($"Loaded saved plot '{slotName}' for {ckey} at ({worldPos.X:F0}, {worldPos.Y:F0}).");
