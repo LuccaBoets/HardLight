@@ -22,10 +22,10 @@
     layers:
     - state: big
       color: "#6c15ae"
-  - type: Stealth
-    minVisibility: 0.8
-    maxVisibility: 0.8
-    lastVisibility: 0.8
+  # - type: Stealth
+    # minVisibility: 0.8
+    # maxVisibility: 0.8
+    # lastVisibility: 0.8
   - type: NullSpaceBlocker
     bypassPVS: true
     unphaseOnCollide: false

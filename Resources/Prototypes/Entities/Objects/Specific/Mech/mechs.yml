@@ -31,6 +31,9 @@
     - Frezon
     #- Helium3 TODO: fusion
   - type: HLAllowStrapMovement # Hardlight
+  - type: Speech
+    speechSounds: Pai
+  - type: CombatMode
   - type: AirIntake
   - type: CryoPodAir
   # for intake and filter to work
