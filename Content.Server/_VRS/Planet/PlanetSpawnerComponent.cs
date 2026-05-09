@@ -229,7 +229,90 @@ public sealed partial class PlanetSpawnerComponent : Component
     [ViewVariables]
     public TimeSpan NextRoll;
 
+    // ── Planet combat contract events ─────────────────────────────────────────
+
+    /// <summary>
+    /// How often to roll for a new combat contract event.
+    /// </summary>
+    [DataField]
+    public TimeSpan ContractRollInterval = TimeSpan.FromMinutes(4);
+
+    /// <summary>
+    /// Per-roll chance to spawn a contract event when below
+    /// <see cref="MaxActiveContracts"/>.
+    /// </summary>
+    [DataField]
+    public float ContractSpawnChancePerRoll = 0.65f;
+
+    /// <summary>
+    /// Maximum simultaneous contract events on this planet.
+    /// </summary>
+    [DataField]
+    public int MaxActiveContracts = 2;
+
+    /// <summary>
+    /// Server time of the next contract roll.
+    /// </summary>
+    [ViewVariables]
+    public TimeSpan NextContractRoll;
+
+    /// <summary>
+    /// How often active contracts are scanned for completion.
+    /// </summary>
+    [DataField]
+    public TimeSpan ContractStatusCheckInterval = TimeSpan.FromSeconds(1);
+
+    /// <summary>
+    /// Server time of the next active-contract completion scan.
+    /// </summary>
+    [ViewVariables]
+    public TimeSpan NextContractStatusCheck;
+
+    /// <summary>
+    /// Probability a contract event is a dungeon assault instead of a roaming
+    /// hunt encounter.
+    /// </summary>
+    [DataField]
+    public float DungeonContractChance = 0.45f;
+
+    /// <summary>
+    /// Contract mob spawn ring inner radius in world tiles.
+    /// </summary>
+    [DataField]
+    public float ContractMobInnerRadius = 8f;
+
+    /// <summary>
+    /// Contract mob spawn ring outer radius in world tiles.
+    /// </summary>
+    [DataField]
+    public float ContractMobOuterRadius = 34f;
+
+    /// <summary>
+    /// No-landing radius around a contract marker beacon.
+    /// </summary>
+    [DataField]
+    public float ContractFtlLandingRadius = 50f;
+
+    /// <summary>
+    /// Active contract events currently running on this planet.
+    /// </summary>
+    [ViewVariables]
+    public List<PlanetCombatContract> ActiveContracts = new();
+
     /// <summary>World positions of dungeons we've already placed this round.</summary>
     [ViewVariables]
     public List<Vector2> SpawnedDungeons = new();
+}
+
+public sealed class PlanetCombatContract
+{
+    public string Name = string.Empty;
+    public string DifficultyName = string.Empty;
+    public bool IsDungeonContract;
+    public Vector2 Center;
+    public string RewardBriefcaseProto = string.Empty;
+    public EntityUid? Beacon;
+    public EntityUid? Boss;
+    public List<EntityUid> Members = new();
+    public Vector2? DungeonCenter;
 }
