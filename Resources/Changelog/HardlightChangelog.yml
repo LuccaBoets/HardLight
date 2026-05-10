@@ -3768,3 +3768,11 @@ Entries:
       message: 'Fixed Warden duplicate "backpack items" loadout category. '
   id: 405
   time: '2026-05-10T11:02:52.0000000+00:00'
+- author: Illumos
+  changes:
+    - type: Remove
+      message: Blindness mutation is now disabled.
+    - type: Remove
+      message: DNR mutation is now disabled.
+  id: 406
+  time: '2026-05-10T11:07:15.0000000+00:00'
