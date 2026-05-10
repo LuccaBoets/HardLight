@@ -105,6 +105,7 @@
     - id: PlushieShadekin
     - id: PlushieSgaeyl
     - id: PlushieVytian
+    - id: PlushieKinetic
 
 - type: entity
   id: CrateFunPlushie

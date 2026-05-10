@@ -311,6 +311,8 @@
     - id: PlushieThrongler #hehe
       prob: 0.0005
       orGroup: Plushies
+    - id: PlushieLoming
+      prob: 0.1
     #useful
     - id: AmeJar
       prob: 0.01

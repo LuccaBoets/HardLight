@@ -1094,3 +1094,35 @@
     wideAnimationRotation: 180
     soundHit:
      path: /Audio/_Starlight/Voice/Resomi/resomi_cry_1.ogg
+
+# Naked varient of plushes-in-maints
+
+- type: entity
+  parent: BasePlushie
+  id: PlushieMaintsNaked
+  name: Maints Plushie
+  description: MARR
+  components:
+  - type: Sprite
+    sprite: _HL/Objects/Fun/HLtoys.rsi
+    state: naked-maints-plush
+    scale: 0.8, 0.8
+  - type: EmitSoundOnUse
+    sound:
+      path: /Audio/_Starlight/Voice/Shadekin/marr.ogg
+  - type: EmitSoundOnLand
+    sound:
+      path: /Audio/_Starlight/Voice/Resomi/resomi_cry_1.ogg
+  - type: EmitSoundOnActivate
+    sound:
+      path: /Audio/_Starlight/Voice/Shadekin/wurble.ogg
+  - type: EmitSoundOnTrigger
+    sound:
+      path: /Audio/_Starlight/Voice/Shadekin/marr.ogg
+  - type: EmitSoundOnCollide
+    sound:
+      path: /Audio/_Starlight/Voice/Shadekin/scream_f1.ogg
+  - type: MeleeWeapon
+    wideAnimationRotation: 180
+    soundHit:
+      path: /Audio/_Starlight/Voice/Shadekin/scream_f1.ogg

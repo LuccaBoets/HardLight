@@ -44,3 +44,69 @@
     sprite: _HL/Objects/Fun/patreon_plushies.rsi
     state: VytianPlush
     scale: 0.8, 0.8
+
+- type: entity
+  parent: BasePlushie
+  id: PlushieKinetic
+  name: Kinetic Plushie
+  description: The rough and rugged Kinetic... but softer! Now with a less-than-lethal marr.
+  components:
+  - type: Sprite
+    sprite: _HL/Objects/Fun/patreon_plushies.rsi
+    state: KineticPlush
+    scale: 0.8, 0.8
+  - type: Clothing
+    quickEquip: false
+    sprite: _HL/Objects/Fun/HLtoys.rsi
+    equippedPrefix: KineticPlush
+    slots:
+    - HEAD
+  - type: EmitSoundOnUse
+    sound:
+      path: /Audio/_Starlight/Voice/Shadekin/marr.ogg
+  - type: EmitSoundOnLand
+    sound:
+      path: /Audio/_Starlight/Voice/Shadekin/marr.ogg
+  - type: EmitSoundOnActivate
+    sound:
+      path: /Audio/_Starlight/Voice/Shadekin/marr.ogg
+  - type: EmitSoundOnTrigger
+    sound:
+      path: /Audio/_Starlight/Voice/Shadekin/marr.ogg
+  - type: EmitSoundOnCollide
+    sound:
+      path: /Audio/_Starlight/Voice/Shadekin/marr.ogg
+  - type: MeleeWeapon
+    wideAnimationRotation: 180
+    soundHit:
+      path: /Audio/_Starlight/Voice/Shadekin/marr.ogg
+
+- type: entity
+  parent: BasePlushie
+  id: PlushieLoming
+  name: Loming Plushie
+  description:
+  components:
+  - type: Sprite
+    sprite: _HL/Objects/Fun/patreon_plushies.rsi
+    state: LomingPlush
+    scale: 0.8, 0.8
+  - type: EmitSoundOnUse
+    sound:
+      path: /Audio/_Starlight/Voice/Shadekin/wurble.ogg
+  - type: EmitSoundOnLand
+    sound:
+      path: /Audio/_Starlight/Voice/Resomi/resomi_cry_3.ogg
+  - type: EmitSoundOnActivate
+    sound:
+      path: /Audio/_Starlight/Voice/Felionoid/cat_trill2.ogg
+  - type: EmitSoundOnTrigger
+    sound:
+      path: /Audio/_Starlight/Voice/Resomi/resomi_chirp2.ogg
+  - type: EmitSoundOnCollide
+    sound:
+      path: /Audio/_Starlight/Voice/Resomi/resomi_scree_2.ogg
+  - type: MeleeWeapon
+    wideAnimationRotation: 180
+    soundHit:
+      path: /Audio/_Starlight/Voice/Resomi/resomi_squawk_1.ogg
