@@ -14,6 +14,7 @@ using Content.Server._HL.Shipyard; // HardLight
 using Content.Shared._Common.Consent; // HardLight
 using Content.Shared._HL.Shipyard; // HardLight
 using Content.Shared._NF.Shipyard.Components;
+using Content.Shared._Triad.Shipyard; // VRS: Triad SavingContraband port
 using Content.Shared._NF.Shipyard.Events;
 using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.Components.SolutionManager;
@@ -408,6 +409,10 @@ public sealed class ShipyardGridSaveSystem : EntitySystem
             // HardLight: Remove components that fail serialization (e.g., player state) from entities on the grid.
             RemoveSerializationBlockingComponentsOnGrid(gridUid);
 
+            // VRS: Remove all entities marked SavingContraband (illegal-to-own or
+            // save-breaking machinery such as Mono datafarm chassis). Ported from Triad.
+            RemoveSavingContrabandEntitiesOnGrid(gridUid);
+
             // HardLight: Preserve spray-painted visual prototype by copying runtime appearance data into a serialized component field.
             StampSprayPaintedPrototypesOnGrid(gridUid);
 
@@ -476,6 +481,30 @@ public sealed class ShipyardGridSaveSystem : EntitySystem
         {
             _entityManager.RemoveComponent<MindContainerComponent>(uid);
             _entityManager.RemoveComponent<ConsentComponent>(uid);
+        }
+    }
+
+    /// <summary>
+    /// VRS: Triad-port. Deletes any entity carrying <see cref="SavingContrabandComponent"/>
+    /// from the target grid before serialization. These entities are flagged as
+    /// either illegal-to-own or save-breaking (e.g. faction servers, datafarm cores)
+    /// and are removed instead of written into the blueprint.
+    /// </summary>
+    private void RemoveSavingContrabandEntitiesOnGrid(EntityUid gridUid)
+    {
+        var toRemove = new HashSet<EntityUid>();
+
+        var savingContraband = _entityManager.EntityQueryEnumerator<SavingContrabandComponent, TransformComponent>();
+        while (savingContraband.MoveNext(out var uid, out var _, out var xform))
+        {
+            if (xform.GridUid != gridUid)
+                continue;
+            toRemove.Add(uid);
+        }
+
+        foreach (var uid in toRemove)
+        {
+            Del(uid);
         }
     }
 
