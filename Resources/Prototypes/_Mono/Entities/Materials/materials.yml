@@ -167,6 +167,14 @@
   - type: RadiationReceiver
   - type: RadiationSource
     intensity: 0.4
+  - type: ChainRadiation
+    baseIntensity: 0.4
+    coefficient: 0.1 # critical mass at 25
+    explosionThreshold: 10 # let it cook a bit
+    totalIntensity: 15000
+    intensitySlope: 2000
+    maxIntensity: 4000
+    explosionType: Radioactive # VRS: ChainRadiation owns the explosion prototype directly (ExplosiveComponent is locked).
   - type: Appearance
   - type: PhysicalComposition
     materialComposition:
