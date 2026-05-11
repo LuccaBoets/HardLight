@@ -1,8 +1,9 @@
 # Mono port: nanolaminate hull walls used by capital-class hostile shuttle event
 # POIs (wyrm, wyvern). The original Mono prototype carries the ArmorThickness
-# component (armor-piercing damage modifier) which has not been ported yet.
-# These stub variants omit ArmorThickness so the maps load; HP and visuals
-# match the original. ArmorThickness will be layered on in a follow-up PR.
+# component (armor-piercing damage modifier) which is now ported in #37.
+# Once both #33 and #37 are in dev, this rewire restores ArmorThickness so the
+# walls behave like the Mono originals (capital-class hull armour, pierceable
+# only by AP rounds with sufficient piercing budget).
 
 - type: entity
   id: WallNanolaminateDiagonal
@@ -76,6 +77,8 @@
   - type: ShipRepairable
     repairTime: 3
     repairCost: 6
+  - type: ArmorThickness
+    thickness: 10
 
 - type: entity
   parent: BaseWallTierFour
@@ -88,6 +91,8 @@
     price: 250
   - type: RadiationBlocker
     resistance: 5
+  - type: ArmorThickness
+    thickness: 10
   - type: Sprite
     sprite: _Shitmed/Structures/Walls/abductor.rsi
   - type: Icon
