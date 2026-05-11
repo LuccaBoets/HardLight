@@ -1,0 +1,26 @@
+# Mono port: trimmed for VRS — only SpawnLootTechDisksPrinterT4 (used by
+# asakim_medium event map). All other tech-disk loot variants removed because
+# they reference dozens of TechDisk* entity prototypes (TechDiskBluespaceBags,
+# TechDiskMechCiv, TechDiskRCD, etc.) that are not yet ported in VRS.
+
+- type: entity
+  name: tech disk printer disks
+  id: SpawnLootTechDisksPrinterT4
+  parent: MarkerBasePlaceFree
+  suffix: "Tech Disk Printer T4"
+  components:
+  - type: Sprite
+    layers:
+    - state: green
+      scale: 0.7, 0.7
+    - sprite: _NF/Markers/general.rsi
+      state: questionmark
+      color: red
+  # VRS: original Mono spawner referenced TechDiskTranslationPreFracture and
+  # TechDiskSpeedBoots — both not yet ported. Stub spawner uses a generic
+  # research disk to keep the map slot populated.
+  - type: RandomSpawner
+    prototypes:
+    - ResearchDisk
+    chance: 0.95
+    offset: 0.0
