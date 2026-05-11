@@ -630,4 +630,5 @@ PosterSectorEnclave: PosterContrabandFreeTonto
 CrateLewdToys: CrateFunToyBox
 
 # 2026-05-08 HL community-content cleanup: redirect removed PlushieDrakeborn (Colcomm map)
-PlushieDrakeborn: PlushieCarp
+# (already mapped earlier in this file at line 26 — duplicate removed to avoid
+# YAML mapping-key collision that crashes MapMigrationSystem.)

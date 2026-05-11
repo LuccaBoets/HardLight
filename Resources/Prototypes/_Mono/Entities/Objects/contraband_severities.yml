@@ -1,0 +1,16 @@
+# VRS port: trimmed — only the Monolith loot severities are kept.
+# The FactionGear{0..3} and OtherFactionGear{0..3} severities are already
+# defined by NF in /Prototypes/_NF/contraband_severities.yml; including them
+# here would cause a duplicate-prototype load failure.
+
+- type: contrabandSeverity
+  id: MonolithContrabandT1
+  examineText: contraband-examine-text-monolith-loot-1
+
+- type: contrabandSeverity
+  id: MonolithContrabandT2
+  examineText: contraband-examine-text-monolith-loot-2
+
+- type: contrabandSeverity
+  id: MonolithContrabandT3
+  examineText: contraband-examine-text-monolith-loot-3
