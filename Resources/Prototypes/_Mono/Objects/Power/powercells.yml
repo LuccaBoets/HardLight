@@ -1,0 +1,39 @@
+# VRS port: Mono — combat power cell. Parents the existing high-capacity cell
+# and adds a pseudo-EMP-immune variant intended for combat use. The
+# corresponding Triad LargePowerCell* recipes are deferred — their underlying
+# entities are not yet ported in VRS.
+
+- type: entity
+  name: combat power cell
+  description: A rechargeable standardized power cell. This combat brand is equipped with partial protection from power spikes.
+  id: PowerCellCombat
+  suffix: Full
+  parent: PowerCellHigh
+  components:
+  - type: Sprite
+    sprite: _Mono/Objects/Power/power_cells.rsi
+    layers:
+    - map: [ "enum.PowerCellVisualLayers.Base" ]
+      state: combat
+    - map: [ "enum.PowerCellVisualLayers.Unshaded" ]
+      state: o2
+      shader: unshaded
+  # VRS: EmpResistance component is not yet ported; the combat cell ships
+  # without EMP protection until that system lands.
+
+- type: entity
+  id: PowerCellCombatPrinted
+  suffix: Empty
+  parent: PowerCellCombat
+  components:
+  - type: Sprite
+    layers:
+      - map: [ "enum.PowerCellVisualLayers.Base" ]
+        state: combat
+      - map: [ "enum.PowerCellVisualLayers.Unshaded" ]
+        state: o2
+        shader: unshaded
+        visible: false
+  - type: Battery
+    maxCharge: 1080
+    startingCharge: 0
