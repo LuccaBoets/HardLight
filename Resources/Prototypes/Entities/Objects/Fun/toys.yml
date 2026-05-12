@@ -11,6 +11,7 @@
     tags:
       - Payload
       - ClothMade
+      - RoomSaveable
   - type: EmitSoundOnUse
     sound:
       collection: ToySqueak

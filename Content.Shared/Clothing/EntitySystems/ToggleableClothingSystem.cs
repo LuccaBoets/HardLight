@@ -442,6 +442,16 @@ public sealed class ToggleableClothingSystem : EntitySystem
         }
     }
 
+    /// <summary>
+    /// Clears the attachment link on a helmet before it is deleted during container restoration,
+    /// preventing <see cref="OnRemoveAttached"/> from stripping <see cref="ToggleableClothingComponent"/>
+    /// off the parent suit. Only call this immediately before deletion.
+    /// </summary>
+    public void DisconnectAttachedClothing(AttachedClothingComponent comp)
+    {
+        comp.AttachedUid = EntityUid.Invalid;
+    }
+
     private void OnInit(EntityUid uid, ToggleableClothingComponent component, ComponentInit args)
     {
         // Only create container for legacy clothing mode, not for marking mode

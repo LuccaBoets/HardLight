@@ -34,6 +34,9 @@
   - type: ContainerContainer
     containers:
       stash: !type:ContainerSlot {}
+  - type: Tag
+    tags:
+      - RoomSaveable
   - type: Pullable
   - type: Damageable
     damageContainer: StructuralInorganic # The pot. Not the plant. Or is it plastic?
