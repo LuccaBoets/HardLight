@@ -611,19 +611,19 @@ public sealed partial class ChatSystem : SharedChatSystem
                 _chatManager.ChatMessageToOne(ChatChannel.Whisper,
                     canUnderstand ? message : languageObfuscatedMessage,
                     canUnderstand ? wrappedMessage : wrappedLanguageMessage,
-                    source, false, session.Channel);
+                    source, false, session.Channel, colorOverride: language.SpeechOverride.Color);
             //If listener is too far, they only hear fragments of the message
             else if (_examineSystem.InRangeUnOccluded(source, listener, WhisperMuffledRange))
                 _chatManager.ChatMessageToOne(ChatChannel.Whisper,
                     canUnderstand ? obfuscatedMessage : languageObfuscatedReadability,
                     canUnderstand ? wrappedobfuscatedMessage : wrappedLanguageObfuscatedMessage,
-                    source, false, session.Channel);
+                    source, false, session.Channel, colorOverride: language.SpeechOverride.Color);
             //If listener is too far and has no line of sight, they can't identify the whisperer's identity
             else
                 _chatManager.ChatMessageToOne(ChatChannel.Whisper,
                     canUnderstand ? obfuscatedMessage : languageObfuscatedReadability,
                     canUnderstand ? wrappedUnknownMessage : wrappedLanguageUnknownMessage,
-                    source, false, session.Channel);
+                    source, false, session.Channel, colorOverride: language.SpeechOverride.Color);
         }
 
         _replay.RecordServerMessage(new ChatMessage(ChatChannel.Whisper, message, wrappedMessage, GetNetEntity(source), null, MessageRangeHideChatForReplay(range)));
@@ -894,6 +894,8 @@ public sealed partial class ChatSystem : SharedChatSystem
         LanguagePrototype language,
         NetUserId? author = null)
     {
+        var colorOverride = language.SpeechOverride.Color;
+
         foreach (var (session, data) in GetRecipients(source, VoiceRange))
         {
             var entRange = MessageRangeCheck(session, data, range);
@@ -902,9 +904,9 @@ public sealed partial class ChatSystem : SharedChatSystem
             var entHideChat = entRange == MessageRangeCheckResult.HideChat;
 
             if (session.AttachedEntity is { Valid: true } listener && _language.CanUnderstand(listener, language.ID))
-                _chatManager.ChatMessageToOne(channel, message, wrappedMessage, source, entHideChat, session.Channel, author: author);
+                _chatManager.ChatMessageToOne(channel, message, wrappedMessage, source, entHideChat, session.Channel, colorOverride: colorOverride, author: author);
             else
-                _chatManager.ChatMessageToOne(channel, obfuscatedMessage, wrappedObfuscatedMessage, source, entHideChat, session.Channel, author: author);
+                _chatManager.ChatMessageToOne(channel, obfuscatedMessage, wrappedObfuscatedMessage, source, entHideChat, session.Channel, colorOverride: colorOverride, author: author);
         }
 
         _replay.RecordServerMessage(new ChatMessage(channel, message, wrappedMessage, GetNetEntity(source), null, MessageRangeHideChatForReplay(range)));
@@ -936,12 +938,18 @@ public sealed partial class ChatSystem : SharedChatSystem
 
         var fontType = language.SpeechOverride.FontId ?? speech.FontId;
         var fontSize = language.SpeechOverride.FontSize ?? speech.FontSize;
+        var fontColor = (language.SpeechOverride.Color ?? Color.White).ToHex();
+        var displayName = entityName;
+
+        if (language.IsVisibleLanguage && !string.IsNullOrWhiteSpace(entityName))
+            displayName = Loc.GetString("chat-language-prefix", ("entityName", entityName), ("languageName", language.ChatName));
 
         return Loc.GetString(wrapId,
-            ("entityName", entityName),
+            ("entityName", displayName),
             ("verb", Loc.GetString(verbId)),
             ("fontType", fontType),
             ("fontSize", fontSize),
+            ("fontColor", fontColor),
             ("message", FormattedMessage.EscapeText(message)));
     }
 
