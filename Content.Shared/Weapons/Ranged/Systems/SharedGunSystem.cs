@@ -479,7 +479,10 @@ public abstract partial class SharedGunSystem : EntitySystem
             return;
         }
 
-        var fromCoordinates = Transform(user).Coordinates;
+        // Use the weapon's transform as the authoritative muzzle origin.
+        // For mounted ship guns, callers may pass a controlling entity as `user`; using that
+        // transform can produce center-origin shots on moving grids (HL #1631).
+        var fromCoordinates = Transform(gunUid).Coordinates;
         // Remove ammo
         var ev = new TakeAmmoEvent(shots, new List<(EntityUid? Entity, IShootable Shootable)>(), fromCoordinates, user, true); // Frontier: add intent to fire
 
