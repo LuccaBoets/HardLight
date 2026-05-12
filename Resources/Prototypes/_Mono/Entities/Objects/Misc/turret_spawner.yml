@@ -2,8 +2,7 @@
 # by event maps). All other faction-flavour spawners (TSFMC/USSP/PDV) removed
 # because their underlying turret entities (WeaponTurretLaserTSFMC,
 # WeaponTurretTSFMC, WeaponTurretUSSP, WeaponTurretPDV) are not yet ported in
-# VRS. The Silicon turret spawner stubs to the existing VRS WeaponTurretLaser
-# Syndicate variant until the Mono silicon-laser turret is ported.
+# VRS.
 
 - type: entity
   id: SpawnMobWeaponTurretLaserSilicon
@@ -18,6 +17,5 @@
       state: base
   - type: ConditionalSpawner
     prototypes:
-    # VRS: Mono's WeaponTurretLaserSilicon not ported; substitute with the
-    # equivalent VRS hostile-laser turret to keep the spawner functional.
-    - WeaponTurretLaserSyndicateNF
+    - WeaponTurretLaserSilicon
+
