@@ -15,6 +15,7 @@ using Content.Server.Station.Systems;
 // VRS port: Einstein Engines Language framework (via Triad).
 using Content.Server._EinsteinEngines.Language;
 using Content.Shared._EinsteinEngines.Language;
+using Content.Shared.Speech;
 using Content.Shared.ActionBlocker;
 using Content.Shared.Administration;
 using Content.Shared.CCVar;
@@ -255,8 +256,12 @@ public sealed partial class ChatSystem : SharedChatSystem
         if (string.IsNullOrEmpty(message))
             return;
 
+        // VRS port: Einstein Engines - Language. Apply per-language ChatTypeOverride (e.g. force a chat type) and AllowRadio gate.
+        if (language.SpeechOverride.ChatTypeOverride is { } chatTypeOverride)
+            desiredType = chatTypeOverride;
+
         // This message may have a radio prefix, and should then be whispered to the resolved radio channel
-        if (checkRadioPrefix)
+        if (checkRadioPrefix && language.SpeechOverride.AllowRadio)
         {
             if (TryProccessRadioMessage(source, message, out var modMessage, out var channel))
             {
@@ -461,10 +466,12 @@ public sealed partial class ChatSystem : SharedChatSystem
         bool ignoreActionBlocker = false
         )
     {
-        if (!_actionBlocker.CanSpeak(source) && !ignoreActionBlocker)
+        // VRS port: Einstein Engines - Language. RequireSpeech=false bypasses the speech action blocker (e.g. Sign for muted entities).
+        if (language.SpeechOverride.RequireSpeech && !_actionBlocker.CanSpeak(source) && !ignoreActionBlocker)
             return;
 
-        var message = TransformSpeech(source, originalMessage);
+        // VRS port: Einstein Engines - Language. Skip TransformSpeech (accents) when the language doesn't require speech.
+        var message = language.SpeechOverride.RequireSpeech ? TransformSpeech(source, originalMessage) : originalMessage;
 
         if (message.Length == 0)
             return;
@@ -489,21 +496,12 @@ public sealed partial class ChatSystem : SharedChatSystem
 
         name = FormattedMessage.EscapeText(name);
 
-        var wrappedMessage = Loc.GetString(speech.Bold ? "chat-manager-entity-say-bold-wrap-message" : "chat-manager-entity-say-wrap-message",
-            ("entityName", name),
-            ("verb", Loc.GetString(_random.Pick(speech.SpeechVerbStrings))),
-            ("fontType", speech.FontId),
-            ("fontSize", speech.FontSize),
-            ("message", FormattedMessage.EscapeText(message)));
+        // VRS port: Einstein Engines - Language. Per-language wrap selection (e.g. Sign uses gesture wraps).
+        var wrappedMessage = WrapLanguageMessage(InGameICChatType.Speak, speech, name, message, language, isBoldFallback: speech.Bold);
 
         // VRS port: Einstein Engines - Language. Build a parallel obfuscated wrap for listeners that don't speak the language.
         var obfuscatedMessage = _language.ObfuscateSpeech(message, language);
-        var wrappedObfuscatedMessage = Loc.GetString(speech.Bold ? "chat-manager-entity-say-bold-wrap-message" : "chat-manager-entity-say-wrap-message",
-            ("entityName", name),
-            ("verb", Loc.GetString(_random.Pick(speech.SpeechVerbStrings))),
-            ("fontType", speech.FontId),
-            ("fontSize", speech.FontSize),
-            ("message", FormattedMessage.EscapeText(obfuscatedMessage)));
+        var wrappedObfuscatedMessage = WrapLanguageMessage(InGameICChatType.Speak, speech, name, obfuscatedMessage, language, isBoldFallback: speech.Bold);
 
         SendInVoiceRangeLanguage(ChatChannel.Local, message, wrappedMessage, obfuscatedMessage, wrappedObfuscatedMessage, source, range, language);
 
@@ -544,10 +542,13 @@ public sealed partial class ChatSystem : SharedChatSystem
         bool ignoreActionBlocker = false
         )
     {
-        if (!_actionBlocker.CanSpeak(source) && !ignoreActionBlocker)
+        // VRS port: Einstein Engines - Language. RequireSpeech=false bypasses the speech action blocker (e.g. Sign for muted entities).
+        if (language.SpeechOverride.RequireSpeech && !_actionBlocker.CanSpeak(source) && !ignoreActionBlocker)
             return;
 
-        var message = TransformSpeech(source, FormattedMessage.RemoveMarkupOrThrow(originalMessage));
+        var message = language.SpeechOverride.RequireSpeech
+            ? TransformSpeech(source, FormattedMessage.RemoveMarkupOrThrow(originalMessage))
+            : FormattedMessage.RemoveMarkupOrThrow(originalMessage);
         if (message.Length == 0)
             return;
 
@@ -573,24 +574,24 @@ public sealed partial class ChatSystem : SharedChatSystem
         }
         name = FormattedMessage.EscapeText(name);
 
-        var wrappedMessage = Loc.GetString("chat-manager-entity-whisper-wrap-message",
-            ("entityName", name), ("message", FormattedMessage.EscapeText(message)));
+        var wrappedMessage = WrapLanguageMessage(InGameICChatType.Whisper, GetSpeechVerb(source, message), name, message, language,
+            wrapId: "chat-manager-entity-whisper-wrap-message");
 
-        var wrappedobfuscatedMessage = Loc.GetString("chat-manager-entity-whisper-wrap-message",
-            ("entityName", nameIdentity), ("message", FormattedMessage.EscapeText(obfuscatedMessage)));
+        var wrappedobfuscatedMessage = WrapLanguageMessage(InGameICChatType.Whisper, GetSpeechVerb(source, message), nameIdentity, obfuscatedMessage, language,
+            wrapId: "chat-manager-entity-whisper-wrap-message");
 
-        var wrappedUnknownMessage = Loc.GetString("chat-manager-entity-whisper-unknown-wrap-message",
-            ("message", FormattedMessage.EscapeText(obfuscatedMessage)));
+        var wrappedUnknownMessage = WrapLanguageMessage(InGameICChatType.Whisper, GetSpeechVerb(source, message), string.Empty, obfuscatedMessage, language,
+            wrapId: "chat-manager-entity-whisper-unknown-wrap-message");
 
         // VRS port: Einstein Engines - Language. Variants for listeners who don't understand the spoken language.
-        var wrappedLanguageMessage = Loc.GetString("chat-manager-entity-whisper-wrap-message",
-            ("entityName", name), ("message", FormattedMessage.EscapeText(languageObfuscatedMessage)));
+        var wrappedLanguageMessage = WrapLanguageMessage(InGameICChatType.Whisper, GetSpeechVerb(source, message), name, languageObfuscatedMessage, language,
+            wrapId: "chat-manager-entity-whisper-wrap-message");
 
-        var wrappedLanguageObfuscatedMessage = Loc.GetString("chat-manager-entity-whisper-wrap-message",
-            ("entityName", nameIdentity), ("message", FormattedMessage.EscapeText(languageObfuscatedReadability)));
+        var wrappedLanguageObfuscatedMessage = WrapLanguageMessage(InGameICChatType.Whisper, GetSpeechVerb(source, message), nameIdentity, languageObfuscatedReadability, language,
+            wrapId: "chat-manager-entity-whisper-wrap-message");
 
-        var wrappedLanguageUnknownMessage = Loc.GetString("chat-manager-entity-whisper-unknown-wrap-message",
-            ("message", FormattedMessage.EscapeText(languageObfuscatedReadability)));
+        var wrappedLanguageUnknownMessage = WrapLanguageMessage(InGameICChatType.Whisper, GetSpeechVerb(source, message), string.Empty, languageObfuscatedReadability, language,
+            wrapId: "chat-manager-entity-whisper-unknown-wrap-message");
 
         foreach (var (session, data) in GetRecipients(source, WhisperMuffledRange))
         {
@@ -907,6 +908,41 @@ public sealed partial class ChatSystem : SharedChatSystem
         }
 
         _replay.RecordServerMessage(new ChatMessage(channel, message, wrappedMessage, GetNetEntity(source), null, MessageRangeHideChatForReplay(range)));
+    }
+
+    /// <summary>
+    ///     VRS port: Einstein Engines - Language. Builds a wrapped chat message respecting the language's
+    ///     <see cref="SpeechOverrideInfo.MessageWrapOverrides"/>, <see cref="SpeechOverrideInfo.SpeechVerbOverrides"/>,
+    ///     <see cref="SpeechOverrideInfo.FontId"/>, and <see cref="SpeechOverrideInfo.FontSize"/> when present.
+    /// </summary>
+    private string WrapLanguageMessage(
+        InGameICChatType chatType,
+        SpeechVerbPrototype speech,
+        string entityName,
+        string message,
+        LanguagePrototype language,
+        string? wrapId = null,
+        bool isBoldFallback = false)
+    {
+        if (wrapId == null)
+            wrapId = isBoldFallback ? "chat-manager-entity-say-bold-wrap-message" : "chat-manager-entity-say-wrap-message";
+
+        if (language.SpeechOverride.MessageWrapOverrides.TryGetValue(chatType, out var wrapOverride))
+            wrapId = wrapOverride;
+
+        var verbId = language.SpeechOverride.SpeechVerbOverrides is { } verbsOverride && verbsOverride.Count > 0
+            ? _random.Pick(verbsOverride).ToString()
+            : _random.Pick(speech.SpeechVerbStrings);
+
+        var fontType = language.SpeechOverride.FontId ?? speech.FontId;
+        var fontSize = language.SpeechOverride.FontSize ?? speech.FontSize;
+
+        return Loc.GetString(wrapId,
+            ("entityName", entityName),
+            ("verb", Loc.GetString(verbId)),
+            ("fontType", fontType),
+            ("fontSize", fontSize),
+            ("message", FormattedMessage.EscapeText(message)));
     }
 
     /// <summary>
