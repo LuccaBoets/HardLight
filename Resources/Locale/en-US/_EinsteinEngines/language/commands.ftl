@@ -1,6 +1,8 @@
 command-list-langs-desc = List languages your current entity can speak at the current moment.
 command-list-langs-help = Usage: {$command}
 
+command-saylang-desc = Send a message in a specific language. To choose a language, you can use either the name of the language, or its position in the list of languages.
+command-saylang-help = Usage: {$command} <language id> <message>. Example: {$command} TauCetiBasic "Hello World!". Example: {$command} 1 "Hello World!"
 command-language-select-desc = Select the currently spoken language of your entity. You can use either the name of the language, or its position in the list of languages.
 command-language-select-help = Usage: {$command} <language id>. Example: {$command} 1. Example: {$command} TauCetiBasic
 
