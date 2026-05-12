@@ -120,7 +120,7 @@ public sealed class PlanetSpawnerSystem : EntitySystem
     private void OnFtlCompleted(ref FTLCompletedEvent args)
     {
         // Only act on planet maps so we don't sweep mobs in stations / expeditions.
-        if (!HasComp<PlanetSpawnerComponent>(args.MapUid))
+        if (!TryComp<PlanetSpawnerComponent>(args.MapUid, out var spawner))
             return;
 
         if (!TryComp<TransformComponent>(args.Entity, out var shuttleXform))
@@ -145,6 +145,91 @@ public sealed class PlanetSpawnerSystem : EntitySystem
                 continue;
             QueueDel(mob.Owner);
         }
+
+        // If a player shuttle just arrived, roll a single dungeon nearby so
+        // there is fresh content close to the landing site. Honours the planet
+        // cooldown, the global dungeon cap, and the existing exclusion checks
+        // (other shuttles, plots, neighbouring dungeons), so multi-shuttle
+        // sessions don't pile dungeons on top of each other.
+        TrySpawnFtlArrivalDungeon((args.MapUid, spawner), args.Entity, mapId);
+    }
+
+    /// <summary>
+    /// Spawns one dungeon in a random ring around an arriving player shuttle,
+    /// subject to the planet's FTL cooldown, dungeon cap, and the standard
+    /// activity / dungeon spacing exclusions. Returns silently on any failure
+    /// (including "no clear candidate found") — the periodic Update roll will
+    /// continue to attempt placements as biome chunks load.
+    /// </summary>
+    private void TrySpawnFtlArrivalDungeon(
+        Entity<PlanetSpawnerComponent> ent,
+        EntityUid arrivingEnt,
+        MapId mapId)
+    {
+        // Only player shuttles trigger the spawn — ignore mobs / debris / contract
+        // beacon FTLs / etc. The ShuttleComponent + non-biome filter mirrors the
+        // existing SnapshotExclusions logic so we don't fire on the planet itself.
+        if (!HasComp<ShuttleComponent>(arrivingEnt) || HasComp<BiomeComponent>(arrivingEnt))
+            return;
+
+        var now = _timing.CurTime;
+        if (now < ent.Comp.NextFtlSpawn)
+            return;
+
+        if (ent.Comp.SpawnedDungeons.Count >= ent.Comp.MaxDungeons)
+            return;
+
+        if (!TryComp<MapGridComponent>(ent.Owner, out var grid))
+            return;
+
+        if (ent.Comp.DungeonConfigs.Count == 0)
+            return;
+
+        var arrivalWorld = _transform.GetWorldPosition(arrivingEnt);
+
+        var (plotPositions, shuttlePositions) = SnapshotExclusions(mapId);
+        // The arriving shuttle is now in the snapshot; that's intentional — the
+        // ring offset already keeps the candidate away from it, and downstream
+        // exclusion uses MinDistFromActivity which we want to honour for every
+        // shuttle on the planet (multi-shuttle correctness).
+
+        const int maxAttempts = 16;
+        for (var attempt = 0; attempt < maxAttempts; attempt++)
+        {
+            var angle = _random.NextFloat() * MathF.Tau;
+            var radius = _random.NextFloat(ent.Comp.FtlSpawnRingMin, ent.Comp.FtlSpawnRingMax);
+            var candidate = arrivalWorld + new Vector2(MathF.Cos(angle) * radius, MathF.Sin(angle) * radius);
+
+            if (!IsCandidatePositionClear(candidate, ent.Comp, plotPositions, shuttlePositions))
+                continue;
+
+            var snappedTile = new Vector2i(
+                (int)MathF.Round(candidate.X / CandidateStride) * CandidateStride,
+                (int)MathF.Round(candidate.Y / CandidateStride) * CandidateStride);
+
+            var configId = _random.Pick(ent.Comp.DungeonConfigs);
+            if (!_proto.TryIndex(configId, out var config))
+            {
+                _sawmill.Warning($"PlanetSpawner missing dungeon config '{configId}' (ftl arrival).");
+                continue;
+            }
+
+            var seed = HashCode.Combine(now.Ticks, snappedTile.X, snappedTile.Y);
+            _dungeon.GenerateDungeon(config, configId.Id, ent.Owner, grid, snappedTile, seed);
+            var snappedWorld = new Vector2(snappedTile.X, snappedTile.Y);
+            ent.Comp.SpawnedDungeons.Add(snappedWorld);
+
+            var beacon = Spawn(DungeonBeaconProto, new EntityCoordinates(ent.Owner, snappedWorld));
+            _meta.SetEntityName(beacon, configId.Id);
+
+            var registry = EnsureComp<PlanetDungeonRegistryComponent>(ent.Owner);
+            registry.Dungeons.Add(new DungeonMarker(snappedWorld, configId.Id));
+            Dirty(ent.Owner, registry);
+
+            ent.Comp.NextFtlSpawn = now + ent.Comp.FtlSpawnCooldown;
+            _sawmill.Info($"Spawned FTL-arrival dungeon '{configId}' at ({snappedTile.X}, {snappedTile.Y}) on {ToPrettyString(ent.Owner)} for arriving shuttle {ToPrettyString(arrivingEnt)}.");
+            return;
+        }
     }
 
     private void OnMapInit(Entity<PlanetSpawnerComponent> ent, ref MapInitEvent args)
@@ -154,102 +239,16 @@ public sealed class PlanetSpawnerSystem : EntitySystem
             : ent.Comp.ContractStatusCheckInterval;
 
         EnsureMarkerLayers(ent);
-        EnsurePreseeded(ent);
+        // Dungeons are now spawned lazily on FTL arrival (see OnFtlCompleted) and
+        // by the periodic Update roll once players begin loading biome chunks.
+        // No preseed work is performed at round start — that previously generated
+        // 4 dungeons + ~100 HTN garrison mobs in a single tick, causing the
+        // observed round-start GameState burst and "MainLoop: Cannot keep up!".
         ent.Comp.NextRoll = _timing.CurTime + ent.Comp.RollInterval;
         ent.Comp.NextContractRoll = _timing.CurTime + ent.Comp.ContractRollInterval;
         ent.Comp.NextContractStatusCheck = _timing.CurTime + contractStatusInterval;
         ent.Comp.RampStart = _timing.CurTime;
         ent.Comp.NextRampSpawn = _timing.CurTime + TimeSpan.FromSeconds(ent.Comp.RampStartIntervalSeconds);
-    }
-
-    /// <summary>
-    /// Pre-seeds <see cref="PlanetSpawnerComponent.PreseedDungeonCount"/> dungeons
-    /// at random offsets from the planet origin in a configurable ring. Submits
-    /// all jobs in one go; the dungeon system processes them off the hot path.
-    /// </summary>
-    private void EnsurePreseeded(Entity<PlanetSpawnerComponent> ent)
-    {
-        if (ent.Comp.Preseeded)
-            return;
-        if (!TryComp<MapGridComponent>(ent.Owner, out var grid))
-            return;
-
-        var registry = EnsureComp<PlanetDungeonRegistryComponent>(ent.Owner);
-
-        for (var i = 0; i < ent.Comp.PreseedDungeonCount; i++)
-        {
-            var sliceAngle = (i + _random.NextFloat()) * (MathF.Tau / Math.Max(1, ent.Comp.PreseedDungeonCount));
-            var radius = _random.NextFloat(ent.Comp.PreseedRingMin, ent.Comp.PreseedRingMax);
-
-            var x = MathF.Cos(sliceAngle) * radius;
-            var y = MathF.Sin(sliceAngle) * radius;
-
-            var snappedTile = new Vector2i(
-                (int)MathF.Round(x / CandidateStride) * CandidateStride,
-                (int)MathF.Round(y / CandidateStride) * CandidateStride);
-
-            var configId = _random.Pick(ent.Comp.DungeonConfigs);
-            if (!_proto.TryIndex(configId, out var config))
-            {
-                _sawmill.Warning($"PlanetSpawner missing dungeon config '{configId}' (preseed).");
-                continue;
-            }
-
-            var seed = HashCode.Combine(_timing.CurTime.Ticks, snappedTile.X, snappedTile.Y, i);
-            _dungeon.GenerateDungeon(config, configId.Id, ent.Owner, grid, snappedTile, seed);
-            ent.Comp.SpawnedDungeons.Add(new Vector2(snappedTile.X, snappedTile.Y));
-
-            var beaconCoords = new EntityCoordinates(ent.Owner, new Vector2(snappedTile.X, snappedTile.Y));
-            var beacon = Spawn(DungeonBeaconProto, beaconCoords);
-            _meta.SetEntityName(beacon, configId.Id);
-
-            registry.Dungeons.Add(new DungeonMarker(new Vector2(snappedTile.X, snappedTile.Y), configId.Id));
-            _sawmill.Info($"Pre-seeded planet dungeon {i + 1}/{ent.Comp.PreseedDungeonCount} '{configId}' at ({snappedTile.X}, {snappedTile.Y}) on {ToPrettyString(ent.Owner)}.");
-
-            PopulateDungeonGarrison(ent, snappedTile);
-        }
-
-        Dirty(ent.Owner, registry);
-        ent.Comp.Preseeded = true;
-    }
-
-    /// <summary>
-    /// Spawns a baseline garrison of mobs in a ring around a freshly-placed
-    /// dungeon. Counts and ring sizes come from
-    /// <see cref="PlanetSpawnerComponent.PreseedMobsPerDungeon"/> and friends.
-    /// All mobs at a single dungeon use the same prototype so faction garrisons
-    /// don't immediately murder each other on spawn.
-    /// </summary>
-    private void PopulateDungeonGarrison(Entity<PlanetSpawnerComponent> ent, Vector2i centerTile)
-    {
-        if (ent.Comp.PreseedMobsPerDungeon <= 0 || ent.Comp.RampingMobs.Count == 0)
-            return;
-        if (!TryComp<MapGridComponent>(ent.Owner, out var grid))
-            return;
-
-        // Pick ONE species for the whole garrison so they don't infight.
-        var proto = _random.Pick(ent.Comp.RampingMobs);
-        var biome = CompOrNull<BiomeComponent>(ent.Owner);
-
-        var center = new Vector2(centerTile.X, centerTile.Y);
-        const int maxAttemptsPerSlot = 8;
-        for (var i = 0; i < ent.Comp.PreseedMobsPerDungeon; i++)
-        {
-            for (var attempt = 0; attempt < maxAttemptsPerSlot; attempt++)
-            {
-                var angle = _random.NextFloat() * MathF.Tau;
-                var dist = _random.NextFloat(ent.Comp.PreseedMobInnerRadius, ent.Comp.PreseedMobOuterRadius);
-                var offset = new Vector2(MathF.Cos(angle) * dist, MathF.Sin(angle) * dist);
-                var localPos = center + offset;
-                var tileIndices = new Vector2i((int)MathF.Floor(localPos.X), (int)MathF.Floor(localPos.Y));
-
-                if (IsTileBlockedForMob(ent.Owner, grid, biome, tileIndices))
-                    continue;
-
-                Spawn(proto, new EntityCoordinates(ent.Owner, localPos));
-                break;
-            }
-        }
     }
 
     /// <summary>
@@ -312,11 +311,6 @@ public sealed class PlanetSpawnerSystem : EntitySystem
             // (e.g. when added at runtime via admin tooling).
             if (!spawner.MarkerLayersAdded)
                 EnsureMarkerLayers((uid, spawner));
-
-            // Fallback in case MapInit didn't fire for this component (e.g.
-            // EnsureComp added after the map was already initialised by the rule).
-            if (!spawner.Preseeded)
-                EnsurePreseeded((uid, spawner));
 
             // Time-scaled ambient mob spawns. Independent of the dungeon roll
             // cadence — fires on its own ramping cooldown.
@@ -726,9 +720,13 @@ public sealed class PlanetSpawnerSystem : EntitySystem
 
     /// <summary>
     /// Removes dungeons whose clearance radius contains no live AI mobs
-    /// (HTN-driven, alive). Updates both the spawner's working list and the
-    /// networked <see cref="PlanetDungeonRegistryComponent"/> so client
-    /// preview markers also disappear once the area is "safe".
+    /// (HTN-driven, alive) AND no player shuttles. Updates both the spawner's
+    /// working list and the networked <see cref="PlanetDungeonRegistryComponent"/>
+    /// so client preview markers also disappear once the area is "safe".
+    /// The shuttle check is critical for multi-shuttle play: a shuttle parked
+    /// at a cleared dungeon must keep that site reserved (excluded from new
+    /// dungeon placement) until it leaves, otherwise a new dungeon could spawn
+    /// directly on top of an occupied site.
     /// </summary>
     private void PruneClearedDungeons(Entity<PlanetSpawnerComponent> ent)
     {
@@ -742,11 +740,30 @@ public sealed class PlanetSpawnerSystem : EntitySystem
         TryComp<PlanetDungeonRegistryComponent>(ent.Owner, out var registry);
         var registryDirty = false;
 
+        // Snapshot active shuttles on this map once for the whole prune pass.
+        var (_, shuttlePositions) = SnapshotExclusions(mapId);
+        var clearanceSq = radius * radius;
+
         // Iterate in reverse so removals don't shift unscanned indices.
         for (var i = ent.Comp.SpawnedDungeons.Count - 1; i >= 0; i--)
         {
             var pos = ent.Comp.SpawnedDungeons[i];
+
             if (HasLiveAiMobs(new MapCoordinates(pos, mapId), radius))
+                continue;
+
+            // Don't release a dungeon's reserved spacing while a player shuttle
+            // is parked nearby — even if cleared of mobs, the site is "in use".
+            var shuttleNearby = false;
+            foreach (var shuttlePos in shuttlePositions)
+            {
+                if ((pos - shuttlePos).LengthSquared() <= clearanceSq)
+                {
+                    shuttleNearby = true;
+                    break;
+                }
+            }
+            if (shuttleNearby)
                 continue;
 
             ent.Comp.SpawnedDungeons.RemoveAt(i);

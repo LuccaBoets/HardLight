@@ -10,6 +10,7 @@ using Content.Shared.Parallax.Biomes;
 using Content.Shared.Shuttles.Components;
 using Content.Shared.Shuttles.Systems;
 using Robust.Server.GameObjects;
+using Robust.Server.GameStates;
 using Robust.Shared.GameStates;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
@@ -34,7 +35,7 @@ public sealed class VRSPersistentPlanetRuleSystem : GameRuleSystem<VRSPersistent
     [Dependency] private readonly ShuttleSystem _serverShuttle = default!;
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
-    [Dependency] private readonly SharedPvsOverrideSystem _pvs = default!;
+    [Dependency] private readonly PvsOverrideSystem _pvs = default!;
 
     /// <summary>
     /// Beacon prototype used to make the planet appear in the shuttle console
@@ -107,12 +108,20 @@ public sealed class VRSPersistentPlanetRuleSystem : GameRuleSystem<VRSPersistent
         var beacon = Spawn(FtlBeaconProto, beaconCoords);
         _meta.SetEntityName(beacon, name);
 
-        // Mark the map entity and beacon as globally visible so clients on other maps
-        // can see this destination in the FTL console scan. Biome planets start with
-        // 0 tiles (lazy-loaded), so they generate no PVS chunks and would otherwise
-        // never be sent to clients.
-        _pvs.AddGlobalOverride(mapUid);
-        _pvs.AddGlobalOverride(beacon);
+        // Force-send only the planet map shell and the FTL beacon to every client.
+        // Both are required even when the player is not on the planet:
+        //   - the map entity must exist on the client so _mapManager.GetMapEntityId(ViewingMap)
+        //     resolves when the FTL console is open on the destination tab, and so the
+        //     networked PlanetDungeonRegistry / PlanetPlotRegistry / BiomeComponent on it
+        //     are available to the shuttle map preview overlays.
+        //   - the beacon must exist so it appears in the FTL console destination list.
+        // AddForceSend is used instead of AddGlobalOverride because it explicitly does
+        // NOT cascade to children. AddGlobalOverride(mapUid) previously force-streamed
+        // every dungeon wall, mob, and beacon parented to the planet to every connected
+        // client regardless of PVS distance, defeating per-player streaming and producing
+        // the round-start GameState burst ("MainLoop: Cannot keep up!").
+        _pvs.AddForceSend(mapUid);
+        _pvs.AddForceSend(beacon);
 
         component.SpawnedPlanet = mapUid;
         Log.Info($"VRSPersistentPlanet '{name}' spawned (map {mapId}, biome {template.ID}, seed {seed}).");

@@ -129,6 +129,36 @@ public sealed partial class PlanetSpawnerComponent : Component
     [ViewVariables]
     public bool MarkerLayersAdded;
 
+    // ── FTL-arrival dungeon trigger ─────────────────────────────────────────
+
+    /// <summary>
+    /// Minimum interval between FTL-arrival-triggered dungeon spawns on this
+    /// planet. Prevents a coordinated shuttle convoy or rapid round-trip
+    /// landings from spawning multiple dungeons back-to-back.
+    /// </summary>
+    [DataField]
+    public TimeSpan FtlSpawnCooldown = TimeSpan.FromSeconds(120);
+
+    /// <summary>
+    /// Inner radius (world tiles) for FTL-arrival dungeon placement, measured
+    /// from the arriving shuttle's centre. Keeps fresh dungeons out of the
+    /// shuttle's immediate landing footprint.
+    /// </summary>
+    [DataField]
+    public float FtlSpawnRingMin = 200f;
+
+    /// <summary>
+    /// Outer radius (world tiles) for FTL-arrival dungeon placement.
+    /// </summary>
+    [DataField]
+    public float FtlSpawnRingMax = 400f;
+
+    /// <summary>
+    /// Server time of the next allowed FTL-arrival dungeon spawn on this planet.
+    /// </summary>
+    [ViewVariables]
+    public TimeSpan NextFtlSpawn;
+
     // ── Ramping ambient mob density ─────────────────────────────────────────
 
     /// <summary>
