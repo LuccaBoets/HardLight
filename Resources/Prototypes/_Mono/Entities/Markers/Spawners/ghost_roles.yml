@@ -1,6 +1,4 @@
-# Mono port: trimmed for VRS — only the spawners referenced by event maps:
-#   - SpawnRedactedBorg / SpawnRedactedBorgPlaytime (wyvern)
-#   - SpawnChimeraGhostrole (chimera maps)
+# Mono event ghost-role spawners used by shuttle event maps.
 
 - type: entity
   name: asakim warrior spawner
@@ -20,10 +18,9 @@
   id: SpawnRedactedBorg
   parent: MarkerBase
   components:
-  # VRS: PlayerBorgRedactedGhostRole entity (Mono full borg roster) not yet
-  # ported. ConditionalSpawner stubbed empty — map slot stays valid but no
-  # ghost-role borg spawns until the borg roster is ported.
   - type: ConditionalSpawner
+    prototypes:
+    - PlayerBorgRedactedGhostRole
   - type: Sprite
     sprite: Markers/jobs.rsi
     layers:
@@ -36,8 +33,9 @@
   id: SpawnRedactedBorgPlaytime
   parent: MarkerBase
   components:
-  # VRS: see SpawnRedactedBorg note.
   - type: ConditionalSpawner
+    prototypes:
+    - PlayerBorgRedactedGhostRolePlaytime
   - type: Sprite
     sprite: Markers/jobs.rsi
     layers:
@@ -50,9 +48,9 @@
   id: SpawnChimeraGhostrole
   parent: MarkerBase
   components:
-  # VRS: MobLetoferolHorrorGhostrole entity (Mono chimera roster) not yet
-  # ported. ConditionalSpawner stubbed empty.
   - type: ConditionalSpawner
+    prototypes:
+    - MobLetoferolHorrorGhostrole
   - type: Sprite
     sprite: Markers/jobs.rsi
     layers:
