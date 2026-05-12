@@ -505,6 +505,10 @@ public sealed partial class ChatSystem : SharedChatSystem
 
         SendInVoiceRangeLanguage(ChatChannel.Local, message, wrappedMessage, obfuscatedMessage, wrappedObfuscatedMessage, source, range, language);
 
+        // VRS equivalent for EmpathySpeech: relay to Telepathic channel for listeners who understand this language.
+        if (language.SpeechOverride.EmpathySpeech)
+            SendInTelepathicByLanguage(source, message, language, range == ChatTransmitRange.HideChat);
+
         var ev = new EntitySpokeEvent(source, message, null, null);
         RaiseLocalEvent(source, ev, true);
 
@@ -627,6 +631,10 @@ public sealed partial class ChatSystem : SharedChatSystem
         }
 
         _replay.RecordServerMessage(new ChatMessage(ChatChannel.Whisper, message, wrappedMessage, GetNetEntity(source), null, MessageRangeHideChatForReplay(range)));
+
+        // VRS equivalent for EmpathySpeech: relay whispers as telepathic language messages as well.
+        if (language.SpeechOverride.EmpathySpeech)
+            SendInTelepathicByLanguage(source, message, language, range == ChatTransmitRange.HideChat);
 
         var ev = new EntitySpokeEvent(source, message, channel, obfuscatedMessage);
         RaiseLocalEvent(source, ev, true);
@@ -910,6 +918,36 @@ public sealed partial class ChatSystem : SharedChatSystem
         }
 
         _replay.RecordServerMessage(new ChatMessage(channel, message, wrappedMessage, GetNetEntity(source), null, MessageRangeHideChatForReplay(range)));
+    }
+
+    /// <summary>
+    ///     VRS equivalent for LanguagePrototype.SpeechOverride.EmpathySpeech.
+    ///     Since this fork has no Empathy channel, language-tagged empathy relays use Telepathic chat,
+    ///     but only for recipients that can understand the language.
+    /// </summary>
+    private void SendInTelepathicByLanguage(EntityUid source, string message, LanguagePrototype language, bool hideChat)
+    {
+        var wrappedMessage = Loc.GetString("chat-manager-send-telepathic-chat-wrap-message",
+            ("telepathicChannelName", Loc.GetString("chat-manager-telepathic-channel-name")),
+            ("message", message));
+
+        foreach (var session in _playerManager.Sessions)
+        {
+            if (session.AttachedEntity is not { Valid: true } listener)
+                continue;
+
+            if (!_language.CanUnderstand(listener, language.ID))
+                continue;
+
+            _chatManager.ChatMessageToOne(
+                ChatChannel.Telepathic,
+                message,
+                wrappedMessage,
+                source,
+                hideChat,
+                session.Channel,
+                colorOverride: Color.PaleVioletRed);
+        }
     }
 
     /// <summary>
