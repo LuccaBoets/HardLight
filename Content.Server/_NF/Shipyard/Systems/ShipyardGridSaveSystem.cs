@@ -353,6 +353,12 @@ public sealed class ShipyardGridSaveSystem : EntitySystem
         if (!TryBuildShipSaveYaml(gridUid, shipName, out var yaml))
             return TrackedShipSaveResult.Failed;
 
+        // VRS: write a server-side backup copy before handing the YAML off to the client. The pre-serialization
+        // purge (PurgeTransientEntities, MindContainer/Consent removal, contraband deletion, etc.) has already
+        // mutated the live grid; if the client write later fails, the player still has the (now stripped) ship
+        // entity but no on-disk copy of the YAML. The backup gives admins a recovery path in that case.
+        TryWriteServerSideBackup(shipName, playerSession.UserId, yaml);
+
         var requestId = Guid.NewGuid();
         _pendingTrackedSaves[requestId] = new PendingShipSave
         {
@@ -1133,5 +1139,55 @@ public sealed class ShipyardGridSaveSystem : EntitySystem
             //_sawmill.Error($"Failed to write temporary YAML file {fileName}: {ex}");
             return false;
         }
+    }
+
+    /// <summary>
+    /// VRS: writes a server-side backup of the just-built ship YAML so player saves can be recovered if the
+    /// client-side write fails. Best-effort — never throws to the caller, never blocks the save flow.
+    /// Files land in <c>UserData/Exports/server_backup/</c>.
+    /// </summary>
+    private void TryWriteServerSideBackup(string shipName, NetUserId playerUserId, string yaml)
+    {
+        try
+        {
+            var userData = _resourceManager.UserData;
+            var backupDir = new ResPath("/Exports/server_backup");
+            try { userData.CreateDir(backupDir); } catch { /* already exists */ }
+
+            var safeShipName = SanitizeFileNameComponent(shipName);
+            var safePlayer = SanitizeFileNameComponent(playerUserId.ToString());
+            var fileName = $"/Exports/server_backup/{safePlayer}_{safeShipName}_{DateTime.UtcNow:yyyyMMdd_HHmmss}.yml";
+            var resPath = new ResPath(fileName);
+
+            using var stream = userData.OpenWrite(resPath);
+            using var writer = new StreamWriter(stream);
+            writer.Write(yaml);
+        }
+        catch (Exception ex)
+        {
+            _sawmill.Warning($"Server-side ship save backup for '{shipName}' (user {playerUserId}) failed: {ex.Message}");
+        }
+    }
+
+    private static string SanitizeFileNameComponent(string raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+            return "unnamed";
+
+        var invalid = Path.GetInvalidFileNameChars();
+        var chars = raw.ToCharArray();
+        for (var i = 0; i < chars.Length; i++)
+        {
+            var c = chars[i];
+            if (Array.IndexOf(invalid, c) >= 0 || c == '/' || c == '\\' || char.IsControl(c))
+                chars[i] = '_';
+        }
+
+        var sanitized = new string(chars).Trim();
+        if (sanitized.Length == 0)
+            sanitized = "unnamed";
+        if (sanitized.Length > 64)
+            sanitized = sanitized.Substring(0, 64);
+        return sanitized;
     }
 }
