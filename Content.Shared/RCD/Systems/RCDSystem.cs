@@ -56,6 +56,22 @@ public sealed class RCDSystem : EntitySystem
 
     private HashSet<EntityUid> _intersectingEntities = new();
 
+    /// <summary>
+    /// VRS: Resolves the tile prototype id to place for an RCD ConstructTile recipe, using
+    /// <see cref="RCDPrototype.ConstructTileByDirection"/> if set, otherwise falling back to
+    /// <see cref="RCDPrototype.Prototype"/>. Lets one menu entry rotate through a family of related tiles.
+    /// </summary>
+    public string? GetConstructTileTypeId(RCDPrototype prototype, Direction direction)
+    {
+        if (prototype.ConstructTileByDirection is { } byDirection &&
+            byDirection.TryGetValue(direction, out var dirTile))
+        {
+            return dirTile;
+        }
+
+        return prototype.Prototype;
+    }
+
     public override void Initialize()
     {
         base.Initialize();
@@ -546,8 +562,11 @@ public sealed class RCDSystem : EntitySystem
 
             var tileDef = tile.GetContentTileDefinition();
 
+            // VRS: resolve target tile through ConstructTileByDirection if present, otherwise fall back to Prototype.
+            var resolvedTileId = GetConstructTileTypeId(prototype, direction);
+
             // Check rule: Respect baseTurf and baseWhitelist
-            if (prototype.Prototype != null && _tileDefMan.TryGetDefinition(prototype.Prototype, out var replacementDef))
+            if (resolvedTileId != null && _tileDefMan.TryGetDefinition(resolvedTileId, out var replacementDef))
             {
                 var replacementContentDef = (ContentTileDefinition) replacementDef;
 
@@ -561,7 +580,7 @@ public sealed class RCDSystem : EntitySystem
             }
 
             // Check rule: Tiles can't be identical
-            if (tileDef.ID == prototype.Prototype)
+            if (tileDef.ID == resolvedTileId)
             {
                 if (popMsgs)
                     _popup.PopupClient(Loc.GetString("rcd-component-cannot-build-identical-tile"), uid, user);
@@ -704,17 +723,20 @@ public sealed class RCDSystem : EntitySystem
 
         var prototype = _protoManager.Index(component.ProtoId);
 
-        if (prototype.Prototype == null)
+        // VRS: ConstructTile recipes may carry only ConstructTileByDirection without a Prototype fallback.
+        if (prototype.Prototype == null && prototype.ConstructTileByDirection == null)
             return;
 
         switch (prototype.Mode)
         {
             case RcdMode.ConstructTile:
-                if (!_tileDefMan.TryGetDefinition(prototype.Prototype, out var tileDef))
+                // VRS: respect ConstructTileByDirection so rotatable tile recipes resolve the correct tile id.
+                var tileTypeId = GetConstructTileTypeId(prototype, direction);
+                if (tileTypeId == null || !_tileDefMan.TryGetDefinition(tileTypeId, out var tileDef))
                     return;
 
                 _tile.ReplaceTile(tile, (ContentTileDefinition) tileDef, gridUid, mapGrid);
-                _adminLogger.Add(LogType.RCD, LogImpact.High, $"{ToPrettyString(user):user} used RCD to set grid: {gridUid} {position} to {prototype.Prototype}");
+                _adminLogger.Add(LogType.RCD, LogImpact.High, $"{ToPrettyString(user):user} used RCD to set grid: {gridUid} {position} to {tileTypeId}");
                 break;
 
             case RcdMode.ConstructObject:

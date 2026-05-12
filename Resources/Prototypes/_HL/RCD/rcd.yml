@@ -449,3 +449,148 @@
   rules:
     - CanBuildOnEmptyTile
   fx: EffectRCDConstruct1
+
+# VRS: Consolidated rotatable plating recipes. One menu entry per family; the player rotates
+# the construction ghost (R) and ConstructTileByDirection picks the right tile per facing.
+# The original per-direction recipes above remain ID-resolvable for backward compatibility,
+# but are no longer surfaced in any RCD's availablePrototypes.
+
+- type: rcd
+  id: PlatingDiagonal
+  name: diagonal plating
+  category: PlatingTiles
+  sprite: /Textures/_Mono/Tiles/plating/ne.png
+  mode: ConstructTile
+  prototype: PlatingCornerNE
+  constructTileByDirection:
+    North: PlatingCornerNE
+    East: PlatingCornerSE
+    South: PlatingCornerSW
+    West: PlatingCornerNW
+  cost: 1
+  delay: 1
+  collisionMask: InteractImpassable
+  rules:
+    - CanBuildOnEmptyTile
+  fx: EffectRCDConstruct1
+  allowMultiDirection: true
+
+- type: rcd
+  id: PlatingHalf
+  name: half plating
+  category: PlatingTiles
+  sprite: /Textures/_Mono/Tiles/plating/script/half_v.png
+  mode: ConstructTile
+  prototype: PlatingHalfV
+  constructTileByDirection:
+    North: PlatingHalfV
+    East: PlatingHalfH
+    South: PlatingHalfV
+    West: PlatingHalfH
+  cost: 1
+  delay: 1
+  collisionMask: InteractImpassable
+  rules:
+    - CanBuildOnEmptyTile
+  fx: EffectRCDConstruct1
+  allowMultiDirection: true
+
+- type: rcd
+  id: PlatingWedge
+  name: wedge plating
+  category: PlatingTiles
+  sprite: /Textures/_Mono/Tiles/plating/script/wedge_n.png
+  mode: ConstructTile
+  prototype: PlatingWedgeN
+  constructTileByDirection:
+    North: PlatingWedgeN
+    East: PlatingWedgeE
+    South: PlatingWedgeS
+    West: PlatingWedgeW
+  cost: 1
+  delay: 1
+  collisionMask: InteractImpassable
+  rules:
+    - CanBuildOnEmptyTile
+  fx: EffectRCDConstruct1
+  allowMultiDirection: true
+
+- type: rcd
+  id: PlatingHalfTiltLowerAxis
+  name: lower half-tilt plating (axis)
+  category: PlatingTiles
+  sprite: /Textures/_Mono/Tiles/plating/script/halftilt_ne_s_l.png
+  mode: ConstructTile
+  prototype: PlatingHalfTiltNESLower
+  constructTileByDirection:
+    North: PlatingHalfTiltNESLower
+    East: PlatingHalfTiltSEWLower
+    South: PlatingHalfTiltSWNLower
+    West: PlatingHalfTiltNWELower
+  cost: 1
+  delay: 1
+  collisionMask: InteractImpassable
+  rules:
+    - CanBuildOnEmptyTile
+  fx: EffectRCDConstruct1
+  allowMultiDirection: true
+
+- type: rcd
+  id: PlatingHalfTiltLowerOffset
+  name: lower half-tilt plating (offset)
+  category: PlatingTiles
+  sprite: /Textures/_Mono/Tiles/plating/script/halftilt_ne_w_l.png
+  mode: ConstructTile
+  prototype: PlatingHalfTiltNEWLower
+  constructTileByDirection:
+    North: PlatingHalfTiltNEWLower
+    East: PlatingHalfTiltSENLower
+    South: PlatingHalfTiltSWELower
+    West: PlatingHalfTiltNWSLower
+  cost: 1
+  delay: 1
+  collisionMask: InteractImpassable
+  rules:
+    - CanBuildOnEmptyTile
+  fx: EffectRCDConstruct1
+  allowMultiDirection: true
+
+- type: rcd
+  id: PlatingHalfTiltUpperAxis
+  name: upper half-tilt plating (axis)
+  category: PlatingTiles
+  sprite: /Textures/_Mono/Tiles/plating/script/halftilt_ne_s_u.png
+  mode: ConstructTile
+  prototype: PlatingHalfTiltNESUpper
+  constructTileByDirection:
+    North: PlatingHalfTiltNESUpper
+    East: PlatingHalfTiltSEWUpper
+    South: PlatingHalfTiltSWNUpper
+    West: PlatingHalfTiltNWEUpper
+  cost: 1
+  delay: 1
+  collisionMask: InteractImpassable
+  rules:
+    - CanBuildOnEmptyTile
+  fx: EffectRCDConstruct1
+  allowMultiDirection: true
+
+- type: rcd
+  id: PlatingHalfTiltUpperOffset
+  name: upper half-tilt plating (offset)
+  category: PlatingTiles
+  sprite: /Textures/_Mono/Tiles/plating/script/halftilt_ne_w_u.png
+  mode: ConstructTile
+  prototype: PlatingHalfTiltNEWUpper
+  constructTileByDirection:
+    North: PlatingHalfTiltNEWUpper
+    East: PlatingHalfTiltSENUpper
+    South: PlatingHalfTiltSWEUpper
+    West: PlatingHalfTiltNWSUpper
+  cost: 1
+  delay: 1
+  collisionMask: InteractImpassable
+  rules:
+    - CanBuildOnEmptyTile
+  fx: EffectRCDConstruct1
+  allowMultiDirection: true
