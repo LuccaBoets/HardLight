@@ -1,0 +1,36 @@
+# Mono/Triad port: Asakim warrior starting gear for ghost role.
+
+- type: startingGear
+  id: AsakimGear
+  equipment:
+    jumpsuit: ClothingUniformJumpsuitNinja
+    back: ClothingBackpackERTLeader
+    gloves: ClothingHandsGlovesCombat
+    outerClothing: ClothingOuterHardsuitSyndie
+    shoes: ClothingShoesBootsMagSyndie
+    pocket1: CrowbarPocket
+    pocket2: DoubleEmergencyOxygenTank
+    belt: ClothingBeltMilitaryWebbing
+    suitStorage: OxygenTankFilled
+  inhand:
+  - WeaponRifleAk
+  - EnergySword
+  storage:
+    back:
+    - RadioHandheldNF
+    - DoubleEmergencyOxygenTankFilled
+    - MedkitCombatFilled
+    - MedkitCombatFilled
+    - SyringeCaseAltFilled
+    - JetpackMiniFilled
+    - StorageImplanter
+    - FreedomImplanter
+    belt:
+    - CombatMedipen
+    - CombatMedipen
+    - CombatMedipen
+    - CombatMedipen
+    - HandHeldMassScannerBorg
+    - PowerDrill
+    - JawsOfLife
+    - WelderExperimental

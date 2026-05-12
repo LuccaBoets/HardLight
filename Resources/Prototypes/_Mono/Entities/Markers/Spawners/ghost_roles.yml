@@ -1,7 +1,19 @@
 # Mono port: trimmed for VRS — only the spawners referenced by event maps:
 #   - SpawnRedactedBorg / SpawnRedactedBorgPlaytime (wyvern)
 #   - SpawnChimeraGhostrole (chimera maps)
-# Removed: SpawnAsakimWarrior (references MobAsakimGhostrole, not ported)
+
+- type: entity
+  name: asakim warrior spawner
+  id: SpawnAsakimWarrior
+  parent: MarkerBase
+  components:
+  - type: ConditionalSpawner
+    prototypes:
+    - MobAsakimGhostrole
+  - type: Sprite
+    sprite: Markers/jobs.rsi
+    layers:
+    - state: green
 
 - type: entity
   name: ADS tender spawner
