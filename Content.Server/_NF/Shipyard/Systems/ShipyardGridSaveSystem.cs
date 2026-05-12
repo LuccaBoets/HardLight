@@ -100,6 +100,7 @@ public sealed class ShipyardGridSaveSystem : EntitySystem
     [Dependency] private readonly SharedDeviceLinkSystem _deviceLink = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!; // HardLight
     [Dependency] private readonly AppearanceSystem _appearance = default!; // HardLight
+    [Dependency] private readonly SharedTransformSystem _transform = default!; // VRS: eject players before ship save (HL #1694)
 
     private ISawmill _sawmill = default!;
     private MapLoaderSystem _mapLoader = default!;
@@ -429,6 +430,16 @@ public sealed class ShipyardGridSaveSystem : EntitySystem
             // which aborts the entire ship save (observed: Phantom, Kestrel).
             CleanupBrokenDeviceLinks(gridUid);
 
+            // VRS: Eject any entities currently controlled by a player from the grid BEFORE the
+            // serialization-blocker purge runs. The purge strips MindContainerComponent in-place, which
+            // turns active players into soulless husks; combined with the post-save QueueDel(gridUid) below,
+            // this would silently delete any crew aboard when a ship is saved (HardLight issue #1694).
+            // We re-parent them to the grid's parent map at their current world coordinates, leaving them
+            // floating in space exactly where the ship used to be — alive, mind intact, and able to ghost
+            // out or be rescued. The mind-strip step that follows then no-ops for these entities because
+            // their xform.GridUid no longer matches.
+            EvictPlayersFromGrid(gridUid);
+
             // HardLight: Remove components that fail serialization (e.g., player state) from entities on the grid.
             RemoveSerializationBlockingComponentsOnGrid(gridUid);
 
@@ -475,6 +486,51 @@ public sealed class ShipyardGridSaveSystem : EntitySystem
         {
             // No-op: mind containers are intentionally removed during ship save.
         }
+    }
+
+    /// <summary>
+    /// VRS: Move any entity currently bound to a player mind off the grid before the save pipeline
+    /// strips mind components and queues the grid for deletion. Without this, players standing on a
+    /// ship that another player saves get their <see cref="MindContainerComponent"/> stripped and are
+    /// then deleted alongside the grid (HardLight issue #1694).
+    /// </summary>
+    private void EvictPlayersFromGrid(EntityUid gridUid)
+    {
+        // Snapshot first; we mutate transforms inside the loop and don't want enumerator invalidation.
+        var toEvict = new List<EntityUid>();
+        var query = _entityManager.EntityQueryEnumerator<MindContainerComponent, TransformComponent>();
+        while (query.MoveNext(out var uid, out var mindContainer, out var xform))
+        {
+            if (xform.GridUid != gridUid)
+                continue;
+
+            // Only protect entities that actually hold a mind. Mob entities without a mind (NPCs,
+            // unconscious dummies, decorative props that happen to carry the component) keep their
+            // existing serialization behaviour and are stripped/serialized as before.
+            if (!mindContainer.HasMind)
+                continue;
+
+            toEvict.Add(uid);
+        }
+
+        foreach (var uid in toEvict)
+        {
+            // AttachToGridOrMap re-parents to whatever grid the world position falls on, or to the
+            // map if there is none. For a ship docked to a station this drops the player onto the
+            // station; for a ship in open space this drops them into space at the ship's last
+            // position (where they can ghost or be retrieved).
+            try
+            {
+                _transform.AttachToGridOrMap(uid);
+            }
+            catch (Exception ex)
+            {
+                _sawmill.Error($"Failed to evict player entity {uid} from saved grid {gridUid}: {ex}");
+            }
+        }
+
+        if (toEvict.Count > 0)
+            _sawmill.Info($"Evicted {toEvict.Count} player-controlled entities from grid {gridUid} prior to ship save.");
     }
 
     /// <summary>
