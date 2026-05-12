@@ -39,8 +39,28 @@ public sealed class JobTrackingSystem : SharedJobTrackingSystem
         SubscribeLocalEvent<JobTrackingComponent, CryosleepBeforeMindRemovedEvent>(OnJobBeforeCryoEntered);
         SubscribeLocalEvent<JobTrackingComponent, MindAddedMessage>(OnJobMindAdded);
         SubscribeLocalEvent<JobTrackingComponent, MindRemovedMessage>(OnJobMindRemoved);
+        SubscribeLocalEvent<JobTrackingComponent, EntityTerminatingEvent>(OnJobBodyTerminating); // VRS
         SubscribeLocalEvent<ColcommRegistryRoundStartEvent>(OnColcommRegistryRoundStart); // HardLight
         SubscribeLocalEvent<StationJobsComponent, EntityTerminatingEvent>(OnStationJobsTerminating); // HardLight
+    }
+
+    /// <summary>
+    /// VRS: Body-side mirror of <see cref="OnStationJobsTerminating"/>. If a tracked body is
+    /// deleted while still holding a slot (e.g. round-end primary station cleanup, admin smite,
+    /// gib + cascade-delete) and its <see cref="MindRemovedMessage"/> never gets to fire its
+    /// handler before the JobTrackingComponent is torn down, the slot would leak across the
+    /// round boundary. <see cref="OpenJob"/> is idempotent (early-returns on !Active), so this
+    /// is safe to fire even when the station-side sweep already refunded.
+    /// </summary>
+    private void OnJobBodyTerminating(Entity<JobTrackingComponent> ent, ref EntityTerminatingEvent args)
+    {
+        if (!ent.Comp.Active || ent.Comp.Job is not { } job)
+            return;
+
+        if (!ShouldReopenTrackedJob(ent.Comp.SpawnStation, job))
+            return;
+
+        OpenJob((ent.Owner, ent.Comp));
     }
 
     /// <summary>
@@ -71,11 +91,21 @@ public sealed class JobTrackingSystem : SharedJobTrackingSystem
     {
         var activeCounts = new Dictionary<ProtoId<JobPrototype>, int>();
 
-        var jobQuery = AllEntityQuery<JobTrackingComponent>();
-        while (jobQuery.MoveNext(out _, out var job))
+        var jobQuery = AllEntityQuery<JobTrackingComponent, MindContainerComponent>();
+        while (jobQuery.MoveNext(out var bodyUid, out var job, out var mindContainer))
         {
             if (!job.Active || job.Job is not { } jobId)
                 continue;
+
+            // VRS: self-heal leaked Active=true tracking. If the body has no mind attached at
+            // round start, it's an abandoned husk from the previous round (cleanup race, missed
+            // refund path, etc.) and re-deducting would permanently hold a freelancer slot.
+            // Flip it inactive so future MindAdded/Cryo/Terminating handlers no-op cleanly.
+            if (mindContainer.Mind == null)
+            {
+                job.Active = false;
+                continue;
+            }
 
             var colcommJobId = _stationJobs.GetColcommJobId(jobId);
             activeCounts.TryGetValue(colcommJobId, out var existing);
