@@ -131,8 +131,8 @@
         Caustic: 0.5
   - type: ExplosionResistance
     damageCoefficient: 0.35
-  - type: StaminaResistance # HL: unremove
-    damageCoefficient: 0.45
+  #- type: StaminaResistance
+  #  damageCoefficient: 0.45
   - type: ClothingSpeedModifier
     walkModifier: 0.9
     sprintModifier: 0.9
@@ -184,9 +184,6 @@
     autoRechargeRate: 2
   - type: Item
     size: Normal
-  - type: Tag # HL start
-    tags:
-    - KnockdownImmune # HL end
 
 - type: entity
   parent: [ClothingOuterBaseLarge, BaseC3CultContraband, AllowSuitStorageClothing, ContrabandClothing] # Frontier: BaseMajorContraband<BaseC3CultContraband, added ContrabandClothing as parent

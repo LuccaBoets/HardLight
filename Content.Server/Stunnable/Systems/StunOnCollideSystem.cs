@@ -1,13 +1,10 @@
 using Content.Server.Stunnable.Components;
-using Content.Shared.Inventory;
 using Content.Shared.Standing;
 using Content.Shared.StatusEffect;
-using Content.Shared.Tag;
 using JetBrains.Annotations;
 using Robust.Shared.Physics.Dynamics;
 using Content.Shared.Throwing;
 using Robust.Shared.Physics.Events;
-using Robust.Shared.Prototypes;
 
 namespace Content.Server.Stunnable
 {
@@ -15,9 +12,6 @@ namespace Content.Server.Stunnable
     internal sealed class StunOnCollideSystem : EntitySystem
     {
         [Dependency] private readonly StunSystem _stunSystem = default!;
-        [Dependency] private readonly InventorySystem _inventory = default!; // Hardlight
-        [Dependency] private readonly TagSystem _tag = default!; // Hardlight;
-        private static readonly ProtoId<TagPrototype> IgnoreKnockdown = "KnockdownImmune";
 
         public override void Initialize()
         {
@@ -31,14 +25,6 @@ namespace Content.Server.Stunnable
 
             if (EntityManager.TryGetComponent<StatusEffectsComponent>(target, out var status))
             {
-                if (_inventory.TryGetSlotEntity(target, "outerClothing", out var armour)) // Hardlight start
-                {
-                    if (_tag.HasTag(armour.Value, IgnoreKnockdown))
-                    {
-                        return;
-                    }
-                } // Hardlight end
-
                 _stunSystem.TryStun(target, TimeSpan.FromSeconds(component.StunAmount), true, status);
 
                 _stunSystem.TryKnockdown(target, TimeSpan.FromSeconds(component.KnockdownAmount), true,
