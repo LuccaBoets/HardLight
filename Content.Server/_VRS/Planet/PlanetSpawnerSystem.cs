@@ -536,12 +536,19 @@ public sealed class PlanetSpawnerSystem : EntitySystem
 
     private ContractTemplate PickContractTemplate()
     {
-        var roll = _random.NextFloat();
-        if (roll < 0.45f)
-            return ContractTemplates[0];
-        if (roll < 0.8f)
-            return ContractTemplates[1];
-        return ContractTemplates[2];
+        var totalWeight = 0f;
+        foreach (var t in ContractTemplates)
+            totalWeight += t.Weight;
+
+        var roll = _random.NextFloat() * totalWeight;
+        var cumulative = 0f;
+        foreach (var t in ContractTemplates)
+        {
+            cumulative += t.Weight;
+            if (roll < cumulative)
+                return t;
+        }
+        return ContractTemplates[ContractTemplates.Length - 1];
     }
 
     private void SpawnContractMobPack(
