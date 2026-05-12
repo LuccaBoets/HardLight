@@ -8,8 +8,10 @@ using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
 using Content.Server.CriminalRecords.Systems;
 using Content.Server.PsionicsRecords.Systems;
+using Content.Server.Station.Systems; // VRS: station deletion on ship save (Triad PR #42)
 using Content.Server.StationRecords.Systems;
 using Content.Server.Store.Components; // HardLight
+using Content.Server._NF.ShuttleRecords; // VRS: refresh records on ship save (Triad PR #42)
 using Content.Server._HL.Shipyard; // HardLight
 using Content.Shared._Common.Consent; // HardLight
 using Content.Shared._HL.Shipyard; // HardLight
@@ -89,6 +91,8 @@ public sealed class ShipyardGridSaveSystem : EntitySystem
     [Dependency] private readonly CriminalRecordsConsoleSystem _criminalRecordsConsoles = default!;
     [Dependency] private readonly GeneralStationRecordConsoleSystem _generalStationRecordConsoles = default!;
     [Dependency] private readonly PsionicsRecordsConsoleSystem _psionicsRecordsConsoles = default!;
+    [Dependency] private readonly StationSystem _station = default!; // VRS: station deletion on ship save (Triad PR #42)
+    [Dependency] private readonly ShuttleRecordsSystem _shuttleRecords = default!; // VRS: refresh records on ship save (Triad PR #42)
     [Dependency] private readonly PopupSystem _popup = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly IResourceManager _resourceManager = default!;
@@ -286,7 +290,19 @@ public sealed class ShipyardGridSaveSystem : EntitySystem
         RemoveAllShuttleDeeds(pending.ShuttleUid);
 
         if (_entityManager.EntityExists(pending.ShuttleUid))
+        {
+            // VRS: delete the owning station before queueing the grid so late joiners don't end up with a dangling
+            // station entity (which manifested as a black screen on join). Mirrors the sell-ship flow in ShipyardSystem.
+            // Ported from Triad PR #42.
+            var owningStation = _station.GetOwningStation(pending.ShuttleUid);
+            if (owningStation is { } stationUid && _entityManager.EntityExists(stationUid))
+                _station.DeleteStation(stationUid);
+
             QueueDel(pending.ShuttleUid);
+
+            // VRS: refresh shuttle records UI so consoles drop the now-saved ship.
+            _shuttleRecords.RefreshStateForAll(true);
+        }
 
         var gridSavedEvent = new ShipSavedEvent
         {
