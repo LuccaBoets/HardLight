@@ -261,6 +261,10 @@ public sealed partial class PlayTimeTrackingManager : ISharedPlaytimeManager, IP
         {
             await task;
         }
+        catch (Exception e) // VRS: surface playtime save failures instead of letting them become unhandled async-void exceptions.
+        {
+            Logger.GetSawmill("play_time").Error($"Play time save task failed: {e}");
+        }
         finally
         {
             _pendingSaveTasks.Remove(task);
