@@ -427,6 +427,22 @@ public static class ShipSaveYamlSanitizer
                         compMap.Remove("UpdateAccumulator");
                     }
 
+                    if (typeName == "Door")
+                    {
+                        // VRS: Ships saved while docked can serialize airlock state as Open/Opening
+                        // while Docking is stripped from the same entity. On load this leaves doors
+                        // visually/physically stuck in an invalid open state (HL #1645).
+                        compMap["state"] = new ValueDataNode("Closed");
+                        compMap["State"] = new ValueDataNode("Closed");
+                    }
+
+                    if (typeName == "DoorBolt")
+                    {
+                        // Clear runtime bolt latch captured during docking interactions.
+                        compMap["boltsDown"] = new ValueDataNode("false");
+                        compMap["BoltsDown"] = new ValueDataNode("false");
+                    }
+
                     if (typeName == "VendingMachine")
                     {
                         compMap.Remove("Inventory");
