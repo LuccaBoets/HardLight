@@ -325,7 +325,7 @@
     - !type:NestedSelector # Max Inv. footprint: 1
       tableId: TableStorageFillStashCoins # From 75 to ~5000 spesos
     - !type:NestedSelector # Max Inv. footprint: 2
-      tableId: TablePosterLoot # From 500 to 750 spesos
+      tableId: TableArtLoot # From 500 to 1000 spesos
 
 - type: entityTable # Max Inv. footprint: 33
   id: TableStorageFillStashLoot

@@ -45,47 +45,8 @@
 
 - type: vendingMachineInventory
   id: PosterPrinterFrontierVendPOIInventory
-  startingInventory: # NT-approved posters
-    NFPosterRolledLegitMagnusWatching: 4294967295
-    NFPosterRolledLegitGoblinTinkerer: 4294967295
-    NFPosterRolledLegitBahamaMama: 4294967295
-    NFPosterRolledLegitWinnerWinner: 4294967295
-    NFPosterRolledLegitWantedClarpy: 4294967295
-    NFPosterRolledLegitMothPlease: 4294967295
-    NFPosterRolledLegitHaveYouSeenThisEgg: 4294967295
-    NFPosterRolledLegitTurnIn: 4294967295
-  contrabandInventory: # Player factions
-    NFPosterRolledContrabandLvhiStation: 4294967295
-    NFPosterRolledContrabandLvhiShuttle: 4294967295
-    NFPosterRolledContrabandLvhiSpace: 4294967295
-    NFPosterRolledContrabandFsbLogo: 4294967295
-    NFPosterRolledContrabandFsbStasis: 4294967295
-    NFPosterRolledContrabandFsbSpirit: 4294967295
-    NFPosterRolledContrabandEmsCoords: 4294967295
-    NFPosterRolledContrabandLvhiMountains: 4294967295
-    NFPosterRolledContrabandLvhiPlanetCore: 4294967295
-    NFPosterRolledContrabandLvhiLogo: 4294967295
-    NFPosterRolledContrabandEatShrooms: 4294967295
-    NFPosterRolledContrabandKillerFashion: 4294967295
-    NFPosterRolledContrabandGoblinFront: 4294967295
-    NFPosterRolledContrabandGoblinate: 4294967295
-    NFPosterRolledContrabandFsbRubicon: 4294967295
-    NFPosterRolledContrabandWyvernShipyards: 4294967295
-    NFPosterRolledContrabandRatvarLives: 4294967295
-    NFPosterRolledContrabandFsbNightlight: 4294967295
-    NFPosterRolledContrabandFsbRetort: 4294967295
-    NFPosterRolledContrabandFsbCaladrius: 4294967295
-    NFPosterRolledContrabandFscLogo: 4294967295
-    NFPosterRolledContrabandFsbSurveyor: 4294967295
-    NFPosterRolledContrabandFsbCourier: 4294967295
-    NFPosterRolledContrabandFsbDruid: 4294967295
-    NFPosterRolledContrabandGas: 4294967295
-    NFPosterRolledContrabandCloudWatchers: 4294967295
-    NFPosterRolledContrabandGoblinLeague: 4294967295
-    NFPosterRolledContrabandEms: 4294967295
-    NFPosterRolledContrabandSsfLogo: 4294967295
-    NFPosterRolledContrabandDbiLogo: 4294967295
-#  emaggedInventory: # Proper syndicate stuff (but frontier)
+  inherits: PosterPrinterFrontierVendInventory
+  inheritAsUnlimited: true
 
 # region nanotrasen
 - type: vendingMachineInventory
@@ -148,61 +109,8 @@
 
 - type: vendingMachineInventory
   id: PosterPrinterNanotrasenVendPOIInventory
-  startingInventory: # NT-approved posters
-    NFPosterRolledLegitHereForYourSafety: 4294967295
-    NFPosterRolledLegitNanotrasenLogo: 4294967295
-    NFPosterRolledLegitCleanliness: 4294967295
-    NFPosterRolledLegitHelpOthers: 4294967295
-    NFPosterRolledLegitBlessThisSpess: 4294967295
-    NFPosterRolledLegitScience: 4294967295
-    NFPosterRolledLegitIan: 4294967295
-    NFPosterRolledLegitObey: 4294967295
-    NFPosterRolledLegitWalk: 4294967295
-    NFPosterRolledLegitStateLaws: 4294967295
-    NFPosterRolledLegitLoveIan: 4294967295
-    NFPosterRolledLegitSpaceCops: 4294967295
-    NFPosterRolledLegitUeNo: 4294967295
-    NFPosterRolledLegitGetYourLEGS: 4294967295
-    NFPosterRolledLegitDoNotQuestion: 4294967295
-    NFPosterRolledLegitWorkForAFuture: 4294967295
-    NFPosterRolledLegitSoftCapPopArt: 4294967295
-    NFPosterRolledLegitSafetyInternals: 4294967295
-    NFPosterRolledLegitSafetyEyeProtection: 4294967295
-    NFPosterRolledLegitSafetyReport: 4294967295
-    NFPosterRolledLegitReportCrimes: 4294967295
-    NFPosterRolledLegitIonRifle: 4294967295
-    NFPosterRolledLegitFoamForceAd: 4294967295
-    NFPosterRolledLegitCohibaRobustoAd: 4294967295
-    NFPosterRolledLegit50thAnniversaryVintageReprint: 4294967295
-    NFPosterRolledLegitFruitBowl: 4294967295
-    NFPosterRolledLegitEnlist: 4294967295
-    NFPosterRolledLegitNanomichiAd: 4294967295
-    NFPosterRolledLegit12Gauge: 4294967295
-    NFPosterRolledLegitHighClassMartini: 4294967295
-    NFPosterRolledLegitTheOwl: 4294967295
-    NFPosterRolledLegitNoErp: 4294967295
-    NFPosterRolledLegitCarbonDioxide: 4294967295
-    NFPosterRolledLegitDickGumshue: 4294967295
-    NFPosterRolledLegitThereIsNoGasGiant: 4294967295
-    NFPosterRolledLegitJustAWeekAway: 4294967295
-    NFPosterRolledLegitSecWatch: 4294967295
-    NFPosterRolledLegitAnatomyPoster: 4294967295
-    NFPosterRolledLegitMime: 4294967295
-    NFPosterRolledLegitCarpMount: 4294967295
-    NFPosterRolledLegitSafetyMothDelam: 4294967295
-    NFPosterRolledLegitSafetyMothEpi: 4294967295
-    NFPosterRolledLegitSafetyMothPiping: 4294967295
-    NFPosterRolledLegitSafetyMothMeth: 4294967295
-    NFPosterRolledLegitSafetyMothHardhat: 4294967295
-    NFPosterRolledLegitPeriodicTable: 4294967295
-    NFPosterRolledLegitRenault: 4294967295
-    NFPosterRolledLegitNTTGC: 4294967295
-    NFPosterRolledLegitSafetyMothSSD: 4294967295
-    NFPosterRolledLegitOppenhopper: 4294967295
-    NFPosterRolledLegitTyrone: 4294967295
-    NFPosterRolledLegitHelio: 4294967295
-#  contrabandInventory:
-#  emaggedInventory:
+  inherits: PosterPrinterNanotrasenVendInventory
+  inheritAsUnlimited: true
 
 # region syndicate
 - type: vendingMachineInventory
@@ -276,70 +184,8 @@
 
 - type: vendingMachineInventory
   id: PosterPrinterSyndicateVendPOIInventory
-  startingInventory: # Syndicate-approved posters
-    NFPosterRolledContrabandFreeTonto: 4294967295
-    NFPosterRolledContrabandAtmosiaDeclarationIndependence: 4294967295
-    NFPosterRolledContrabandFunPolice: 4294967295
-    NFPosterRolledContrabandRealExomorph: 4294967295
-    NFPosterRolledContrabandSyndicateRecruitment: 4294967295
-    NFPosterRolledContrabandClown: 4294967295
-    NFPosterRolledContrabandGreyTide: 4294967295
-    NFPosterRolledContrabandMissingGloves: 4294967295
-    NFPosterRolledContrabandHackingGuide: 4294967295
-    NFPosterRolledContrabandRIPBadger: 4294967295
-    NFPosterRolledContrabandAmbrosiaVulgaris: 4294967295
-    NFPosterRolledContrabandDonutCorp: 4294967295
-    NFPosterRolledContrabandEAT: 4294967295
-    NFPosterRolledContrabandTools: 4294967295
-    NFPosterRolledContrabandPower: 4294967295
-    NFPosterRolledContrabandSpaceCube: 4294967295
-    NFPosterRolledContrabandCommunistState: 4294967295
-    NFPosterRolledContrabandLamarr: 4294967295
-    NFPosterRolledContrabandBorgFancy: 4294967295
-    NFPosterRolledContrabandBorgFancyv2: 4294967295
-    NFPosterRolledContrabandKosmicheskayaStantsiya: 4294967295
-    NFPosterRolledContrabandRebelsUnite: 4294967295
-    NFPosterRolledContrabandC20r: 4294967295
-    NFPosterRolledContrabandHaveaPuff: 4294967295
-    NFPosterRolledContrabandRevolver: 4294967295
-    NFPosterRolledContrabandDDayPromo: 4294967295
-    NFPosterRolledContrabandSyndicatePistol: 4294967295
-    NFPosterRolledContrabandEnergySwords: 4294967295
-    NFPosterRolledContrabandRedRum: 4294967295
-    NFPosterRolledContrabandCC64KAd: 4294967295
-    NFPosterRolledContrabandPunchShit: 4294967295
-    NFPosterRolledContrabandTheGriffin: 4294967295
-    NFPosterRolledContrabandFreeDrone: 4294967295
-    NFPosterRolledContrabandRouny: 4294967295
-    NFPosterRolledContrabandRobustSoftdrinks: 4294967295
-    NFPosterRolledContrabandShamblersJuice: 4294967295
-    NFPosterRolledContrabandPwrGame: 4294967295
-    NFPosterRolledContrabandSunkist: 4294967295
-    NFPosterRolledContrabandSpaceCola: 4294967295
-    NFPosterRolledContrabandSpaceUp: 4294967295
-    NFPosterRolledContrabandKudzu: 4294967295
-    NFPosterRolledContrabandMaskedMen: 4294967295
-    NFPosterRolledContrabandUnreadableAnnouncement: 4294967295
-    NFPosterRolledContrabandFreeSyndicateEncryptionKey: 4294967295
-    NFPosterRolledContrabandBountyHunters: 4294967295
-    NFPosterRolledContrabandTheBigGasTruth: 4294967295
-    NFPosterRolledContrabandWehWatches: 4294967295
-    NFPosterRolledContrabandVoteWeh: 4294967295
-    NFPosterRolledContrabandBeachStarYamamoto: 4294967295
-    NFPosterRolledContrabandHighEffectEngineering: 4294967295
-    NFPosterRolledContrabandNuclearDeviceInformational: 4294967295
-    NFPosterRolledContrabandRise: 4294967295
-    NFPosterRolledContrabandRevolt: 4294967295
-    NFPosterRolledContrabandMoth: 4294967295
-    NFPosterRolledContrabandCybersun600: 4294967295
-    NFPosterRolledContrabandDonk: 4294967295
-    NFPosterRolledContrabandEnlistGorlex: 4294967295
-    NFPosterRolledContrabandInterdyne: 4294967295
-    NFPosterRolledContrabandWaffleCorp: 4294967295
-    NFPosterRolledContrabandMissingSpacepen: 4294967295
-    NFPosterRolledContrabandExoAcid: 4294967295
-    NFPosterRolledContrabandExoRun: 4294967295
-    NFPosterRolledContrabandExoChomp: 4294967295
+  inherits: PosterPrinterSyndicateVendInventory
+  inheritAsUnlimited: true
 
 # region paintings
 - type: vendingMachineInventory
@@ -371,27 +217,5 @@
 
 - type: vendingMachineInventory
   id: PaintingPrinterVendPOIInventory
-  startingInventory:
-    NFPaintingCurtainedNightOfThePostGoblin: 4294967295
-    NFPaintingCurtainedSpookyIan: 4294967295
-    NFPaintingCurtainedSpookyLady: 4294967295
-    NFPaintingCurtainedCaladrius: 4294967295
-    NFPaintingCurtainedMoony: 4294967295
-    NFPaintingCurtainedPersistenceOfMemory: 4294967295
-    NFPaintingCurtainedTheSonOfMan: 4294967295
-    NFPaintingCurtainedTheKiss: 4294967295
-    NFPaintingCurtainedTheScream: 4294967295
-    NFPaintingCurtainedTheGreatWave: 4294967295
-    NFPaintingCurtainedCafeTerraceAtNight: 4294967295
-    NFPaintingCurtainedNightHawks: 4294967295
-    NFPaintingCurtainedSkeletonCigarette: 4294967295
-    NFPaintingCurtainedSkeletonBoof: 4294967295
-    NFPaintingCurtainedPrayerHands: 4294967295
-    NFPaintingCurtainedOldGuitarist: 4294967295
-    NFPaintingCurtainedOlympia: 4294967295
-    NFPaintingCurtainedSaturn: 4294967295
-    NFPaintingCurtainedSleepingGypsy: 4294967295
-    NFPaintingCurtainedRedBlueYellow: 4294967295
-    NFPaintingCurtainedAmogusTriptych: 4294967295
-    NFPaintingCurtainedHelloWorld: 4294967295
-    NFPaintingCurtainedSadClown: 4294967295
+  inherits: PaintingPrinterVendInventory
+  inheritAsUnlimited: true

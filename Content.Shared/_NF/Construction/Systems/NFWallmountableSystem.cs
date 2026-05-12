@@ -25,8 +25,6 @@ public sealed partial class NFWallmountableSystem : EntitySystem
     [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly TagSystem _tag = default!;
 
-    private static readonly ProtoId<TagPrototype> WallTag = "Wall";
-    private static readonly ProtoId<TagPrototype> DiagonalTag = "Diagonal";
     private const float IntersectionRange = 0.35f; // The range to look for wallmounts around the center of a wall.
 
     public override void Initialize()
@@ -47,10 +45,10 @@ public sealed partial class NFWallmountableSystem : EntitySystem
             return;
 
         // Not a wall, don't show verb.
-        if (!IsMountableWall(args.Target))
+        if (!IsMountableTarget(ent.Comp, args.Target))
             return;
 
-        bool canMount = NoWallmountsAtEntity(args.Target);
+        bool canMount = IsTargetClear(ent.Comp, args.Target);
 
         var user = args.User;
         var target = args.Target;
@@ -79,7 +77,7 @@ public sealed partial class NFWallmountableSystem : EntitySystem
         if (!UserCanMountOnTarget(args.User, args.Target.Value))
             return;
 
-        if (!IsMountableWall(args.Target.Value)
+        if (!IsMountableTarget(ent.Comp, args.Target.Value)
             || !TryMount(ent, args.User, args.Target.Value, checkAccess: false))
         {
             _popup.PopupPredicted(Loc.GetString("nf-wallmountable-component-verb-cant-mount"), args.User, args.User);
@@ -98,8 +96,8 @@ public sealed partial class NFWallmountableSystem : EntitySystem
 
         // Sanity check.
         if (!UserCanMountOnTarget(args.User, args.Target.Value)
-            || !IsMountableWall(args.Target.Value)
-            || !NoWallmountsAtEntity(args.Target.Value))
+            || !IsMountableTarget(ent.Comp, args.Target.Value)
+            || !IsTargetClear(ent.Comp, args.Target.Value))
             return;
 
         if (_net.IsClient)
@@ -144,13 +142,13 @@ public sealed partial class NFWallmountableSystem : EntitySystem
         if (checkAccess)
         {
             if (!UserCanMountOnTarget(user, target)
-                || !IsMountableWall(target))
+                || !IsMountableTarget(ent.Comp, target))
             {
                 return false;
             }
         }
 
-        if (!NoWallmountsAtEntity(target))
+        if (!IsTargetClear(ent.Comp, target))
             return false;
 
         var ev = new NFWallmountDoAfterEvent();
@@ -180,11 +178,32 @@ public sealed partial class NFWallmountableSystem : EntitySystem
     /// <summary>
     /// Returns true if the given entity is a mountable wall.
     /// </summary>
-    private bool IsMountableWall(EntityUid target)
+    private bool IsMountableTarget(NFWallmountableComponent component, EntityUid target)
     {
-        return TryComp<TagComponent>(target, out var tags)
-            && _tag.HasTag(tags, WallTag)
-            && !_tag.HasTag(tags, DiagonalTag);
+        if (!TryComp<TagComponent>(target, out var tags))
+            return false;
+
+        foreach (var requiredTag in component.RequiredTargetTags)
+        {
+            if (!_tag.HasTag(tags, requiredTag))
+                return false;
+        }
+
+        foreach (var blockedTag in component.BlockedTargetTags)
+        {
+            if (_tag.HasTag(tags, blockedTag))
+                return false;
+        }
+
+        return true;
+    }
+
+    private bool IsTargetClear(NFWallmountableComponent component, EntityUid target)
+    {
+        if (component.AllowOccupiedTarget)
+            return true;
+
+        return NoWallmountsAtEntity(target);
     }
 
     /// <summary>
