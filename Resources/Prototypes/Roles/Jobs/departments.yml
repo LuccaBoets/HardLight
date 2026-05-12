@@ -162,6 +162,5 @@
   - Boxer
   # - RadioHost # Goobstation, # HardLight: Superceded by Station Host
   - Reporter # HardLight: Station Host
-  - Anomaly
   primary: false
 # HardLight end

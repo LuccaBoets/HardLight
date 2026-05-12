@@ -24,6 +24,3 @@
 
 - type: playTimeTracker
   id: JobColonialNavyman
-
-- type: playTimeTracker
-  id: RoleAnomaly

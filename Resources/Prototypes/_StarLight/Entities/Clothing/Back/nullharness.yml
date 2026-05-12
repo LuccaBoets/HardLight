@@ -5,14 +5,14 @@
   description: A security harness reinforced with bluespace crystals. Prevents the wearer from entering NullSpace. Cannot be removed by the wearer themselves.
   components:
     - type: Sprite
-      sprite: _HL/Clothing/Back/nullharness.rsi
+      sprite: Clothing/Back/Backpacks/ertsec.rsi
       state: icon
     - type: Item
       size: Normal
     - type: Clothing
       slots: BACK
-      sprite: _HL/Clothing/Back/nullharness.rsi
+      sprite: Clothing/Back/Backpacks/ertsec.rsi
     - type: SelfUnremovableClothing
-    - type: NullSpaceDrainer
+    - type: NullHarness
     - type: StaticPrice
       price: 200

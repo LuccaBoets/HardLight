@@ -149,9 +149,6 @@ public sealed partial class TriggerSystem
                 if (colliding.LinearVelocity.Length() < trigger.TriggerSpeed)
                     continue;
 
-                if (_whitelist.IsWhitelistFail(trigger.Whitelist, collidingUid)) // HL
-                    continue;
-
                 // Trigger!
                 toActivate.Add((uid, collidingUid));
                 break;

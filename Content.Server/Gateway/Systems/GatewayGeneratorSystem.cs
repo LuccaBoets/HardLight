@@ -4,7 +4,6 @@ using Content.Server.Parallax;
 using Content.Server.Procedural;
 using Content.Shared.CCVar;
 using Content.Shared.Dataset;
-using Content.Shared.Gateway.Components;
 using Content.Shared.Maps;
 using Content.Shared.Parallax.Biomes;
 using Content.Shared.Procedural;

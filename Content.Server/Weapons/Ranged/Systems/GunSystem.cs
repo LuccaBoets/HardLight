@@ -78,7 +78,6 @@ using Content.Shared.Interaction; // Frontier
 using Content.Shared.Examine; // Frontier
 using Content.Shared.Hands.Components;
 using Content.Shared.Power;
-using Content.Shared._Starlight.NullSpace;
 
 namespace Content.Server.Weapons.Ranged.Systems;
 
@@ -259,9 +258,6 @@ public sealed partial class GunSystem : SharedGunSystem
                                 // Checks if the laser should pass over unless targeted by its user
                                 foreach (var collide in rayCastResults)
                                 {
-                                    if (hitscan.Reflective != ReflectType.Energy && HasComp<NullSpaceComponent>(collide.HitEntity))
-                                        continue;
-
                                     if (collide.HitEntity != gun.Target &&
                                         CompOrNull<RequireProjectileTargetComponent>(collide.HitEntity)?.Active == true)
                                     {

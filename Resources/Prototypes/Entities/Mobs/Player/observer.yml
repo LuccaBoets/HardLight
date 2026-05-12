@@ -58,7 +58,6 @@
   - type: ShowElectrocutionHUD
   - type: IntrinsicRadioReceiver
   - type: ShowNullSpace # Starlight
-  - type: DarkLight # Starlight
   - type: ActiveRadio
     receiveAllChannels: true
     globalReceive: true
