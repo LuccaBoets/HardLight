@@ -140,6 +140,10 @@ public static class ShipSaveYamlSanitizer
         "PortalRed",
         "ReactorGasPipe",
         "ShipShield",
+        // HardLight #1267: flesh anomaly cores can serialize runtime refs that break ship load
+        // with unresolved MetaDataComponent errors. Exclude them from ship exports.
+        "AnomalyCoreFlesh",
+        "AnomalyCoreFleshInert",
         // NullSpace items
         "ClothingEyesGlassesNullSpace",
         "BluespaceFlasher",
