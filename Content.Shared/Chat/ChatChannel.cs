@@ -85,6 +85,12 @@ namespace Content.Shared.Chat
         /// </summary>
         Unspecified = 1 << 14,
 
+        // VRS port: Goobstation/Starlight CollectiveMind channel.
+        /// <summary>
+        ///     Collective mind channel for entities holding a CollectiveMindComponent.
+        /// </summary>
+        CollectiveMind = 1 << 17,
+
         /// <summary>
         ///     Subtle - Floofstation
         ///     VRS: placed at high bit positions to avoid future upstream channel collisions.

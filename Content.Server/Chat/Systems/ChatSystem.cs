@@ -66,6 +66,9 @@ public sealed partial class ChatSystem : SharedChatSystem
     //Nyano - Summary: pulls in the nyano chat system for psionics.
     [Dependency] private readonly NyanoChatSystem _nyanoChatSystem = default!;
 
+    // VRS port: Goobstation/Starlight CollectiveMind — number assignment.
+    [Dependency] private readonly Content.Shared._Starlight.CollectiveMind.CollectiveMindUpdateSystem _collectiveMind = default!;
+
     public const int VoiceRange = 10; // how far voice goes in world units
     public const int WhisperClearRange = 2; // how far whisper goes while still being understandable, in world units
     public const int WhisperMuffledRange = 5; // how far whisper goes at all, in world units
@@ -188,6 +191,11 @@ public sealed partial class ChatSystem : SharedChatSystem
             return;
         }
 
+        // VRS port: Goobstation/Starlight CollectiveMind \u2014 keep the per-channel
+        // numbers fresh whenever the speaker has a CollectiveMindComponent.
+        if (TryComp<Content.Shared._Starlight.CollectiveMind.CollectiveMindComponent>(source, out var collective))
+            _collectiveMind.UpdateCollectiveMind(source, collective);
+
         if (player != null && _chatManager.HandleRateLimit(player) != RateLimitStatus.Allowed)
             return;
 
@@ -249,6 +257,17 @@ public sealed partial class ChatSystem : SharedChatSystem
             if (TryProccessRadioMessage(source, message, out var modMessage, out var channel))
             {
                 SendEntityWhisper(source, modMessage, range, channel, nameOverride, hideLog, ignoreActionBlocker);
+                return;
+            }
+        }
+
+        // VRS port: Goobstation/Starlight CollectiveMind — if this is a CM message,
+        // resolve the channel from the `+`-prefix and send it through the CM router.
+        if (desiredType == Content.Shared.Chat.InGameICChatType.CollectiveMind)
+        {
+            if (TryProccessCollectiveMindMessage(source, message, out var cmMessage, out var cmChannel))
+            {
+                SendCollectiveMindChat(source, cmMessage, cmChannel);
                 return;
             }
         }
@@ -1017,6 +1036,84 @@ public sealed partial class ChatSystem : SharedChatSystem
             sb.Append(_random.Pick(charOptions));
         }
         return sb.ToString();
+    }
+
+    // VRS port: Goobstation/Starlight CollectiveMind \u2014 routes a parsed CM
+    // message to all entities that share the channel (or have HearAll set),
+    // plus active admins. Speaker identity follows the channel's ShowNames /
+    // SeeAllNames flags.
+    private void SendCollectiveMindChat(EntityUid source, string message, Content.Shared._Starlight.CollectiveMind.CollectiveMindPrototype? collectiveMind)
+    {
+        if (_mobStateSystem.IsDead(source)
+            || collectiveMind == null
+            || message == ""
+            || !TryComp<Content.Shared._Starlight.CollectiveMind.CollectiveMindComponent>(source, out var sourceCmComp)
+            || !sourceCmComp.Minds.ContainsKey(collectiveMind.ID))
+            return;
+
+        var clients = Filter.Empty();
+        var clientsSeeNames = Filter.Empty();
+        var mindQuery = EntityQueryEnumerator<Content.Shared._Starlight.CollectiveMind.CollectiveMindComponent, ActorComponent>();
+        while (mindQuery.MoveNext(out var uid, out var collectMindComp, out var actorComp))
+        {
+            if (_mobStateSystem.IsDead(uid))
+                continue;
+
+            if (collectMindComp.Minds.ContainsKey(collectiveMind.ID) || collectMindComp.HearAll)
+            {
+                if (collectMindComp.SeeAllNames)
+                    clientsSeeNames.AddPlayer(actorComp.PlayerSession);
+                else
+                    clients.AddPlayer(actorComp.PlayerSession);
+            }
+        }
+
+        var number = $"{sourceCmComp.Minds[collectiveMind.ID]}";
+
+        var admins = _adminManager.ActiveAdmins.Select(p => p.Channel);
+
+        var messageWrap = Loc.GetString("collective-mind-chat-wrap-message",
+            ("message", message),
+            ("channel", collectiveMind.LocalizedName),
+            ("number", number));
+        var namedMessageWrap = Loc.GetString("collective-mind-chat-wrap-message-named",
+            ("source", source),
+            ("message", message),
+            ("channel", collectiveMind.LocalizedName));
+        var adminMessageWrap = Loc.GetString("collective-mind-chat-wrap-message-admin",
+            ("source", source),
+            ("message", message),
+            ("channel", collectiveMind.LocalizedName),
+            ("number", number));
+
+        _adminLogger.Add(LogType.Chat, LogImpact.Low, $"CollectiveMind chat from {ToPrettyString(source):Player}: {message}");
+
+        _chatManager.ChatMessageToManyFiltered(clients,
+            ChatChannel.CollectiveMind,
+            message,
+            collectiveMind.ShowNames ? namedMessageWrap : messageWrap,
+            source,
+            false,
+            true,
+            collectiveMind.Color);
+
+        _chatManager.ChatMessageToManyFiltered(clientsSeeNames,
+            ChatChannel.CollectiveMind,
+            message,
+            namedMessageWrap,
+            source,
+            false,
+            true,
+            collectiveMind.Color);
+
+        _chatManager.ChatMessageToMany(ChatChannel.CollectiveMind,
+            message,
+            adminMessageWrap,
+            source,
+            false,
+            true,
+            admins,
+            collectiveMind.Color);
     }
 
     #endregion
