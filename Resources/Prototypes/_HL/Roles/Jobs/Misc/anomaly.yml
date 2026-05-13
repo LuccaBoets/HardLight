@@ -21,7 +21,7 @@
   special:
     - !type:AddComponentSpecial
       components:
-        - type: Nullphase
+        - type: NullPhase
         - type: MailDisabled
         - type: SpecialSectorStationRecord
           recordGeneration: NoRecord
