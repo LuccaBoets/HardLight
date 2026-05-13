@@ -35,24 +35,6 @@ public sealed class BluespacePulseOnTriggerSystem : EntitySystem
         SubscribeLocalEvent<BluespacePulseOnTriggerComponent, TriggerEvent>(OnCrystalActivated);
     }
 
-
-    private void OnAnchorChanged(Entity<BluespacePulseOnTriggerComponent> ent, ref AnchorStateChangedEvent args)
-    {
-        if (args.Anchored && ent.Comp.CurrentDome is null)
-        {
-            var newDome = SpawnAttachedTo(ent.Comp.Dome, Transform(ent).Coordinates);
-            _transform.SetParent(newDome, ent);
-
-            ent.Comp.CurrentDome = newDome;
-        }
-        else
-        {
-            if (ent.Comp.CurrentDome is { } dome && !TerminatingOrDeleted(dome))
-                Del(dome);
-
-            ent.Comp.CurrentDome = null;
-        }
-    }
     private void OnCrystalActivated(Entity<BluespacePulseOnTriggerComponent> ent, ref TriggerEvent args)
     {
         if (MetaData(ent).EntityPrototype?.ID?.StartsWith(BluespaceCrystalId) != true)

@@ -8,7 +8,7 @@ using Content.Server.Chat.Systems;
 using Content.Server.Communications;
 using Content.Server.DeviceNetwork.Systems;
 using Content.Server.GameTicking.Events;
-using Content.Server._HL.Cleanup;
+using Content.Server._Mono.Cleanup;
 using Content.Server.Pinpointer;
 using Content.Server.Popups;
 using Content.Server.RoundEnd;
@@ -187,7 +187,7 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
         {
             if (colcomm.Entity != null && Exists(colcomm.Entity.Value))
             {
-                EnsureComp<CleanupProtectedGridComponent>(colcomm.Entity.Value);
+                EnsureComp<CleanupImmuneComponent>(colcomm.Entity.Value);
 
                 if (TryComp(colcomm.Entity.Value, out TransformComponent? xform) && xform.MapUid != null)
                     colcomm.MapEntity = xform.MapUid;
@@ -585,7 +585,7 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
         {
             component.MapEntity = _singletonColcommMap;
             component.Entity = _singletonColcommGrid;
-            EnsureComp<CleanupProtectedGridComponent>(_singletonColcommGrid.Value);
+            EnsureComp<CleanupImmuneComponent>(_singletonColcommGrid.Value);
             return;
         }
 
@@ -614,7 +614,7 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
         component.Entity = grid;
         _singletonColcommMap = map;
         _singletonColcommGrid = grid;
-        EnsureComp<CleanupProtectedGridComponent>(grid.Value);
+        EnsureComp<CleanupImmuneComponent>(grid.Value);
         _metaData.SetEntityName(map, Loc.GetString("map-name-Colcomm"));
         _shuttle.TryAddFTLDestination(mapId, true, out _);
         Log.Info($"Created Colcomm grid {ToPrettyString(grid)} on map {ToPrettyString(map)} for station {ToPrettyString(station)}");
@@ -689,7 +689,7 @@ public sealed partial class EmergencyShuttleSystem : EntitySystem
         ent.Comp1.EmergencyShuttle = shuttle;
         _singletonColcommShuttle = shuttle; // Store singleton
         EnsureComp<ProtectedGridComponent>(shuttle.Value);
-        EnsureComp<CleanupProtectedGridComponent>(shuttle.Value);
+        EnsureComp<CleanupImmuneComponent>(shuttle.Value);
         EnsureComp<PreventPilotComponent>(shuttle.Value);
         EnsureComp<EmergencyShuttleComponent>(shuttle.Value);
 
