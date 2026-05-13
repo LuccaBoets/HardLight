@@ -267,6 +267,8 @@
     - MonoAISTCShuttleSpawnerSchedulerTier2
     - MonoAsakimSTCShuttleSpawnerScheduler
     - MonoChimeraSTCShuttleSpawnerScheduler
+    # VRS: Triad-ported Monolith fragment small-appearance event scheduler
+    - MonoMonolithicEventsScheduler
 
 - type: gamePreset
   id: NFPirate
