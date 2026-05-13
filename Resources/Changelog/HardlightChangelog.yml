@@ -3782,3 +3782,36 @@ Entries:
       message: All members of Command can now issue command bounties.
   id: 407
   time: '2026-05-12T21:56:31.0000000+00:00'
+- author: IngvarJackal
+  changes:
+    - type: Fix
+      message: Room saves no longer freeze the game on save or load
+    - type: Fix
+      message: Room save files shrunk from ~4 MB to ~50 KB
+    - type: Fix
+      message: >-
+        Spray-painted walls and objects now preserve their style after a room
+        load
+    - type: Fix
+      message: Material silo contents are now preserved after a room load
+    - type: Fix
+      message: >-
+        Item positions inside bags and crates are now preserved after a room
+        load
+    - type: Fix
+      message: Stack counts are now preserved after a room load
+    - type: Fix
+      message: >-
+        Paint colors (PaintedComponent), item labels, paper content/stamps, and
+        plushie appearances now survive room loads
+    - type: Fix
+      message: >-
+        Unanchored tools and equipment are no longer saved in rooms (and turning
+        non-interactable); only items tagged `RoomSaveable` (plushies, pillows,
+        potted plants) are kept
+    - type: Add
+      message: >-
+        `RoomSaveable` tag — add to any prototype to preserve it when unanchored
+        in a room save
+  id: 408
+  time: '2026-05-13T06:42:35.0000000+00:00'
