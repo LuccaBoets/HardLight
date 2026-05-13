@@ -4,6 +4,7 @@ using Robust.Shared.GameObjects;
 using Robust.Shared.IoC;
 using Robust.Shared.Log;
 using System;
+using System.Threading.Tasks;
 
 namespace Content.Client._HL.Rooms;
 
@@ -55,17 +56,23 @@ public sealed class RoomGridFileManagementSystem : EntitySystem
     {
         var safeKey = SanitizeKey(message.CharacterKey);
         var filePath = GetRoomGridPath(safeKey);
+        var roomData = message.RoomData;
 
-        try
+        // Write on a background thread so the game thread isn't blocked by disk I/O.
+        // We don't need the result; logging handles failures.
+        Task.Run(() =>
         {
-            _resourceManager.UserData.CreateDir(new(RoomGridsRoot));
-            using var writer = _resourceManager.UserData.OpenWriteText(new(filePath));
-            writer.Write(message.RoomData);
-        }
-        catch (Exception ex)
-        {
-            Logger.Error($"Failed to save room data to {filePath}: {ex.Message}");
-        }
+            try
+            {
+                _resourceManager.UserData.CreateDir(new(RoomGridsRoot));
+                using var writer = _resourceManager.UserData.OpenWriteText(new(filePath));
+                writer.Write(roomData);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Failed to save room data to {filePath}: {ex.Message}");
+            }
+        });
     }
 
     private static string GetRoomGridPath(string safeKey)
