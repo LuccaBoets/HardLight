@@ -32,7 +32,28 @@ public sealed class BluespacePulseOnTriggerSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
+        SubscribeLocalEvent<BluespacePulseOnTriggerComponent, MapInitEvent>(OnMapInit);
+        SubscribeLocalEvent<BluespacePulseOnTriggerComponent, ComponentShutdown>(OnShutdown);
         SubscribeLocalEvent<BluespacePulseOnTriggerComponent, TriggerEvent>(OnCrystalActivated);
+    }
+
+    private void OnMapInit(Entity<BluespacePulseOnTriggerComponent> ent, ref MapInitEvent args)
+    {
+        if (MetaData(ent).EntityPrototype?.ID != BluespaceFlasherId)
+            return;
+
+        EnsureRangeIndicator(ent);
+    }
+
+    private void OnShutdown(Entity<BluespacePulseOnTriggerComponent> ent, ref ComponentShutdown args)
+    {
+        if (ent.Comp.RangeIndicator is not { } indicator)
+            return;
+
+        ent.Comp.RangeIndicator = null;
+
+        if (!TerminatingOrDeleted(indicator))
+            QueueDel(indicator);
     }
 
     private void OnCrystalActivated(Entity<BluespacePulseOnTriggerComponent> ent, ref TriggerEvent args)
@@ -71,6 +92,8 @@ public sealed class BluespacePulseOnTriggerSystem : EntitySystem
             if (!xform.Anchored)
                 continue;
 
+            EnsureRangeIndicator((uid, comp));
+
             var found = new List<EntityUid>();
             foreach (var ent in _lookup.GetEntitiesInRange(uid, comp.Radius))
             {
@@ -107,5 +130,16 @@ public sealed class BluespacePulseOnTriggerSystem : EntitySystem
             RemComp<NullSpaceComponent>(ent);
             _stun.TryParalyze(ent, stunTime, true);
         }
+    }
+
+    private void EnsureRangeIndicator(Entity<BluespacePulseOnTriggerComponent> ent)
+    {
+        if (ent.Comp.RangeIndicatorPrototype == null)
+            return;
+
+        if (ent.Comp.RangeIndicator is { } existing && !TerminatingOrDeleted(existing))
+            return;
+
+        ent.Comp.RangeIndicator = SpawnAttachedTo(ent.Comp.RangeIndicatorPrototype, new EntityCoordinates(ent, 0, 0));
     }
 }

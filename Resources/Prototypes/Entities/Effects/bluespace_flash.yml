@@ -26,6 +26,30 @@
       path: /Audio/Effects/Lightning/lightningbolt.ogg
 
 - type: entity
+  id: EffectNullspaceFlasherRange
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Transform
+  - type: Physics
+    bodyType: Static
+    canCollide: false
+  - type: Sprite
+    drawdepth: Effects
+    noRot: true
+    overrideContainerOcclusion: true
+    sprite: Effects/EnergyDome/energydome_big.rsi
+    layers:
+    - state: big
+      shader: unshaded
+      color: "#18abf566"
+    scale: 4.3, 4.3
+  - type: Visibility
+    layer: 32
+  - type: Tag
+    tags:
+    - HideContextMenu
+
+- type: entity
   id: EffectFlashShadeskip
   components:
   - type: PointLight

@@ -252,15 +252,17 @@ public sealed class EtherealSystem : SharedEtherealSystem
         {
             foreach (var slot in inventory.Slots)
             {
-                if (_inventory.TryGetSlotEntity(uid, slot.Name, out var equipped, inventory)
-                    && HasComp<NullPhaseComponent>(equipped.Value))
+                if (!_inventory.TryGetSlotContainer(uid, slot.Name, out var slotContainer, out _, inventory)
+                    || slotContainer.ContainedEntity is not { } equipped)
                     continue;
 
-                if (!_inventory.TryUnequip(uid, slot.Name, out var item, silent: true, force: true, inventory: inventory))
+                if (HasComp<NullPhaseComponent>(equipped))
                     continue;
 
-                if (_container.Insert(item.Value, hiddenContainer))
-                    state.HiddenSlots[slot.Name] = item.Value;
+                if (!_container.Insert(equipped, hiddenContainer))
+                    continue;
+
+                state.HiddenSlots[slot.Name] = equipped;
             }
         }
 

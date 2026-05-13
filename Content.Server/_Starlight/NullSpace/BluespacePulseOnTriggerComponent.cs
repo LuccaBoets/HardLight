@@ -14,6 +14,11 @@ public sealed partial class BluespacePulseOnTriggerComponent : Component
     public float Radius = 10f;
 
     [DataField]
+    public string? RangeIndicatorPrototype;
+
+    public EntityUid? RangeIndicator;
+
+    [DataField]
     public float StunSeconds = 4f;
 
     [DataField]
