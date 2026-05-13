@@ -5,7 +5,6 @@ using Content.Shared._Starlight.NullSpace;
 using Content.Shared.Maps;
 using Robust.Server.GameObjects;
 using Content.Shared.Popups;
-using Content.Shared.Physics;
 using Content.Shared._Starlight;
 using System.Linq;
 using Content.Server.Ghost;
@@ -19,14 +18,12 @@ namespace Content.Server._Starlight.NullSpace;
 public sealed class EtherealPhaseSystem : EntitySystem
 {
     [Dependency] private readonly SharedActionsSystem _actionsSystem = default!;
-    [Dependency] private readonly PhysicsSystem _physics = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
     [Dependency] private readonly GhostSystem _ghost = default!;
     [Dependency] private readonly ContainerSystem _container = default!;
     [Dependency] private readonly IGameTiming _gameTiming = default!;
 
-    private EntProtoId ShadekinShadow = "ShadekinShadow";
     private EntProtoId ShadekinPhaseInEffect = "ShadekinPhaseInEffect";
     private EntProtoId ShadekinPhaseOutEffect = "ShadekinPhaseOutEffect";
 
@@ -141,8 +138,6 @@ public sealed class EtherealPhaseSystem : EntitySystem
                 var effect = SpawnAtPosition(ShadekinPhaseInEffect, Transform(uid).Coordinates);
                 Transform(effect).LocalRotation = Transform(uid).LocalRotation;
             }
-            else
-                SpawnAtPosition(ShadekinShadow, Transform(uid).Coordinates);
 
             if (TryComp<NullPhaseComponent>(uid, out var phaseComp))
                 phaseComp.VoluntaryExit = true;
@@ -168,8 +163,6 @@ public sealed class EtherealPhaseSystem : EntitySystem
                 var effect = SpawnAtPosition(ShadekinPhaseOutEffect, Transform(uid).Coordinates);
                 Transform(effect).LocalRotation = Transform(uid).LocalRotation;
             }
-            else
-                SpawnAtPosition(ShadekinShadow, Transform(uid).Coordinates);
         }
         return true;
     }
