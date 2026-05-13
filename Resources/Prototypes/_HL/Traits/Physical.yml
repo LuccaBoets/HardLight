@@ -453,6 +453,7 @@
     partSymmetry: Left
   - type: BuckleOnMapInit
     prototype: VehicleWheelchair
+  - type: LegsParalyzed
 
 - type: trait
   id: LegAmputeeR
@@ -473,6 +474,7 @@
     partSymmetry: Right
   - type: BuckleOnMapInit
     prototype: VehicleWheelchair
+  - type: LegsParalyzed
 
 - type: trait
   id: LegAmputeeBoth
@@ -493,3 +495,4 @@
     ignoreSymmetry: true
   - type: BuckleOnMapInit
     prototype: VehicleWheelchair
+  - type: LegsParalyzed

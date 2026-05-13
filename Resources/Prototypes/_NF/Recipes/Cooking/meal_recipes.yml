@@ -439,7 +439,7 @@
     FoodOnionSlice: 1
   recipeType:
   - Assembler
-   
+
 # Donuts (uncooked as well as glazed) - frying handled by DeepFrySpawnComponent per-entity
 
 - type: microwaveMealRecipe
@@ -1088,3 +1088,19 @@
   recipeType:
   - Oven
   - Microwave
+
+# Fries
+
+- type: microwaveMealRecipe
+  id: Poutine
+  name: poutine recipe
+  result: FoodMealPoutine
+  time: 5
+  group: Savory
+  solids:
+    FoodMealFries: 1
+    FoodCheeseCurds: 1
+  reagents:
+    BbqSauce: 10
+  recipeType:
+  - Assembler

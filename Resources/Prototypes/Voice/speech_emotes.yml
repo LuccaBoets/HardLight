@@ -7,6 +7,11 @@
   whitelist:
     components:
     - Vocal
+  # Starlight Start
+  blacklist:
+    tags:
+    - DogEmotes
+  # Starlight End
   chatMessages: ["chat-emote-msg-scream"]
   chatTriggers:
     - scream
@@ -15,31 +20,6 @@
     - screamed
     - shriek
     - shrieks
-    - shrieking
-    - shrieked
-    - screech
-    - screeches
-    - screeching
-    - screeched
-    - yell
-    - yells
-    - yelled
-    - yelling
-
-- type: emote
-  id: Laugh
-  name: chat-emote-name-laugh
-  category: Vocal
-  icon: Interface/Emotes/laugh.png
-  whitelist:
-    components:
-    - Vocal
-  chatMessages: ["chat-emote-msg-laugh"]
-  chatTriggers:
-    - laugh
-    - laughs
-    - laughing
-    - laughed
     - chuckle
     - chuckles
     - chuckled
@@ -82,6 +62,7 @@
   blacklist:
     tags:
     - SiliconEmotes
+    - DogEmotes # Starlight
   chatMessages: ["chat-emote-msg-sigh"]
   chatTriggers:
     - sigh
@@ -100,12 +81,25 @@
   blacklist:
     tags:
     - SiliconEmotes
+    - DogEmotes # Starlight
   chatMessages: ["chat-emote-msg-whistle"]
   chatTriggers:
     - whistle
     - whistles
     - whistleblowing
     - whistled # Frontier
+
+- type: emote
+  id: Flap
+  name: chat-emote-name-flap
+  category: Vocal
+  available: false
+  chatMessages: ["chat-emote-msg-flap"]
+  chatTriggers:
+    - flap
+    - flaps
+    - flapping
+    - flapped
 
 - type: emote
   id: Crying
@@ -141,6 +135,7 @@
   blacklist:
     tags:
     - SiliconEmotes
+    - DogEmotes # Starlight
   chatMessages: ["chat-emote-msg-squish"]
   chatTriggers:
     - squish
@@ -160,6 +155,7 @@
   blacklist:
     tags:
     - SiliconEmotes
+    - DogEmotes # Starlight
   chatMessages: ["chat-emote-msg-chitter"]
   chatTriggers:
    - chitter
@@ -179,6 +175,7 @@
   blacklist:
     tags:
     - SiliconEmotes
+    - DogEmotes # Starlight
   chatMessages: ["chat-emote-msg-squeak"]
   chatTriggers:
    - squeak
@@ -198,103 +195,13 @@
   blacklist:
     tags:
     - SiliconEmotes
+    - DogEmotes # Starlight
   chatMessages: ["chat-emote-msg-click"]
   chatTriggers:
    - click
    - clicks
    - clicked # Frontier
    - clicking # Frontier
-
-# Vulpkanin
-- type: emote
-  id: Bark
-  name: chat-emote-name-bark
-  category: Vocal
-  available: false
-  whitelist:
-    components:
-    - Vocal
-  blacklist:
-    tags:
-    - SiliconEmotes
-  chatMessages: ["chat-emote-msg-bark"]
-  chatTriggers:
-  - bark
-  - barks
-  - barked
-  - barking
-
-- type: emote
-  id: Snarl
-  name: chat-emote-name-snarl
-  category: Vocal
-  available: false
-  whitelist:
-    components:
-    - Vocal
-  blacklist:
-    tags:
-    - SiliconEmotes
-  chatMessages: ["chat-emote-msg-snarl"]
-  chatTriggers:
-  - snarl
-  - snarls
-  - snarled
-  - snarling
-
-- type: emote
-  id: Whine
-  name: chat-emote-name-whine
-  category: Vocal
-  available: false
-  whitelist:
-    components:
-    - Vocal
-  blacklist:
-    tags:
-    - SiliconEmotes
-  chatMessages: ["chat-emote-msg-whine"]
-  chatTriggers:
-  - whine
-  - whines
-  - whined
-  - whining
-
-- type: emote
-  id: Howl
-  name: chat-emote-name-howl
-  category: Vocal
-  available: false
-  whitelist:
-    components:
-    - Vocal
-  blacklist:
-    tags:
-    - SiliconEmotes
-  chatMessages: ["chat-emote-msg-howl"]
-  chatTriggers:
-  - howl
-  - howls
-  - howling
-  - howled
-
-- type: emote
-  id: Growl
-  name: chat-emote-name-growl
-  category: Vocal
-  available: false
-  whitelist:
-    components:
-    - Vocal
-  blacklist:
-    tags:
-    - SiliconEmotes
-  chatMessages: ["chat-emote-msg-growl"]
-  chatTriggers:
-  - growl
-  - growls
-  - growled
-  - growling
 
 # hand emotes
 - type: emote
@@ -308,6 +215,7 @@
   blacklist:
     tags:
     - SiliconEmotes
+    - DogEmotes # Starlight
   chatMessages: ["chat-emote-msg-clap"]
   chatTriggers:
     - claps
@@ -325,6 +233,7 @@
   blacklist:
     tags:
     - SiliconEmotes
+    - DogEmotes # Starlight
   chatMessages: [ "chat-emote-msg-clap-single" ]
   chatTriggers:
     - clap
@@ -344,6 +253,7 @@
   blacklist:
     tags:
     - SiliconEmotes
+    - DogEmotes # Starlight
   chatMessages: ["chat-emote-msg-snap"]
   chatTriggers:
     - snap
@@ -371,6 +281,7 @@
   blacklist:
     tags:
     - SiliconEmotes
+    - DogEmotes # Starlight
   chatMessages: ["chat-emote-msg-thump"]
   chatTriggers:
     - thump
@@ -383,60 +294,6 @@
     - thumps her tail
     - thumps his tail
     - thumps its tail
-
-- type: emote
-  id: Chirp
-  name: chat-emote-name-chirp
-  category: Vocal
-  available: false
-  icon: Interface/Emotes/chirp.png
-  whitelist:
-    components:
-    - Vocal
-  blacklist:
-    components:
-    - BorgChassis
-  chatMessages: ["chat-emote-msg-chirp"]
-  chatTriggers:
-    - chirp
-    - chirps
-    - chirping
-    - chirped
-
-- type: emote
-  id: Flap
-  name: chat-emote-name-flap
-  category: Hands # Not really "hands", but how far it to vocal? (moth mimes want to flap too!)
-  available: false
-  icon: Interface/Emotes/flap.png
-  whitelist:
-    components:
-    - Hands
-  blacklist:
-    tags:
-    - SiliconEmotes
-  chatMessages: ["chat-emote-msg-flap"]
-  chatTriggers:
-   - flap
-   - flaps
-   - flapped
-   - flapping
-   - flutter
-   - flutters
-   - fluttering
-   - fluttered
-   - flap wings
-   - flaps wings
-   - flutter wings
-   - flutters wings
-   - flaps his wings
-   - flaps her wings
-   - flaps their wings
-   - flaps its wings
-   - flutters his wings
-   - flutters her wings
-   - flutters their wings
-   - flutters its wings
 
 - type: emote
   id: Salute
@@ -516,11 +373,6 @@
   category: Vocal
   icon: Interface/Emotes/weh.png
   chatMessages: ["chat-emote-msg-weh"]
-  chatTriggers: # Floof - you can weh now
-    - weh
-    - wehs
-    - wehed
-    - wehing
 
 - type: emote
   id: Hew
@@ -528,14 +380,9 @@
   category: Vocal
   icon: Interface/Emotes/hew.png
   chatMessages: ["chat-emote-msg-hew"]
-  chatTriggers: # Floof - you can weh now
-    - hew
-    - hews
-    - hewed
-    - hewing
 
 - type: emote
-  id: NymphChirp
+  id: Chirp
   name: chat-emote-name-chirp
   category: Vocal
   available: false
@@ -547,8 +394,13 @@
   blacklist:
     tags:
     - SiliconEmotes
+    - DogEmotes # Starlight
   chatMessages: ["chat-emote-msg-chirp"]
-  # chatTriggers removed to avoid duplicates with base 'Chirp'
+  chatTriggers:
+    - chirp
+    - chirps
+    - chirped
+    - chirping
 
 # Machine Emotes
 - type: emote
@@ -629,106 +481,3 @@
     - pings
     - pinged
     - pinging
-
-# lewd emotes
-- type: emote
-  id: Stroke
-  name: chat-emote-name-stroke
-  category: Sex
-  icon: Interface/Emotes/stroke.png
-  whitelist:
-    components:
-    - Hands
-  blacklist:
-    tags:
-    - SiliconEmotes
-  chatTriggers:
-    - stroke
-
-- type: emote
-  id: WetPlorp
-  name: chat-emote-name-wetplorp
-  category: Sex
-  icon: Interface/Emotes/wetplaps.png
-  whitelist:
-    components:
-    - Hands
-  blacklist:
-    tags:
-    - SiliconEmotes
-  chatTriggers:
-    - wetplorp
-
-- type: emote
-  id: Plap
-  name: chat-emote-name-plap
-  category: Sex
-  icon: Interface/Emotes/plap.png
-  whitelist:
-    components:
-    - Hands
-  blacklist:
-    tags:
-    - SiliconEmotes
-  chatTriggers:
-    - plap
-
-- type: emote
-  id: WetPlap
-  name: chat-emote-name-wetplap
-  category: Sex
-  icon: Interface/Emotes/wetplaps.png
-  whitelist:
-    components:
-    - Hands
-  blacklist:
-    tags:
-    - SiliconEmotes
-  chatTriggers:
-    - wetplap
-
-- type: emote
-  id: PullOut
-  name: chat-emote-name-pullout
-  category: Sex
-  icon: Interface/Emotes/pullout.png
-  whitelist:
-    components:
-    - Hands
-  blacklist:
-    tags:
-    - SiliconEmotes
-  chatTriggers:
-    - pullout
-
-- type: emote
-  id: CumOut
-  name: chat-emote-name-cumout
-  category: Sex
-  icon: Interface/Emotes/cumout.png
-  whitelist:
-    components:
-    - Hands
-  blacklist:
-    tags:
-    - SiliconEmotes
-  chatTriggers:
-    - cumout
-
-- type: emote
-  id: CumIn
-  name: chat-emote-name-cumin
-  category: Sex
-  icon: Interface/Emotes/cumin.png
-  whitelist:
-    components:
-    - Hands
-  blacklist:
-    tags:
-    - SiliconEmotes
-  chatTriggers:
-    - cumin
-
-
-
-

@@ -1,19 +1,16 @@
 [head=2][color=#ff4444]⚠ You must be 18 or older to play. Players found to be under 18 will be banned immediately.[/color][/head]
 
-[color=#99ff99]Hard Light is an english speaking 18+ medium roleplay server[/color]
+[head=3]Hard Light is an English-speaking 18+ medium roleplay server.[/head]
 
 [color=#a4885c][head=3]0. Implementation and interpretation of the rules is at the sole discretion of the Admins.[/head][/color]
+  • Admins are held accountable through the Admin Code of Conduct.
 
-	• Admins will instead be held accountable through use of the Admin code of conduct.
+[color=#ffff00]If you have any questions about these rules, press F1 in-game (or click AHelp in the lobby), or ask in the Discord.[/color]
 
-[color=#ffff00]If you have any questions about these rules, please use the Admin help menu by hitting F1 in-game, or clicking the "AHelp" button in the lobby, or alternatively, ask for assistance on the discord.[/color]
+[color=#00fffb]Rules shown in this color are enforced at all times, without requiring a player report.[/color]
+All other rules are enforced upon receiving a player report.
 
-[head=3][color=#ff0000]rules marked in Hardlight's [color=#00fffb]color[/color] will be enforced at all times. Other rules will only be enforced upon recieving a user report.[/head][/color]
-  # Core Rules
-  These rules apply at all times, including between rounds.
-
-  Each section contains its own list of rules. Click on the section name to view the full version.
-
+[head=3]Contents[/head]
   - [textlink="Section 1 — Behavioral Rules" link="RuleC1"]
   - [textlink="Section 2 — Gameplay Rules" link="RuleC2"]
   - [textlink="Section 3 — Metagaming Rules" link="RuleC3"]

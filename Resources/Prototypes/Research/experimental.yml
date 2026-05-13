@@ -80,7 +80,6 @@
   tier: 1
   position: -2, -1
   cost: 10000
-
   recipeUnlocks:
   - ClothingShoesBootsMagSci
   - NFClothingShoesBootsMoon
@@ -108,7 +107,6 @@
   tier: 2
   position: 0, 9
   cost: 20000
-
   recipeUnlocks:
   - AdvancedCapacitorStockPart
   - AdvancedMatterBinStockPart
@@ -152,7 +150,6 @@
   tier: 2
   position: 2, -1
   cost: 10000
-
   recipeUnlocks:
   - HoloprojectorField
 - type: technology

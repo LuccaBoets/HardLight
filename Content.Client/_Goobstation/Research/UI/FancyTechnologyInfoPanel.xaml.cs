@@ -42,18 +42,31 @@ public sealed partial class FancyTechnologyInfoPanel : Control
         if (proto.EntityIcon.HasValue)
         {
             TechnologyTexture.SetPrototype(proto.EntityIcon);
+            TechnologyTexture.Visible = true;
+            TechnologyIconTexture.Visible = false;
         }
         else if (proto.Icon != null)
         {
             // Legacy SpriteSpecifier icon (rsi/state, texture, or entity prototype).
-            // Render via TextureRect using SpriteSystem.Frame0 so it works for all icon kinds.
-            TechnologyTexture.Visible = false;
-            TechnologyIconTexture.Texture = sprite.Frame0(proto.Icon);
-            TechnologyIconTexture.Visible = true;
+            if (proto.Icon is SpriteSpecifier.EntityPrototype entityProtoSpec)
+            {
+                TechnologyTexture.SetPrototype(entityProtoSpec.EntityPrototypeId);
+                TechnologyTexture.Visible = true;
+                TechnologyIconTexture.Visible = false;
+            }
+            else
+            {
+                // Render non-entity SpriteSpecifiers via TextureRect fallback.
+                TechnologyTexture.Visible = false;
+                TechnologyIconTexture.Texture = sprite.Frame0(proto.Icon);
+                TechnologyIconTexture.Visible = true;
+            }
         }
         else
         {
-            //_sawmill.Warning($"Technology {proto.ID} has no icon specified. Consider adding an EntityIcon field.");
+            TechnologyTexture.SetPrototype(null);
+            TechnologyTexture.Visible = false;
+            TechnologyIconTexture.Visible = false;
         }
 
         InitializePrerequisites(proto, research, sprite);

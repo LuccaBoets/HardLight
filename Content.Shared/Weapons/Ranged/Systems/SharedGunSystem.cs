@@ -646,7 +646,6 @@ public abstract partial class SharedGunSystem : EntitySystem
 
         return StackSystem.Split(uid, 1, coordinates, stack);
     }
-
     // VRS (Triad #3732)
     public DamageSpecifier GetNextDamage(Entity<GunComponent?> gun)
     {

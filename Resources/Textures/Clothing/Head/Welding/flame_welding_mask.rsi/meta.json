@@ -18,8 +18,8 @@
       "directions": 4
     },
     {
-        "name": "equipped-HELMET-vulpkanin",
-        "directions": 4
+      "name": "equipped-HELMET-vulpkanin",
+      "directions": 4
     },
     {
       "name": "up-equipped-HELMET",
@@ -56,6 +56,16 @@
     {
       "name": "equipped-HELMET-feroxi",
       "directions": 4
+    },
+    {
+      "name": "equipped-HELMET-dog",
+      "directions": 4,
+      "copyright": "Sparlight (GitHub)"
+    },
+    {
+      "name": "up-equipped-HELMET-dog",
+      "directions": 4,
+      "copyright": "Sparlight (GitHub)"
     }
   ]
 }

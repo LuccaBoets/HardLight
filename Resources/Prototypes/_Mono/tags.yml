@@ -1,9 +1,13 @@
 - type: Tag
   id: CassetteTape
+
+# Mono tags consumed by ported nanolaminate walls and EMP rocket cartridges.
 - type: Tag
   id: WallT4
 - type: Tag
   id: CartridgeRocketEmp
+
+# 762x51mm tags
 - type: Tag
   id: Cartridge762x51mmFMJ
 - type: Tag
@@ -206,6 +210,8 @@
   id: MagazineDMR
 - type: Tag
   id: ShuttleAIIgnore
+
+# Heavy airlocks
 - type: Tag
   id: AirlockHeavy
 - type: Tag

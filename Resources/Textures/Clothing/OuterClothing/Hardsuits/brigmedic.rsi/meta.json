@@ -19,8 +19,8 @@
       "directions": 4
     },
     {
-        "name": "equipped-OUTERCLOTHING-harpy",
-        "directions": 4
+      "name": "equipped-OUTERCLOTHING-harpy",
+      "directions": 4
     },
     {
       "name": "inhand-left",
@@ -28,6 +28,10 @@
     },
     {
       "name": "inhand-right",
+      "directions": 4
+    },
+    {
+      "name": "equipped-OUTERCLOTHING-dog",
       "directions": 4
     }
   ]

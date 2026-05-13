@@ -222,13 +222,11 @@ public sealed class StationPaySystem : EntitySystem
         {
             //Log.Debug($"[stationpay] Attemped payout for {uid}, but no scheduled payout was found");
             return false;
-            return false;
         }
 
         if (!GetJobForEntity(uid, out var jobId))
         {
             //Log.Debug($"[stationpay] Attemped payout for {uid}, but no valid job found");
-            return false;
             return false;
         }
 
@@ -254,35 +252,27 @@ public sealed class StationPaySystem : EntitySystem
         var amount = employedTime * rate;
         //Log.Info($"Paying entity {uid} ${amount} for {secondsWorked} seconds of work as {jobId.Value.Id}.");
 
-        if (_bank.TryBankDeposit(uid, amount))
-        {
-            var job = _prototypeManager.Index<JobPrototype>(jobId);
-            var message = Loc.GetString("stationpay-notify-payment",
-                ("pay", amount),
-                ("time", secondsWorked / 60),
-                ("job", job.LocalizedName)
-            );
-            var wrappedMessage = Loc.GetString("pda-notification-message",
-                ("header", Loc.GetString("stationpay-notify-pda-header")),
-                ("message", message));
+        if (!_bank.TryBankDeposit(uid, amount))
+            return false;
 
-            _chat.ChatMessageToOne(ChatChannel.Notifications,
-                message,
-                wrappedMessage,
-                EntityUid.Invalid,
-                false,
-                session.Channel);
+        var job = _prototypeManager.Index<JobPrototype>(jobId);
+        var message = Loc.GetString("stationpay-notify-payment",
+            ("pay", amount),
+            ("time", secondsWorked / 60),
+            ("job", job.LocalizedName)
+        );
+        var wrappedMessage = Loc.GetString("pda-notification-message",
+            ("header", Loc.GetString("stationpay-notify-pda-header")),
+            ("message", message));
 
-            return true;
+        _chat.ChatMessageToOne(ChatChannel.Notifications,
+            message,
+            wrappedMessage,
+            EntityUid.Invalid,
+            false,
+            session.Channel);
 
-            return true;
-        }
-
-        return false;
-
-        return false;
-        /* else
-            Log.Error("[stationpay] Failed to deposit station pay for uid: " + uid); */
+        return true;
     }
 
     // HardLight: throttle accumulator. Payouts are tracked in whole seconds, so checking

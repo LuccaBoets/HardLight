@@ -1,0 +1,31 @@
+# VRS port: Goobstation/Mono — collective mind channel definitions.
+#
+# Channels enumerate but stay inert until something grants the channel to an
+# entity via CollectiveMindComponent (e.g. the cmsay command's `+<key>`
+# prefix routes to the matching channel). Channels for unported mob systems
+# (CorticalBorer, Letoferol, Monolithic) ship their prototypes so future
+# system ports can attach them without an extra YAML PR.
+
+- type: collectiveMind
+  id: Binary
+  name: collective-mind-binary
+  keycode: 'b'
+  color: "#5ed7aa"
+
+- type: collectiveMind
+  id: Letoferol
+  name: collective-mind-letoferol
+  keycode: 'l'
+  color: "#ebba34"
+
+- type: collectiveMind
+  id: CorticalBorer
+  name: collective-mind-borer
+  keycode: 'r'
+  color: "#9999ff"
+
+- type: collectiveMind
+  id: MonolithicMind
+  name: collective-mind-monolithic
+  keycode: 'k'
+  color: "#a967f5"

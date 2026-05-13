@@ -237,6 +237,9 @@ namespace Content.Client.Options.UI.Tabs
             AddButton(ContentKeyFunctions.FocusAdminChat);
             AddButton(ContentKeyFunctions.FocusDeadChat);
             AddButton(ContentKeyFunctions.FocusConsoleChat);
+            // VRS: Floofstation — subtle channel keybinds
+            AddButton(ContentKeyFunctions.FocusSubtle);
+            AddButton(ContentKeyFunctions.FocusSubtleOOC);
             AddButton(ContentKeyFunctions.CycleChatChannelForward);
             AddButton(ContentKeyFunctions.CycleChatChannelBackward);
             AddButton(ContentKeyFunctions.OpenCharacterMenu);

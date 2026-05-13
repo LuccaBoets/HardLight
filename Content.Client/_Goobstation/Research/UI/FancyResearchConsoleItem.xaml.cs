@@ -59,6 +59,8 @@ public sealed partial class FancyResearchConsoleItem : LayoutContainer
         {
             // Use EntityPrototypeView to show all sprite layers
             ResearchDisplay.SetPrototype(proto.EntityIcon.Value);
+            ResearchDisplay.Visible = true;
+            ResearchIconTexture.Visible = false;
         }
         else if (proto.Icon != null)
         {
@@ -73,6 +75,8 @@ public sealed partial class FancyResearchConsoleItem : LayoutContainer
         {
             // No icon specified
             ResearchDisplay.SetPrototype(null);
+            ResearchDisplay.Visible = false;
+            ResearchIconTexture.Visible = false;
         }
 
         Button.OnPressed += Selected;

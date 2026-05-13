@@ -1,8 +1,4 @@
-# Mono port: trimmed for VRS — only BorgModuleRedactedRCD (used by wyvern map
-# in PlayerBorgRedacted's loadout). All other Mono borg modules removed
-# because they reference TSF/PDV faction gear, weapons (UllmanWeaponPulsePistol,
-# WeaponHFKatana, WeaponBorgPulseRifle, CyborgWeaponMinigun, WeaponVT7,
-# WeaponRifleAsakimAutopulserADM) that are not yet ported in VRS.
+# Mono borg modules used by remnant borg roles.
 
 - type: entity
   id: BorgModuleRedactedRCD
@@ -17,5 +13,24 @@
     moduleId: RCD
     items:
     - RCDRecharging
+    - ShipRepairDeviceRedacted
   - type: BorgModuleIcon
     icon: { sprite: Interface/Actions/actions_borg.rsi, state: rcd-module }
+
+- type: entity
+  id: BorgModuleRedactedWeapon
+  parent: [ BaseBorgModule, BaseProviderBorgModule ]
+  name: pre-fracture weapon cyborg module
+  components:
+  - type: Sprite
+    sprite: _Mono/Objects/Specific/Robotics/borgmodule.rsi
+    layers:
+    - state: mercenary
+    - state: icon-mercenary
+  - type: ItemBorgModule
+    moduleId: Security
+    items:
+    - WeaponPistolAnaconda
+    - WeaponRifleAk
+  - type: BorgModuleIcon
+    icon: { sprite: _Mono/Interface/Action/actions_borg.rsi, state: mercenary-weapon-module }

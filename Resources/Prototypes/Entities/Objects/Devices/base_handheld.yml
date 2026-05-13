@@ -6,6 +6,7 @@
   - type: ActivatableUIRequiresPowerCell
   - type: ItemToggle
     onUse: false # above component does the toggling
+    onActivate: false # VRS: prevent ItemToggle from consuming activation intended for handheld UI
   - type: PowerCellDraw
     drawRate: 0
     useRate: 20

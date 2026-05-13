@@ -4,16 +4,14 @@ using Content.Shared.Chat;
 using Robust.Shared.Console;
 using Robust.Shared.Enums;
 
-namespace Content.Server.Chat.Commands
+namespace Content.Server._Floof.Chat.Commands
 {
     [AnyCommand]
     internal sealed class SubtleOOCCommand : IConsoleCommand
     {
-        public string Command => "subtleooc";
-        public string Description => "Perform an subtle action.";
-        public string Help => "subtleooc <text>";
-
-        private const string SubtleOOCColor = "#ff7782";
+        public string Command => "sooc";
+        public string Description => "Send a subtle OOC message visible to nearby players.";
+        public string Help => "sooc <text>";
 
         public void Execute(IConsoleShell shell, string argStr, string[] args)
         {
@@ -40,7 +38,7 @@ namespace Content.Server.Chat.Commands
                 return;
 
             IoCManager.Resolve<IEntitySystemManager>().GetEntitySystem<ChatSystem>()
-                .TrySendInGameICMessage(playerEntity, message, InGameICChatType.SubtleOOC, ChatTransmitRange.NoGhosts, false, shell, player, color: SubtleOOCColor);
+                .TrySendInGameOOCMessage(playerEntity, message, InGameOOCChatType.SubtleLOOC, false, shell, player);
         }
     }
 }
