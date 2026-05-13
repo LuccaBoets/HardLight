@@ -863,14 +863,15 @@
     occursDuringRoundEnd: false
     requiredJobs:
       HeadOfSecurity: 1
+      SecurityOfficer: 1
   - type: AlertLevelInterceptionRule
   - type: AntagSelection
     definitions:
     - prefRoles: [ TraitorSleeper ]
       fallbackRoles: [ Traitor ]
       min: 1
-      max: 5
-      playerRatio: 10
+      max: 3
+      playerRatio: 30
       blacklist:
         components:
         - AntagImmune
@@ -904,7 +905,7 @@
       min: 1
       max: 3
       lateJoinAdditional: true
-      playerRatio: 15
+      playerRatio: 30
       briefing:
         text: sleeper-head-rev-role-greeting
         color: CornflowerBlue

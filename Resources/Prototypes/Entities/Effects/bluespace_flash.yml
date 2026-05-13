@@ -39,9 +39,9 @@
     overrideContainerOcclusion: true
     sprite: Effects/EnergyDome/energydome_big.rsi
     layers:
-    - state: big
+    - state: nullphase
       shader: unshaded
-      color: "#18abf566"
+      color: "#6c15ae"
     scale: 4.3, 4.3
   - type: Visibility
     layer: 32

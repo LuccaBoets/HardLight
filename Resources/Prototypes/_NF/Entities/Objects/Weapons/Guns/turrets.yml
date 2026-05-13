@@ -50,6 +50,17 @@
         3.141
       SoundTargetInLOS: !type:SoundPathSpecifier
         path: /Audio/Effects/double_beep.ogg
+  - type: Sprite
+    sprite: _NF/Objects/Weapons/Guns/Turrets/laser.rsi
+    drawdepth: Mobs
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: unshaded
+      shader: unshaded
+    - state: mag-0
+      map: ["enum.GunVisualLayers.Mag"]
+      shader: unshaded
   - type: Gun
     fireRate: 2
     soundGunshot:
@@ -410,3 +421,33 @@
       steps:
         - tool: Screwing
           doAfter: 14
+
+- type: entity
+  id: NFSpawnMobWeaponTurretLaserContraband
+  parent: MarkerBase
+  name: CDET spawner
+  suffix: Hostile, Frontier
+  components:
+  - type: Sprite
+    layers:
+    - state: red
+    - sprite: _NF/Objects/Weapons/Guns/Turrets/laser.rsi
+      state: base
+  - type: ConditionalSpawner
+    prototypes:
+    - WeaponTurretLethalContrabandDenyingDeployed
+    
+- type: entity
+  id: NFSpawnMobWeaponTurretDisablerContraband
+  parent: MarkerBase
+  name: CDET spawner
+  suffix: Hostile, Frontier
+  components:
+  - type: Sprite
+    layers:
+    - state: red
+    - sprite: _NF/Objects/Weapons/Guns/Turrets/disabler.rsi
+      state: base
+  - type: ConditionalSpawner
+    prototypes:
+    - WeaponTurretContrabandDenyingDeployed

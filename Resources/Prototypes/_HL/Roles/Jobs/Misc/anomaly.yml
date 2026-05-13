@@ -1,0 +1,27 @@
+- type: job
+  id: Anomaly
+  name: job-name-anomaly
+  description: job-description-anomaly
+  playTimeTracker: RoleAnomaly
+  overrideConsoleVisibility: true
+  alwaysUseSpawner: true
+  canBeAntag: false
+  icon: "JobIconNoId"
+  joinNotifyCrew: false
+  whitelisted: true
+  setPreference: true
+  requirements:
+    - !type:SpeciesRequirement
+      species:
+        - Shadekin
+  access:
+    - Maintenance
+  accessGroups:
+    - GeneralAccess
+  special:
+    - !type:AddComponentSpecial
+      components:
+        - type: Nullphase
+        - type: MailDisabled
+        - type: SpecialSectorStationRecord
+          recordGeneration: NoRecord

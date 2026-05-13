@@ -4,8 +4,8 @@ meta:
   engineVersion: 274.0.0
   forkId: ""
   forkVersion: ""
-  time: 05/13/2026 09:39:49
-  entityCount: 25553
+  time: 05/13/2026 20:36:55
+  entityCount: 25571
 maps:
 - 1
 grids:
@@ -14725,22 +14725,6 @@ entities:
           Quantity: 20
     - type: ContainedSolution
       containerName: drink
-  - uid: 25170
-    components:
-    - type: MetaData
-      name: solution - drink
-    - type: Transform
-      parent: 10964
-    - type: Solution
-      solution:
-        maxVol: 20
-        name: drink
-        reagents:
-        - data: []
-          ReagentId: Coffee
-          Quantity: 20
-    - type: ContainedSolution
-      containerName: drink
   - uid: 25171
     components:
     - type: MetaData
@@ -19343,10 +19327,7 @@ entities:
       solution:
         maxVol: 500
         name: tank
-        reagents:
-        - data: []
-          ReagentId: Water
-          Quantity: 500
+        reagents: []
     - type: ContainedSolution
       containerName: tank
   - uid: 25465
@@ -19372,10 +19353,7 @@ entities:
       solution:
         maxVol: 500
         name: tank
-        reagents:
-        - data: []
-          ReagentId: Water
-          Quantity: 500
+        reagents: []
     - type: ContainedSolution
       containerName: tank
   - uid: 25467
@@ -19401,10 +19379,7 @@ entities:
       solution:
         maxVol: 500
         name: tank
-        reagents:
-        - data: []
-          ReagentId: Water
-          Quantity: 500
+        reagents: []
     - type: ContainedSolution
       containerName: tank
   - uid: 25469
@@ -19430,10 +19405,7 @@ entities:
       solution:
         maxVol: 500
         name: tank
-        reagents:
-        - data: []
-          ReagentId: Water
-          Quantity: 500
+        reagents: []
     - type: ContainedSolution
       containerName: tank
   - uid: 25471
@@ -19459,10 +19431,7 @@ entities:
       solution:
         maxVol: 500
         name: tank
-        reagents:
-        - data: []
-          ReagentId: Water
-          Quantity: 500
+        reagents: []
     - type: ContainedSolution
       containerName: tank
   - uid: 25473
@@ -19488,10 +19457,7 @@ entities:
       solution:
         maxVol: 500
         name: tank
-        reagents:
-        - data: []
-          ReagentId: Water
-          Quantity: 500
+        reagents: []
     - type: ContainedSolution
       containerName: tank
   - uid: 25475
@@ -19517,10 +19483,7 @@ entities:
       solution:
         maxVol: 500
         name: tank
-        reagents:
-        - data: []
-          ReagentId: Water
-          Quantity: 500
+        reagents: []
     - type: ContainedSolution
       containerName: tank
   - uid: 25477
@@ -19546,10 +19509,7 @@ entities:
       solution:
         maxVol: 500
         name: tank
-        reagents:
-        - data: []
-          ReagentId: Water
-          Quantity: 500
+        reagents: []
     - type: ContainedSolution
       containerName: tank
   - uid: 25479
@@ -23065,7 +23025,7 @@ entities:
       pos: 0.5,28.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -19982.176
+      secondsUntilStateChange: -20708.26
       state: Opening
     - type: DeviceLinkSource
       lastSignals:
@@ -23972,7 +23932,7 @@ entities:
       pos: -18.5,-45.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -85399.46
+      secondsUntilStateChange: -86125.55
       state: Opening
     - type: DeviceLinkSink
       invokeCounter: 1
@@ -24791,7 +24751,7 @@ entities:
       pos: -41.5,-28.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -84662.86
+      secondsUntilStateChange: -85388.945
       state: Opening
     - type: DeviceLinkSource
       lastSignals:
@@ -25633,7 +25593,7 @@ entities:
       pos: -20.5,-6.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -297944.84
+      secondsUntilStateChange: -298670.94
       state: Opening
     - type: DeviceLinkSource
       lastSignals:
@@ -25756,7 +25716,7 @@ entities:
       pos: -42.5,-9.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -85774.56
+      secondsUntilStateChange: -86500.65
       state: Opening
     - type: DeviceLinkSource
       lastSignals:
@@ -88408,11 +88368,6 @@ entities:
     - type: Transform
       pos: -29.5,-4.5
       parent: 2
-  - uid: 10912
-    components:
-    - type: Transform
-      pos: -59.5,-48.5
-      parent: 2
   - uid: 10913
     components:
     - type: Transform
@@ -88916,19 +88871,6 @@ entities:
       containers:
         solution@drink: !type:ContainerSlot
           ent: 25169
-  - uid: 10964
-    components:
-    - type: Transform
-      pos: -59.138767,-42.552944
-      parent: 2
-    - type: SolutionContainerManager
-      solutions: null
-      containers:
-      - drink
-    - type: ContainerContainer
-      containers:
-        solution@drink: !type:ContainerSlot
-          ent: 25170
 - proto: DrinkMilkCarton
   entities:
   - uid: 10967
@@ -90724,11 +90666,6 @@ entities:
     components:
     - type: Transform
       pos: 26.5,6.5
-      parent: 2
-  - uid: 11222
-    components:
-    - type: Transform
-      pos: -60.5,-42.5
       parent: 2
 - proto: filingCabinetTallRandom
   entities:
@@ -96661,13 +96598,7 @@ entities:
       pos: 41.488365,-7.265074
       parent: 2
     - type: SolutionContainerManager
-      solutions:
-        food:
-          temperature: 293.15
-          canReact: True
-          maxVol: 0
-          name: food
-          reagents: []
+      solutions: null
       containers:
       - food
     - type: ContainerContainer
@@ -96882,13 +96813,7 @@ entities:
       pos: -16.585815,13.580917
       parent: 2
     - type: SolutionContainerManager
-      solutions:
-        food:
-          temperature: 293.15
-          canReact: True
-          maxVol: 0
-          name: food
-          reagents: []
+      solutions: null
       containers:
       - food
     - type: ContainerContainer
@@ -96901,13 +96826,7 @@ entities:
       pos: -16.460815,13.409042
       parent: 2
     - type: SolutionContainerManager
-      solutions:
-        food:
-          temperature: 293.15
-          canReact: True
-          maxVol: 0
-          name: food
-          reagents: []
+      solutions: null
       containers:
       - food
     - type: ContainerContainer
@@ -132806,7 +132725,7 @@ entities:
       containers:
       - food
     - type: StackSignature
-      signature: LeavesCannabis|THC=1500;seed=LeavesCannabis|pot=20;yield=2;endur=100;life=75;mature=8;prod=12;stages=3;harvest=1;seedless=0;viable=1;ligneous=0;THC=300;
+      signature: LeavesCannabis|THC=1500;
     - type: Physics
       canCollide: False
     - type: ContainerContainer
@@ -132822,7 +132741,7 @@ entities:
       containers:
       - food
     - type: StackSignature
-      signature: LeavesCannabis|THC=1500;seed=LeavesCannabis|pot=20;yield=2;endur=100;life=75;mature=8;prod=12;stages=3;harvest=1;seedless=0;viable=1;ligneous=0;THC=300;
+      signature: LeavesCannabis|THC=1500;
     - type: Physics
       canCollide: False
     - type: ContainerContainer
@@ -132838,7 +132757,7 @@ entities:
       containers:
       - food
     - type: StackSignature
-      signature: LeavesCannabis|THC=1500;seed=LeavesCannabis|pot=20;yield=2;endur=100;life=75;mature=8;prod=12;stages=3;harvest=1;seedless=0;viable=1;ligneous=0;THC=300;
+      signature: LeavesCannabis|THC=1500;
     - type: Physics
       canCollide: False
     - type: ContainerContainer
@@ -133790,6 +133709,8 @@ entities:
       containers:
         solution@food: !type:ContainerSlot
           ent: 25297
+    - type: StackSignature
+      signature: MaterialBananium|Honk=500;Nutriment=400;Vitamin=200;
 - proto: MaterialCloth
   entities:
   - uid: 16770
@@ -133805,6 +133726,8 @@ entities:
       containers:
         solution@food: !type:ContainerSlot
           ent: 25298
+    - type: StackSignature
+      signature: MaterialCloth|Fiber=500;
 - proto: MaterialDurathread
   entities:
   - uid: 16771
@@ -133820,6 +133743,8 @@ entities:
       containers:
         solution@food: !type:ContainerSlot
           ent: 25299
+    - type: StackSignature
+      signature: MaterialDurathread|Fiber=500;
 - proto: MaterialWoodPlank
   entities:
   - uid: 16772
@@ -134730,10 +134655,10 @@ entities:
       parent: 2
 - proto: NFLockerSecurityFilled
   entities:
-  - uid: 16886
+  - uid: 11222
     components:
     - type: Transform
-      pos: -61.5,-42.5
+      pos: -60.5,-42.5
       parent: 2
 - proto: NFMagnetBoxOre
   entities:
@@ -134793,6 +134718,61 @@ entities:
     components:
     - type: Transform
       pos: 58.457176,26.640175
+      parent: 2
+- proto: NFSpawnMobWeaponTurretDisablerContraband
+  entities:
+  - uid: 10964
+    components:
+    - type: Transform
+      rot: 3.141592653589793 rad
+      pos: -59.5,-48.5
+      parent: 2
+  - uid: 20490
+    components:
+    - type: Transform
+      pos: -55.5,-45.5
+      parent: 2
+  - uid: 25554
+    components:
+    - type: Transform
+      rot: 1.5707963267948966 rad
+      pos: -63.5,-44.5
+      parent: 2
+  - uid: 25555
+    components:
+    - type: Transform
+      rot: 3.141592653589793 rad
+      pos: -61.5,-48.5
+      parent: 2
+  - uid: 25556
+    components:
+    - type: Transform
+      rot: 3.141592653589793 rad
+      pos: -57.5,-48.5
+      parent: 2
+- proto: NFSpawnMobWeaponTurretLaserContraband
+  entities:
+  - uid: 16886
+    components:
+    - type: Transform
+      pos: -61.5,-42.5
+      parent: 2
+  - uid: 24160
+    components:
+    - type: Transform
+      pos: -59.5,-42.5
+      parent: 2
+  - uid: 25557
+    components:
+    - type: Transform
+      rot: 3.141592653589793 rad
+      pos: -60.5,-48.5
+      parent: 2
+  - uid: 25558
+    components:
+    - type: Transform
+      rot: 3.141592653589793 rad
+      pos: -58.5,-48.5
       parent: 2
 - proto: NFWeaponEnergyPistolDisabler
   entities:
@@ -138263,11 +138243,6 @@ entities:
     - type: Transform
       rot: -1.5707963267948966 rad
       pos: 24.5,13.5
-      parent: 2
-  - uid: 17252
-    components:
-    - type: Transform
-      pos: -55.5,-45.5
       parent: 2
   - uid: 17253
     components:
@@ -142624,11 +142599,6 @@ entities:
     components:
     - type: Transform
       pos: -30.336449,-37.287514
-      parent: 2
-  - uid: 24684
-    components:
-    - type: Transform
-      pos: -59.09648,-42.22489
       parent: 2
   - uid: 24685
     components:
@@ -149675,6 +149645,8 @@ entities:
       containers:
         solution@food: !type:ContainerSlot
           ent: 25448
+    - type: StackSignature
+      signature: SheetUranium|Radium=200;Uranium=800;
   - uid: 18960
     components:
     - type: Transform
@@ -149688,6 +149660,8 @@ entities:
       containers:
         solution@food: !type:ContainerSlot
           ent: 25449
+    - type: StackSignature
+      signature: SheetUranium|Radium=200;Uranium=800;
   - uid: 18961
     components:
     - type: Transform
@@ -149701,6 +149675,8 @@ entities:
       containers:
         solution@food: !type:ContainerSlot
           ent: 25450
+    - type: StackSignature
+      signature: SheetUranium|Radium=200;Uranium=800;
 - proto: ShelfChemistryChemistrySecure
   entities:
   - uid: 18962
@@ -149748,6 +149724,8 @@ entities:
     - type: Transform
       pos: -58.5,-44.5
       parent: 2
+    - type: DeviceLinkSink
+      invokeCounter: 1
   - uid: 18969
     components:
     - type: Transform
@@ -149819,10 +149797,51 @@ entities:
     - type: Transform
       pos: -57.5,-44.5
       parent: 2
+    - type: DeviceLinkSink
+      invokeCounter: 1
   - uid: 18981
     components:
     - type: Transform
       pos: -59.5,-44.5
+      parent: 2
+    - type: DeviceLinkSink
+      invokeCounter: 1
+  - uid: 25565
+    components:
+    - type: Transform
+      rot: 3.141592653589793 rad
+      pos: -63.5,-44.5
+      parent: 2
+  - uid: 25566
+    components:
+    - type: Transform
+      rot: 3.141592653589793 rad
+      pos: -55.5,-45.5
+      parent: 2
+  - uid: 25567
+    components:
+    - type: Transform
+      pos: -57.5,-48.5
+      parent: 2
+  - uid: 25568
+    components:
+    - type: Transform
+      pos: -58.5,-48.5
+      parent: 2
+  - uid: 25569
+    components:
+    - type: Transform
+      pos: -59.5,-48.5
+      parent: 2
+  - uid: 25570
+    components:
+    - type: Transform
+      pos: -60.5,-48.5
+      parent: 2
+  - uid: 25571
+    components:
+    - type: Transform
+      pos: -61.5,-48.5
       parent: 2
 - proto: ShuttersNormalOpen
   entities:
@@ -151448,8 +151467,6 @@ entities:
       rot: 3.141592653589793 rad
       pos: -60.5,-44.5
       parent: 2
-    - type: SignalSwitch
-      state: True
     - type: DeviceLinkSource
       linkedPorts:
         18981:
@@ -151459,6 +151476,27 @@ entities:
         - - Pressed
           - Toggle
         18980:
+        - - Pressed
+          - Toggle
+        25565:
+        - - Pressed
+          - Toggle
+        25566:
+        - - Pressed
+          - Toggle
+        25571:
+        - - Pressed
+          - Toggle
+        25570:
+        - - Pressed
+          - Toggle
+        25569:
+        - - Pressed
+          - Toggle
+        25568:
+        - - Pressed
+          - Toggle
+        25567:
         - - Pressed
           - Toggle
   - uid: 19147
@@ -157427,7 +157465,7 @@ entities:
       pos: -46.5,-9.5
       parent: 2
     - type: Door
-      secondsUntilStateChange: -25403.857
+      secondsUntilStateChange: -26129.941
       state: Opening
 - proto: SophicScribe
   entities:
@@ -157453,6 +157491,8 @@ entities:
       containers:
         solution@food: !type:ContainerSlot
           ent: 25479
+    - type: StackSignature
+      signature: SpaceCash100|Fiber=100;
   - uid: 19693
     components:
     - type: Transform
@@ -157466,6 +157506,8 @@ entities:
       containers:
         solution@food: !type:ContainerSlot
           ent: 25480
+    - type: StackSignature
+      signature: SpaceCash100|Fiber=100;
 - proto: SpaceHeater
   entities:
   - uid: 19694
@@ -161148,6 +161190,12 @@ entities:
       - SurveillanceCameraSecurity
       nameSet: True
       id: Security docks controls
+  - uid: 25564
+    components:
+    - type: Transform
+      rot: 3.141592653589793 rad
+      pos: -60.5,-45.5
+      parent: 2
 - proto: SurveillanceCameraService
   entities:
   - uid: 20137
@@ -162018,11 +162066,6 @@ entities:
     - type: Transform
       rot: 3.141592653589793 rad
       pos: 52.5,-28.5
-      parent: 2
-  - uid: 20254
-    components:
-    - type: Transform
-      pos: -55.5,-45.5
       parent: 2
   - uid: 20255
     components:
@@ -163395,12 +163438,6 @@ entities:
     - type: Transform
       rot: 1.5707963267948966 rad
       pos: -57.5,-44.5
-      parent: 2
-  - uid: 20490
-    components:
-    - type: Transform
-      rot: 1.5707963267948966 rad
-      pos: -59.5,-42.5
       parent: 2
   - uid: 20491
     components:
@@ -165530,6 +165567,20 @@ entities:
     components:
     - type: Transform
       pos: 5.468586,33.590187
+      parent: 2
+- proto: WallDirectionalSolid
+  entities:
+  - uid: 17252
+    components:
+    - type: Transform
+      rot: -1.5707963267948966 rad
+      pos: -54.5,-45.5
+      parent: 2
+  - uid: 25170
+    components:
+    - type: Transform
+      rot: 1.5707963267948966 rad
+      pos: -64.5,-44.5
       parent: 2
 - proto: WallmountTelescreen
   entities:
@@ -184077,6 +184128,13 @@ entities:
     - type: Transform
       pos: 69.5,5.5
       parent: 2
+- proto: WallWeaponCapacitorRecharger
+  entities:
+  - uid: 24684
+    components:
+    - type: Transform
+      pos: -58.5,-41.5
+      parent: 2
 - proto: WallWood
   entities:
   - uid: 24063
@@ -184820,12 +184878,6 @@ entities:
     - type: Transform
       rot: 1.5707963267948966 rad
       pos: 20.5,-38.5
-      parent: 2
-  - uid: 24160
-    components:
-    - type: Transform
-      rot: 1.5707963267948966 rad
-      pos: -59.5,-42.5
       parent: 2
 - proto: WeaponEnergyTurretAI
   entities:
@@ -186067,6 +186119,12 @@ entities:
       rot: -1.5707963267948966 rad
       pos: 11.5,27.5
       parent: 2
+  - uid: 10912
+    components:
+    - type: Transform
+      rot: 3.141592653589793 rad
+      pos: -55.5,-46.5
+      parent: 2
   - uid: 16667
     components:
     - type: Transform
@@ -186089,6 +186147,12 @@ entities:
     - type: Transform
       rot: 3.141592653589793 rad
       pos: -4.5,42.5
+      parent: 2
+  - uid: 20254
+    components:
+    - type: Transform
+      rot: 3.141592653589793 rad
+      pos: -63.5,-45.5
       parent: 2
   - uid: 20294
     components:
@@ -186835,6 +186899,31 @@ entities:
     - type: Transform
       rot: 1.5707963267948966 rad
       pos: 17.5,40.5
+      parent: 2
+  - uid: 25559
+    components:
+    - type: Transform
+      pos: -61.5,-47.5
+      parent: 2
+  - uid: 25560
+    components:
+    - type: Transform
+      pos: -60.5,-47.5
+      parent: 2
+  - uid: 25561
+    components:
+    - type: Transform
+      pos: -59.5,-47.5
+      parent: 2
+  - uid: 25562
+    components:
+    - type: Transform
+      pos: -58.5,-47.5
+      parent: 2
+  - uid: 25563
+    components:
+    - type: Transform
+      pos: -57.5,-47.5
       parent: 2
 - proto: WoodDoor
   entities:

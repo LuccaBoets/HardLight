@@ -3,7 +3,7 @@
   mapName: 'Silica Station'
   mapPath: /Maps/_HL/silica.yml
   minPlayers: 0
-  maxPlayers: 100
+  maxPlayers: 200
   stations:
     StarlightSilica:
       stationProto: StandardNanotrasenStation
@@ -77,6 +77,8 @@
           Clown: [ 2, 2 ]
           Mime: [ 2, 2 ]
           Musician: [ 2, 2 ]
+          # Anomaly (1)
+          Anomaly: [ 5, 5 ]
       - type: StationDeadDrop
         maxDeadDrops: 2 # medium station
       - type: StationDeadDropReporting

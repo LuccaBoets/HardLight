@@ -23,9 +23,14 @@ public sealed partial class NpcFactionSystem : EntitySystem
     [Dependency] private readonly SharedTransformSystem _xform = default!;
 
     private static readonly ProtoId<NpcFactionPrototype> ContrabandDetectionFaction = "ContrabandDetection";
+    private static readonly HashSet<ProtoId<ContrabandSeverityPrototype>> Class3EquivalentContrabandSeverities =
+    [
+        "OtherFactionGear2",
+        "OtherFactionGear3",
+    ];
+
     private static readonly HashSet<ProtoId<AccessLevelPrototype>> ContrabandDetectionSecurityExemptions =
     [
-        
         "StationCaptain",
         "HeadOfPersonnel",
         "ChiefEngineer",
@@ -207,12 +212,16 @@ public sealed partial class NpcFactionSystem : EntitySystem
         var hostiles = GetNearbyFactions(ent, range, ent.Comp1.HostileFactions)
             // ignore mobs that have both hostile faction and the same faction,
             // otherwise having multiple factions is strictly negative
-            .Where(target => !IsEntityFriendly((ent, ent.Comp1), target) && !IsSecurityExemptFromContrabandDetection((ent.Owner, ent.Comp1), target));
+            .Where(target => !IsEntityFriendly((ent, ent.Comp1), target)
+                && !IsSecurityExemptFromContrabandDetection((ent.Owner, ent.Comp1), target)
+                && IsValidContrabandDetectionTarget((ent.Owner, ent.Comp1), target));
 
         if (ent.Comp1.Factions.Contains(ContrabandDetectionFaction))
         {
             hostiles = hostiles.Union(GetNearbyContrabandCarriers(ent.Owner, range)
-                .Where(target => !IsEntityFriendly((ent, ent.Comp1), target) && !IsSecurityExemptFromContrabandDetection((ent.Owner, ent.Comp1), target)));
+                .Where(target => !IsEntityFriendly((ent, ent.Comp1), target)
+                    && !IsSecurityExemptFromContrabandDetection((ent.Owner, ent.Comp1), target)
+                    && IsValidContrabandDetectionTarget((ent.Owner, ent.Comp1), target)));
         }
 
         if (!Resolve(ent, ref ent.Comp2, false))
@@ -233,31 +242,34 @@ public sealed partial class NpcFactionSystem : EntitySystem
             if (ent.Owner == entity)
                 continue;
 
-            if (!IsCarryingContraband(ent.Owner))
+            if (!HasClass3Contraband(ent.Owner))
                 continue;
 
             yield return ent.Owner;
         }
     }
 
-    private bool IsCarryingContraband(EntityUid entity)
+    private bool HasClass3Contraband(EntityUid entity)
     {
+        if (TryComp<ContrabandComponent>(entity, out var selfContraband) && IsClass3Contraband(selfContraband))
+            return true;
+
         var scanned = new HashSet<EntityUid>();
         foreach (var item in _inventory.GetHandOrInventoryEntities(entity))
         {
-            if (ContainsContrabandRecursive(item, scanned))
+            if (ContainsClass3ContrabandRecursive(item, scanned))
                 return true;
         }
 
         return false;
     }
 
-    private bool ContainsContrabandRecursive(EntityUid entity, HashSet<EntityUid> scanned)
+    private bool ContainsClass3ContrabandRecursive(EntityUid entity, HashSet<EntityUid> scanned)
     {
         if (!scanned.Add(entity))
             return false;
 
-        if (HasComp<ContrabandComponent>(entity))
+        if (TryComp<ContrabandComponent>(entity, out var contraband) && IsClass3Contraband(contraband))
             return true;
 
         if (!TryComp<ContainerManagerComponent>(entity, out var manager))
@@ -267,12 +279,26 @@ public sealed partial class NpcFactionSystem : EntitySystem
         {
             foreach (var contained in container.ContainedEntities)
             {
-                if (ContainsContrabandRecursive(contained, scanned))
+                if (ContainsClass3ContrabandRecursive(contained, scanned))
                     return true;
             }
         }
 
         return false;
+    }
+
+    private bool IsValidContrabandDetectionTarget(Entity<NpcFactionMemberComponent?> source, EntityUid target)
+    {
+        if (!Resolve(source, ref source.Comp, false) || !source.Comp.Factions.Contains(ContrabandDetectionFaction))
+            return true;
+
+        return HasClass3Contraband(target);
+    }
+
+    private static bool IsClass3Contraband(ContrabandComponent contraband)
+    {
+        return contraband.Severity.ToString().StartsWith("Class3", StringComparison.Ordinal)
+            || Class3EquivalentContrabandSeverities.Contains(contraband.Severity);
     }
 
     private bool IsSecurityExemptFromContrabandDetection(Entity<NpcFactionMemberComponent?> source, EntityUid target)
