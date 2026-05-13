@@ -3,7 +3,6 @@ using Content.Shared._Starlight.NullSpace;
 using Content.Shared._Starlight;
 using Content.Shared.Stacks;
 using Content.Shared.Stunnable;
-using Content.Shared.Coordinates;
 using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Timing;
@@ -141,6 +140,6 @@ public sealed class BluespacePulseOnTriggerSystem : EntitySystem
         if (ent.Comp.RangeIndicator is { } existing && !TerminatingOrDeleted(existing))
             return;
 
-        ent.Comp.RangeIndicator = SpawnAttachedTo(ent.Comp.RangeIndicatorPrototype, new EntityCoordinates(ent, 0, 0));
+        ent.Comp.RangeIndicator = SpawnAttachedTo(ent.Comp.RangeIndicatorPrototype, new(ent, 0, 0));
     }
 }
