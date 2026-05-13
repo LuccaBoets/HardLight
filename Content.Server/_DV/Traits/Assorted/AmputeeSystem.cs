@@ -30,7 +30,7 @@ public sealed class AmputeeSystem : EntitySystem
         foreach (var part in parts)
         {
             var partComp = part.Component;
-            if (partComp.Symmetry != ent.Comp.PartSymmetry)
+            if (!ent.Comp.IgnoreSymmetry && partComp.Symmetry != ent.Comp.PartSymmetry)
                 continue;
 
             foreach (var child in _body.GetBodyPartChildren(part.Id, part.Component))

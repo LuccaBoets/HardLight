@@ -1,69 +1,28 @@
+[head=2][color=#ff4444]⚠ You must be 18 or older to play. Players found to be under 18 will be banned immediately.[/color][/head]
 
-[head=2][color=#ff4444]⚠ 18+ ONLY: You must be 18 or older to play. Anyone found to be under 18 will be banned immediately.[/color][/head]
+[head=3]VRS is an English-speaking 18+ medium roleplay server.[/head]
 
-[head=3][color=#ffff00]VRS is an English-speaking, 18+ medium roleplay server.[/color][/head]
+[color=#a4885c][head=3]0. Implementation and interpretation of the rules is at the sole discretion of the Admins.[/head][/color]
+  • Admins are held accountable through the Admin Code of Conduct.
 
-[head=3][color=#a4885c]Admin Discretion[/color][/head]
-• Admins interpret and enforce these rules at their sole discretion, guided by the Admin Code of Conduct.
+[color=#ffff00]If you have any questions about these rules, press F1 in-game (or click AHelp in the lobby), or ask in the Discord.[/color]
 
-[head=3][color=#00fffb]How to Get Help[/color][/head]
-• Press F1 in-game, use AHelp in the lobby, or ask in Discord if you have questions about these rules or need assistance.
+[color=#00fffb]Rules shown in this color are enforced at all times, without requiring a player report.[/color]
+All other rules are enforced upon receiving a player report.
 
-[color=#00fffb]Rules in this color are enforced at all times, even without a player report.[/color]
-All other rules are enforced when reported.
+[head=3]Contents[/head]
 
-[head=3]Table of Contents[/head]
-  - [textlink="1. Behavioral Rules" link="RuleC1"]
-  - [textlink="2. Gameplay Rules" link="RuleC2"]
-  - [textlink="3. Metagaming Rules" link="RuleC3"]
-  - [textlink="4. New-Life Rules" link="RuleC4"]
-  - [textlink="5. Character Naming Rules" link="RuleC5"]
-  - [textlink="6. Roleplay Rules" link="RuleC6"]
-  - [textlink="7. Powergaming Rules" link="RuleC7"]
-  - [textlink="8. End-Of-Round (EOR) Rules" link="RuleC8"]
-  - [textlink="10. Command and Security Rules" link="RuleC10"]
-  - [textlink="11. Antagonist Rules" link="RuleC11"]
-  - [textlink="12. Escalation Guidelines" link="RuleC12"]
-
-[head=3][color=#ffff00]1. Behavioral Rules[/color][/head]
-• [color=#a4885c]Be respectful to others out-of-character.[/color]
-• [color=#a4885c]Do not use hate speech, slurs, racism, or bigoted language.[/color]
-• [color=#00fffb]Do not metagame.[/color]
-• [color=#a4885c]Do not spam or advertise.[/color]
-• [color=#a4885c]Do not intentionally disrupt or negatively impact others' enjoyment.[/color]
-• [color=#a4885c]Avoid controversial topics (e.g., self-harm) in public channels.[/color]
-• [color=#00fffb]Do not evade bans.[/color]
-• [color=#a4885c]Do not self-antag.[/color]
-• [color=#00fffb]Do not disconnect to avoid in-game consequences (ragequitting).[/color]
-• [color=#00fffb]Cheating and exploiting bugs is forbidden.[/color]
-• [color=#00fffb]Respect other players' out-of-character consent and preferences.[/color]
-
-[head=3][color=#ffff00]2. Gameplay Rules[/color][/head]
-• [color=#00fffb]If you are banned from a role or department, you may not play that role—including via promotion or ghost roles.[/color]
-• [color=#a4885c]Do not be a major problem or disruption for others when not playing as an antagonist.[/color]
-• [color=#00fffb]Do not livestream or share recorded gameplay of others outside VRS without all parties' consent.[/color]
-• [color=#a4885c]Do not ghost with the sole intent of spying on others' private activities.[/color]
-• [color=#00fffb]Vandalism, theft, or major disturbances on ColComm are not permitted. Trespassing in central ColComm offices is prohibited.[/color]
-
-[head=3][color=#ffff00]3. Metagaming Rules[/color][/head]
-• [color=#a4885c]Use chat channels for their intended purposes.[/color]
-• [color=#a4885c]Characters do not retain knowledge of events that occurred while dead.[/color]
-• [color=#a4885c]Do not act on information gained through out-of-character communication (meta-communication).[/color]
-• [color=#00fffb]Discussing the current round on Discord is allowed, but acting on that information is metagaming.[/color]
-• [color=#a4885c]Do not meta-grudge or meta-friend. Do not use IC or OOC info to give unfair treatment or advantages.[/color]
-• [color=#00fffb]Do not antag-roll. Disconnecting or entering cryo to seek antagonist roles is forbidden.[/color]
-
-[head=3][color=#ffff00]4. New-Life Rules[/color][/head]
-• [color=#a4885c]Players retain all in-character memory up until going critical.[/color]
-• [color=#a4885c]If revived, you may only recall vague, unclear impressions of how you died—not specific details.[/color]
-
-[head=3][color=#ffff00]5. Character Naming Rules[/color][/head]
-• [color=#a4885c]Do not use names that reference real people, other media, or other players.[/color]
-• [color=#a4885c]Choose a believable, fitting name. Theatrical roles (Clown, Boxer, Mime) may use creative stage names.[/color]
-
-[head=3][color=#ffff00]6. Roleplay Rules[/color][/head]
-• [color=#a4885c]Your character is separate from you. Their actions, feelings, and knowledge are based only on in-character experiences.[/color]
-• [color=#a4885c]Do not play excessively hostile or provocative characters. Accurate portrayal never requires breaking the rules. Use AHelp if unsure.[/color]
+  - [textlink="Section 1 — Behavioral Rules" link="RuleC1"]
+  - [textlink="Section 2 — Gameplay Rules" link="RuleC2"]
+  - [textlink="Section 3 — Metagaming Rules" link="RuleC3"]
+  - [textlink="Section 4 — New-Life Rules" link="RuleC4"]
+  - [textlink="Section 5 — Character Naming Rules" link="RuleC5"]
+  - [textlink="Section 6 — Roleplay Rules" link="RuleC6"]
+  - [textlink="Section 7 — Powergaming Rules" link="RuleC7"]
+  - [textlink="Section 8 — End-Of-Round (EOR) Rules" link="RuleC8"]
+  - [textlink="Section 10 — Command and Security Rules" link="RuleC10"]
+  - [textlink="Section 11 — Antagonist Rules" link="RuleC11"]
+  - [textlink="Section 12 — Escalation Guidelines" link="RuleC12"]
 
 
 [color=#ffff00][head=3]Section 1: Behavioral Rules[/head][/color]

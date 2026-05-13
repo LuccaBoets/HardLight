@@ -10,6 +10,7 @@
     tags:
       - Payload
       - ClothMade
+      - RoomSaveable
   - type: EmitSoundOnCollide
     sound:
       collection: ToyFall

@@ -4,11 +4,9 @@
   notificationType: Radio
   name: bounty-contract-collection-name-command
   writeAccess:
-  - HeadOfPersonnel
-  - HeadOfSecurity
+  - Command # VRS: Triad #16 — broadened from HoP/HoS to any command access
   deleteAccess:
-  - HeadOfPersonnel
-  - HeadOfSecurity
+  - Command # VRS: Triad #16 — broadened from HoP/HoS to any command access
   categories:
   - Criminal
   - Vacancy

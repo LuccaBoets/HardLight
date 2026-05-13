@@ -1,5 +1,6 @@
 using System.Collections.Frozen;
 using System.Text.RegularExpressions;
+using Content.Shared._Starlight.CollectiveMind; // VRS port: Goobstation/Starlight CollectiveMind
 using Content.Shared.Popups;
 using Content.Shared.Radio;
 using Content.Shared.Speech;
@@ -25,6 +26,7 @@ public abstract class SharedChatSystem : EntitySystem
     public const char AdminPrefix = ']';
     public const char WhisperPrefix = ',';
     public const char TelepathicPrefix = '='; //Nyano - Summary: Adds the telepathic channel's prefix.
+    public const char CollectiveMindPrefix = '+'; // VRS port: Goobstation/Starlight CollectiveMind
     public const char DefaultChannelKey = 'h';
 
     public static readonly ProtoId<RadioChannelPrototype> CommonChannel = "Common";
@@ -41,24 +43,94 @@ public abstract class SharedChatSystem : EntitySystem
     /// </summary>
     private FrozenDictionary<char, RadioChannelPrototype> _keyCodes = default!;
 
+    // VRS port: Goobstation/Starlight CollectiveMind — keycode cache.
+    private FrozenDictionary<char, CollectiveMindPrototype> _mindKeyCodes = default!;
+
     public override void Initialize()
     {
         base.Initialize();
         DebugTools.Assert(_prototypeManager.HasIndex<RadioChannelPrototype>(CommonChannel));
         SubscribeLocalEvent<PrototypesReloadedEventArgs>(OnPrototypeReload);
         CacheRadios();
+        CacheCollectiveMinds(); // VRS port: Goobstation/Starlight CollectiveMind
     }
 
     protected virtual void OnPrototypeReload(PrototypesReloadedEventArgs obj)
     {
         if (obj.WasModified<RadioChannelPrototype>())
             CacheRadios();
+
+        // VRS port: Goobstation/Starlight CollectiveMind
+        if (obj.WasModified<CollectiveMindPrototype>())
+            CacheCollectiveMinds();
     }
 
     private void CacheRadios()
     {
         _keyCodes = _prototypeManager.EnumeratePrototypes<RadioChannelPrototype>()
             .ToFrozenDictionary(x => x.KeyCode);
+    }
+
+    // VRS port: Goobstation/Starlight CollectiveMind — keycode cache builder.
+    private void CacheCollectiveMinds()
+    {
+        _mindKeyCodes = _prototypeManager.EnumeratePrototypes<CollectiveMindPrototype>()
+            .ToFrozenDictionary(x => x.KeyCode);
+    }
+
+    /// <summary>
+    /// VRS port: Goobstation/Starlight CollectiveMind — parses a `+`-prefixed
+    /// chat message into the resolved channel and the message body.
+    /// </summary>
+    public bool TryProccessCollectiveMindMessage(
+        EntityUid source,
+        string input,
+        out string output,
+        out CollectiveMindPrototype? channel,
+        bool quiet = false)
+    {
+        output = input.Trim();
+        channel = null;
+
+        if (input.Length == 0)
+            return false;
+
+        if (!input.StartsWith(CollectiveMindPrefix))
+            return false;
+
+        ProtoId<CollectiveMindPrototype>? defaultChannel = null;
+        if (TryComp<CollectiveMindComponent>(source, out var mind))
+            defaultChannel = mind.DefaultChannel;
+
+        if (input.Length < 2 || (char.IsWhiteSpace(input[1]) && defaultChannel == null))
+        {
+            output = SanitizeMessageCapital(input[1..].TrimStart());
+            if (!quiet)
+                _popup.PopupEntity(Loc.GetString("chat-manager-no-radio-key"), source, source);
+            return true;
+        }
+
+        var channelKey = char.ToLower(input[1]);
+
+        if (_mindKeyCodes.TryGetValue(channelKey, out channel))
+        {
+            output = SanitizeMessageCapital(input[2..].TrimStart());
+            return true;
+        }
+
+        if (defaultChannel != null)
+        {
+            output = SanitizeMessageCapital(input[1..].TrimStart());
+            channel = _prototypeManager.Index<CollectiveMindPrototype>(defaultChannel.Value);
+            return true;
+        }
+
+        if (quiet)
+            return false;
+
+        var msg = Loc.GetString("chat-manager-no-such-channel", ("key", channelKey));
+        _popup.PopupEntity(msg, source, source);
+        return false;
     }
 
     /// <summary>
@@ -302,9 +374,9 @@ public enum InGameICChatType : byte
     Speak,
     Emote,
     Subtle, // Floofstation
-    SubtleOOC, // Den
     Whisper,
-    Telepathic
+    Telepathic,
+    CollectiveMind, // VRS port: Goobstation/Starlight CollectiveMind
 }
 
 /// <summary>
@@ -314,7 +386,8 @@ public enum InGameICChatType : byte
 public enum InGameOOCChatType : byte
 {
     Looc,
-    Dead
+    Dead,
+    SubtleLOOC, // VRS: Floofstation — Subtle OOC is an OOC channel, not IC. Ported from Triad #27 (71eede6).
 }
 
 /// <summary>

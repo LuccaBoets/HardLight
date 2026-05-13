@@ -51,6 +51,22 @@ using Robust.Shared.EntitySerialization.Systems; // Added for MapLoaderSystem
 using Robust.Shared.EntitySerialization;
 using Content.Shared.Access.Components; // AccessReaderComponent for access retention
 using Robust.Shared.Map.Events; // For BeforeEntityReadEvent
+using Content.Server.Construction;
+using Content.Server.Construction.Components;
+using Content.Shared.SprayPainter.Components;
+using Content.Shared.SprayPainter.Prototypes;
+using Content.Shared.Materials;
+using Content.Shared.Storage;
+using Content.Shared.Storage.EntitySystems;
+using Robust.Shared.Prototypes;
+using Content.Shared.Paint;
+using Content.Shared.Labels.Components;
+using Content.Shared.Labels.EntitySystems;
+using Content.Shared.Sprite;
+using Content.Shared.Tag;
+using Content.Shared.Clothing.Components;
+using Content.Shared.Clothing.EntitySystems;
+using Content.Server.Clothing.Systems;
 
 namespace Content.Server.Shuttles.Save
 {
@@ -71,6 +87,15 @@ namespace Content.Server.Shuttles.Save
         [Dependency] private readonly IGameTiming _gameManager = default!;
         [Dependency] private readonly MapLoaderSystem _mapLoader = default!; // For refactored serializer path
         [Dependency] private readonly IDependencyCollection _dependencyCollection = default!; // Use same dependency collection as MapLoaderSystem
+        [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
+        [Dependency] private readonly SharedMaterialStorageSystem _materialStorage = default!;
+        [Dependency] private readonly SharedStorageSystem _storageSystem = default!;
+        [Dependency] private readonly SharedStackSystem _stackSystem = default!;
+        [Dependency] private readonly ConstructionSystem _constructionSystem = default!;
+        [Dependency] private readonly LabelSystem _labelSystem = default!;
+        [Dependency] private readonly TagSystem _tagSystem = default!;
+        [Dependency] private readonly ChameleonClothingSystem _chameleonSystem = default!;
+        [Dependency] private readonly ToggleableClothingSystem _toggleableClothingSystem = default!;
         // Note: For EntityDeserializer we use IoCManager.Instance directly to avoid extra injected fields.
 
         private ISawmill _sawmill = default!;
@@ -450,10 +475,10 @@ namespace Content.Server.Shuttles.Save
             }
         }
 
-        public ShipGridData SerializeShipArea(EntityUid gridId, NetUserId playerId, string shipName, Box2 bounds, HashSet<EntityUid>? excludeEntities = null)
+        public ShipGridData SerializeShipArea(EntityUid gridId, NetUserId playerId, string shipName, Box2 bounds, HashSet<EntityUid>? excludeEntities = null, bool includeVendors = false)
         {
             var verbose = _configManager.GetCVar(Content.Shared.CCVar.CCVars.ShipyardSaveVerbose);
-            var excludeVending = _configManager.GetCVar(Content.Shared.HL.CCVar.HLCCVars.ExcludeVendingInShipSave);
+            var excludeVending = !includeVendors && _configManager.GetCVar(Content.Shared.HL.CCVar.HLCCVars.ExcludeVendingInShipSave);
 
             if (!_entityManager.TryGetComponent<MapGridComponent>(gridId, out var grid))
                 throw new ArgumentException($"Grid with ID {gridId} not found.");
@@ -529,6 +554,12 @@ namespace Content.Server.Shuttles.Save
                     if (!bounds.Contains(childTransform.LocalPosition))
                         continue;
 
+                    // Skip mobs and player-minded entities
+                    if (_entityManager.HasComponent<Content.Shared.Mobs.Components.MobStateComponent>(childUid))
+                        continue;
+                    if (_entityManager.HasComponent<Content.Shared.Mind.Components.MindContainerComponent>(childUid))
+                        continue;
+
                     var meta = _entityManager.GetComponentOrNull<MetaDataComponent>(childUid);
                     var proto = meta?.EntityPrototype?.ID ?? string.Empty;
                     if (string.IsNullOrEmpty(proto))
@@ -537,7 +568,7 @@ namespace Content.Server.Shuttles.Save
                     if (excludeVending && _entityManager.HasComponent<VendingMachineComponent>(childUid))
                         continue;
 
-                    var entityData = SerializeEntity(childUid, childTransform, proto, gridId);
+                    var entityData = SerializeEntity(childUid, childTransform, proto, gridId, roomMode: true);
                     if (entityData != null)
                     {
                         gridData.Entities.Add(entityData);
@@ -545,9 +576,8 @@ namespace Content.Server.Shuttles.Save
                     }
                 }
 
-                // Second pass: unanchored loose items within bounds (plushies, pillows, buttons,
-                // bed sheets, etc.). Exclude mobs/players and items already in containers;
-                // SerializeContainedEntities will handle those.
+                // Second pass: unanchored loose items with the RoomSaveable tag (plushies, pillows,
+                // potted plants, etc.). Tools and gameplay items without the tag are excluded.
                 var childEnumerator2 = gridTransform.ChildEnumerator;
                 while (childEnumerator2.MoveNext(out var childUid2))
                 {
@@ -589,7 +619,12 @@ namespace Content.Server.Shuttles.Save
                     if (excludeVending && _entityManager.HasComponent<VendingMachineComponent>(childUid2))
                         continue;
 
-                    var entityData2 = SerializeEntity(childUid2, childTransform2, proto2, gridId);
+                    // Only save unanchored items explicitly tagged for room preservation.
+                    // Gameplay items (tools, weapons, spray painters, etc.) lack this tag and are dropped.
+                    if (!_tagSystem.HasTag(childUid2, "RoomSaveable"))
+                        continue;
+
+                    var entityData2 = SerializeEntity(childUid2, childTransform2, proto2, gridId, roomMode: true);
                     if (entityData2 != null)
                     {
                         gridData.Entities.Add(entityData2);
@@ -599,8 +634,23 @@ namespace Content.Server.Shuttles.Save
                     }
                 }
 
-                SerializeContainedEntities(gridId, gridData, serializedEntities);
+                SerializeContainedEntities(gridId, gridData, serializedEntities, includeVendors, roomMode: true);
                 ValidateContainerRelationships(gridData);
+
+                // Room-specific: append Properties-based component data for types the generic
+                // DataNode path can't round-trip (spray paint, material silos, storage positions).
+                foreach (var entityData in gridData.Entities)
+                {
+                    if (EntityUid.TryParse(entityData.EntityId, out var entityUid))
+                        AddRoomComponentData(entityUid, entityData);
+                }
+
+                // Drop component entries with empty Properties — these came from the generic
+                // SerializeComponent path which writes bloated DataNode YAML (unusable on load).
+                // Room restores use Properties-based paths only; empty-Properties entries are no-ops.
+                // Effect: ~4 MB room save shrinks to ~50 KB.
+                foreach (var entityData in gridData.Entities)
+                    entityData.Components.RemoveAll(c => !c.Properties.Any());
 
                 shipGridData.Grids.Add(gridData);
 
@@ -1475,6 +1525,7 @@ namespace Content.Server.Shuttles.Save
                     var newEntity = SpawnEntityWithComponents(entityData, coords, clearDefaultsForContainers: false);
                     if (newEntity != null)
                     {
+                        RestoreRoomComponents(newEntity.Value, entityData);
                         entityIdMapping[entityData.EntityId] = newEntity.Value;
                         // Room saves filter to Anchored-only entities, but the serialized
                         // TransformComponent is intentionally skipped. Re-anchor here so
@@ -1483,6 +1534,8 @@ namespace Content.Server.Shuttles.Save
                     }
                 }
 
+                RestoreStorageLocations(primaryGridData.Entities, entityIdMapping);
+                RefreshRoomMachines(primaryGridData.Entities, entityIdMapping);
                 return;
             }
 
@@ -1509,6 +1562,7 @@ namespace Content.Server.Shuttles.Save
                 var newEntity = SpawnEntityWithComponents(entityData, coords, clearDefaultsForContainers: true);
                 if (newEntity != null)
                 {
+                    RestoreRoomComponents(newEntity.Value, entityData);
                     entityIdMapping[entityData.EntityId] = newEntity.Value;
                     // Room saves filter to Anchored-only entities at the top level; re-anchor
                     // since the serialized TransformComponent (and thus its Anchored flag) is skipped.
@@ -1523,6 +1577,7 @@ namespace Content.Server.Shuttles.Save
                 if (containedEntity == null)
                     continue;
 
+                RestoreRoomComponents(containedEntity.Value, entityData);
                 entityIdMapping[entityData.EntityId] = containedEntity.Value;
 
                 if (!string.IsNullOrEmpty(entityData.ParentContainerEntity) &&
@@ -1541,6 +1596,9 @@ namespace Content.Server.Shuttles.Save
                     entityIdMapping.Remove(entityData.EntityId);
                 }
             }
+
+            RestoreStorageLocations(primaryGridData.Entities, entityIdMapping);
+            RefreshRoomMachines(primaryGridData.Entities, entityIdMapping);
         }
 
         public EntityUid ReconstructShip(ShipGridData shipGridData)
@@ -1788,7 +1846,13 @@ namespace Content.Server.Shuttles.Save
             }
         }
 
-        private List<ComponentData> SerializeEntityComponents(EntityUid entityUid)
+        /// <param name="roomMode">
+        /// When true, skips the generic <see cref="SerializeComponent"/> path (which calls
+        /// <c>_serializationManager.WriteValue</c> on every component via expensive reflection,
+        /// then discards the output). Room saves use Properties-based paths only; the generic
+        /// DataNode round-trip is broken for rooms and produces only bloat.
+        /// </param>
+        private List<ComponentData> SerializeEntityComponents(EntityUid entityUid, bool roomMode = false)
         {
             var componentDataList = new List<ComponentData>();
 
@@ -1809,6 +1873,14 @@ namespace Content.Server.Shuttles.Save
                         if (component is SolutionContainerManagerComponent solutionManager)
                         {
                             componentData = SerializeSolutionComponent(entityUid, solutionManager);
+                        }
+                        else if (roomMode)
+                        {
+                            // Room saves: skip the generic write path entirely. It calls
+                            // _serializationManager.WriteValue ~8000 times per save and produces
+                            // DataNode YAML that can't round-trip. AddRoomComponentData handles
+                            // every component type rooms actually need to restore.
+                            continue;
                         }
                         else if (component is SolutionComponent solutionComp
                                  && !float.IsFinite(solutionComp.Solution.Temperature))
@@ -1935,8 +2007,12 @@ namespace Content.Server.Shuttles.Save
                 "RadioComponent", "InteractionOutlineComponent",
                 // Scan-only
                 "SolutionScannerComponent",
-                // Safety: still skip vending machines entirely if flagged elsewhere
-                "VendingMachineComponent"
+                // Runtime-only: mirrored from ShipSaveYamlSanitizer.FilteredTypes
+                "JointComponent", "NavMapComponent", "DockingComponent", "ActionGrantComponent",
+                "ForensicsComponent", "ContainmentFieldGeneratorComponent",
+                "LinkedLifecycleGridParentComponent", "ShuttleDeedComponent", "IFFComponent",
+                "StationMemberComponent", "BlockingComponent", "TurnstileComponent",
+                "SubdermalImplantComponent", "ProjectileComponent", "ItemToggleActiveSoundComponent",
             };
 
             return problematicTypes.Contains(typeName);
@@ -2020,12 +2096,12 @@ namespace Content.Server.Shuttles.Save
                         : Atmospherics.T20C;
                     var solutionInfo = new Dictionary<string, object>
                     {
-                        ["Volume"] = solution.Volume,
-                        ["MaxVolume"] = solution.MaxVolume,
+                        ["Volume"] = solution.Volume.Double(),
+                        ["MaxVolume"] = solution.MaxVolume.Double(),
                         ["Temperature"] = safeTemperature,
                         ["Reagents"] = solution.Contents?.ToDictionary(
                             reagent => reagent.Reagent.Prototype,
-                            reagent => (object)reagent.Quantity
+                            reagent => (object)reagent.Quantity.Double()
                         ) ?? new Dictionary<string, object>()
                     };
                     solutionData[solutionName] = solutionInfo;
@@ -2048,6 +2124,419 @@ namespace Content.Server.Shuttles.Save
             }
         }
 
+
+        private void AddRoomComponentData(EntityUid uid, EntityData entityData)
+        {
+            if (_entityManager.TryGetComponent<SprayPaintedComponent>(uid, out var sprayPainted))
+            {
+                var d = SerializeSprayPaintedComponent(sprayPainted);
+                if (d != null) entityData.Components.Add(d);
+            }
+            if (_entityManager.TryGetComponent<MaterialStorageComponent>(uid, out var materialStorage))
+            {
+                var d = SerializeMaterialStorageComponent(materialStorage);
+                if (d != null) entityData.Components.Add(d);
+            }
+            if (_entityManager.TryGetComponent<StorageComponent>(uid, out var storageComp))
+            {
+                var d = SerializeStorageLocationsComponent(uid, storageComp);
+                if (d != null) entityData.Components.Add(d);
+            }
+            if (_entityManager.TryGetComponent<StackComponent>(uid, out var stack))
+            {
+                var d = SerializeStackComponent(stack);
+                if (d != null) entityData.Components.Add(d);
+            }
+            if (_entityManager.TryGetComponent<PaintedComponent>(uid, out var painted))
+            {
+                var d = SerializePaintedComponent(painted);
+                if (d != null) entityData.Components.Add(d);
+            }
+            if (_entityManager.TryGetComponent<LabelComponent>(uid, out var label))
+            {
+                var d = SerializeLabelComponent(label);
+                if (d != null) entityData.Components.Add(d);
+            }
+            if (_entityManager.TryGetComponent<PaperComponent>(uid, out var paper))
+            {
+                var d = SerializePaperComponent(paper);
+                if (d != null) entityData.Components.Add(d);
+            }
+            if (_entityManager.TryGetComponent<RandomSpriteComponent>(uid, out var randomSprite))
+            {
+                var d = SerializeRandomSpriteComponent(randomSprite);
+                if (d != null) entityData.Components.Add(d);
+            }
+            if (_entityManager.TryGetComponent<ChameleonClothingComponent>(uid, out var chameleon))
+            {
+                var d = SerializeChameleonClothingComponent(chameleon);
+                if (d != null) entityData.Components.Add(d);
+            }
+        }
+
+        private void RestoreRoomComponents(EntityUid uid, EntityData entityData)
+        {
+            foreach (var componentData in entityData.Components)
+            {
+                if (componentData.Type == "SprayPaintedComponent" && componentData.Properties.Any())
+                    RestoreSprayPaintedComponent(uid, componentData);
+                else if (componentData.Type == "MaterialStorageComponent" && componentData.Properties.Any())
+                    RestoreMaterialStorageComponent(uid, componentData);
+                else if (componentData.Type == "StackComponent" && componentData.Properties.Any())
+                    RestoreStackComponent(uid, componentData);
+                else if (componentData.Type == "PaintedComponent" && componentData.Properties.Any())
+                    RestorePaintedComponent(uid, componentData);
+                else if (componentData.Type == "LabelComponent" && componentData.Properties.Any())
+                    RestoreLabelComponent(uid, componentData);
+                else if (componentData.Type == "PaperComponent" && componentData.Properties.Any())
+                    RestorePaperComponent(uid, componentData);
+                else if (componentData.Type == "RandomSpriteComponent" && componentData.Properties.Any())
+                    RestoreRandomSpriteComponent(uid, componentData);
+                else if (componentData.Type == "ChameleonClothingComponent" && componentData.Properties.Any())
+                    RestoreChameleonClothingComponent(uid, componentData);
+                // StorageComponent locations handled in RestoreStorageLocations post-pass
+            }
+        }
+
+        private ComponentData? SerializeSprayPaintedComponent(SprayPaintedComponent comp)
+        {
+            if (string.IsNullOrEmpty(comp.PaintedPrototype))
+                return null;
+            return new ComponentData
+            {
+                Type = "SprayPaintedComponent",
+                Properties = new Dictionary<string, object> { ["PaintedPrototype"] = comp.PaintedPrototype },
+            };
+        }
+
+        private void RestoreSprayPaintedComponent(EntityUid entityUid, ComponentData componentData)
+        {
+            if (!componentData.Properties.TryGetValue("PaintedPrototype", out var protoObj))
+                return;
+            var proto = protoObj?.ToString();
+            if (string.IsNullOrEmpty(proto))
+                return;
+            var comp = EnsureComp<SprayPaintedComponent>(entityUid);
+            comp.PaintedPrototype = proto;
+            Dirty(entityUid, comp);
+            // ComponentStartup already fired when the entity was spawned; re-apply appearance manually.
+            _appearance.SetData(entityUid, PaintableVisuals.Prototype, proto);
+        }
+
+        private ComponentData? SerializeMaterialStorageComponent(MaterialStorageComponent comp)
+        {
+            if (comp.Storage.Count == 0)
+                return null;
+            var materials = comp.Storage.ToDictionary(
+                kv => kv.Key.Id,
+                kv => (object)kv.Value);
+            return new ComponentData
+            {
+                Type = "MaterialStorageComponent",
+                Properties = new Dictionary<string, object> { ["Materials"] = materials },
+            };
+        }
+
+        private void RestoreMaterialStorageComponent(EntityUid entityUid, ComponentData componentData)
+        {
+            if (!componentData.Properties.TryGetValue("Materials", out var materialsObj))
+                return;
+            var materials = CoerceToDictStringObj(materialsObj);
+            if (materials == null)
+                return;
+            foreach (var (matId, amountObj) in materials)
+            {
+                if (!int.TryParse(amountObj?.ToString(), out var amount) || amount <= 0)
+                    continue;
+                _materialStorage.TrySetMaterialAmount(entityUid, matId, amount);
+            }
+        }
+
+        private void RefreshRoomMachines(List<EntityData> entityDataList, Dictionary<string, EntityUid> idMap)
+        {
+            foreach (var entityData in entityDataList)
+            {
+                if (entityData.IsContained)
+                    continue;
+                if (!idMap.TryGetValue(entityData.EntityId, out var uid))
+                    continue;
+                if (!_entityManager.TryGetComponent<MachineComponent>(uid, out var machine))
+                    continue;
+                _constructionSystem.RefreshParts(uid, machine);
+            }
+        }
+
+
+        private ComponentData? SerializeStackComponent(StackComponent stack)
+        {
+            return new ComponentData
+            {
+                Type = "StackComponent",
+                Properties = new Dictionary<string, object> { ["Count"] = stack.Count },
+            };
+        }
+
+        private void RestoreStackComponent(EntityUid entityUid, ComponentData componentData)
+        {
+            if (!componentData.Properties.TryGetValue("Count", out var countObj))
+                return;
+            if (!int.TryParse(countObj?.ToString(), out var count) || count <= 0)
+                return;
+            _stackSystem.SetCount(entityUid, count);
+        }
+
+        private ComponentData? SerializePaintedComponent(PaintedComponent comp)
+        {
+            if (!comp.Enabled)
+                return null;
+            return new ComponentData
+            {
+                Type = "PaintedComponent",
+                Properties = new Dictionary<string, object>
+                {
+                    ["Color"] = comp.Color.ToHex(),
+                    ["Enabled"] = (object)comp.Enabled,
+                    ["ShaderName"] = comp.ShaderName,
+                },
+            };
+        }
+
+        private void RestorePaintedComponent(EntityUid uid, ComponentData componentData)
+        {
+            var comp = EnsureComp<PaintedComponent>(uid);
+            if (componentData.Properties.TryGetValue("Color", out var colorObj) && colorObj is string hex)
+                comp.Color = Color.FromHex(hex);
+            if (componentData.Properties.TryGetValue("Enabled", out var enabledObj)
+                && bool.TryParse(enabledObj?.ToString(), out var enabled))
+                comp.Enabled = enabled;
+            if (componentData.Properties.TryGetValue("ShaderName", out var shaderObj) && shaderObj is string shader)
+                comp.ShaderName = shader;
+            Dirty(uid, comp);
+            _appearance.SetData(uid, PaintVisuals.Painted, comp.Enabled);
+        }
+
+        private ComponentData? SerializeLabelComponent(LabelComponent comp)
+        {
+            if (string.IsNullOrEmpty(comp.CurrentLabel))
+                return null;
+            return new ComponentData
+            {
+                Type = "LabelComponent",
+                Properties = new Dictionary<string, object> { ["CurrentLabel"] = comp.CurrentLabel },
+            };
+        }
+
+        private void RestoreLabelComponent(EntityUid uid, ComponentData componentData)
+        {
+            if (!componentData.Properties.TryGetValue("CurrentLabel", out var labelObj))
+                return;
+            var text = labelObj?.ToString();
+            if (!string.IsNullOrEmpty(text))
+                _labelSystem.Label(uid, text);
+        }
+
+        private ComponentData? SerializePaperComponent(PaperComponent comp)
+        {
+            if (string.IsNullOrEmpty(comp.Content) && comp.StampedBy.Count == 0 && comp.StampState == null && !comp.EditingDisabled)
+                return null;
+            var props = new Dictionary<string, object>();
+            if (!string.IsNullOrEmpty(comp.Content))
+                props["Content"] = comp.Content;
+            if (comp.StampState != null)
+                props["StampState"] = comp.StampState;
+            if (comp.EditingDisabled)
+                props["EditingDisabled"] = (object)true;
+            if (comp.StampedBy.Count > 0)
+            {
+                props["Stamps"] = comp.StampedBy
+                    .Select(s => (object)new Dictionary<string, object>
+                    {
+                        ["Name"] = s.StampedName,
+                        ["Color"] = s.StampedColor.ToHex(),
+                        ["Type"] = s.Type.ToString(),
+                        ["Reapply"] = (object)s.Reapply,
+                    })
+                    .ToList();
+            }
+            return props.Count == 0 ? null : new ComponentData { Type = "PaperComponent", Properties = props };
+        }
+
+        private void RestorePaperComponent(EntityUid uid, ComponentData componentData)
+        {
+            var comp = EnsureComp<PaperComponent>(uid);
+            if (componentData.Properties.TryGetValue("Content", out var contentObj))
+                comp.Content = contentObj?.ToString() ?? string.Empty;
+            if (componentData.Properties.TryGetValue("StampState", out var stateObj))
+                comp.StampState = stateObj?.ToString();
+            if (componentData.Properties.TryGetValue("EditingDisabled", out var disabledObj)
+                && bool.TryParse(disabledObj?.ToString(), out var disabled))
+                comp.EditingDisabled = disabled;
+            if (componentData.Properties.TryGetValue("Stamps", out var stampsObj) && stampsObj is List<object> stampsList)
+            {
+                comp.StampedBy = new List<StampDisplayInfo>();
+                foreach (var item in stampsList)
+                {
+                    var dict = CoerceToDictStringObj(item);
+                    if (dict == null)
+                        continue;
+                    var info = new StampDisplayInfo
+                    {
+                        StampedName = dict.GetValueOrDefault("Name")?.ToString() ?? string.Empty,
+                        StampedColor = dict.TryGetValue("Color", out var cObj) && cObj is string ch
+                            ? Color.FromHex(ch)
+                            : Color.Red,
+                        Type = Enum.TryParse<StampType>(dict.GetValueOrDefault("Type")?.ToString(), out var st)
+                            ? st
+                            : StampType.RubberStamp,
+                        Reapply = bool.TryParse(dict.GetValueOrDefault("Reapply")?.ToString(), out var rp) && rp,
+                    };
+                    comp.StampedBy.Add(info);
+                }
+            }
+            Dirty(uid, comp);
+        }
+
+        private ComponentData? SerializeRandomSpriteComponent(RandomSpriteComponent comp)
+        {
+            if (comp.Selected.Count == 0)
+                return null;
+            var selected = comp.Selected.ToDictionary(
+                kv => kv.Key,
+                kv => (object)new Dictionary<string, object?>
+                {
+                    ["State"] = kv.Value.State,
+                    ["Color"] = kv.Value.Color.HasValue ? (object?)kv.Value.Color.Value.ToHex() : null,
+                });
+            return new ComponentData
+            {
+                Type = "RandomSpriteComponent",
+                Properties = new Dictionary<string, object> { ["Selected"] = selected },
+            };
+        }
+
+        private void RestoreRandomSpriteComponent(EntityUid uid, ComponentData componentData)
+        {
+            if (!componentData.Properties.TryGetValue("Selected", out var selectedObj))
+                return;
+            var selectedDict = CoerceToDictStringObj(selectedObj);
+            if (selectedDict == null)
+                return;
+            var comp = EnsureComp<RandomSpriteComponent>(uid);
+            comp.Selected.Clear();
+            foreach (var (layer, entryObj) in selectedDict)
+            {
+                var entry = CoerceToDictStringObj(entryObj);
+                if (entry == null)
+                    continue;
+                var state = entry.GetValueOrDefault("State")?.ToString() ?? string.Empty;
+                Color? color = null;
+                if (entry.TryGetValue("Color", out var colorObj) && colorObj is string colorHex && !string.IsNullOrEmpty(colorHex))
+                    color = Color.FromHex(colorHex);
+                comp.Selected[layer] = (state, color);
+            }
+            Dirty(uid, comp);
+        }
+
+        private ComponentData? SerializeChameleonClothingComponent(ChameleonClothingComponent comp)
+        {
+            if (string.IsNullOrEmpty(comp.Default))
+                return null;
+            return new ComponentData
+            {
+                Type = "ChameleonClothingComponent",
+                Properties = new Dictionary<string, object> { ["Default"] = comp.Default }
+            };
+        }
+
+        private void RestoreChameleonClothingComponent(EntityUid uid, ComponentData componentData)
+        {
+            if (!componentData.Properties.TryGetValue("Default", out var protoObj))
+                return;
+            var protoId = protoObj?.ToString();
+            if (!string.IsNullOrEmpty(protoId))
+                _chameleonSystem.SetSelectedPrototype(uid, protoId, forceUpdate: true);
+        }
+
+        private ComponentData? SerializeStorageLocationsComponent(EntityUid entityUid, StorageComponent storage)
+        {
+            if (storage.StoredItems.Count == 0)
+                return null;
+            var locations = new Dictionary<string, object>();
+            foreach (var (item, loc) in storage.StoredItems)
+            {
+                locations[item.ToString()] = new Dictionary<string, object>
+                {
+                    ["X"] = loc.Position.X,
+                    ["Y"] = loc.Position.Y,
+                    ["Rotation"] = (int)loc.Direction,
+                };
+            }
+            return new ComponentData
+            {
+                Type = "StorageComponent",
+                Properties = new Dictionary<string, object> { ["Locations"] = locations },
+            };
+        }
+
+        private void RestoreStorageLocations(List<EntityData> entityDataList, Dictionary<string, EntityUid> idMap)
+        {
+            foreach (var entityData in entityDataList)
+            {
+                if (!idMap.TryGetValue(entityData.EntityId, out var storageUid))
+                    continue;
+
+                var storageComponentData = entityData.Components
+                    .FirstOrDefault(c => c.Type == "StorageComponent" && c.Properties.ContainsKey("Locations"));
+                if (storageComponentData == null)
+                    continue;
+
+                if (!_entityManager.TryGetComponent<StorageComponent>(storageUid, out var storageComp))
+                    continue;
+
+                var locationsRaw = CoerceToDictStringObj(storageComponentData.Properties["Locations"]);
+                if (locationsRaw == null)
+                    continue;
+
+                var anySet = false;
+                foreach (var (oldItemIdStr, locObj) in locationsRaw)
+                {
+                    if (!idMap.TryGetValue(oldItemIdStr, out var newItemUid))
+                        continue;
+
+                    // Only restore position for items actually inside this storage.
+                    if (!storageComp.Container.ContainedEntities.Contains(newItemUid))
+                        continue;
+
+                    var locDict = CoerceToDictStringObj(locObj);
+                    if (locDict == null)
+                        continue;
+
+                    if (!int.TryParse(locDict.GetValueOrDefault("X")?.ToString(), out var x))
+                        continue;
+                    if (!int.TryParse(locDict.GetValueOrDefault("Y")?.ToString(), out var y))
+                        continue;
+                    if (!int.TryParse(locDict.GetValueOrDefault("Rotation")?.ToString(), out var rot))
+                        rot = 0;
+
+                    // Assign directly to StoredItems, bypassing ItemFitsInGridLocation.
+                    // We are restoring a layout that was valid at save time, so the positions
+                    // are known-good. Using TrySetItemStorageLocation would fail for items whose
+                    // saved position is currently occupied by another item that hasn't been moved
+                    // yet (ordering issue), corrupting the layout.
+                    storageComp.StoredItems[newItemUid] = new ItemStorageLocation(Angle.Zero, new Vector2i(x, y))
+                    {
+                        Direction = (Direction)rot
+                    };
+                    anySet = true;
+                }
+
+                if (anySet)
+                {
+                    _storageSystem.UpdateUI((storageUid, storageComp));
+                    Dirty(storageUid, storageComp);
+                }
+            }
+        }
 
         private static readonly Dictionary<Type, bool> ComponentSkipCache = new();
 
@@ -2072,8 +2561,8 @@ namespace Content.Server.Shuttles.Save
             else if (typeName.Contains("Physics"))
                 shouldSkip = true;
 
-            // Skip appearance/visual components (usually regenerated)
-            else if (typeName.Contains("Appearance") || typeName.Contains("Sprite"))
+            // Skip client-side sprite components (not present server-side)
+            else if (typeName.Contains("Sprite"))
                 shouldSkip = true;
 
             // Skip network/client-side components
@@ -2284,6 +2773,23 @@ namespace Content.Server.Shuttles.Save
             }
         }
 
+        /// <summary>
+        /// YamlDotNet deserializes nested YAML mappings into Dictionary&lt;object, object&gt;
+        /// when the declared target type is Dictionary&lt;string, object&gt;.
+        /// This helper normalises both forms so callers don't need to branch on the runtime type.
+        /// </summary>
+        private static Dictionary<string, object>? CoerceToDictStringObj(object? value)
+        {
+            return value switch
+            {
+                Dictionary<string, object> d => d,
+                Dictionary<object, object> od => od.ToDictionary(
+                    kv => kv.Key?.ToString() ?? string.Empty,
+                    kv => kv.Value),
+                _ => null
+            };
+        }
+
         private void RestoreSolutionComponent(EntityUid entityUid, ComponentData componentData)
         {
             try
@@ -2297,7 +2803,8 @@ namespace Content.Server.Shuttles.Save
                 var restoredSolutions = 0;
                 foreach (var (solutionName, solutionDataObj) in componentData.Properties)
                 {
-                    if (solutionDataObj is not Dictionary<string, object> solutionInfo)
+                    var solutionInfo = CoerceToDictStringObj(solutionDataObj);
+                    if (solutionInfo == null)
                         continue;
 
                     try
@@ -2341,15 +2848,18 @@ namespace Content.Server.Shuttles.Save
                         }
 
                         // Restore reagents
-                        if (solutionInfo.TryGetValue("Reagents", out var reagentsObj) &&
-                            reagentsObj is Dictionary<string, object> reagents)
+                        if (solutionInfo.TryGetValue("Reagents", out var reagentsObj))
                         {
-                            foreach (var (reagentId, quantityObj) in reagents)
+                            var reagents = CoerceToDictStringObj(reagentsObj);
+                            if (reagents != null)
                             {
-                                if (TryConvertToDouble(quantityObj, out var quantity) && quantity > 0)
+                                foreach (var (reagentId, quantityObj) in reagents)
                                 {
-                                    // Add the reagent back to the solution
-                                    solution?.AddReagent(reagentId, (float)quantity);
+                                    if (TryConvertToDouble(quantityObj, out var quantity) && quantity > 0)
+                                    {
+                                        // Add the reagent back to the solution
+                                        solution?.AddReagent(reagentId, (float)quantity);
+                                    }
                                 }
                             }
                         }
@@ -2357,9 +2867,9 @@ namespace Content.Server.Shuttles.Save
                         _solutionContainerSystem.UpdateChemicals(restoredSolutionEntity, false);
 
                         restoredSolutions++;
-                        var reagentCount = solutionInfo.ContainsKey("Reagents") &&
-                                          solutionInfo["Reagents"] is Dictionary<string, object> reagentDict ?
-                                          reagentDict.Count : 0;
+                        var reagentCount = solutionInfo.TryGetValue("Reagents", out var reagentRaw)
+                                          ? (CoerceToDictStringObj(reagentRaw)?.Count ?? 0)
+                                          : 0;
                         _sawmill.Debug($"Restored solution '{solutionName}' with {reagentCount} reagents");
                     }
                     catch (Exception ex)
@@ -2452,7 +2962,7 @@ namespace Content.Server.Shuttles.Save
             return _entityManager.HasComponent<ContainerManagerComponent>(entityUid);
         }
 
-        private EntityData? SerializeEntity(EntityUid uid, TransformComponent transform, string prototype, EntityUid gridId)
+        private EntityData? SerializeEntity(EntityUid uid, TransformComponent transform, string prototype, EntityUid gridId, bool roomMode = false)
         {
             try
             {
@@ -2480,7 +2990,7 @@ namespace Content.Server.Shuttles.Save
                 var isContainer = HasContainers(uid);
 
                 // Serialize component states
-                var components = SerializeEntityComponents(uid);
+                var components = SerializeEntityComponents(uid, roomMode);
 
                 // Use entity's current position and rotation (grid is already normalized to 0°)
                 var position = transform.LocalPosition;
@@ -2518,10 +3028,10 @@ namespace Content.Server.Shuttles.Save
             }
         }
 
-        private void SerializeContainedEntities(EntityUid gridId, GridData gridData, HashSet<EntityUid> alreadySerialized)
+        private void SerializeContainedEntities(EntityUid gridId, GridData gridData, HashSet<EntityUid> alreadySerialized, bool includeVendors = false, bool roomMode = false)
         {
             var verbose = _configManager.GetCVar(Content.Shared.CCVar.CCVars.ShipyardSaveVerbose);
-            var excludeVending = _configManager.GetCVar(Content.Shared.HL.CCVar.HLCCVars.ExcludeVendingInShipSave);
+            var excludeVending = !includeVendors && _configManager.GetCVar(Content.Shared.HL.CCVar.HLCCVars.ExcludeVendingInShipSave);
             // Find all entities that might be contained within grid entities but not directly on the grid
             var containersToCheck = new Queue<EntityUid>();
 
@@ -2576,7 +3086,7 @@ namespace Content.Server.Shuttles.Save
                                 continue; // Skip contained vending machines
                             }
 
-                            var entityData = SerializeEntity(containedEntity, transform, proto, gridId);
+                            var entityData = SerializeEntity(containedEntity, transform, proto, gridId, roomMode);
                             if (entityData != null)
                             {
                                 gridData.Entities.Add(entityData);
@@ -2669,10 +3179,15 @@ namespace Content.Server.Shuttles.Save
                         // Do not clear powered light bulb containers; ships would spawn dark.
                         if (containerId == Content.Server.Light.EntitySystems.PoweredLightSystem.LightBulbContainer)
                             continue;
-                        // Clear default spawned items - we'll restore saved contents later
+                        // Clear default spawned items - we'll restore saved contents later.
+                        // Disconnect AttachedClothingComponent first so that deleting an
+                        // auto-spawned helmet doesn't trigger OnRemoveAttached, which would
+                        // strip ToggleableClothingComponent off the parent suit.
                         var defaultItems = container.ContainedEntities.ToList();
                         foreach (var defaultItem in defaultItems)
                         {
+                            if (_entityManager.TryGetComponent<AttachedClothingComponent>(defaultItem, out var attached))
+                                _toggleableClothingSystem.DisconnectAttachedClothing(attached);
                             _containerSystem.Remove(defaultItem, container);
                             _entityManager.DeleteEntity(defaultItem);
                         }

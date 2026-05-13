@@ -85,10 +85,17 @@ namespace Content.Shared.Chat
         /// </summary>
         Unspecified = 1 << 14,
 
+        // VRS port: Goobstation/Starlight CollectiveMind channel.
+        /// <summary>
+        ///     Collective mind channel for entities holding a CollectiveMindComponent.
+        /// </summary>
+        CollectiveMind = 1 << 17,
+
         /// <summary>
         ///     Subtle - Floofstation
+        ///     VRS: placed at high bit positions to avoid future upstream channel collisions.
         /// </summary>
-        Subtle = 1 << 15,
+        Subtle = 1u << 31,
 
 
         /// <summary>
@@ -97,9 +104,10 @@ namespace Content.Shared.Chat
         Telepathic = 1 << 16,
 
         /// <summary>
-        ///     Subtle - Floofstation
+        ///     Subtle OOC - Floofstation
+        ///     VRS: placed at high bit positions to avoid future upstream channel collisions.
         /// </summary>
-        SubtleOOC = 1 << 17,
+        SubtleOOC = 1u << 30,
 
         /// <summary>
         ///     Channels considered to be IC.

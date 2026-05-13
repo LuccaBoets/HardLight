@@ -178,3 +178,9 @@
 
 - type: Tag
   id: ADSRepairTool
+
+- type: Tag
+  id: CorgiWearable
+
+- type: Tag
+  id: DogEmotes

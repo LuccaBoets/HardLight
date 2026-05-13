@@ -8,6 +8,7 @@
     state: fab-idle
   discipline: Experimental
   tier: 1
+  position: -3, -1
   cost: 5000
   recipeUnlocks:
   - ProximitySensor
@@ -20,6 +21,7 @@
     state: icon
   discipline: Experimental
   tier: 1
+  position: 0, -6
   cost: 5000
   recipeUnlocks:
   - AnomalyScanner
@@ -37,6 +39,7 @@
     state: display
   discipline: Experimental
   tier: 1
+  position: -1, -6
   cost: 5000
   recipeUnlocks:
   - NodeScanner
@@ -53,6 +56,7 @@
     state: display
   discipline: Experimental
   tier: 1
+  position: 1, -6
   cost: 5000
   recipeUnlocks:
   - TechDiskComputerCircuitboard
@@ -66,6 +70,7 @@
     state: icon
   discipline: Experimental
   tier: 1
+  position: -2, -1
   cost: 7500
   recipeUnlocks:
   - ClothingShoesBootsMagSci
@@ -79,6 +84,7 @@
     state: icon
   discipline: Experimental
   tier: 1
+  position: -1, -7
   cost: 10000
   recipeUnlocks:
   - WeaponGauntletGorilla
@@ -93,6 +99,7 @@
     state: advanced_matter_bin
   discipline: Experimental
   tier: 2
+  position: 0, 9
   cost: 10000
   recipeUnlocks:
   - AdvancedCapacitorStockPart
@@ -107,6 +114,7 @@
     state: icon
   discipline: Experimental
   tier: 2
+  position: -3, 9
   cost: 5000
   recipeUnlocks:
   - ArtifactCrusherMachineCircuitboard
@@ -119,6 +127,7 @@
     state: base
   discipline: Experimental
   tier: 2
+  position: -2, 9
   cost: 10000
   recipeUnlocks:
   - NFWeaponPistolCHIMP # Frontier: add NF prefix
@@ -135,6 +144,7 @@
     state: icon # Frontier base<icon
   discipline: Experimental
   tier: 2
+  position: 2, -1
   cost: 7500
   recipeUnlocks:
   # - WeaponParticleDecelerator # Frontier - Cancer gun that skip walls
@@ -179,6 +189,7 @@
     state: icon
   discipline: Experimental
   tier: 3
+  position: -4, 19
   cost: 10000
   recipeUnlocks:
   - DeviceDesynchronizer

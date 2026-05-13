@@ -1,0 +1,37 @@
+# Mono/Triad port: Asakim ghost role for hostile shuttle events.
+
+- type: entity
+  parent: MobHumanSyndicateAgent
+  id: MobAsakimGhostrole
+  name: asakim warrior
+  suffix: Asakim
+  components:
+  - type: RandomHumanoidAppearance
+    randomizeName: True
+  - type: Loadout
+    prototypes: [AsakimGear]
+  - type: GhostRole
+    name: ghost-role-information-asakim-name
+    description: ghost-role-information-asakim-description
+    rules: ghost-role-information-asakim-rules
+    raffle:
+      settings: default
+    requirements:
+    - !type:OverallPlaytimeRequirement
+      time: 180000 # 50 hrs
+  - type: GhostTakeoverAvailable
+  - type: RandomMetadata
+    nameSegments:
+    - NamesReptilianMale
+  - type: NpcFactionMember
+    factions:
+    - Syndicate
+  - type: SurgerySpeedModifier
+    speedModifier: 1.5
+  - type: IntrinsicRadioReceiver
+  - type: IntrinsicRadioTransmitter
+    channels:
+    - Remnants
+  - type: ActiveRadio
+    channels:
+    - Remnants

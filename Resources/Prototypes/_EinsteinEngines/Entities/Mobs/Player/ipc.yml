@@ -170,6 +170,7 @@
   - type: EmitBuzzWhileDamaged
   - type: CanHostGuardian
   - type: WeldingHealable
+  - type: RetroMonitorView # Mono - #3902
 
 - type: entity
   save: false

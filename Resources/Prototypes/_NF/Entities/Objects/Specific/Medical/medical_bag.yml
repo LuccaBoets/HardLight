@@ -23,6 +23,7 @@
       components:
         - Pill
         - Hypospray
+        - Injector # VRS: allow jet injectors to fit in medical bag (HL #1585)
       tags:
         - PillCanister
         - CentrifugeCompatible

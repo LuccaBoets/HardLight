@@ -22,6 +22,9 @@ Intercom: IntercomCommon
 # 2023-07-12
 ToyAssistant: ToyFigurinePassenger
 
+# 2026-05-08
+PlushieDrakeborn: PlushieCarp
+
 # 2023-07-20
 ForensicGloves: ClothingHandsGlovesForensic
 
@@ -625,3 +628,7 @@ PosterSectorEnclave: PosterContrabandFreeTonto
 
 # 2026-05-06 Phase 4 sanitization: redirect removed lewd crate placements
 CrateLewdToys: CrateFunToyBox
+
+# 2026-05-08 HL community-content cleanup: redirect removed PlushieDrakeborn (Colcomm map)
+# (already mapped earlier in this file at line 26 — duplicate removed to avoid
+# YAML mapping-key collision that crashes MapMigrationSystem.)

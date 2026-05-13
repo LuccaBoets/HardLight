@@ -1,6 +1,8 @@
 using Content.Server.Popups;
 using Content.Server.Shuttles.Save;
 using Content.Shared._HL.Rooms;
+using Content.Shared.SprayPainter.Components;
+using Content.Shared.SprayPainter.Prototypes;
 using Content.Shared.Interaction;
 using Content.Server.Mind;
 using Content.Shared.Mind;
@@ -254,13 +256,31 @@ public sealed class RoomGridSpawnerSystem : EntitySystem
         ResetRoom(userId, session);
     }
 
+    private void StampSprayPaintedInBounds(EntityUid gridId, Box2 bounds)
+    {
+        var query = EntityQueryEnumerator<SprayPaintedComponent, TransformComponent>();
+        while (query.MoveNext(out var uid, out var painted, out var xform))
+        {
+            if (xform.GridUid != gridId)
+                continue;
+            if (!bounds.Contains(xform.LocalPosition))
+                continue;
+            if (_appearance.TryGetData(uid, PaintableVisuals.Prototype, out string styleProto))
+            {
+                painted.PaintedPrototype = styleProto;
+                Dirty(uid, painted);
+            }
+        }
+    }
+
     private bool TrySaveRoom(NetUserId userId, ActiveRoomSession session)
     {
         if (!_gridQuery.TryComp(session.GridUid, out var gridComp))
             return false;
 
         var excluded = new HashSet<EntityUid> { session.ConsoleUid, session.MarkerUid };
-        var shipData = _shipSerialization.SerializeShipArea(session.GridUid, userId, $"Room_{session.CharacterKey}", session.Bounds, excluded);
+        StampSprayPaintedInBounds(session.GridUid, session.Bounds);
+        var shipData = _shipSerialization.SerializeShipArea(session.GridUid, userId, $"Room_{session.CharacterKey}", session.Bounds, excluded, includeVendors: true);
         NormalizeRoomDataToAnchor(shipData, session.AnchorTile, session.AnchorPosition, session.AnchorRotation);
         var yaml = _shipSerialization.SerializeShipGridDataToYaml(shipData);
 
