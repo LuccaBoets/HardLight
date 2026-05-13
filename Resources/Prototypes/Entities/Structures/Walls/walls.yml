@@ -629,7 +629,6 @@
     snap:
     - Wall
   components:
-  - type: Occluder # Hardlight: occlusion
   - type: Transform
     anchored: true
   - type: Clickable
