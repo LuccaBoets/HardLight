@@ -248,7 +248,10 @@ public sealed class CrewManifestSystem : EntitySystem
             if (card.Comp.LocalizedJobTitle != null)
                 jobTitle = card.Comp.LocalizedJobTitle;
 
-            var entry = new CrewManifestEntry(name, jobTitle, card.Comp.JobIcon, card.Comp.JobPrototype!.Value);
+            if (!TryComp<PresetIdCardComponent>(card, out var preset))
+                continue;
+
+            var entry = new CrewManifestEntry(name, jobTitle, card.Comp.JobIcon, preset.JobName!.Value);
 
             entriesSort.Add((null, entry));
         } // Coyote end
