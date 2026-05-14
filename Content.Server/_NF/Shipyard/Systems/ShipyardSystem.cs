@@ -364,11 +364,20 @@ public sealed partial class ShipyardSystem : SharedShipyardSystem
         if (ShipyardMap == null)
             return false;
 
+        // VRS PR 2': time the actual MapLoader.TryLoadGrid call so admins/devs can see whether
+        // ship-load lag is YAML deserialization (engine path) vs sanitize/dock work (content path).
+        // Gated by hardlight.shipload.log_progress so production doesn't pay the Stopwatch cost.
+        var logProgress = _configManager.GetCVar(HLCCVars.ShipLoadLogProgress);
+        var loadSw = logProgress ? System.Diagnostics.Stopwatch.StartNew() : null;
+
         if (!_mapLoader.TryLoadGrid(ShipyardMap.Value, shuttlePath, out var grid, offset: new Vector2(500f + _shuttleIndex, 1f)))
         {
             //_sawmill.Error($"Unable to spawn shuttle {shuttlePath}");
             return false;
         }
+
+        if (loadSw != null)
+            _sawmill.Info($"[ShipLoad] MapLoader.TryLoadGrid {shuttlePath} took {loadSw.Elapsed.TotalMilliseconds:F1}ms");
 
         _shuttleIndex += grid.Value.Comp.LocalAABB.Width + ShuttleSpawnBuffer;
 
@@ -1356,12 +1365,29 @@ public sealed partial class ShipyardSystem : SharedShipyardSystem
     private void SanitizeLoadedShuttle(EntityUid gridUid)
     {
         var prunedContainers = 0;
+        // VRS PR 2': counters for instrumentation. All increments stay no-ops in the hot path
+        // (just int adds); the formatted log line is gated by ShipLoadLogProgress so production
+        // does not pay the string allocation.
+        var jointsRemoved = 0;
+        var dockingsCleared = 0;
+        var useDelaysQueued = 0;
+        var useDelaysImmediate = 0;
+        var visited = 0;
+        var logProgress = _configManager.GetCVar(HLCCVars.ShipLoadLogProgress);
+        var sw = logProgress ? System.Diagnostics.Stopwatch.StartNew() : null;
+
+        var deferUseDelays = _configManager.GetCVar(HLCCVars.ShipLoadDeferredUseDelayBudget) > 0;
 
         // HardLight: use cached queries instead of TryComp<T> per entity. On a multi-thousand entity
         // capital ship the original three TryComp calls per entity dominate this method's cost.
         VisitEntityAndDescendants(gridUid, uid =>
         {
-            RemComp<JointComponent>(uid);
+            visited++;
+            if (HasComp<JointComponent>(uid))
+            {
+                RemComp<JointComponent>(uid);
+                jointsRemoved++;
+            }
 
             if (_containerManagerQuery.TryComp(uid, out var manager))
                 prunedContainers += PruneInvalidContainerContents(uid, manager);
@@ -1377,6 +1403,8 @@ public sealed partial class ShipyardSystem : SharedShipyardSystem
                     if (!other.IsValid() || !_metaQuery.HasComp(other))
                         dock.DockedWith = null;
                 }
+
+                dockingsCleared++;
             }
 
             if (_useDelayQuery.TryComp(uid, out var useDelay))
@@ -1385,15 +1413,29 @@ public sealed partial class ShipyardSystem : SharedShipyardSystem
                 // via the shared post-load job queue. The legacy `deferred_usedelay_budget` CVar is
                 // honored as the "disable deferral entirely" kill-switch (set to 0 for byte-identical
                 // #1411 rollback behavior).
-                if (_configManager.GetCVar(HLCCVars.ShipLoadDeferredUseDelayBudget) > 0)
+                if (deferUseDelays)
+                {
                     _pendingPostLoadJobs.Enqueue(new PostLoadJob(PostLoadJobKind.UseDelayReset, uid));
+                    useDelaysQueued++;
+                }
                 else
+                {
                     _useDelay.ResetAllDelays((uid, useDelay));
+                    useDelaysImmediate++;
+                }
             }
         });
 
         if (prunedContainers > 0)
             _sawmill.Warning($"[ShipLoad] Pruned {prunedContainers} stale contained UID reference(s) from loaded shuttle {ToPrettyString(gridUid)}.");
+
+        if (sw != null)
+        {
+            _sawmill.Info(
+                $"[ShipLoad] SanitizeLoadedShuttle {ToPrettyString(gridUid)} took {sw.Elapsed.TotalMilliseconds:F1}ms" +
+                $" entities={visited} joints={jointsRemoved} dockings={dockingsCleared}" +
+                $" useDelays(queued={useDelaysQueued},immediate={useDelaysImmediate}) prunedContainers={prunedContainers}");
+        }
     }
 
     private int PruneInvalidContainerContents(EntityUid owner, ContainerManagerComponent manager)
