@@ -106,13 +106,31 @@ public sealed partial class ShipyardSystem : SharedShipyardSystem
     private static readonly TimeSpan ShipyardActionDelay = TimeSpan.FromSeconds(1); // HardLight
     private HashSet<string>? _activeLoadDeletedPrototypes; // HardLight
 
-    // HardLight: queue of UseDelay-bearing entities from freshly loaded ships whose `ResetAllDelays`
-    // call has been deferred so we don't pay the dirty-storm cost on the load tick. Drained at a
-    // budgeted rate from Update(). The only observable effect of a delayed reset is that an item
-    // briefly shows whatever cooldown the previous owner left on it (which is also nonsensical
-    // gameplay state to inherit) until the queue reaches it. Disabled by setting
-    // hardlight.shipload.deferred_usedelay_budget = 0.
-    private readonly Queue<EntityUid> _pendingUseDelayResets = new();
+    // VRS PR 4: typed queue for any work that SanitizeLoadedShuttle wants to defer past the
+    // load tick. Was originally a UseDelay-only queue from #1411; widened so future deferred jobs
+    // (power graph rebuild, atmos warmup, container audits) can share a single per-tick budget
+    // instead of each carrying its own knob. Drained at the budget set by
+    // hardlight.shipload.post_load_job_budget. The legacy `hardlight.shipload.deferred_usedelay_budget`
+    // CVar is still honored: setting it to 0 forces UseDelay resets to run synchronously inside
+    // SanitizeLoadedShuttle (preserves the byte-identical rollback path documented in #1411).
+    private enum PostLoadJobKind : byte
+    {
+        UseDelayReset = 0,
+    }
+
+    private readonly struct PostLoadJob
+    {
+        public readonly PostLoadJobKind Kind;
+        public readonly EntityUid Target;
+
+        public PostLoadJob(PostLoadJobKind kind, EntityUid target)
+        {
+            Kind = kind;
+            Target = target;
+        }
+    }
+
+    private readonly Queue<PostLoadJob> _pendingPostLoadJobs = new();
 
     // The type of error from the attempted sale of a ship.
     public enum ShipyardSaleError
@@ -181,6 +199,10 @@ public sealed partial class ShipyardSystem : SharedShipyardSystem
     {
         _shipyardActionDelayUntil.Clear(); // HardLight
         _lastLoadCharge.Clear(); // HardLight
+        // VRS PR 4: drop any deferred post-load work targeting entities from the previous round.
+        // The grids those jobs targeted are about to be cleaned up anyway, and leaking the queue
+        // would cause first-tick-of-next-round work against stale UIDs.
+        _pendingPostLoadJobs.Clear();
         CleanupShipyard();
     }
 
@@ -210,35 +232,43 @@ public sealed partial class ShipyardSystem : SharedShipyardSystem
             CleanupShipyard();
     }
 
-    // HardLight: drain the deferred UseDelay reset queue at a budgeted rate so a freshly loaded
-    // capital ship doesn't fire hundreds of Dirty() notifications on the load tick.
+    // VRS PR 4: drain the typed post-load job queue at a single shared budget so deferred
+    // sanitize work (UseDelay resets and future job kinds) doesn't fire its full cost on the
+    // load tick. Falling back to a flush-all when the budget CVar <= 0 preserves the original
+    // #1411 rollback behavior.
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
 
-        if (_pendingUseDelayResets.Count == 0)
+        if (_pendingPostLoadJobs.Count == 0)
             return;
 
-        var budget = _configManager.GetCVar(HLCCVars.ShipLoadDeferredUseDelayBudget);
+        var budget = _configManager.GetCVar(HLCCVars.ShipLoadPostLoadJobBudget);
         if (budget <= 0)
         {
-            // CVar was disabled mid-flight; flush whatever's still queued in one go to avoid
-            // leaking it across rounds. Same correctness as the original sync path.
-            while (_pendingUseDelayResets.TryDequeue(out var leftover))
-            {
-                if (_useDelayQuery.TryComp(leftover, out var useDelay))
-                    _useDelay.ResetAllDelays((leftover, useDelay));
-            }
+            // CVar was set to flush-all (or admin disabled deferral mid-flight). Drain in one
+            // go to avoid leaking entries across rounds; correctness is identical to the
+            // original sync path.
+            while (_pendingPostLoadJobs.TryDequeue(out var leftover))
+                ExecutePostLoadJob(leftover);
 
             return;
         }
 
-        for (var i = 0; i < budget && _pendingUseDelayResets.TryDequeue(out var uid); i++)
+        for (var i = 0; i < budget && _pendingPostLoadJobs.TryDequeue(out var job); i++)
+            ExecutePostLoadJob(job);
+    }
+
+    private void ExecutePostLoadJob(PostLoadJob job)
+    {
+        switch (job.Kind)
         {
-            // Entity may have been deleted between enqueue and now (ship sold, round restart,
-            // admin nuked, etc). Cached query handles this correctly.
-            if (_useDelayQuery.TryComp(uid, out var useDelay))
-                _useDelay.ResetAllDelays((uid, useDelay));
+            case PostLoadJobKind.UseDelayReset:
+                // Entity may have been deleted between enqueue and now (ship sold, round restart,
+                // admin nuked, etc). Cached query handles this correctly.
+                if (_useDelayQuery.TryComp(job.Target, out var useDelay))
+                    _useDelay.ResetAllDelays((job.Target, useDelay));
+                break;
         }
     }
 
@@ -1351,10 +1381,12 @@ public sealed partial class ShipyardSystem : SharedShipyardSystem
 
             if (_useDelayQuery.TryComp(uid, out var useDelay))
             {
-                // HardLight: defer the reset to spread the Dirty() / GetPauseTime cost across ticks.
-                // Falls back to immediate reset when the budget CVar is 0 (preserves original behavior).
+                // VRS PR 4: defer the reset to spread the Dirty() / GetPauseTime cost across ticks
+                // via the shared post-load job queue. The legacy `deferred_usedelay_budget` CVar is
+                // honored as the "disable deferral entirely" kill-switch (set to 0 for byte-identical
+                // #1411 rollback behavior).
                 if (_configManager.GetCVar(HLCCVars.ShipLoadDeferredUseDelayBudget) > 0)
-                    _pendingUseDelayResets.Enqueue(uid);
+                    _pendingPostLoadJobs.Enqueue(new PostLoadJob(PostLoadJobKind.UseDelayReset, uid));
                 else
                     _useDelay.ResetAllDelays((uid, useDelay));
             }
