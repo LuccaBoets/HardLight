@@ -3501,7 +3501,9 @@
     allowMovement: true
     name: ghost-role-information-hamster-name
     description: ghost-role-information-hamster-description
-    rules: ghost-role-information-nonantagonist-rules
+    rules: ghost-role-information-freeagent-rules
+    mindRoles:
+    - MindRoleGhostRoleFreeAgent
   - type: GhostTakeoverAvailable
   - type: Speech
     speechVerb: SmallMob

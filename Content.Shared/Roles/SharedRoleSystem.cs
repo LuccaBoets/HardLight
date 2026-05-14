@@ -184,9 +184,7 @@ public abstract class SharedRoleSystem : EntitySystem
         }
         else
         {
-            //TODO: This is not tied to the player on the Admin Log filters.
-            //Probably only happens when Job Role is added on initial spawn, before the mind entity is put in a mob
-            Log.Error($"{ToPrettyString(mindId)} does not have an OwnedEntity!");
+            // Roles can be assigned before the mind is attached to a body during spawn/setup.
             _adminLogger.Add(LogType.Mind,
                 LogImpact.Low,
                 $"{name} added to {ToPrettyString(mindId)}");

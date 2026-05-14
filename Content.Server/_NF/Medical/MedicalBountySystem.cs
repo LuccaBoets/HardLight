@@ -196,6 +196,7 @@ public sealed partial class MedicalBountySystem : EntitySystem
             _bank.TrySectorDeposit(account, (int)(bountyPayout * taxCoeff), LedgerEntryType.MedicalBountyTax);
         }
 
+        _container.Remove(bountyUid, container, destination: Transform(uid).Coordinates);
         QueueDel(bountyUid);
 
         _popup.PopupEntity(Loc.GetString(successString), uid);

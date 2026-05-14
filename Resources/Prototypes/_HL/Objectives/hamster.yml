@@ -1,0 +1,13 @@
+- type: entity
+  parent: BaseObjective
+  id: HamsterGloriousDeathObjective
+  name: Die a glorious death
+  description: Seek the most dramatic end you can manage.
+  components:
+  - type: Objective
+    difficulty: 0.1
+    issuer: objective-issuer-unknown
+    icon:
+      sprite: Mobs/Animals/hamster.rsi
+      state: dead-0
+  - type: DieCondition

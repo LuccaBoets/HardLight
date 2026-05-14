@@ -285,7 +285,10 @@ namespace Content.Server.Atmos.EntitySystems
 
         public void UpdateAppearance(EntityUid uid, FlammableComponent? flammable = null, AppearanceComponent? appearance = null)
         {
-            if (!Resolve(uid, ref flammable, ref appearance))
+            if (!Resolve(uid, ref flammable))
+                return;
+
+            if (!Resolve(uid, ref appearance, false))
                 return;
 
             _appearance.SetData(uid, FireVisuals.OnFire, flammable.OnFire, appearance);
