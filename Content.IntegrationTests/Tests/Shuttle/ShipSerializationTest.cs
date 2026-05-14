@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Numerics;
+using Content.Server.Atmos.Components;
 using Content.Server.Shuttles.Save;
 using Content.Tests;
 using Content.Shared.Actions;
@@ -307,5 +308,128 @@ public sealed class ShipSerializationTest : ContentUnitTest
         });
 
         await pair.CleanReturnAsync();
+    }
+
+    /// <summary>
+    /// Coverage: the async ShipLoadJob path in <see cref="ShipSerializationSystem.Update"/> must
+    /// (a) actually defer work past the call to ReconstructShipOnMap when async is on, and
+    /// (b) eventually restore every entity that was serialized. A regression in either direction
+    /// silently breaks player ship loading on production: (a) means the load tick still pays the
+    /// full cost (perf regression); (b) means players get a half-loaded ship (correctness regression).
+    /// We force tiny per-tick batches so completion provably spans multiple ticks even on a small
+    /// test grid.
+    /// </summary>
+    [Test]
+    public async Task RefactoredSerializer_AsyncLoaderCompletesAcrossTicks()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+
+        var sourceMap = await pair.CreateTestMap();
+        var targetMap = await pair.CreateTestMap();
+
+        var entManager = server.ResolveDependency<IEntityManager>();
+        var mapManager = server.ResolveDependency<IMapManager>();
+        var shipSer = entManager.System<ShipSerializationSystem>();
+        var cfg = server.ResolveDependency<IConfigurationManager>();
+        var mapSys = entManager.System<SharedMapSystem>();
+
+        const int spawnCount = 20;
+        EntityUid sourceGridUid = default;
+        ShipGridData data = null!;
+        EntityUid restoredGrid = default;
+
+        await server.WaitPost(() =>
+        {
+            cfg.SetCVar(CCVars.ShipyardUseLegacySerializer, false);
+            // Force the async path on (default true, but make the test self-contained against
+            // future default flips) and squeeze the per-tick batch so we are guaranteed to need
+            // multiple ticks to drain spawnCount entities. The time budget stays generous so the
+            // test isn't sensitive to host CPU jitter.
+            cfg.SetCVar(Content.Shared.HL.CCVar.HLCCVars.ShipLoadAsync, true);
+            cfg.SetCVar(Content.Shared.HL.CCVar.HLCCVars.ShipLoadBatchNonContained, 4);
+            cfg.SetCVar(Content.Shared.HL.CCVar.HLCCVars.ShipLoadBatchContained, 4);
+            cfg.SetCVar(Content.Shared.HL.CCVar.HLCCVars.ShipLoadTimeBudgetMs, 1000);
+
+            entManager.DeleteEntity(sourceMap.Grid);
+            var sourceGrid = mapManager.CreateGridEntity(sourceMap.MapId);
+            sourceGridUid = sourceGrid.Owner;
+            var sourceGridComp = sourceGrid.Comp;
+
+            entManager.RunMapInit(sourceGridUid, entManager.GetComponent<MetaDataComponent>(sourceGridUid));
+
+            // Lay down a row of tiles and spawn a chair on each. ChairBrass is a cheap, fully
+            // serializable prototype already exercised by RefactoredSerializer_SerializesEntities.
+            for (var i = 0; i < spawnCount; i++)
+            {
+                mapSys.SetTile(sourceGridUid, sourceGridComp, new Vector2i(i, 0), new Tile(1));
+                entManager.SpawnEntity("ChairBrass",
+                    new EntityCoordinates(sourceGridUid, new Vector2(i + 0.5f, 0.5f)));
+            }
+        });
+
+        await server.WaitRunTicks(1);
+
+        await server.WaitAssertion(() =>
+        {
+            data = shipSer.SerializeShip(sourceGridUid, new NetUserId(Guid.NewGuid()), "BatchShip");
+            Assert.That(data.Grids, Has.Count.EqualTo(1));
+            Assert.That(data.Grids[0].Entities, Has.Count.GreaterThanOrEqualTo(spawnCount),
+                $"Expected at least {spawnCount} entities serialized, got {data.Grids[0].Entities.Count}");
+
+            restoredGrid = shipSer.ReconstructShipOnMap(data, targetMap.MapId, Vector2.Zero);
+            Assert.That(entManager.EntityExists(restoredGrid), Is.True,
+                "ReconstructShipOnMap should return a live grid even when async loading is enabled.");
+            // ReconstructShipOnMap queues a delayed `fixgridatmos` console command (see
+            // ShipSerializationSystem.ApplyFixGridAtmosphereToGrid). On a real production load
+            // the YAML carries a GridAtmosphereComponent so the command succeeds; on a synthetic
+            // test grid it doesn't, and the resulting Sawmill.Error trips the integration test
+            // log handler. Attach atmosphere here so the timer fires cleanly.
+            entManager.AddComponent<GridAtmosphereComponent>(restoredGrid);
+        });
+
+        // Run one tick. With ShipLoadBatchNonContained=4 and >=spawnCount entities to spawn, the
+        // loader should have NOT yet finished. This proves the async path is actually deferring
+        // work; if a regression made ReconstructShipOnMap synchronous all spawnCount chairs would
+        // already exist after this single tick.
+        await server.WaitRunTicks(1);
+        int afterFirstTick = 0;
+        await server.WaitAssertion(() =>
+        {
+            afterFirstTick = CountChairsOnGrid(entManager, restoredGrid);
+            Assert.That(afterFirstTick, Is.LessThan(spawnCount),
+                $"Async loader should not finish in one tick with batch size 4 (saw {afterFirstTick}/{spawnCount}). "
+                + "If this fails, the async deferral was bypassed and the load tick is paying full cost.");
+        });
+
+        // Now run enough ticks to comfortably drain the queue (spawnCount/batch + slack).
+        await server.WaitRunTicks(2 + spawnCount / 4 + 5);
+
+        await server.WaitAssertion(() =>
+        {
+            var afterDrain = CountChairsOnGrid(entManager, restoredGrid);
+            Assert.That(afterDrain, Is.EqualTo(spawnCount),
+                $"Async loader should restore every serialized chair (got {afterDrain}/{spawnCount}). "
+                + "If this fails, ShipLoadJob completion is dropping entities mid-batch.");
+            Assert.That(afterDrain, Is.GreaterThan(afterFirstTick),
+                "Sanity: more chairs should be present after draining than after the first tick.");
+        });
+
+        await pair.CleanReturnAsync();
+
+        static int CountChairsOnGrid(IEntityManager em, EntityUid grid)
+        {
+            var count = 0;
+            var query = em.EntityQueryEnumerator<MetaDataComponent, TransformComponent>();
+            while (query.MoveNext(out _, out var meta, out var xform))
+            {
+                if (xform.GridUid != grid)
+                    continue;
+                if (meta.EntityPrototype?.ID == "ChairBrass")
+                    count++;
+            }
+
+            return count;
+        }
     }
 }
