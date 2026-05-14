@@ -106,13 +106,31 @@ public sealed partial class ShipyardSystem : SharedShipyardSystem
     private static readonly TimeSpan ShipyardActionDelay = TimeSpan.FromSeconds(1); // HardLight
     private HashSet<string>? _activeLoadDeletedPrototypes; // HardLight
 
-    // HardLight: queue of UseDelay-bearing entities from freshly loaded ships whose `ResetAllDelays`
-    // call has been deferred so we don't pay the dirty-storm cost on the load tick. Drained at a
-    // budgeted rate from Update(). The only observable effect of a delayed reset is that an item
-    // briefly shows whatever cooldown the previous owner left on it (which is also nonsensical
-    // gameplay state to inherit) until the queue reaches it. Disabled by setting
-    // hardlight.shipload.deferred_usedelay_budget = 0.
-    private readonly Queue<EntityUid> _pendingUseDelayResets = new();
+    // VRS PR 4: typed queue for any work that SanitizeLoadedShuttle wants to defer past the
+    // load tick. Was originally a UseDelay-only queue from #1411; widened so future deferred jobs
+    // (power graph rebuild, atmos warmup, container audits) can share a single per-tick budget
+    // instead of each carrying its own knob. Drained at the budget set by
+    // hardlight.shipload.post_load_job_budget. The legacy `hardlight.shipload.deferred_usedelay_budget`
+    // CVar is still honored: setting it to 0 forces UseDelay resets to run synchronously inside
+    // SanitizeLoadedShuttle (preserves the byte-identical rollback path documented in #1411).
+    private enum PostLoadJobKind : byte
+    {
+        UseDelayReset = 0,
+    }
+
+    private readonly struct PostLoadJob
+    {
+        public readonly PostLoadJobKind Kind;
+        public readonly EntityUid Target;
+
+        public PostLoadJob(PostLoadJobKind kind, EntityUid target)
+        {
+            Kind = kind;
+            Target = target;
+        }
+    }
+
+    private readonly Queue<PostLoadJob> _pendingPostLoadJobs = new();
 
     // The type of error from the attempted sale of a ship.
     public enum ShipyardSaleError
@@ -181,6 +199,10 @@ public sealed partial class ShipyardSystem : SharedShipyardSystem
     {
         _shipyardActionDelayUntil.Clear(); // HardLight
         _lastLoadCharge.Clear(); // HardLight
+        // VRS PR 4: drop any deferred post-load work targeting entities from the previous round.
+        // The grids those jobs targeted are about to be cleaned up anyway, and leaking the queue
+        // would cause first-tick-of-next-round work against stale UIDs.
+        _pendingPostLoadJobs.Clear();
         CleanupShipyard();
     }
 
@@ -210,35 +232,43 @@ public sealed partial class ShipyardSystem : SharedShipyardSystem
             CleanupShipyard();
     }
 
-    // HardLight: drain the deferred UseDelay reset queue at a budgeted rate so a freshly loaded
-    // capital ship doesn't fire hundreds of Dirty() notifications on the load tick.
+    // VRS PR 4: drain the typed post-load job queue at a single shared budget so deferred
+    // sanitize work (UseDelay resets and future job kinds) doesn't fire its full cost on the
+    // load tick. Falling back to a flush-all when the budget CVar <= 0 preserves the original
+    // #1411 rollback behavior.
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
 
-        if (_pendingUseDelayResets.Count == 0)
+        if (_pendingPostLoadJobs.Count == 0)
             return;
 
-        var budget = _configManager.GetCVar(HLCCVars.ShipLoadDeferredUseDelayBudget);
+        var budget = _configManager.GetCVar(HLCCVars.ShipLoadPostLoadJobBudget);
         if (budget <= 0)
         {
-            // CVar was disabled mid-flight; flush whatever's still queued in one go to avoid
-            // leaking it across rounds. Same correctness as the original sync path.
-            while (_pendingUseDelayResets.TryDequeue(out var leftover))
-            {
-                if (_useDelayQuery.TryComp(leftover, out var useDelay))
-                    _useDelay.ResetAllDelays((leftover, useDelay));
-            }
+            // CVar was set to flush-all (or admin disabled deferral mid-flight). Drain in one
+            // go to avoid leaking entries across rounds; correctness is identical to the
+            // original sync path.
+            while (_pendingPostLoadJobs.TryDequeue(out var leftover))
+                ExecutePostLoadJob(leftover);
 
             return;
         }
 
-        for (var i = 0; i < budget && _pendingUseDelayResets.TryDequeue(out var uid); i++)
+        for (var i = 0; i < budget && _pendingPostLoadJobs.TryDequeue(out var job); i++)
+            ExecutePostLoadJob(job);
+    }
+
+    private void ExecutePostLoadJob(PostLoadJob job)
+    {
+        switch (job.Kind)
         {
-            // Entity may have been deleted between enqueue and now (ship sold, round restart,
-            // admin nuked, etc). Cached query handles this correctly.
-            if (_useDelayQuery.TryComp(uid, out var useDelay))
-                _useDelay.ResetAllDelays((uid, useDelay));
+            case PostLoadJobKind.UseDelayReset:
+                // Entity may have been deleted between enqueue and now (ship sold, round restart,
+                // admin nuked, etc). Cached query handles this correctly.
+                if (_useDelayQuery.TryComp(job.Target, out var useDelay))
+                    _useDelay.ResetAllDelays((job.Target, useDelay));
+                break;
         }
     }
 
@@ -334,11 +364,20 @@ public sealed partial class ShipyardSystem : SharedShipyardSystem
         if (ShipyardMap == null)
             return false;
 
+        // VRS PR 2': time the actual MapLoader.TryLoadGrid call so admins/devs can see whether
+        // ship-load lag is YAML deserialization (engine path) vs sanitize/dock work (content path).
+        // Gated by hardlight.shipload.log_progress so production doesn't pay the Stopwatch cost.
+        var logProgress = _configManager.GetCVar(HLCCVars.ShipLoadLogProgress);
+        var loadSw = logProgress ? System.Diagnostics.Stopwatch.StartNew() : null;
+
         if (!_mapLoader.TryLoadGrid(ShipyardMap.Value, shuttlePath, out var grid, offset: new Vector2(500f + _shuttleIndex, 1f)))
         {
             //_sawmill.Error($"Unable to spawn shuttle {shuttlePath}");
             return false;
         }
+
+        if (loadSw != null)
+            _sawmill.Info($"[ShipLoad] MapLoader.TryLoadGrid {shuttlePath} took {loadSw.Elapsed.TotalMilliseconds:F1}ms");
 
         _shuttleIndex += grid.Value.Comp.LocalAABB.Width + ShuttleSpawnBuffer;
 
@@ -1326,12 +1365,29 @@ public sealed partial class ShipyardSystem : SharedShipyardSystem
     private void SanitizeLoadedShuttle(EntityUid gridUid)
     {
         var prunedContainers = 0;
+        // VRS PR 2': counters for instrumentation. All increments stay no-ops in the hot path
+        // (just int adds); the formatted log line is gated by ShipLoadLogProgress so production
+        // does not pay the string allocation.
+        var jointsRemoved = 0;
+        var dockingsCleared = 0;
+        var useDelaysQueued = 0;
+        var useDelaysImmediate = 0;
+        var visited = 0;
+        var logProgress = _configManager.GetCVar(HLCCVars.ShipLoadLogProgress);
+        var sw = logProgress ? System.Diagnostics.Stopwatch.StartNew() : null;
+
+        var deferUseDelays = _configManager.GetCVar(HLCCVars.ShipLoadDeferredUseDelayBudget) > 0;
 
         // HardLight: use cached queries instead of TryComp<T> per entity. On a multi-thousand entity
         // capital ship the original three TryComp calls per entity dominate this method's cost.
         VisitEntityAndDescendants(gridUid, uid =>
         {
-            RemComp<JointComponent>(uid);
+            visited++;
+            if (HasComp<JointComponent>(uid))
+            {
+                RemComp<JointComponent>(uid);
+                jointsRemoved++;
+            }
 
             if (_containerManagerQuery.TryComp(uid, out var manager))
                 prunedContainers += PruneInvalidContainerContents(uid, manager);
@@ -1347,21 +1403,39 @@ public sealed partial class ShipyardSystem : SharedShipyardSystem
                     if (!other.IsValid() || !_metaQuery.HasComp(other))
                         dock.DockedWith = null;
                 }
+
+                dockingsCleared++;
             }
 
             if (_useDelayQuery.TryComp(uid, out var useDelay))
             {
-                // HardLight: defer the reset to spread the Dirty() / GetPauseTime cost across ticks.
-                // Falls back to immediate reset when the budget CVar is 0 (preserves original behavior).
-                if (_configManager.GetCVar(HLCCVars.ShipLoadDeferredUseDelayBudget) > 0)
-                    _pendingUseDelayResets.Enqueue(uid);
+                // VRS PR 4: defer the reset to spread the Dirty() / GetPauseTime cost across ticks
+                // via the shared post-load job queue. The legacy `deferred_usedelay_budget` CVar is
+                // honored as the "disable deferral entirely" kill-switch (set to 0 for byte-identical
+                // #1411 rollback behavior).
+                if (deferUseDelays)
+                {
+                    _pendingPostLoadJobs.Enqueue(new PostLoadJob(PostLoadJobKind.UseDelayReset, uid));
+                    useDelaysQueued++;
+                }
                 else
+                {
                     _useDelay.ResetAllDelays((uid, useDelay));
+                    useDelaysImmediate++;
+                }
             }
         });
 
         if (prunedContainers > 0)
             _sawmill.Warning($"[ShipLoad] Pruned {prunedContainers} stale contained UID reference(s) from loaded shuttle {ToPrettyString(gridUid)}.");
+
+        if (sw != null)
+        {
+            _sawmill.Info(
+                $"[ShipLoad] SanitizeLoadedShuttle {ToPrettyString(gridUid)} took {sw.Elapsed.TotalMilliseconds:F1}ms" +
+                $" entities={visited} joints={jointsRemoved} dockings={dockingsCleared}" +
+                $" useDelays(queued={useDelaysQueued},immediate={useDelaysImmediate}) prunedContainers={prunedContainers}");
+        }
     }
 
     private int PruneInvalidContainerContents(EntityUid owner, ContainerManagerComponent manager)

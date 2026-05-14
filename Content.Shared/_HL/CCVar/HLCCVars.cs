@@ -123,6 +123,16 @@ public sealed class HLCCVars
         CVarDef.Create("hardlight.shipload.deferred_usedelay_budget", 32, CVar.SERVERONLY,
             desc: "Per-tick budget for deferred UseDelay resets after ship load. 0 disables deferral (sync reset).");
 
+    /// <summary>
+    /// VRS: per-tick budget shared across all post-load sanitize jobs (UseDelay resets and any
+    /// future deferred work) drained by ShipyardSystem.Update. Replaces the per-job budget for
+    /// callers that want a single knob; ShipLoadDeferredUseDelayBudget is still honored as the
+    /// "disable deferral entirely" switch when set to 0 for backward compatibility with #1411.
+    /// </summary>
+    public static readonly CVarDef<int> ShipLoadPostLoadJobBudget =
+        CVarDef.Create("hardlight.shipload.post_load_job_budget", 64, CVar.SERVERONLY,
+            desc: "Per-tick budget for combined post-load sanitize jobs after ship load. Set to 0 to flush all queued jobs immediately.");
+
     // Radar blip system performance controls.
     // Mono RadarBlipSystem.OnBlipsRequested can dominate server tick under combat / multi-console
     // load: each request runs EntityLookupSystem.GetEntitiesInRange (B2 broadphase + grid intersect)
