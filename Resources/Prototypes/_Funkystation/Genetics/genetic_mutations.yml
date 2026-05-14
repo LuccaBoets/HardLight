@@ -1442,7 +1442,6 @@
   components:
   - type: WorldTargetAction
     useDelay: 30
-    cooldown: 30
     itemIconStyle: BigAction
     checkCanAccess: false
     raiseOnUser: true
