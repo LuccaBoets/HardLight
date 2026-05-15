@@ -7,7 +7,7 @@
     - type: Transform
       noRot: true
     - type: AccessReader
-#      access: [["Research"], ["Cargo"]]
+      access: [ ] # Frontier: Removed ["Research"], ["Cargo"]
     - type: Lock
     - type: ResistLocker
     - type: Sprite
@@ -46,7 +46,7 @@
       capacity: 1
       whitelist:
         components:
-        - Artifact
+        - XenoArtifact
     - type: Weldable
     - type: SuppressArtifactContainer
     - type: RadiationBlockingContainer
@@ -66,8 +66,8 @@
               acts: ["Destruction"]
     - type: PaperLabel
       labelSlot:
-        insertVerbText: Attach Label
-        ejectVerbText: Remove Label
+        insertVerbText: comp-paper-label-insert
+        ejectVerbText: comp-paper-label-eject
         whitelist:
           components:
             - Paper
@@ -94,7 +94,6 @@
           enum.PaperLabelVisuals.Layer:
             True: { offset: "0.0,0.3125" }
             False: { offset: "0.0,0.0" }
-
     - type: LockVisuals
     - type: ItemSlots
     - type: ContainerContainer
@@ -103,6 +102,7 @@
         paper_label: !type:ContainerSlot
     - type: StaticPrice
       price: 250
+    - type: NFForkLiftable #Frontier
 
 - type: entity
   parent: BaseStorageItem
@@ -125,9 +125,9 @@
     - 0,0,1,1
     whitelist:
       components:
-      - Artifact
+      - XenoArtifact
   - type: Item
-    sprite: Objects/Storage/artifact_container.rsi  
+    sprite: Objects/Storage/artifact_container.rsi
     size: Huge
   - type: MeleeWeapon
     damage:
@@ -137,8 +137,9 @@
       path: "/Audio/Weapons/smash.ogg"
   - type: Appearance
   - type: AccessReader
-    # access: [["Research"], ["Cargo"]] # HardLight
+    access: [ ] # Frontier: Removed ["Research"], ["Cargo"]
   - type: Lock
+  - type: LockedStorage
   - type: SuppressArtifactContainer
   - type: RadiationBlockingContainer
     resistance: 5
