@@ -1,0 +1,15 @@
+# Stubs for old artifact item prototypes referenced by existing maps
+# (radstation.yml, ShuttleEvent/incorporation.yml). Keeps saved ships
+# and event shuttles loadable after the xenoarch port.
+
+- type: entity
+  parent: ComplexXenoArtifactItem
+  id: MediumXenoArtifactItem
+  suffix: DEPRECATED
+  categories: [ HideSpawnMenu ]
+
+- type: entity
+  parent: ComplexXenoArtifactItem
+  id: VariedXenoArtifactItem
+  suffix: DEPRECATED
+  categories: [ HideSpawnMenu ]
