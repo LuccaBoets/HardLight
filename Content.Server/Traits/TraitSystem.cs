@@ -12,6 +12,7 @@ using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Movement.Systems; // HardLight
 using Content.Shared.Players;
+using Content.Shared.Preferences; // HardLight
 using Content.Shared.Roles;
 using Content.Shared.Traits;
 using Content.Shared.Whitelist;
@@ -111,9 +112,37 @@ public sealed class TraitSystem : EntitySystem
     }
 
     /// <summary>
+    /// HardLight: Applies the selected traits from a humanoid profile to an existing entity.
+    /// This is intended for non-standard spawn paths like admin spawning or cloning
+    /// that already have a validated profile and just need its trait components replayed.
+    /// </summary>
+    public void ApplyProfileTraits(EntityUid uid, HumanoidCharacterProfile profile, string? playerName = null, bool addTraitGear = true)
+    {
+        var sortedTraits = new List<TraitPrototype>();
+        foreach (var traitId in profile.TraitPreferences)
+        {
+            if (_prototype.TryIndex<TraitPrototype>(traitId, out var traitPrototype))
+                sortedTraits.Add(traitPrototype);
+        }
+
+        sortedTraits.Sort();
+
+        foreach (var traitPrototype in sortedTraits)
+        {
+            if (traitPrototype.Logins.Count > 0 &&
+                (playerName == null || !traitPrototype.Logins.Contains(playerName)))
+            {
+                continue;
+            }
+
+            AddTrait(uid, traitPrototype, addTraitGear);
+        }
+    }
+
+    /// <summary>
     ///     Adds a single Trait Prototype to an Entity.
     /// </summary>
-    public void AddTrait(EntityUid uid, TraitPrototype traitPrototype)
+    public void AddTrait(EntityUid uid, TraitPrototype traitPrototype, bool addTraitGear = true) // HardLight: Added bool addTraitGear
     {
         // Check whitelist/blacklist
         if (_whitelistSystem.IsWhitelistFail(traitPrototype.Whitelist, uid) ||
@@ -127,7 +156,7 @@ public sealed class TraitSystem : EntitySystem
         _movementSpeed.RefreshMovementSpeedModifiers(uid);
 
         // Add item required by the trait
-        if (traitPrototype.TraitGear != null && TryComp(uid, out HandsComponent? handsComponent))
+        if (addTraitGear && traitPrototype.TraitGear != null && TryComp(uid, out HandsComponent? handsComponent)) // HardLight: Added addTraitGear
         {
             var coords = Transform(uid).Coordinates;
             var inhandEntity = EntityManager.SpawnEntity(traitPrototype.TraitGear, coords);
