@@ -245,6 +245,11 @@
   id: APECircuitboard
   result: APECircuitboard
 
+- type: latheRecipe
+  parent: [ BaseCircuitboardRecipe, BaseResearchMachineRecipeCategory ]
+  id: AiCoreElectronics
+  result: AiCoreElectronics
+
 ## Service
 
 - type: latheRecipe
