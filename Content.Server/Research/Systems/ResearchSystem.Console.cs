@@ -88,8 +88,9 @@ public sealed partial class ResearchSystem
             TryComp<TechnologyDatabaseComponent>(serverUid, out var db))
         {
             var unlockedTechs = new HashSet<string>(db.UnlockedTechnologies);
+            var disciplineTiers = GetDisciplineTiers(db);
             techList = allTechs
-                .Where(tech => tech.GetAllDisciplines().Any(d => db.SupportedDisciplines.Contains(d)))
+                .Where(tech => !tech.Hidden && tech.GetAllDisciplines().Any(d => db.SupportedDisciplines.Contains(d)))
                 .ToDictionary(
                     proto => proto.ID,
                     proto =>
@@ -98,9 +99,10 @@ public sealed partial class ResearchSystem
                             return ResearchAvailability.Researched;
 
                         var prereqsMet = proto.TechnologyPrerequisites.All(p => unlockedTechs.Contains(p));
+                        var canUnlockByRules = IsTechnologyAvailable(db, proto, disciplineTiers);
                         var canAfford = serverComponent.Points >= proto.Cost;
 
-                        return prereqsMet
+                        return prereqsMet && canUnlockByRules
                             ? (canAfford ? ResearchAvailability.Available : ResearchAvailability.PrereqsMet)
                             : ResearchAvailability.Unavailable;
                     });
