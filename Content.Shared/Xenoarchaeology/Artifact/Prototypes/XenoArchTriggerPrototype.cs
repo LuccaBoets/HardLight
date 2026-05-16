@@ -6,7 +6,7 @@ using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototy
 namespace Content.Shared.Xenoarchaeology.Artifact.Prototypes;
 
 /// <summary> Proto for xeno artifact triggers - markers, which event could trigger node to unlock it. </summary>
-[Prototype]
+[Prototype("xenoArchTrigger")]
 public sealed partial class XenoArchTriggerPrototype : IPrototype
 {
     /// <inheritdoc/>
@@ -35,7 +35,7 @@ public sealed partial class XenoArchTriggerPrototype : IPrototype
 /// <summary>
 /// Container for list of xeno artifact triggers and their respective weights to be used in case randomly rolling trigger is required.
 /// </summary>
-[Prototype]
+[Prototype("weightedRandomXenoArchTrigger")]
 public sealed partial class WeightedRandomXenoArchTriggerPrototype : IWeightedRandomPrototype
 {
     [IdDataField]

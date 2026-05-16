@@ -1192,6 +1192,12 @@
   id: RifleStock
 
 - type: Tag
+  id: AICoreElectronics
+
+- type: Tag
+  id: WeaponShotgunBigBuddy
+
+- type: Tag
   id: Ring
 
 - type: Tag
