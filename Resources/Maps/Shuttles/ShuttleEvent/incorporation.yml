@@ -5291,7 +5291,6 @@ entities:
     components:
     - type: Transform
       parent: 766
-    - type: Artifact
     - type: Physics
       canCollide: False
     - type: InsideEntityStorage
@@ -5299,7 +5298,6 @@ entities:
     components:
     - type: Transform
       parent: 768
-    - type: Artifact
     - type: Physics
       canCollide: False
     - type: InsideEntityStorage

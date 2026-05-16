@@ -79,7 +79,6 @@
         enum.PowerDeviceVisualLayers.Powered:
           True: { visible: true }
           False: { visible: false }
-  - type: TraversalDistorter
 
 - type: entity
   id: MachineArtifactCrusher
