@@ -68,6 +68,8 @@
 
 - type: technology
   id: WeaponizedLaserManipulation
+  technologyPrerequisites:
+    - BasicParts
   name: research-technology-weaponized-laser-manipulation
   icon:
     sprite: Objects/Weapons/Guns/Battery/laser_gun.rsi
@@ -75,7 +77,8 @@
   discipline: Arsenal
   tier: 1
   position: 2, 3
-  cost: 7500
+  cost: 10000
+
   recipeUnlocks: # Frontier
   - WeaponLaserCarbine # Frontier
   - WeaponMechCombatFiredartLaser # Goobstation
@@ -124,6 +127,8 @@
 
 - type: technology
   id: AdvancedRiotControl
+  technologyPrerequisites:
+    - BasicParts
   name: research-technology-advanced-riot-control
   icon:
     sprite: Objects/Weapons/Melee/truncheon.rsi
@@ -131,7 +136,8 @@
   discipline: Arsenal
   tier: 1
   position: 2, 2
-  cost: 8000
+  cost: 10000
+
   recipeUnlocks: # Frontier
   - Truncheon # Frontier
   - TelescopicShield # Frontier
@@ -140,6 +146,8 @@
 
 - type: technology
   id: ExplosiveTechnology
+  technologyPrerequisites:
+    - SuperParts
   name: research-technology-explosive-technology
   icon:
     sprite: Objects/Devices/payload.rsi
@@ -147,7 +155,8 @@
   discipline: Arsenal
   tier: 1
   position: 1, 14
-  cost: 10000
+  cost: 25000
+
   recipeUnlocks:
   - SignallerAdvanced
   - SignalTrigger
@@ -174,6 +183,8 @@
 
 - type: technology
   id: ConcentratedLaserWeaponry
+  technologyPrerequisites:
+    - WeaponizedLaserManipulation
   name: research-technology-concentrated-laser-weaponry
   icon:
     sprite: Objects/Weapons/Guns/Battery/laser_cannon.rsi
@@ -181,7 +192,8 @@
   discipline: Arsenal
   tier: 2
   position: 3, 3
-  cost: 10000
+  cost: 25000
+
   recipeUnlocks: # Frontier
   - WeaponLaserCannon # Frontier
 
@@ -227,7 +239,8 @@
   discipline: Arsenal
   tier: 2
   position: -5, 8
-  cost: 10500
+  cost: 10000
+
   recipeUnlocks:
   - PowerCageRechargerCircuitboard
   - PowerCageSmall
@@ -243,11 +256,15 @@
   #  - ShuttleGunFriendshipCircuitboard # Frontier
   technologyPrerequisites:
   - SalvageWeapons
+  - ExplosiveTechnology
 
 # Tier 3
 
 - type: technology
   id: PortableMicrofusionWeaponry
+  technologyPrerequisites:
+    - ConcentratedLaserWeaponry
+    - SuperParts
   name: research-technology-portable-microfusion-weaponry
   icon:
     sprite: Objects/Weapons/Guns/Battery/advancedlasergun.rsi
@@ -255,7 +272,8 @@
   discipline: Arsenal
   tier: 3
   position: 4, 3
-  cost: 15000
+  cost: 30000
+
   recipeUnlocks:
   - WeaponAdvancedLaser # Frontier
   - PortableRecharger
