@@ -102,7 +102,6 @@
         paper_label: !type:ContainerSlot
     - type: StaticPrice
       price: 250
-    - type: NFForkLiftable #Frontier
 
 - type: entity
   parent: BaseStorageItem

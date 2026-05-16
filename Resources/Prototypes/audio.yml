@@ -249,6 +249,11 @@
   files:
     - /Audio/Ambience/shipambience.ogg
 
+- type: soundCollection
+  id: ArtifactForceActivation
+  files:
+    - /Audio/Items/Artifact/artifact-force-activated1.ogg
+
 # Rules
 - type: rules
   id: AlwaysTrue

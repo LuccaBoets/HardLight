@@ -413,3 +413,10 @@
   sprite:
     sprite: Mobs/Animals/crab.rsi
     state: crab
+
+- type: stealTargetGroup
+  id: XenoArtifact
+  name: steal-target-groups-xeno-artifact
+  sprite:
+    sprite: Objects/Specific/Xenoarchaeology/xeno_artifacts.rsi
+    state: ano30
