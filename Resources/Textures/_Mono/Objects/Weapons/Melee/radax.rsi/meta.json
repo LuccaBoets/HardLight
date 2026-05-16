@@ -1,14 +1,36 @@
 {
   "version": 1,
-  "license": "CC-BY-NC-SA-3.0",
-  "copyright": "Taken and modified by Taral from goonstation at commit https://github.com/goonstation/goonstation/pull/2816/commits/b99c5dff45a6527bbf698bc00f7d24b8ca75a806",
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Sprites by Greenwall-Exe",
   "size": {
     "x": 32,
     "y": 32
   },
   "states": [
     {
+      "name": "inhand-left-blade",
+      "directions": 4
+    },
+    {
       "name": "icon"
+    },
+    {
+      "name": "e_sword"
+    },
+    {
+      "name": "equipped-BACKPACK",
+      "directions": 4
+    },
+    {
+      "name": "e_sword_blade"
+    },
+    {
+      "name": "equipped-SUITSTORAGE",
+      "directions": 4
+    },
+    {
+      "name": "inhand-right-blade",
+      "directions": 4
     },
     {
       "name": "inhand-left",
@@ -18,16 +40,16 @@
       "name": "inhand-right",
       "directions": 4
     },
-	{
+    {
       "name": "wielded-inhand-left",
       "directions": 4
     },
-	{
+    {
       "name": "wielded-inhand-right",
       "directions": 4
     },
     {
-      "name": "equipped-BACKPACK",
+      "name": "equipped-BELT",
       "directions": 4
     }
   ]

@@ -1,18 +1,33 @@
 {
   "version": 1,
   "license": "CC-BY-SA-3.0",
-  "copyright": "Taken from tgstation at commit https://github.com/tgstation/tgstation/commit/5a73e8f825ff279e82949b9329783a9e3070e2da. equipped-EYES-secdog modified from equipped-EYES by TJohnson. Equipped-EYES-arachnid and equipped-EYES-moth modified from equipped-EYES by HTMLSystem.",
+  "copyright": "Taken from tgstation at https://github.com/tgstation/tgstation",
   "size": {
     "x": 32,
     "y": 32
   },
   "states": [
     {
-      "name": "icon"
-    },
-    {
       "name": "equipped-EYES",
-      "directions": 4
+      "directions": 4,
+      "delays": [
+        [
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1
+        ],
+        [
+          0.1,
+          0.1
+        ]
+      ]
     },
     {
       "name": "equipped-EYES-arachnid",
@@ -25,6 +40,13 @@
     {
       "name": "equipped-EYES-secdog",
       "directions": 4
+    },
+    {
+      "name": "equipped-EYES-off",
+      "directions": 4
+    },
+    {
+      "name": "icon"
     },
     {
       "name": "inhand-left",
