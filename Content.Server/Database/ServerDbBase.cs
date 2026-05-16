@@ -64,14 +64,43 @@ namespace Content.Server.Database
             if (prefs is null)
                 return null;
 
-            var maxSlot = prefs.Profiles.Max(p => p.Slot) + 1;
-            var profiles = new Dictionary<int, ICharacterProfile>(maxSlot);
+            var profiles = new Dictionary<int, ICharacterProfile>();
             foreach (var profile in prefs.Profiles)
             {
-                profiles[profile.Slot] = ConvertProfiles(profile);
+                try
+                {
+                    profiles[profile.Slot] = ConvertProfiles(profile);
+                }
+                catch (Exception e)
+                {
+                    _opsLog.Warning($"Skipping malformed profile for user {userId}, slot {profile.Slot}: {e}");
+                }
             }
 
-            return new PlayerPreferences(profiles, prefs.SelectedCharacterSlot, Color.FromHex(prefs.AdminOOCColor));
+            // Keep login resilient if all stored slots are malformed.
+            if (profiles.Count == 0)
+            {
+                profiles[0] = new HumanoidCharacterProfile();
+            }
+
+            var selectedSlot = prefs.SelectedCharacterSlot;
+            if (!profiles.ContainsKey(selectedSlot))
+            {
+                selectedSlot = profiles.Keys.Min();
+            }
+
+            Color adminColor;
+            try
+            {
+                adminColor = Color.FromHex(prefs.AdminOOCColor);
+            }
+            catch (Exception e)
+            {
+                _opsLog.Warning($"Invalid admin OOC color for user {userId}, using default: {e}");
+                adminColor = Color.Red;
+            }
+
+            return new PlayerPreferences(profiles, selectedSlot, adminColor);
         }
 
         public async Task SaveSelectedCharacterIndexAsync(NetUserId userId, int index)
