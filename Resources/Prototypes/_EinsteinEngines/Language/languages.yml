@@ -1,0 +1,30 @@
+- type: language
+  id: TauCetiBasic
+
+- type: language
+  id: Sign
+  speech:
+    allowRadio: false
+    requireSpeech: false
+    speechVerbOverrides:
+    - chat-speech-verb-sign-1
+    - chat-speech-verb-sign-2
+    - chat-speech-verb-sign-3
+    messageWrapOverrides:
+      Speak: chat-sign-language-message-wrap
+      Whisper: chat-sign-language-whisper-wrap
+
+- type: language
+  id: Universal
+
+- type: language
+  id: Psychomantic
+  speech:
+    allowRadio: false
+    requireSpeech: false
+    empathySpeech: true
+    speechVerbOverrides:
+    - chat-speech-verb-Psychomantic-1
+    - chat-speech-verb-Psychomantic-2
+    - chat-speech-verb-Psychomantic-3
+    - chat-speech-verb-Psychomantic-4

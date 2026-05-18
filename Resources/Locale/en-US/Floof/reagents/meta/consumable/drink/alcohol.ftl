@@ -209,5 +209,3 @@ reagent-desc-millermargarita = A self-made spin on a classic by a popular barten
 
 reagent-name-harpysnowfall = Harpy's Snowfall
 reagent-desc-harpysnowfall = A chilled drink with a splash of booze, preferred by harpies on a hot day.
-reagent-physical-desc-slimey = wobbly
-reagent-physical-desc-snowfall = chilly
