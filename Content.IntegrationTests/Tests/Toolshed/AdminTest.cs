@@ -14,11 +14,7 @@ public sealed class AdminTest : ToolshedTest
         var toolMan = Server.ResolveDependency<ToolshedManager>();
         var admin = Server.ResolveDependency<IAdminManager>();
         var ignored = new HashSet<Assembly>()
-<<<<<<< HEAD
             {typeof(LocTest).Assembly, typeof(ToolshedTest).Assembly};
-=======
-            {typeof(LocTest).Assembly};
->>>>>>> VRXX/main
 
         await Server.WaitAssertion(() =>
         {
