@@ -15,7 +15,7 @@ public partial class SharedBodySystem
 {
     [Dependency] private readonly SharedHumanoidAppearanceSystem _humanoid = default!;
     [Dependency] private readonly MarkingManager _markingManager = default!;
-    [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
+    // VRS: removed duplicate _prototypeManager dep; use Prototypes from SharedBodySystem.cs (RA0032)
     private void InitializePartAppearances()
     {
         base.Initialize();
@@ -83,8 +83,8 @@ public partial class SharedBodySystem
 
     private string? CreateIdFromPart(HumanoidAppearanceComponent bodyAppearance, HumanoidVisualLayers part)
     {
-        var speciesProto = _prototypeManager.Index(bodyAppearance.Species);
-        var baseSprites = _prototypeManager.Index<HumanoidSpeciesBaseSpritesPrototype>(speciesProto.SpriteSet);
+        var speciesProto = Prototypes.Index(bodyAppearance.Species); // VRS: _prototypeManager -> Prototypes (RA0032)
+        var baseSprites = Prototypes.Index<HumanoidSpeciesBaseSpritesPrototype>(speciesProto.SpriteSet); // VRS: _prototypeManager -> Prototypes (RA0032)
 
         if (!baseSprites.Sprites.ContainsKey(part))
             return null;

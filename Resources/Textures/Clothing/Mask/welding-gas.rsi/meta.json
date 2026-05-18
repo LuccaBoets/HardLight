@@ -44,6 +44,16 @@
     {
       "name": "up-inhand-right",
       "directions": 4
+    },
+    {
+      "name": "equipped-MASK-dog",
+      "directions": 4,
+      "copyright": "Sparlight (GitHub)"
+    },
+    {
+      "name": "up-equipped-MASK-dog",
+      "directions": 4,
+      "copyright": "Sparlight (GitHub)"
     }
   ]
 }

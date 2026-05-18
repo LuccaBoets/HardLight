@@ -83,7 +83,24 @@ public sealed class TraitSystem : EntitySystem
             // Check requirements if they exist
             if (traitPrototype.Requirements.Count > 0)
             {
-                var job = _prototype.Index<JobPrototype>(args.JobId ?? _prototype.EnumeratePrototypes<JobPrototype>().First().ID);
+                // VRS: guard against missing/unset job to avoid InvalidOperationException from First() when no job prototypes are loaded.
+                // The original `job` local was unused; we only need to confirm a job is resolvable so requirement checks downstream remain meaningful.
+                var hasJob = args.JobId is { } jobId && _prototype.HasIndex<JobPrototype>(jobId);
+                if (!hasJob)
+                {
+                    var any = false;
+                    foreach (var _ in _prototype.EnumeratePrototypes<JobPrototype>())
+                    {
+                        any = true;
+                        break;
+                    }
+                    if (!any)
+                    {
+                        DebugTools.Assert("TraitSystem: no JobPrototype available to evaluate trait requirements.");
+                        continue;
+                    }
+                }
+
                 var playTimes = _playTimeTracking.GetTrackerTimes(args.Player);
 
                 var requirementsMet = true;

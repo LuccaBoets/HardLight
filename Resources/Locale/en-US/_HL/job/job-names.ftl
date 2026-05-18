@@ -13,6 +13,5 @@ job-title-colonial-engineer = Colonial Engineer
 # Role timers
 JobForensicMantis = Mantis
 
-# interdyne
-job-name-interdyne = Interdyne Doctor
-job-name-interdyne-head = Interdyne Head
+job-name-meditech = Medical Doctor
+job-name-meditech-head = Medical Lead

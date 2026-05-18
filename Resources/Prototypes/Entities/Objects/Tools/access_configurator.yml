@@ -53,8 +53,6 @@
       - Service
       - StationTrafficController # Frontier
       - Theatre
-      - Interdyne
-      - InterdyneHead
       privilegedIdSlot:
         name: id-card-console-privileged-id
         ejectSound: /Audio/Machines/id_swipe.ogg
@@ -139,8 +137,6 @@
     - USSPCommand # Mono
     - USSPHigh # Mono
     - USSP # Mono
-    - Interdyne # Hardlight
-    - InterdyneHead # Hardlight
     - Directorate # Hardlight
     - Naval # Hardlight
     privilegedIdSlot:

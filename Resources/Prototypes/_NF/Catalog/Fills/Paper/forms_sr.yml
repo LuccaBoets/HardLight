@@ -263,7 +263,7 @@
 
 - type: entity # Based on form made by Blumbee (Aki Suboshi)
   id: PaperWrittenFrontierContrabandPermit
-  name: class 2 contraband permit
+  name: class 2 contraband permit template
   parent: Paper
 #  categories: [ HideSpawnMenu ]
   components:
@@ -273,15 +273,17 @@
       [color=#000f89]‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾[/color]
       [head=2]Class 2 Contraband Permit[/head]
 
+      [color=#cc0000][bold]TEMPLATE ONLY - NOT VALID UNTIL COMPLETED, SIGNED, AND STAMPED.[/bold][/color]
+
       [color=#660000]This Form may only be issued without an acting Sheriff or with the acting Sheriff's approval.[/color]
 
-      [bold]Permit Holder:[/bold]
+      [bold]Permit Holder:[/bold] ____________________
       [bold]Holder Crew:[/bold]
-          [bullet/]
-          [bullet/]
-          [bullet/]
+          [bullet/] ____________________
+          [bullet/] ____________________
+          [bullet/] ____________________
 
-      [bold]Shift Time:[/bold]
+      [bold]Shift Time:[/bold] ____________________
 
       This Permit allows the Holder and crew, as listed above, to possess and use class 2 contraband.
       Non-compliance with a Contraband Amnesty agreement voids this Permit.

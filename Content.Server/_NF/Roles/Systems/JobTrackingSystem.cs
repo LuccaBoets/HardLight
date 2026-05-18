@@ -47,12 +47,29 @@ public sealed class JobTrackingSystem : SharedJobTrackingSystem
         SubscribeLocalEvent<JobTrackingComponent, CryosleepBeforeMindRemovedEvent>(OnJobBeforeCryoEntered);
         SubscribeLocalEvent<JobTrackingComponent, MindAddedMessage>(OnJobMindAdded);
         SubscribeLocalEvent<JobTrackingComponent, MindRemovedMessage>(OnJobMindRemoved);
-        SubscribeLocalEvent<JobTrackingComponent, EntityTerminatingEvent>(OnTrackedJobTerminating); // HardLight
+        SubscribeLocalEvent<JobTrackingComponent, EntityTerminatingEvent>(OnJobBodyTerminating); // VRS
         SubscribeLocalEvent<ColcommRegistryRoundStartEvent>(OnColcommRegistryRoundStart); // HardLight
         SubscribeLocalEvent<StationInitializedEvent>(OnStationInitialized); // HardLight
         SubscribeLocalEvent<StationJobsComponent, EntityTerminatingEvent>(OnStationJobsTerminating); // HardLight
-        SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestartCleanup); // HardLight
-        SubscribeLocalEvent<RoundStartedEvent>(OnRoundStarted); // HardLight
+    }
+
+    /// <summary>
+    /// VRS: Body-side mirror of <see cref="OnStationJobsTerminating"/>. If a tracked body is
+    /// deleted while still holding a slot (e.g. round-end primary station cleanup, admin smite,
+    /// gib + cascade-delete) and its <see cref="MindRemovedMessage"/> never gets to fire its
+    /// handler before the JobTrackingComponent is torn down, the slot would leak across the
+    /// round boundary. <see cref="OpenJob"/> is idempotent (early-returns on !Active), so this
+    /// is safe to fire even when the station-side sweep already refunded.
+    /// </summary>
+    private void OnJobBodyTerminating(Entity<JobTrackingComponent> ent, ref EntityTerminatingEvent args)
+    {
+        if (!ent.Comp.Active || ent.Comp.Job is not { } job)
+            return;
+
+        if (!ShouldReopenTrackedJob(ent.Comp.SpawnStation, job))
+            return;
+
+        OpenJob((ent.Owner, ent.Comp));
     }
 
     /// <summary>
@@ -86,11 +103,21 @@ public sealed class JobTrackingSystem : SharedJobTrackingSystem
     {
         var activeCounts = new Dictionary<ProtoId<JobPrototype>, int>();
 
-        var jobQuery = AllEntityQuery<JobTrackingComponent>();
-        while (jobQuery.MoveNext(out _, out var job))
+        var jobQuery = AllEntityQuery<JobTrackingComponent, MindContainerComponent>();
+        while (jobQuery.MoveNext(out var bodyUid, out var job, out var mindContainer))
         {
             if (!job.Active || job.Job is not { } jobId)
                 continue;
+
+            // VRS: self-heal leaked Active=true tracking. If the body has no mind attached at
+            // round start, it's an abandoned husk from the previous round (cleanup race, missed
+            // refund path, etc.) and re-deducting would permanently hold a freelancer slot.
+            // Flip it inactive so future MindAdded/Cryo/Terminating handlers no-op cleanly.
+            if (mindContainer.Mind == null)
+            {
+                job.Active = false;
+                continue;
+            }
 
             var colcommJobId = _stationJobs.GetColcommJobId(jobId);
             activeCounts.TryGetValue(colcommJobId, out var existing);
@@ -402,6 +429,37 @@ public sealed class JobTrackingSystem : SharedJobTrackingSystem
             _colcommJobs.TryAdjustJobSlot(colcomm, colcommJob, -1, clamp: true);
 
         _colcommJobs.TryTrackPlayerJob(colcomm, userId, colcommJob);
+    }
+
+    /// <summary>
+    /// VRS: Move a <see cref="JobTrackingComponent"/> from one body to another so a subsequent
+    /// mind transfer between them does not trigger the slot-reopen pathway. Used by the
+    /// AI / borg shunt flow (<c>PositronicJumpSystem</c>) to fix HardLight issue #1354 where
+    /// the AI job slot reopened to new joiners as soon as the AI shunted into a chassis.
+    /// </summary>
+    /// <remarks>
+    /// The destination's <see cref="MindAddedMessage"/> still runs <see cref="OnJobMindAdded"/>
+    /// and falls through to <see cref="CloseJob"/>, but <c>CloseJob</c>'s
+    /// <c>IsPlayerJobTracked</c> guard short-circuits the actual slot decrement because the
+    /// player is already tracked against this slot from their original spawn.
+    /// </remarks>
+    public void MoveTrackingFromTo(EntityUid from, EntityUid to)
+    {
+        if (!TryComp<JobTrackingComponent>(from, out var source))
+            return;
+
+        // Suppress OnJobMindRemoved on the source: it early-returns when Active is false.
+        source.Active = false;
+
+        var dest = EnsureComp<JobTrackingComponent>(to);
+        dest.Job = source.Job;
+        dest.SpawnStation = source.SpawnStation;
+        // Mark Active so the destination's OnJobMindAdded skips the activation branch and
+        // CloseJob reaches its IsPlayerJobTracked no-op path instead of trying to consume
+        // a slot that was already consumed at the original spawn.
+        dest.Active = true;
+
+        RemComp<JobTrackingComponent>(from);
     }
 
     private bool ShouldReopenTrackedJob(EntityUid spawnStation, ProtoId<JobPrototype> job)

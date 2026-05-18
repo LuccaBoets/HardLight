@@ -456,7 +456,10 @@ public abstract partial class SharedGunSystem : EntitySystem
             return;
         }
 
-        var fromCoordinates = Transform(user).Coordinates;
+        // Use the weapon's transform as the authoritative muzzle origin.
+        // For mounted ship guns, callers may pass a controlling entity as `user`; using that
+        // transform can produce center-origin shots on moving grids (HL #1631).
+        var fromCoordinates = Transform(gunUid).Coordinates;
         // Remove ammo
         var ev = new TakeAmmoEvent(shots, new List<(EntityUid? Entity, IShootable Shootable)>(), fromCoordinates, user, true); // Frontier: add intent to fire
 
@@ -611,6 +614,26 @@ public abstract partial class SharedGunSystem : EntitySystem
             return ProtoManager.Index(cartComp.Prototype);
         }
         return cartridge;
+    }
+
+    // VRS (Triad #3732)
+    public DamageSpecifier GetNextDamage(Entity<GunComponent?> gun)
+    {
+        if (!TryNextShootPrototype(gun, out var shoot))
+            return new();
+
+        return GetBulletDamage(shoot);
+    }
+
+    // VRS (Triad #3732)
+    public DamageSpecifier GetBulletDamage(EntityPrototype bullet)
+    {
+        var shoot = GetBulletPrototype(bullet);
+        if (shoot.TryGetComponent<HitscanBasicDamageComponent>(out var hitscan, Factory))
+            return hitscan.Damage;
+        if (shoot.TryGetComponent<ProjectileComponent>(out var proj, Factory))
+            return proj.Damage;
+        return new();
     }
 
     // Mono - used for multiple-per-frame projectile offset

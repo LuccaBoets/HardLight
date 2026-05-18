@@ -19,7 +19,11 @@ public sealed class LocTest : ToolshedTest
         var locStrings = new HashSet<string>();
 
         var ignored = new HashSet<Assembly>()
+<<<<<<< HEAD
             {typeof(LocTest).Assembly, typeof(ToolshedTest).Assembly};
+=======
+            {typeof(LocTest).Assembly};
+>>>>>>> VRXX/main
 
         await Server.WaitAssertion(() =>
         {

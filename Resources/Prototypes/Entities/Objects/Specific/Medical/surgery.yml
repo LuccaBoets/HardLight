@@ -315,7 +315,7 @@
   name: advanced circular saw
   id: SawAdvanced
   parent: [ BaseC3SyndicateContraband, SawElectric ] # Frontier: BaseSyndicateContraband<BaseC3SyndicateContraband
-  description: Interdyne's state-of-the-art surgical saw. Guaranteed to stay spotless and sterile, no matter how messy the job.
+  description: A state-of-the-art surgical saw. Guaranteed to stay spotless and sterile, no matter how messy the job.
   components:
   - type: Sprite
     sprite: Objects/Specific/Medical/Surgery/saw.rsi

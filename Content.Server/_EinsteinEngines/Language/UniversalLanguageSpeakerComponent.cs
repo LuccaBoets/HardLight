@@ -1,0 +1,14 @@
+// VRS port: Einstein Engines Language framework (via Triad).
+
+namespace Content.Server._EinsteinEngines.Language;
+
+/// <summary>
+///     Signifies that this entity can speak and understand any language.
+///     Applies to such entities as ghosts.
+/// </summary>
+[RegisterComponent]
+public sealed partial class UniversalLanguageSpeakerComponent : Component
+{
+    [DataField]
+    public bool Enabled = true;
+}

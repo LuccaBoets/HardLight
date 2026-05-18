@@ -8,6 +8,7 @@
     state: seedextractor
   discipline: CivilianServices
   tier: 1
+  position: 3, -1
   cost: 7500 # Delta Price. 5000 is pre-adjustment.
   recipeUnlocks:
   - BorgModuleGardening
@@ -30,6 +31,7 @@
     state: hamtr
   discipline: CivilianServices
   tier: 1
+  position: 3, 10
   cost: 7500
   recipeUnlocks:
   - HamtrHarness
@@ -50,6 +52,7 @@
     state: cameracase
   discipline: CivilianServices
   tier: 1
+  position: 2, -2
   cost: 5000
   recipeUnlocks:
   - SurveillanceCameraRouterCircuitboard
@@ -69,6 +72,7 @@
     state: television
   discipline: CivilianServices
   tier: 1
+  position: 4, -2
   cost: 7500
   recipeUnlocks:
     - ComputerTelevisionCircuitboard
@@ -85,6 +89,7 @@
     state: borg
   discipline: CivilianServices
   tier: 1
+  position: 3, -3
   cost: 5000
   recipeUnlocks:
   - BorgModuleAdvancedCleaning
@@ -98,6 +103,7 @@
     state: display
   discipline: CivilianServices
   tier: 1
+  position: 4, -1
   cost: 7500
   recipeUnlocks:
   - FatExtractorMachineCircuitboard
@@ -115,6 +121,7 @@
     state: astroice
   discipline: CivilianServices
   tier: 2
+  position: 3, -2
   cost: 5000
   recipeUnlocks:
   - FauxTileAstroGrass
@@ -132,6 +139,7 @@
     state: icon
   discipline: CivilianServices
   tier: 2
+  position: -4, 11
   cost: 7500
   recipeUnlocks:
   - StasisBedMachineCircuitboard
@@ -148,6 +156,7 @@
     state: e-scalpel-on
   discipline: CivilianServices
   tier: 2
+  position: -2, 11
   cost: 5000
   recipeUnlocks:
   # - BorgModuleAdvancedTreatment # Frontier
@@ -168,6 +177,7 @@
     state: eyes
   discipline: CivilianServices
   tier: 2
+  position: -2, 12
   cost: 15000
   recipeUnlocks:
   - JawsOfLifeLeftArm
@@ -188,6 +198,7 @@
     state: eyes_night
   discipline: CivilianServices
   tier: 3
+  position: -1, 12
   cost: 15000
   recipeUnlocks:
   - EyeImplantNightVision
@@ -202,6 +213,7 @@
     state: advmop
   discipline: CivilianServices
   tier: 2
+  position: 2, -3
   cost: 10000
   recipeUnlocks:
   - AdvMopItem
@@ -217,6 +229,7 @@
     state: honker
   discipline: CivilianServices
   tier: 2
+  position: 4, 10
   cost: 7500
   recipeUnlocks:
   - HonkerHarness
@@ -237,6 +250,7 @@
     state: icon
   discipline: CivilianServices
   tier: 2
+  position: 3, -4
   cost: 10000
   recipeUnlocks:
   - WeaponSprayNozzle
@@ -264,6 +278,7 @@
     state: icon
   discipline: CivilianServices
   tier: 3
+  position: -3, 12
   cost: 15000 # Frontier - 10000<15000
   recipeUnlocks:
   - ClothingShoesBootsSpeed
@@ -276,6 +291,7 @@
     state: beakerbluespace
   discipline: CivilianServices
   tier: 3
+  position: -4, 12
   cost: 10000
   recipeUnlocks:
   - BluespaceBeaker

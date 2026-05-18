@@ -134,25 +134,3 @@
         Shock: 16
 
 
-- type: entity
-  id: DefibrillatorInterdyne
-  parent: [ DefibrillatorCompact ]
-  name: interdyne defibrillator
-  description: A compact defibrillator bearing the colors of Interdyne Pharmaceuticals. Comes with a microreactor.
-  components:
-  - type: Sprite
-    sprite: _HL/Objects/Specific/Interdyne/defib.rsi
-    layers:
-    - state: icon
-    - state: screen
-      map: [ "enum.ToggleVisuals.Layer" ]
-      visible: false
-      shader: unshaded
-    - state: ready
-      map: [ "enum.PowerDeviceVisualLayers.Powered" ]
-      shader: unshaded
-  - type: ItemSlots
-    slots:
-      cell_slot:
-        name: power-cell-slot-component-slot-name-default
-        startingItem: PowerCellMicroreactor
