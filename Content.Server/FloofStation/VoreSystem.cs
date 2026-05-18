@@ -101,7 +101,7 @@ public sealed class VoreSystem : EntitySystem
         {
             Act = () => TryDevour(uid, args.Target, component),
             Text = Loc.GetString("vore-devour"),
-            Category = VerbCategory.Vore,
+            Category = VerbCategory.Devour,
             Icon = new SpriteSpecifier.Rsi(new ResPath("Interface/Actions/devour.rsi"), "icon-on"),
             Priority = -1
         };
@@ -120,7 +120,7 @@ public sealed class VoreSystem : EntitySystem
             {
                 Act = () => component.ShowOnExamine = false,
                 Text = Loc.GetString("vore-show-examine-on"),
-                Category = VerbCategory.Vore,
+                Category = VerbCategory.Devour,
                 Priority = 0,
                 Message = "Will show to bystanders examine text that suggests you've consumed people"
             };
@@ -132,7 +132,7 @@ public sealed class VoreSystem : EntitySystem
             {
                 Act = () => component.ShowOnExamine = true,
                 Text = Loc.GetString("vore-show-examine-off"),
-                Category = VerbCategory.Vore,
+                Category = VerbCategory.Devour,
                 Priority = 0,
                 Message = "Will show to bystanders examine text that suggests you've consumed people"
             };
@@ -145,7 +145,7 @@ public sealed class VoreSystem : EntitySystem
             {
                 Act = () => _containerSystem.TryRemoveFromContainer(prey, true),
                 Text = Loc.GetString("vore-release", ("entity", prey)),
-                Category = VerbCategory.Vore,
+                Category = VerbCategory.Devour,
                 Icon = new SpriteSpecifier.Texture(new("/Textures/Interface/VerbIcons/eject.svg.192dpi.png")),
                 Priority = 2
             };
@@ -162,7 +162,7 @@ public sealed class VoreSystem : EntitySystem
                 {
                     Act = () => Digest(prey),
                     Text = Loc.GetString("vore-digest", ("entity", prey)),
-                    Category = VerbCategory.Vore,
+                    Category = VerbCategory.Devour,
                     Icon = new SpriteSpecifier.Texture(new("/Textures/Interface/VerbIcons/cutlery.svg.192dpi.png")),
                     Priority = 1,
                     ConfirmationPopup = true
@@ -175,7 +175,7 @@ public sealed class VoreSystem : EntitySystem
                 {
                     Act = () => StopDigest(prey),
                     Text = Loc.GetString("vore-stop-digest", ("entity", prey)),
-                    Category = VerbCategory.Vore,
+                    Category = VerbCategory.Devour,
                     Priority = 1,
                 };
                 args.Verbs.Add(verbStopDigest);

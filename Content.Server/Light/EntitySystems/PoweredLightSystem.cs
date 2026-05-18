@@ -5,6 +5,7 @@ using Content.Shared.Light.EntitySystems;
 using Robust.Shared.Random; // Frontier
 using System; // HardLight
 using Content.Shared.Containers; // HardLight
+using RobustTimer = Robust.Shared.Timing.Timer;
 
 namespace Content.Server.Light.EntitySystems;
 
@@ -41,7 +42,7 @@ public sealed class PoweredLightSystem : SharedPoweredLightSystem
         light.LastGhostBlink = time;
 
         ToggleBlinkingLight(uid, light, true);
-        uid.SpawnTimer(light.GhostBlinkingTime, () =>
+        RobustTimer.Spawn(light.GhostBlinkingTime, () =>
         {
             ToggleBlinkingLight(uid, light, false);
         });
@@ -64,7 +65,7 @@ public sealed class PoweredLightSystem : SharedPoweredLightSystem
     // Schedules a light update for a later time to ensure bulbs are properly inserted before checking for them.
     private void ScheduleLateRefresh(EntityUid uid)
     {
-        uid.SpawnTimer(TimeSpan.FromSeconds(0.05), () =>
+        RobustTimer.Spawn(TimeSpan.FromSeconds(0.05), () =>
         {
             if (TerminatingOrDeleted(uid))
                 return;
