@@ -22,7 +22,7 @@
 - type: radioChannel
   id: Letoferol
   name: chat-radio-letoferol
-  keycode: '7'
+  keycode: '9'
   color: "#fcba03"
   longRange: true
 
