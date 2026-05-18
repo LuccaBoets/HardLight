@@ -41,6 +41,14 @@ public sealed class EtherealSystem : SharedEtherealSystem
 
     private static readonly SoundPathSpecifier NullSpaceCutoffSound = new("/Audio/_HL/Effects/ma cutoff.ogg");
 
+    // Components that null phase adds and removes; types already present before entry are preserved on exit.
+    private static readonly Type[] NullPhaseComponents =
+    [
+        typeof(StealthComponent),
+        typeof(PressureImmunityComponent),
+        typeof(MovementIgnoreGravityComponent),
+    ];
+
     [Dependency] private readonly VisibilitySystem _visibilitySystem = default!;
     [Dependency] private readonly SharedStealthSystem _stealth = default!;
     [Dependency] private readonly EyeSystem _eye = default!;
@@ -89,6 +97,10 @@ public sealed class EtherealSystem : SharedEtherealSystem
 
         if (TryComp<TemperatureComponent>(uid, out var temp))
             temp.AtmosTemperatureTransferEfficiency = 0;
+
+        foreach (var type in NullPhaseComponents)
+            if (EntityManager.HasComponent(uid, type))
+                component.PreExistingComponents.Add(type);
 
         var stealth = EnsureComp<StealthComponent>(uid);
         _stealth.SetVisibility(uid, 0.8f, stealth);
@@ -152,9 +164,9 @@ public sealed class EtherealSystem : SharedEtherealSystem
 
         SuppressFactions(uid, component, false);
 
-        RemComp<StealthComponent>(uid);
-        RemComp<PressureImmunityComponent>(uid);
-        RemComp<MovementIgnoreGravityComponent>(uid);
+        foreach (var type in NullPhaseComponents)
+            if (!component.PreExistingComponents.Contains(type))
+                EntityManager.RemoveComponent(uid, type);
 
         if (TryComp<PullableComponent>(uid, out var pullable) && pullable.BeingPulled)
         {
