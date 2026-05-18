@@ -5,11 +5,7 @@
     <ServerGarbageCollection>True</ServerGarbageCollection>
   </PropertyGroup>
 
-<<<<<<< HEAD
-  <Import Project="..\RobustToolbox\Imports\Packaging.props" />
-=======
   <Import Project="../MSBuild/Content.props" />
->>>>>>> VRXX/main
 
   <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
 

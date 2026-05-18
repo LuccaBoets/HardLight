@@ -46,19 +46,11 @@
       "directions": 4
     },
     {
-<<<<<<< HEAD
-      "name": "off-equipped-HELMET-avali",
-      "directions": 4
-    },
-    {
-      "name": "on-equipped-HELMET-avali",
-=======
       "name": "off-equipped-HELMET-dog",
       "directions": 4
     },
     {
       "name": "on-equipped-HELMET-dog",
->>>>>>> VRXX/main
       "directions": 4
     }
   ]

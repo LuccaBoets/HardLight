@@ -12,16 +12,11 @@
   <ItemGroup>
     <PackageReference Include="Nett" />
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
-<<<<<<< HEAD
     <PackageReference Include="Pidgin" />
     <PackageReference Include="prometheus-net" />
+    <PackageReference Include="Robust.Shared.AuthLib" />
     <PackageReference Include="Serilog" />
     <PackageReference Include="SixLabors.ImageSharp" />
-=======
-    <PackageReference Include="SixLabors.ImageSharp" />
-    <PackageReference Include="Pidgin" />
-    <PackageReference Include="Robust.Shared.AuthLib" />
->>>>>>> VRXX/main
   </ItemGroup>
 
   <Import Project="..\RobustToolbox\Imports\Lidgren.props" />
@@ -46,9 +41,6 @@
   <PropertyGroup>
     <DisableXamlIL>true</DisableXamlIL>
   </PropertyGroup>
-  <Import Project="..\RobustToolbox\Imports\Shared.props" />
-  <Import Project="..\RobustToolbox\Imports\Client.props" />
-  <Import Project="..\RobustToolbox\Imports\Lidgren.props" />
   <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
   <Import Project="..\RobustToolbox\MSBuild\XamlIL.targets" />
 </Project>

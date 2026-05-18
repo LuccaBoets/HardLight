@@ -9,11 +9,6 @@
       <PackageReference Include="YamlDotNet" />
     </ItemGroup>
 
-<<<<<<< HEAD
-  <Import Project="..\RobustToolbox\Imports\Shared.props" />
-
-=======
->>>>>>> VRXX/main
   <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
 
   <Import Project="..\RobustToolbox\Imports\Shared.props" />

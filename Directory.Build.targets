@@ -1,0 +1,5 @@
+<Project>
+  <ItemGroup>
+    <Compile Remove="bin\**\*.cs;obj\**\*.cs;tmpbuild\**\*.cs;**\bin\**\*.cs;**\obj\**\*.cs;**\tmpbuild\**\*.cs" />
+  </ItemGroup>
+</Project>
