@@ -20,6 +20,7 @@ using Robust.Server.Audio;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio;
 using Robust.Shared.Random;
+using RobustTimer = Robust.Shared.Timing.Timer;
 using InventoryComponent = Content.Shared.Inventory.InventoryComponent;
 using Robust.Shared.Prototypes;
 
@@ -101,7 +102,7 @@ namespace Content.Server.Flash
                 _popup.PopupEntity(Loc.GetString("flash-component-becomes-empty"), user);
             }
 
-            uid.SpawnTimer(400, () =>
+            RobustTimer.Spawn(400, () =>
             {
                 _appearance.SetData(uid, FlashVisuals.Flashing, false);
                 comp.Flashing = false;
