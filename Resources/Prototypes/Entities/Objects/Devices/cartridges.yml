@@ -174,3 +174,21 @@
         sprite: Objects/Devices/gps.rsi
         state: icon
     - type: AstroNavCartridge
+
+- type: entity
+  parent: NFBasePDACartridge # Frontier: BaseItem<NFBasePDACartridge
+  id: LandgrabCartridge
+  name: Landgrab cartridge
+  description: A program for claiming, saving, and loading planetary plots.
+  components:
+    - type: Sprite
+      sprite: Objects/Devices/cartridge.rsi
+      state: cart-nav
+    - type: UIFragment
+      ui: !type:LandgrabUi
+    - type: Cartridge
+      programName: landgrab-program-name
+      icon:
+        sprite: Objects/Devices/gps.rsi
+        state: icon
+    - type: LandgrabCartridge
