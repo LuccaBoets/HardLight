@@ -8,6 +8,6 @@
   - type: Stamp
     stampedName: Interdyne
     stampedColor: "#EA7FC7"
-    stampState: "paper_stamp-interdyne"
+    stampState: "paper_stamp-meditech"
   - type: Sprite
-    state: stamp-interdyne
+    state: stamp-meditech
