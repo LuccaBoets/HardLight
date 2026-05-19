@@ -335,3 +335,63 @@
   - type: Sprite
     sprite: _NF/Structures/Wallmounts/posters.rsi
     state: nf_poster25_contraband
+
+- type: entity
+  parent: PosterBase
+  id: NFPosterContrabandGas
+  name: "Group for Atmos Shenanigans"
+  description: "A loud poster for an atmospherics club that seems a little too enthusiastic about gas mixtures."
+  components:
+  - type: Sprite
+    sprite: _NF/Structures/Wallmounts/posters.rsi
+    state: nf_poster26_contraband
+
+- type: entity
+  parent: PosterBase
+  id: NFPosterContrabandCloudWatchers
+  name: "Cloud Watchers"
+  description: "A cool blue poster for the Cloud Watchers."
+  components:
+  - type: Sprite
+    sprite: _NF/Structures/Wallmounts/posters.rsi
+    state: nf_poster27_contraband
+
+- type: entity
+  parent: PosterBase
+  id: NFPosterContrabandGoblinLeague
+  name: "Goblin League"
+  description: "A poster packed with proud Goblin League branding."
+  components:
+  - type: Sprite
+    sprite: _NF/Structures/Wallmounts/posters.rsi
+    state: nf_poster28_contraband
+
+- type: entity
+  parent: PosterBase
+  id: NFPosterContrabandEms
+  name: "Emergency Medical Society"
+  description: "A poster promoting the Emergency Medical Society."
+  components:
+  - type: Sprite
+    sprite: _NF/Structures/Wallmounts/posters.rsi
+    state: nf_poster29_contraband
+
+- type: entity
+  parent: PosterBase
+  id: NFPosterContrabandSsfLogo
+  name: "SSF Logo"
+  description: "A poster bearing the SSF logo."
+  components:
+  - type: Sprite
+    sprite: _NF/Structures/Wallmounts/posters.rsi
+    state: nf_poster30_contraband
+
+- type: entity
+  parent: PosterBase
+  id: NFPosterContrabandDbiLogo
+  name: "DBI Logo"
+  description: "A poster bearing the DBI logo."
+  components:
+  - type: Sprite
+    sprite: _NF/Structures/Wallmounts/posters.rsi
+    state: nf_poster31_contraband

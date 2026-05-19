@@ -453,14 +453,29 @@
     #Hardlight
     - AtmosDeviceFanDirectional
     - PuckLight
-    # VRS: consolidated rotatable plating recipes (replace 27 per-direction entries; legacy IDs remain resolvable).
-    - PlatingDiagonal
-    - PlatingHalf
-    - PlatingWedge
-    - PlatingHalfTiltLowerAxis
-    - PlatingHalfTiltLowerOffset
-    - PlatingHalfTiltUpperAxis
-    - PlatingHalfTiltUpperOffset
+    # VRS: use the explicit plating variants that still exist in this branch.
+    - PlatingHalfV
+    - PlatingHalfH
+    - PlatingWedgeN
+    - PlatingWedgeE
+    - PlatingWedgeS
+    - PlatingWedgeW
+    - PlatingHalfTiltNESLower
+    - PlatingHalfTiltSEWLower
+    - PlatingHalfTiltSWNLower
+    - PlatingHalfTiltNWELower
+    - PlatingHalfTiltNEWLower
+    - PlatingHalfTiltSENLower
+    - PlatingHalfTiltSWELower
+    - PlatingHalfTiltNWSLower
+    - PlatingHalfTiltNESUpper
+    - PlatingHalfTiltSEWUpper
+    - PlatingHalfTiltSWNUpper
+    - PlatingHalfTiltNWEUpper
+    - PlatingHalfTiltNEWUpper
+    - PlatingHalfTiltSENUpper
+    - PlatingHalfTiltSWEUpper
+    - PlatingHalfTiltNWSUpper
     - WindowDirectionalShuttle
     - WindowShuttle
     - WallShuttleDiagonal

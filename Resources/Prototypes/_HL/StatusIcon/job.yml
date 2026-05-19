@@ -44,7 +44,7 @@
   id: JobIconInterdyne
   icon:
     sprite: /Textures/_HL/Interface/Misc/job_icons.rsi
-    state: interdyne-doctor-icon
+    state: meditech-doctor-icon
   jobName: job-name-interdyne
 
 - type: jobIcon
@@ -52,7 +52,7 @@
   id: JobIconInterdyneHead
   icon:
     sprite: /Textures/_HL/Interface/Misc/job_icons.rsi
-    state: interdyne-head-icon
+    state: meditech-head-icon
   jobName: job-name-interdyne-head
 
 - type: jobIcon

@@ -787,6 +787,52 @@
   - type: Sprite
     state: poster63_contraband
 
+# Frontier rolled posters that do not have dedicated construction nodes in this branch.
+- type: entity
+  parent: PosterBase
+  id: PosterContrabandRealExomorph
+  name: "Real! Exomorph"
+  description: "A poster insisting the exomorph threat is real."
+  components:
+  - type: Sprite
+    state: poster4_contraband
+
+- type: entity
+  parent: PosterBase
+  id: PosterContrabandRouny
+  name: "Rouny"
+  description: "A poster depicting a very recognizable rouny."
+  components:
+  - type: Sprite
+    state: poster50_contraband
+
+- type: entity
+  parent: PosterBase
+  id: PosterContrabandExoAcid
+  name: "Exomorph Warning: Acid Spit!"
+  description: "A warning poster about exomorph acid spit."
+  components:
+  - type: Sprite
+    state: poster64_contraband
+
+- type: entity
+  parent: PosterBase
+  id: PosterContrabandExoRun
+  name: "Exomorph Warning: Run Away!"
+  description: "A warning poster reminding you to run from exomorphs."
+  components:
+  - type: Sprite
+    state: poster65_contraband
+
+- type: entity
+  parent: PosterBase
+  id: PosterContrabandExoChomp
+  name: "Exomorph Warning: Dangerous Bites!"
+  description: "A warning poster about dangerous exomorph bites."
+  components:
+  - type: Sprite
+    state: poster66_contraband
+
 # Legit
 - type: entity
   parent: PosterBase

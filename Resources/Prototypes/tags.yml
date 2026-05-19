@@ -1080,6 +1080,9 @@
   id: PetWearable
 
 - type: Tag
+  id: CorgiWearable
+
+- type: Tag
   id: Pickaxe
 
 - type: Tag
