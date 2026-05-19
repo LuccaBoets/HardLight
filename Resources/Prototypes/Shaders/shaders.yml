@@ -119,3 +119,8 @@
   id: Hologram
   kind: source
   path: "/Textures/Shaders/hologram.swsl"
+
+- type: shader
+  id: Vignette
+  kind: source
+  path: "/Textures/_Scp/Shaders/vignette.swsl"
