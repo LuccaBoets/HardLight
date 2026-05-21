@@ -47,7 +47,7 @@
       tags:
       - RMCShellShotgun
     capacity: 9
-    proto: null
+    proto: CMPelletShotgunBuckshot
     soundInsert:
       collection: CMShotgunLoad
   - type: ContainerContainer
@@ -91,6 +91,7 @@
   - type: BallisticAmmoProvider
     cycleable: true
     capacity: 2
+    proto: CMPelletShotgunBuckshot
     soundInsert:
       path: /Audio/_RMC14/Weapons/Guns/Reload/grenade_insert.ogg
       params:
