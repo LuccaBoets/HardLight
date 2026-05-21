@@ -3,6 +3,8 @@
   parent: [ NFBaseWeaponEncumbranceRifleAssault, NFBaseItemWeaponGunMagazineFed ]
   id: RMCBaseWeaponSniperRifle
   components:
+  - type: Sprite
+    sprite: _RMC14/Objects/Weapons/Guns/Snipers/m96s.rsi
   - type: Gun
     selectedMode: SemiAuto
     availableModes:
