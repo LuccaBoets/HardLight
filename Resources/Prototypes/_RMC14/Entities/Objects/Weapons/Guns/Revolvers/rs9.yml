@@ -120,7 +120,7 @@
   - type: Projectile
     damage:
       types:
-        Piercing: 65
+        Piercing: 40
     armorPenetration: 35
   # - type: RMCProjectileAccuracy
     # accuracy: 90

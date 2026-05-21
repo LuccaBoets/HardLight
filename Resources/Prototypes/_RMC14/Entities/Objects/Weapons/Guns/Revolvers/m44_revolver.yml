@@ -158,7 +158,7 @@
   - type: Projectile
     damage:
       types:
-        Piercing: 72
+        Piercing: 50
   # - type: CMArmorPiercing
     # amount: 5
   # - type: RMCProjectileAccuracy
@@ -172,7 +172,7 @@
   - type: Projectile
     damage:
       types:
-        Piercing: 55
+        Piercing: 40
   # - type: RMCProjectileDamageFalloff
     # thresholds:
     # - range: 22

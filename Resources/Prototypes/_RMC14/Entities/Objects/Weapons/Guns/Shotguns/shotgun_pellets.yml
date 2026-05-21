@@ -25,7 +25,7 @@
   - type: Projectile
     damage:
       types:
-        Piercing: 65
+        Piercing: 45
   - type: ProjectileSpread
     proto: CMPelletShotgunBuckshot
     count: 4
@@ -56,7 +56,7 @@
   - type: Projectile
     damage:
       types:
-        Piercing: 70
+        Piercing: 55
   # - type: RMCProjectileDamageFalloff
     # thresholds:
     # - range: 8
@@ -85,7 +85,7 @@
   - type: Projectile
     damage:
       types:
-        Heat: 55
+        Heat: 40
   # - type: RMCProjectileDamageFalloff
     # thresholds:
     # - range: 12
@@ -173,7 +173,7 @@
   - type: Projectile
     damage:
       types:
-        Blunt: 55
+        Blunt: 40
   # - type: CMArmorPiercing
     # amount: 5
   - type: ProjectileSpread

@@ -103,7 +103,7 @@
   - type: Projectile
     damage:
       types:
-        Piercing: 104
+        Piercing: 50
   # - type: CMArmorPiercing
     # amount: 10
   # - type: GunStacksProjectile

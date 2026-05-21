@@ -124,7 +124,7 @@
   - type: Projectile
     damage:
       types:
-        Piercing: 60
+        Piercing: 50
   # - type: CMArmorPiercing
     # amount: 20
   # - type: RMCStunOnHit
