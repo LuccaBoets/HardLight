@@ -26,8 +26,7 @@
     capacity: 1
     cycleable: true
     mayTransfer: false
-    insertDelay: 6.0
-    cycleDelay: 6.0
+    fillDelay: 6.0
     proto: RMCRocket84mm
     soundInsert:
       path: /Audio/_RMC14/Weapons/Guns/Cock/m5_ammo.ogg
@@ -127,7 +126,8 @@
     damage:
       types:
         Blunt: 15
-    maxFixedRange: 6 # 7 tiles
+  - type: TimedDespawn
+    lifetime: 0.2
   - type: Sprite
     sprite: _RMC14/Objects/Weapons/Guns/Ammunition/Projectiles/m5spec_projectiles.rsi
     layers:
@@ -187,8 +187,9 @@
         Heat: 150
         # 10 brute damage + 150 brute and 150 burn to simulate direct explosive damage.
         # Temporary mechanic to make it consistent with intended main target damage.
-    maxFixedRange: 5 # 6 tiles
     armorPenetration: 100 # Ignores all armor.
+  - type: TimedDespawn
+    lifetime: 0.2
   - type: Sprite
     sprite: _RMC14/Objects/Weapons/Guns/Ammunition/Projectiles/m5spec_projectiles.rsi
     layers:

@@ -33,7 +33,7 @@
 
 - type: stack
   id: RMCCartridge458SOCOM
-  name: handful of .458 SOCOM bullets
+  name: rmc-handful-458-socom-name
   icon: { sprite: /Textures/_RMC14/Objects/Weapons/Guns/Ammunition/Magazines/xm88.rsi, state: SOCOM1 }
   spawn: RMCCartridge458SOCOM
   maxCount: 9
