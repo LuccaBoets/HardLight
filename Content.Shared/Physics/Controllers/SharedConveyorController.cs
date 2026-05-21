@@ -1,4 +1,6 @@
+using System;
 using System.Numerics;
+using Robust.Shared.Timing;
 using Content.Shared.Conveyor;
 using Content.Shared.Gravity;
 using Content.Shared.Movement.Components;
@@ -28,6 +30,7 @@ public abstract class SharedConveyorController : VirtualController
     [Dependency] private   readonly SharedGravitySystem _gravity = default!;
     [Dependency] private   readonly SharedMoverController _mover = default!;
     [Dependency] private   readonly IConfigurationManager _cfg = default!;
+    [Dependency] private   readonly IGameTiming _timing = default!;
 
     protected const string ConveyorFixture = "conveyor";
 
@@ -39,6 +42,9 @@ public abstract class SharedConveyorController : VirtualController
     protected EntityQuery<TransformComponent> XformQuery;
 
     protected HashSet<EntityUid> Intersecting = new();
+
+    // Per-conveyor timestamp for the last activation fallback check.
+    private readonly Dictionary<EntityUid, TimeSpan> _lastActiveCheck = new();
 
     // Cached CVar value. Previously HasPlayerInRange called _cfg.GetCVar(CVars.NetMaxUpdateRange)
     // for every conveyed entity, every tick - that's a dictionary lookup per item per frame.
@@ -254,6 +260,39 @@ public abstract class SharedConveyorController : VirtualController
         foreach (var conveyor in refreshConveyors)
         {
             WakeConveyed(conveyor);
+        }
+
+        // Periodic fallback wake: once per second, wake one dynamic body on each active conveyor
+        // to prevent multiple items from permanently stacking when conveyors are throttled by range checks.
+        var now = _timing.CurTime;
+        var conveyorEnum = EntityQueryEnumerator<ConveyorComponent>();
+
+        while (conveyorEnum.MoveNext(out var conveyorUid, out var conveyorComp))
+        {
+            if (!CanRun(conveyorComp))
+                continue;
+
+            if (_lastActiveCheck.TryGetValue(conveyorUid, out var last) && (now - last) < TimeSpan.FromSeconds(1))
+                continue;
+
+            _lastActiveCheck[conveyorUid] = now;
+
+            var contacts2 = PhysicsSystem.GetContacts(conveyorUid);
+
+            while (contacts2.MoveNext(out var contact2))
+            {
+                if (!contact2.IsTouching)
+                    continue;
+
+                var other = contact2.OtherEnt(conveyorUid);
+                var otherBody = contact2.OtherBody(conveyorUid);
+
+                if (otherBody.BodyType == BodyType.Static)
+                    continue;
+
+                PhysicsSystem.WakeBody(other);
+                break;
+            }
         }
     }
 
