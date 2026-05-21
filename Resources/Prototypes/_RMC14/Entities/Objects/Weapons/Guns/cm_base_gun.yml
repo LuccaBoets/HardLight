@@ -1,6 +1,6 @@
 ﻿- type: entity
   abstract: true
-  parent: NFBaseItemWeaponGun
+  parent: [ NFBaseItemWeaponGun, BaseC3ExpeditionContraband ]
   id: CMBaseWeaponGun
   components:
   - type: Clothing
