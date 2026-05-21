@@ -82,6 +82,9 @@
     totalIntensity: 200
     canCreateVacuum: false
   - type: Ammo
+  - type: RandomTimerTrigger
+    min: 1
+    max: 4
   # - type: CMExplosionEffect
   # - type: CMVocalizeTrigger
   # - type: RMCScorchEffect
