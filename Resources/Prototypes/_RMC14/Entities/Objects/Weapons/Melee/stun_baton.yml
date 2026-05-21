@@ -12,7 +12,7 @@
     - Belt
     - Suitstorage
   - type: StaminaDamageOnHit
-    damage: 100
+    damage: 50
   # - type: MeleeRequiresSkill
     # skills:
       # RMCSkillPolice: 1
