@@ -8,7 +8,7 @@
   suffix: NPC Loot
   components:
   - type: Sprite
-    sprite: _HL/Objects/Storage/bezoar.rsi
+    sprite: _HL/Objects/Storage/bezoar1.rsi
     scale: 0.3, 0.3
     state: bezoar
   - type: Item
