@@ -1,4 +1,11 @@
 - type: entity
+  abstract: true
+  parent: ClothingEyesBase
+  id: RMCGogglesBallistic
+  components:
+  - type: EyeProtection
+
+- type: entity
   parent: RMCGogglesBallistic
   id: AU14GogglesM1A1ClearBallistic
   name: clear M1A1 ballistic goggles
@@ -8,10 +15,6 @@
     sprite: _AU14/Clothing/Goggles/m1a1clear.rsi
   - type: Clothing
     sprite: _AU14/Clothing/Goggles/m1a1clear.rsi
-  - type: HelmetAccessory
-    rsi:
-      sprite: _AU14/Clothing/Goggles/m1a1clear.rsi
-      state: helmet
 
 - type: entity
   parent: RMCGogglesBallistic
@@ -23,10 +26,6 @@
     sprite: _AU14/Clothing/Goggles/m1a1.rsi
   - type: Clothing
     sprite: _AU14/Clothing/Goggles/m1a1.rsi
-  - type: HelmetAccessory
-    rsi:
-      sprite: _AU14/Clothing/Goggles/m1a1.rsi
-      state: helmet
 
 - type: entity
   parent: RMCGogglesBallistic
@@ -38,10 +37,6 @@
     sprite: _AU14/Clothing/Goggles/m1a1dark.rsi
   - type: Clothing
     sprite: _AU14/Clothing/Goggles/m1a1dark.rsi
-  - type: HelmetAccessory
-    rsi:
-      sprite: _AU14/Clothing/Goggles/m1a1dark.rsi
-      state: helmet
 
 - type: entity
   parent: RMCGogglesBallistic
@@ -53,10 +48,6 @@
     sprite: _AU14/Clothing/Goggles/m1a1darkalt.rsi
   - type: Clothing
     sprite: _AU14/Clothing/Goggles/m1a1darkalt.rsi
-  - type: HelmetAccessory
-    rsi:
-      sprite: _AU14/Clothing/Goggles/m1a1darkalt.rsi
-      state: helmet
 
 - type: entity
   parent: RMCGogglesBallistic
@@ -68,7 +59,3 @@
     sprite: _AU14/Clothing/Goggles/m1a1green.rsi
   - type: Clothing
     sprite: _AU14/Clothing/Goggles/m1a1green.rsi
-  - type: HelmetAccessory
-    rsi:
-      sprite: _AU14/Clothing/Goggles/m1a1green.rsi
-      state: helmet

@@ -6,12 +6,12 @@
   components:
   - type: Sprite
     sprite: _RMC14/Objects/Clothing/OuterClothing/Armor/m3/standard/padded/jungle.rsi
-  - type: CMArmor
-    armor: 20
-    bio: 20
-    explosionArmor: 15
-  - type: RMCArmorSpeedTier
-    speedTier: medium
+#  - type: CMArmor
+#    armor: 20
+#    bio: 20
+#   explosionArmor: 15
+#  - type: RMCArmorSpeedTier
+#    speedTier: medium
   - type: ClothingSpeedModifier
     walkModifier: 0.666
     sprintModifier: 0.666
@@ -30,11 +30,11 @@
   - type: ClothingSpeedModifier
     walkModifier: 0.725
     sprintModifier: 0.725
-  - type: CMArmor
-    armor: 15 # TODO RMC14 20 bullet
-    bio: 20
-    explosionArmor: 10
-  - type: CMHardArmor
+#  - type: CMArmor
+#    armor: 15 # TODO RMC14 20 bullet
+#    bio: 20
+#    explosionArmor: 10
+#  - type: CMHardArmor
 
 - type: entity
   parent: AU14BaseArmor
