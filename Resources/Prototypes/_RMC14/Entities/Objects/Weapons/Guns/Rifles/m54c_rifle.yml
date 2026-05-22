@@ -19,7 +19,7 @@
       gun_chamber: !type:ContainerSlot
   - type: Gun
     selectedMode: FullAuto
-    FireRate: 4
+    fireRate: 4
     availableModes:
     - SemiAuto
     - Burst
