@@ -1,6 +1,6 @@
 ﻿- type: entity
   abstract: true
-  parent: CMBaseWeaponRifle
+  parent: [ CMBaseWeaponRifle, BaseC3ExpeditionContraband ]
   id: CMBaseWeaponSMG
   components:
   - type: Item

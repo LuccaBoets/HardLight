@@ -20,6 +20,7 @@
   - type: Gun
     shotsPerBurst: 5
     selectedMode: SemiAuto
+    FireRate: 5
     availableModes:
     - SemiAuto
     - Burst

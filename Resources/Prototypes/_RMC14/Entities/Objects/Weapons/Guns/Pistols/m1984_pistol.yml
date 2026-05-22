@@ -11,6 +11,13 @@
     # burstScatterMult: 5
   - type: Sprite
     sprite: _RMC14/Objects/Weapons/Guns/Pistols/m1984.rsi
+    layers:
+    - sprite: _RMC14/Objects/Weapons/Guns/Pistols/m1984.rsi
+      state: base
+      map: [ "enum.GunVisualLayers.Base" ]
+    - sprite: _RMC14/Objects/Weapons/Guns/Pistols/m1984.rsi
+      state: mag-0
+      map: [ "enum.GunVisualLayers.Mag" ]
   - type: Clothing
     sprite: _RMC14/Objects/Weapons/Guns/Pistols/m1984.rsi
   # - type: RMCWeaponAccuracy

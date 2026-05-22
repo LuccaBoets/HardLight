@@ -56,6 +56,40 @@
     - CMMagazineSniperM96SIncendiary
     - CMMagazineSniperM96SFlak
     - CMMagazineSniperM96SAntiMateriel
+    - RMCMagazineSMGNailgun
+    - CMMagazineSMGMP5
+    - CMMagazineRifleM54C
+    - CMMagazineRifleM54CAP
+    - CMMagazineRifleM54CExt
+    - CMMagazineRifleM54CE2
+    - CMMagazineSMGM63
+    - RMCMagazineSmartGun
+    - RMCBoxShotgunBuckshot
+    - RMCBoxShotgunSlugs
+    - RMCBoxShotgunIncendiary
+    - RMCBoxShotgunBeanbag
+    - RMCBoxShotgunFlechette
+    - RMCBoxShotgunIncendiaryBuckshot
+    - RMCBoxShotgunBreaching
+    - RMCMagazineRifleAR10
+    - CMMagazineRifleM4SPR
+    - CMMagazineRifleM4SPRAP
+    - CMMagazineRifleM4SPRExt
+    - RMCMagazineRifleM4SPRA19
+    - RMCMagazineRifleM4SPRA19Impact
+    - RMCMagazineRifleM4SPRA19Incendiary
+    - RMCMagazineRifleM16
+    - RMCBox458SOCOM
+    - RMCSpeedLoaderRsh9
+    - RMCMagazinePistolSU6
+    - CMMagazinePistolMK80
+    - CMMagazinePistolM1984
+    - CMMagazinePistolM77AP
+    - RMCMagazinePistolB92FS
+    - RMCMagazineLMGM60
+    - RMCRocket84mm
+    - RMCRocket84mmAntiArmor
+    - RMCMagazinePistolD18
     - RMCExplosiveBreachingCharge
     - CMStunbaton
     - RMCFireAxe

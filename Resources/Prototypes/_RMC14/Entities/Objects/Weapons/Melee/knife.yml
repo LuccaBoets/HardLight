@@ -1,5 +1,6 @@
 - type: entity
   abstract: true
+  parent: BaseC3ExpeditionContraband 
   id: RMCBaseMeleeWeapon
   # components:
   # - type: MeleeDamageMultiplier
@@ -83,7 +84,7 @@
   - type: DamageOtherOnHit
     damage:
       types:
-        Slash: 50
+        Slash: 35
   # - type: UsableWhileDevoured
     # damage:
       # types:

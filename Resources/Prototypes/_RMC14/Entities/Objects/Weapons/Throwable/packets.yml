@@ -1,6 +1,6 @@
 - type: entity
   abstract: true
-  parent: BaseStorageItem
+  parent: [ BaseStorageItem, BaseC3ExpeditionContraband ]
   id: CMPacketBase
   name: packet
   components:

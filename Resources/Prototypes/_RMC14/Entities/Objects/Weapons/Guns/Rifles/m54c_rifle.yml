@@ -19,6 +19,7 @@
       gun_chamber: !type:ContainerSlot
   - type: Gun
     selectedMode: FullAuto
+    FireRate: 4
     availableModes:
     - SemiAuto
     - Burst
@@ -215,7 +216,7 @@
   - type: Projectile
     damage:
       types:
-        Piercing: 40
+        Piercing: 20
   # - type: RMCProjectileDamageFalloff
     # thresholds:
     # - range: 24
@@ -239,7 +240,8 @@
   - type: Projectile
     damage:
       types:
-        Piercing: 30
+        Piercing: 15
+    ignoreResistances: true
   # - type: CMArmorPiercing
     # amount: 40
 

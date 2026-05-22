@@ -21,6 +21,7 @@ using Content.Shared.Item;
 using Content.Shared.Mech.Components; // Delta-V: Felinids in duffelbags can't shoot.
 using Content.Shared.Popups;
 using Content.Shared.Projectiles;
+using Content.Shared.Stacks;
 using Content.Shared.Tag;
 using Content.Shared.Throwing;
 using Content.Shared.Timing;
@@ -73,6 +74,7 @@ public abstract partial class SharedGunSystem : EntitySystem
     [Dependency] protected readonly SharedPopupSystem PopupSystem = default!;
     [Dependency] protected readonly SharedPhysicsSystem Physics = default!;
     [Dependency] protected readonly SharedProjectileSystem Projectiles = default!;
+    [Dependency] protected readonly SharedStackSystem StackSystem = default!;
     [Dependency] protected readonly SharedTransformSystem TransformSystem = default!;
     [Dependency] protected readonly TagSystem TagSystem = default!;
     [Dependency] protected readonly ThrowingSystem ThrowingSystem = default!;
@@ -624,6 +626,14 @@ public abstract partial class SharedGunSystem : EntitySystem
             return ProtoManager.Index(cartComp.Prototype);
         }
         return cartridge;
+    }
+
+    protected EntityUid? ExtractSingleAmmoForInsert(EntityUid uid, EntityCoordinates coordinates, StackComponent? stack = null)
+    {
+        if (!Resolve(uid, ref stack, false) || stack.Count <= 1)
+            return uid;
+
+        return StackSystem.Split(uid, 1, coordinates, stack);
     }
 
     // Mono - used for multiple-per-frame projectile offset

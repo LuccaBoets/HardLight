@@ -39,6 +39,15 @@
   # - type: RMCWeaponAccuracy
     # accuracyMultiplier: 1.8
     # accuracyMultiplierUnwielded: 0.6
+  - type: BallisticAmmoProvider
+    whitelist:
+      tags:
+      - ShellShotgun12_gauge
+      - RMCShellShotgun
+    capacity: 7
+    proto: ShellShotgun12_gauge
+    soundInsert:
+      path: /Audio/Weapons/Guns/MagIn/shotgun_insert.ogg
   # - type: ItemSlots
     # slots:
       # gun_magazine:

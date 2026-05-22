@@ -23,6 +23,13 @@
     # once: true
   - type: Sprite
     sprite: _RMC14/Objects/Weapons/Guns/Pistols/mk45.rsi
+    layers:
+    - sprite: _RMC14/Objects/Weapons/Guns/Pistols/mk45.rsi
+      state: base
+      map: [ "enum.GunVisualLayers.Base" ]
+    - sprite: _RMC14/Objects/Weapons/Guns/Pistols/mk45.rsi
+      state: mag-0
+      map: [ "enum.GunVisualLayers.Mag" ]
   - type: Clothing
     sprite: _RMC14/Objects/Weapons/Guns/Pistols/mk45.rsi
   - type: MagazineAmmoProvider

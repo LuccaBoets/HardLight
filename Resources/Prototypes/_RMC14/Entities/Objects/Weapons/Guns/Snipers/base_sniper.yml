@@ -1,6 +1,6 @@
 ﻿- type: entity
   abstract: true
-  parent: [ NFBaseWeaponEncumbranceRifleAssault, NFBaseItemWeaponGunMagazineFed ]
+  parent: [ NFBaseWeaponEncumbranceRifleAssault, NFBaseItemWeaponGunMagazineFed, BaseC3ExpeditionContraband ]
   id: RMCBaseWeaponSniperRifle
   components:
   - type: Sprite
@@ -17,6 +17,8 @@
     # light: 0.69
     # medium: 0.75
     # heavy: 0.806
+  - type: MagazineAmmoProvider
+    autoEject: false
   - type: WieldDelay
     baseDelay: 0.8
   # - type: GunDualWielding
@@ -28,7 +30,7 @@
       # state: all
 
 - type: entity
-  parent: [BaseWeaponSniper, BaseGunWieldable, BaseC3SyndicateContraband]
+  parent: [BaseCartridge, BaseC3SyndicateContraband]
   id: CMCartridgeSniper10x28mm
   name: cartridge (145x114mm)
   components:
@@ -37,21 +39,22 @@
     layers:
     - state: base
       map: ["enum.AmmoVisualLayers.Base"]
-  # - type: Tag
-    # tags:
-    # - Cartridge
-    # - CMCartridgeSniper10x28mm
-  # - type: CartridgeAmmo
-    # proto: CMBulletSniper10x28mm
-  - type: BallisticAmmoProvider
-    whitelist:
-      tags:
-      - Cartridge145x114mm
-    capacity: 5
-    proto: Cartridge145x114mm
-  - type: SpeedModifiedOnWield
-    walkModifier: 0.25
-    sprintModifier: 0.25
+  - type: Tag
+    tags:
+    - Cartridge
+    - CMCartridgeSniper10x28mm
+  - type: CartridgeAmmo
+    proto: CMBulletSniper10x28mm
+    deleteOnSpawn: true
+  # - type: BallisticAmmoProvider
+    # whitelist:
+      # tags:
+      # - Cartridge10x28mm
+    # capacity: 5
+    # proto: Cartridge10x28mm
+  # - type: SpeedModifiedOnWield
+    # walkModifier: 0.25
+    # sprintModifier: 0.25
 
 - type: Tag
   id: CMMagazineSniper
