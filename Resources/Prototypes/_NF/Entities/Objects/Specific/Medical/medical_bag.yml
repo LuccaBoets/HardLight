@@ -33,6 +33,7 @@
         - Gauze
         - Bottle
         - JetInjector
+        - Medipen
   - type: Dumpable
   - type: MagnetPickup
     magnetEnabled: false

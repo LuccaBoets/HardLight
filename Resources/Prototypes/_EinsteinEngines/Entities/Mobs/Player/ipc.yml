@@ -1,6 +1,6 @@
 - type: entity #
   id: MobIPC
-  parent: PlayerSiliconHumanoidBase
+  parent: [ PlayerSiliconHumanoidBase, BaseSiliconBrainLanguages ] # HardLight: BaseSiliconBrainLanguages
   name: Urist McPositronic
   description: A positronic brain in a metal body.
   components:

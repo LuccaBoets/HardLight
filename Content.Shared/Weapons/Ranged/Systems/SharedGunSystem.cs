@@ -48,6 +48,7 @@ using Robust.Shared.Serialization;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using Content.Goobstation.Common.Weapons.Multishot;
+using Content.Shared.Weapons.Ranged.Events;
 
 namespace Content.Shared.Weapons.Ranged.Systems;
 
@@ -319,6 +320,13 @@ public abstract partial class SharedGunSystem : EntitySystem
         if (!gun.LockOnTargetBurst || !gun.BurstActivated) // Goob edit
             gun.Target = null;
         Dirty(uid, gun);
+
+        // If running on the server, notify clients to stop any lingering muzzle-flash animations/lights
+        if (_netManager.IsServer)
+        {
+            var stopEv = new StopMuzzleFlashEvent(GetNetEntity(uid));
+            RaiseNetworkEvent(stopEv, Filter.Pvs(uid, entityManager: EntityManager));
+        }
     }
 
     /// <summary>

@@ -4106,3 +4106,109 @@ Entries:
       message: Damaged RTGs no longer duplicate with the SRD
   id: 442
   time: '2026-05-18T22:05:52.0000000+00:00'
+- author: IngvarJackal
+  changes:
+    - type: Tweak
+      message: Nullspace dephasing is now safer
+  id: 443
+  time: '2026-05-20T08:34:34.0000000+00:00'
+- author: Illumos
+  changes:
+    - type: Add
+      message: Removed colour limits across all species.
+  id: 444
+  time: '2026-05-20T08:35:02.0000000+00:00'
+- author: NotLivyathan
+  changes:
+    - type: Add
+      message: Select species now have the ability to speak in their native tongue.
+  id: 445
+  time: '2026-05-20T08:35:53.0000000+00:00'
+- author: stickycheZ101
+  changes:
+    - type: Add
+      message: >-
+        added the nullspace detector, that detects nullspace users within a
+        short radius
+    - type: Add
+      message: >-
+        added the handheld bluespace flash, that stuns any nearby nullspace
+        users
+    - type: Add
+      message: >-
+        added the nullspace deterrence kit to the cargo market, that contains
+        basic nullspace detection and deterrence gear
+  id: 446
+  time: '2026-05-20T08:37:06.0000000+00:00'
+- author: Illumos
+  changes:
+    - type: Fix
+      message: Pettable trait is now a 100% chance to be pet :3
+  id: 447
+  time: '2026-05-20T18:51:48.0000000+00:00'
+- author: Fasuh
+  changes:
+    - type: Fix
+      message: Fixed Protogens not working at all.
+    - type: Fix
+      message: Fixed Cryogenics not working for Protogens
+  id: 448
+  time: '2026-05-21T08:15:47.0000000+00:00'
+- author: Illumos
+  changes:
+    - type: Add
+      message: Ported the Jabber from Coyote.
+  id: 449
+  time: '2026-05-21T10:40:00.0000000+00:00'
+- author: Illumos
+  changes:
+    - type: Add
+      message: Synthetic trait now gives you EAL
+  id: 450
+  time: '2026-05-21T10:40:37.0000000+00:00'
+- author: TrylobyteWasTaken
+  changes:
+    - type: Fix
+      message: (Admin) The h-series of scale commands now work as intended.
+  id: 451
+  time: '2026-05-21T10:42:30.0000000+00:00'
+- author: re-silvered
+  changes:
+    - type: Fix
+      message: Fixed M90 GL not having a wielded sprite
+  id: 452
+  time: '2026-05-21T11:04:07.0000000+00:00'
+- author: SquishyEmmaaaa
+  changes:
+    - type: Add
+      message: >-
+        Tweaked the credits on security sprites making the color changing PR
+        findable.
+    - type: Fix
+      message: Fixed the definitely green colonial command cloak to reflect such.
+    - type: Fix
+      message: The HoS cloak definitely wasn't red.
+  id: 453
+  time: '2026-05-21T11:06:42.0000000+00:00'
+- author: fenndragon
+  changes:
+    - type: Add
+      message: Added RMC guns and armor
+    - type: Add
+      message: Added Bezoars to high tier Xenos
+    - type: Add
+      message: 'Added damage modifier system '
+  id: 454
+  time: '2026-05-21T19:32:39.0000000+00:00'
+- author: Illumos
+  changes:
+    - type: Add
+      message: Three new katanas! Buy 'em at a MercVend.
+    - type: Add
+      message: Wakizashi from Delta-V.
+    - type: Add
+      message: Melee category to MercVend.
+    - type: Add
+      message: Katana sheaths to MercVend.
+  id: 455
+  time: '2026-05-21T19:52:25.0000000+00:00'
