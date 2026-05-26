@@ -28,6 +28,17 @@
   priority: 1 # Frontier
   children:
   - AlertLevels
+  # Voidrift: per-department SOP entries (defined in _VRS/Guidebook/sop_departments.yml).
+  # Listing them here makes them appear in the F1 guidebook tree under SOP even before
+  # any in-game book has been spawned, so authors can preview drafts via the wiki UI.
+  - SopCommand
+  - SopSecurity
+  - SopMedical
+  - SopEngineering
+  - SopScience
+  - SopCargo
+  - SopService
+  - SopCivilian
 
 - type: guideEntry
   id: AlertLevels

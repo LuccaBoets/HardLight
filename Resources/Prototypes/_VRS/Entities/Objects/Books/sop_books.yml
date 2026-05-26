@@ -1,0 +1,294 @@
+# SPDX-FileCopyrightText: 2026 Voidrift
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Per-department Standard Operating Procedure books.
+# These are auto-issued at spawn by Content.Server._VRS.Sop.SopIssuerSystem when the
+# matching voidrift.sop.<dept>_enabled cvar is true. Each department ships in two flavours:
+#
+#   BookSop<Dept>          - guidebook-backed, opens the in-game F1 Guidebook to Sop<Dept>.
+#   BookSop<Dept>Hyperlink - hyperlink-backed, opens an external wiki URL via HyperlinkBook.
+#
+# Both carry the BookSop tag so they fit the PDA's sopSlot (whitelisted in pda.yml).
+# The issuer spawns the guidebook variant by default; admins can swap any department to the
+# hyperlink variant by editing the issuer's prototype map.
+
+# ---------- Guidebook-backed variants ----------
+
+- type: entity
+  id: BookSopCommand
+  parent: BaseGuidebook
+  name: command SOP
+  description: Standard Operating Procedure for the Command department.
+  components:
+  - type: Sprite
+    layers:
+    - state: paper
+    - state: cover_base
+      color: "#334E6D"
+    - state: decor_wingette
+      color: "#5a7da6"
+    - state: icon_corner
+      color: gold
+  - type: GuideHelp
+    guides:
+    - SopCommand
+  - type: Tag
+    tags:
+    - Book
+    - BookSop
+
+- type: entity
+  id: BookSopSecurity
+  parent: BaseGuidebook
+  name: security SOP
+  description: Standard Operating Procedure for the Security department.
+  components:
+  - type: Sprite
+    layers:
+    - state: paper
+    - state: cover_base
+      color: "#DE3A3A"
+    - state: decor_wingette
+      color: "#e05334"
+    - state: icon_stunbaton
+  - type: GuideHelp
+    guides:
+    - SopSecurity
+  - type: Tag
+    tags:
+    - Book
+    - BookSop
+
+- type: entity
+  id: BookSopMedical
+  parent: BaseGuidebook
+  name: medical SOP
+  description: Standard Operating Procedure for the Medical department.
+  components:
+  - type: Sprite
+    layers:
+    - state: paper
+    - state: cover_base
+      color: "#52B4E9"
+    - state: decor_wingette
+      color: "#a8dcf2"
+  - type: GuideHelp
+    guides:
+    - SopMedical
+  - type: Tag
+    tags:
+    - Book
+    - BookSop
+
+- type: entity
+  id: BookSopEngineering
+  parent: BaseGuidebook
+  name: engineering SOP
+  description: Standard Operating Procedure for the Engineering department.
+  components:
+  - type: Sprite
+    layers:
+    - state: paper
+    - state: cover_base
+      color: "#EFB341"
+    - state: decor_wingette
+      color: "#b5913c"
+    - state: icon_wrench
+  - type: GuideHelp
+    guides:
+    - SopEngineering
+  - type: Tag
+    tags:
+    - Book
+    - BookSop
+
+- type: entity
+  id: BookSopScience
+  parent: BaseGuidebook
+  name: science SOP
+  description: Standard Operating Procedure for the Science department.
+  components:
+  - type: Sprite
+    layers:
+    - state: paper
+    - state: cover_base
+      color: "#D381C9"
+    - state: decor_wingette_circle
+      color: "#be69f0"
+    - state: icon_dna
+  - type: GuideHelp
+    guides:
+    - SopScience
+  - type: Tag
+    tags:
+    - Book
+    - BookSop
+
+- type: entity
+  id: BookSopCargo
+  parent: BaseGuidebook
+  name: cargo SOP
+  description: Standard Operating Procedure for the Cargo department.
+  components:
+  - type: Sprite
+    layers:
+    - state: paper
+    - state: cover_base
+      color: "#A46106"
+    - state: decor_wingette
+      color: "#e69a3e"
+  - type: GuideHelp
+    guides:
+    - SopCargo
+  - type: Tag
+    tags:
+    - Book
+    - BookSop
+
+- type: entity
+  id: BookSopService
+  parent: BaseGuidebook
+  name: service SOP
+  description: Standard Operating Procedure for the Service department.
+  components:
+  - type: Sprite
+    layers:
+    - state: paper
+    - state: cover_base
+      color: "#9FED58"
+    - state: decor_wingette
+      color: "#bdf589"
+  - type: GuideHelp
+    guides:
+    - SopService
+  - type: Tag
+    tags:
+    - Book
+    - BookSop
+
+- type: entity
+  id: BookSopCivilian
+  parent: BaseGuidebook
+  name: civilian SOP
+  description: Standard Operating Procedure for civilian crew.
+  components:
+  - type: Sprite
+    layers:
+    - state: paper
+    - state: cover_base
+      color: "#9FED58"
+    - state: decor_wingette
+  - type: GuideHelp
+    guides:
+    - SopCivilian
+  - type: Tag
+    tags:
+    - Book
+    - BookSop
+
+# ---------- Hyperlink-backed variants ----------
+# Placeholder URLs - update once the wiki pages exist.
+
+- type: entity
+  parent: BaseHyperlinkBook
+  id: BookSopCommandHyperlink
+  name: command SOP
+  description: Standard Operating Procedure for the Command department. Opens the wiki page.
+  components:
+  - type: HyperlinkBook
+    url: https://example.invalid/wiki/SopCommand
+  - type: Tag
+    tags:
+    - Book
+    - BookSop
+
+- type: entity
+  parent: BaseHyperlinkBook
+  id: BookSopSecurityHyperlink
+  name: security SOP
+  description: Standard Operating Procedure for the Security department. Opens the wiki page.
+  components:
+  - type: HyperlinkBook
+    url: https://example.invalid/wiki/SopSecurity
+  - type: Tag
+    tags:
+    - Book
+    - BookSop
+
+- type: entity
+  parent: BaseHyperlinkBook
+  id: BookSopMedicalHyperlink
+  name: medical SOP
+  description: Standard Operating Procedure for the Medical department. Opens the wiki page.
+  components:
+  - type: HyperlinkBook
+    url: https://example.invalid/wiki/SopMedical
+  - type: Tag
+    tags:
+    - Book
+    - BookSop
+
+- type: entity
+  parent: BaseHyperlinkBook
+  id: BookSopEngineeringHyperlink
+  name: engineering SOP
+  description: Standard Operating Procedure for the Engineering department. Opens the wiki page.
+  components:
+  - type: HyperlinkBook
+    url: https://example.invalid/wiki/SopEngineering
+  - type: Tag
+    tags:
+    - Book
+    - BookSop
+
+- type: entity
+  parent: BaseHyperlinkBook
+  id: BookSopScienceHyperlink
+  name: science SOP
+  description: Standard Operating Procedure for the Science department. Opens the wiki page.
+  components:
+  - type: HyperlinkBook
+    url: https://example.invalid/wiki/SopScience
+  - type: Tag
+    tags:
+    - Book
+    - BookSop
+
+- type: entity
+  parent: BaseHyperlinkBook
+  id: BookSopCargoHyperlink
+  name: cargo SOP
+  description: Standard Operating Procedure for the Cargo department. Opens the wiki page.
+  components:
+  - type: HyperlinkBook
+    url: https://example.invalid/wiki/SopCargo
+  - type: Tag
+    tags:
+    - Book
+    - BookSop
+
+- type: entity
+  parent: BaseHyperlinkBook
+  id: BookSopServiceHyperlink
+  name: service SOP
+  description: Standard Operating Procedure for the Service department. Opens the wiki page.
+  components:
+  - type: HyperlinkBook
+    url: https://example.invalid/wiki/SopService
+  - type: Tag
+    tags:
+    - Book
+    - BookSop
+
+- type: entity
+  parent: BaseHyperlinkBook
+  id: BookSopCivilianHyperlink
+  name: civilian SOP
+  description: Standard Operating Procedure for civilian crew. Opens the wiki page.
+  components:
+  - type: HyperlinkBook
+    url: https://example.invalid/wiki/SopCivilian
+  - type: Tag
+    tags:
+    - Book
+    - BookSop

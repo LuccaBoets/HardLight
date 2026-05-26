@@ -1,0 +1,50 @@
+# SPDX-FileCopyrightText: 2026 Voidrift
+# SPDX-License-Identifier: AGPL-3.0-or-later
+#
+# Per-department SOP guidebook entries. Hooked into the existing "SOP" root entry in
+# Resources/Prototypes/Guidebook/station.yml via a `children:` extension.
+#
+# Each entry points at a stub XML under ServerInfo/_VRS/Guidebook/SoP/Departments/.
+# Authors: edit those XML files freely - drafts stay invisible to players because
+# the voidrift.sop.<dept>_enabled cvars default to false, so the corresponding
+# books are never spawned at round start until you flip the cvar.
+
+- type: guideEntry
+  id: SopCommand
+  name: Command SOP
+  text: "/ServerInfo/_VRS/Guidebook/SoP/Departments/CommandSOP.xml"
+
+- type: guideEntry
+  id: SopSecurity
+  name: Security SOP
+  text: "/ServerInfo/_VRS/Guidebook/SoP/Departments/SecuritySOP.xml"
+
+- type: guideEntry
+  id: SopMedical
+  name: Medical SOP
+  text: "/ServerInfo/_VRS/Guidebook/SoP/Departments/MedicalSOP.xml"
+
+- type: guideEntry
+  id: SopEngineering
+  name: Engineering SOP
+  text: "/ServerInfo/_VRS/Guidebook/SoP/Departments/EngineeringSOP.xml"
+
+- type: guideEntry
+  id: SopScience
+  name: Science SOP
+  text: "/ServerInfo/_VRS/Guidebook/SoP/Departments/ScienceSOP.xml"
+
+- type: guideEntry
+  id: SopCargo
+  name: Cargo SOP
+  text: "/ServerInfo/_VRS/Guidebook/SoP/Departments/CargoSOP.xml"
+
+- type: guideEntry
+  id: SopService
+  name: Service SOP
+  text: "/ServerInfo/_VRS/Guidebook/SoP/Departments/ServiceSOP.xml"
+
+- type: guideEntry
+  id: SopCivilian
+  name: Civilian SOP
+  text: "/ServerInfo/_VRS/Guidebook/SoP/Departments/CivilianSOP.xml"

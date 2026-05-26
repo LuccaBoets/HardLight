@@ -13,6 +13,7 @@ namespace Content.Shared.PDA
         public const string PdaPenSlotId = "PDA-pen";
         public const string PdaPaiSlotId = "PDA-pai";
         public const string PdaBookSlotId = "PDA-book"; // Frontier
+        public const string PdaSopSlotId = "PDA-sop"; // Voidrift
 
         [DataField("idSlot")]
         public ItemSlot IdSlot = new();
@@ -25,6 +26,9 @@ namespace Content.Shared.PDA
 
         [DataField] // Frontier
         public ItemSlot BookSlot = new(); // Frontier
+
+        [DataField] // Voidrift: dedicated slot for per-department SOP books, populated at spawn by SopIssuerSystem when the matching cvar is enabled.
+        public ItemSlot SopSlot = new(); // Voidrift
 
         // Really this should just be using ItemSlot.StartingItem. However, seeing as we have so many different starting
         // PDA's and no nice way to inherit the other fields from the ItemSlot data definition, this makes the yaml much

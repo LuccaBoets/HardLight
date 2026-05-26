@@ -1,0 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Voidrift
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+#region SOP books (Voidrift: auto-issued by SopIssuerSystem)
+- type: Tag
+  id: BookSop
