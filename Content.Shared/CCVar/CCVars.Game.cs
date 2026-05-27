@@ -442,6 +442,16 @@ public sealed partial class CCVars
         CVarDef.Create("economy.loadout_cost_multiplier", 0.5f, CVar.REPLICATED | CVar.SERVER);
 
     /// <summary>
+    /// VRS: starter bank balance applied on a character's FIRST spawn (i.e. while their saved balance is still
+    /// the untouched <see cref="Content.Shared.Preferences.HumanoidCharacterProfile.DefaultBalance"/>). Once the
+    /// character has earned or spent anything their persisted balance wins; this CVar is a tuning knob for the
+    /// new-joiner experience, not a per-round refill. Default matches DefaultBalance (30000) so it's a no-op
+    /// until admins tune it.
+    /// </summary>
+    public static readonly CVarDef<int> EconomyStartingBalance =
+        CVarDef.Create("economy.starting_balance", 30000, CVar.SERVERONLY);
+
+    /// <summary>
     /// Target active workers per job before job-level scarcity bonus stops applying.
     /// </summary>
     public static readonly CVarDef<int> GameStationPayoutJobScarcityTarget =

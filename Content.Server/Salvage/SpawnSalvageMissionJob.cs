@@ -403,7 +403,9 @@ public sealed class SpawnSalvageMissionJob : Job<bool>
          * MOB SPAWNS
          */
 
-        var mobBudget = difficultyProto.MobBudget;
+        // VRS: per-tier difficulty multiplier from salvage.expedition_tier_difficulty CVar makes higher tiers
+        // unfeasible for solo runs (pushes group play) without hard crew-count gates.
+        var mobBudget = difficultyProto.MobBudget * _salvage.GetExpeditionTierMobMultiplier(_missionParams.Difficulty);
         var faction = _prototypeManager.Index<SalvageFactionPrototype>(mission.Faction);
         var randomSystem = _entManager.System<RandomSystem>();
 

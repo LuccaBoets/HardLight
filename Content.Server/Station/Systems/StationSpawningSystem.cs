@@ -203,6 +203,17 @@ public sealed class StationSpawningSystem : SharedStationSpawningSystem
             var bankBalance = profile!.BankBalance; //Frontier
             bool hasBalance = false; // Frontier
 
+            // VRS: top-up first-spawn balance from economy.starting_balance CVar. Only fires while the saved
+            // balance is still HumanoidCharacterProfile.DefaultBalance so a character that has actually earned
+            // or spent money keeps their persisted balance across rounds (no per-round refill exploit).
+            var configuredStartingBalance = _configurationManager.GetCVar(CCVars.EconomyStartingBalance);
+            if (profile.BankBalance == HumanoidCharacterProfile.DefaultBalance
+                && configuredStartingBalance != HumanoidCharacterProfile.DefaultBalance)
+            {
+                initialBankBalance = configuredStartingBalance;
+                bankBalance = configuredStartingBalance;
+            }
+
             // Note: since this is stored per character, we don't have a cached
             //       reference for randomly generated characters.
             PlayerPreferences? prefs = null;

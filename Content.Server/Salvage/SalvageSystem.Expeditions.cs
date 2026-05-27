@@ -21,6 +21,7 @@ using Content.Shared._NF.CCVar; // Frontier
 using Content.Shared.Shuttles.Components; // Frontier
 using Robust.Shared.Configuration;
 using Content.Shared.Ghost;
+using Content.Shared.Mind.Components; // VRS: expedition group bonus crew count
 using System.Numerics; // Frontier
 using TimedDespawnComponent = Robust.Shared.Spawners.TimedDespawnComponent;
 
@@ -258,7 +259,7 @@ public sealed partial class SalvageSystem
         if (expeditionComp.Completed)
         {
             Announce(expeditionUid, Loc.GetString("salvage-expedition-mission-completed"));
-            TrySpawnExpeditionReward(expeditionComp);
+            TrySpawnExpeditionReward(expeditionUid, expeditionComp); // VRS: pass uid for group-bonus crew count
             return;
         }
 
@@ -266,7 +267,7 @@ public sealed partial class SalvageSystem
     }
 
     // Spawn expedition reward at the best available location (console first, then fallback locations).
-    private void TrySpawnExpeditionReward(SalvageExpeditionComponent expeditionComp)
+    private void TrySpawnExpeditionReward(EntityUid expeditionUid, SalvageExpeditionComponent expeditionComp)
     {
         var diffId = expeditionComp.MissionParams.Difficulty;
         var rewardProto = RewardPrototypeByDifficulty.GetValueOrDefault(diffId, "SpaceCashExpeditionT1");
@@ -277,15 +278,83 @@ public sealed partial class SalvageSystem
             return;
         }
 
+        // VRS: group bonus — count crew with minds on the expedition map and spawn extra reward copies.
+        // expeditionUid is the expedition map entity (SalvageExpeditionComponent is added to mapUid in
+        // SpawnSalvageMissionJob), so xform.MapUid == expeditionUid identifies entities on that map.
+        var bonusCopies = ComputeExpeditionGroupBonusCopies(expeditionUid);
+
         try
         {
-            EntityManager.SpawnEntity(rewardProto, rewardCoords);
-            Log.Info($"Spawned expedition reward {rewardProto} at {source} for difficulty {diffId}.");
+            for (var i = 0; i < bonusCopies; i++)
+                EntityManager.SpawnEntity(rewardProto, rewardCoords);
+            Log.Info($"Spawned {bonusCopies}x expedition reward {rewardProto} at {source} for difficulty {diffId}.");
         }
         catch (Exception ex)
         {
             Log.Error($"Failed to spawn expedition reward {rewardProto} at {source}: {ex}");
         }
+    }
+
+    /// <summary>
+    /// VRS: returns the integer number of reward copies to spawn on expedition completion based on
+    /// crew (mind-bearing entities) currently on the expedition map. Solo = 1 copy; each additional
+    /// crew adds <c>salvage.expedition_group_bonus_per_player</c> to the multiplier, capped by
+    /// <c>salvage.expedition_group_bonus_max</c>. The multiplier is rounded to nearest int (min 1).
+    /// </summary>
+    private int ComputeExpeditionGroupBonusCopies(EntityUid expeditionMapUid)
+    {
+        var bonusPer = _cfgManager.GetCVar(CCVars.SalvageExpeditionGroupBonusPerPlayer);
+        var bonusMax = _cfgManager.GetCVar(CCVars.SalvageExpeditionGroupBonusMax);
+
+        if (bonusPer <= 0f || bonusMax <= 1f)
+            return 1;
+
+        var crew = 0;
+        var query = EntityQueryEnumerator<MindContainerComponent, TransformComponent>();
+        while (query.MoveNext(out var uid, out var mind, out var xform))
+        {
+            if (!mind.HasMind)
+                continue;
+            if (xform.MapUid != expeditionMapUid)
+                continue;
+            // Skip ghosts that wandered in (mind container with no live attached player is fine; HasMind covers it).
+            if (HasComp<GhostComponent>(uid))
+                continue;
+            crew++;
+        }
+
+        if (crew <= 1)
+            return 1;
+
+        var multiplier = MathF.Min(bonusMax, 1f + bonusPer * (crew - 1));
+        return Math.Max(1, (int)MathF.Round(multiplier));
+    }
+
+    /// <summary>
+    /// VRS: returns the mob-budget multiplier for a given expedition difficulty id, parsed from the CSV
+    /// <c>salvage.expedition_tier_difficulty</c> CVar. Used by <see cref="SpawnSalvageMissionJob"/> to scale
+    /// hostile mob spawns per tier so higher tiers are unfeasible for solo runs.
+    /// Order in the CVar is T1,T2,T3,T4,T5 matching _missionDifficulties.
+    /// </summary>
+    public float GetExpeditionTierMobMultiplier(string difficultyId)
+    {
+        var idx = _missionDifficulties.FindIndex(d => d.id == difficultyId);
+        if (idx < 0)
+            return 1f;
+
+        var csv = _cfgManager.GetCVar(CCVars.SalvageExpeditionTierDifficulty);
+        if (string.IsNullOrWhiteSpace(csv))
+            return 1f;
+
+        var parts = csv.Split(',');
+        if (idx >= parts.Length)
+            return 1f;
+
+        if (!float.TryParse(parts[idx].Trim(), System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var mult)
+            || mult <= 0f)
+            return 1f;
+
+        return mult;
     }
 
     /// <summary>
