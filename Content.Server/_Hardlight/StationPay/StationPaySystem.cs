@@ -395,6 +395,89 @@ public sealed class StationPaySystem : EntitySystem
         return count;
     }
 
+    private float GetScarcityMultiplier(ProtoId<JobPrototype> job)
+    {
+        var multiplier = Math.Max(0f, _stationPayBaseMultiplier);
+
+        // VRS: RP-only jobs (clown, mime, therapist, etc.) get the base multiplier but no scarcity bonus.
+        if (_scarcityExcludedJobs.Contains(job))
+            return Math.Max(0.1f, multiplier);
+
+        if (_jobScarcityTarget > 0)
+        {
+            var currentJobWorkers = CountActiveWorkersForJob(job);
+            var missingJobWorkers = Math.Max(0, _jobScarcityTarget - currentJobWorkers);
+            var jobBonus = Math.Min(_jobScarcityBonusCap, missingJobWorkers * _jobScarcityBonusPerMissing);
+            multiplier += jobBonus;
+        }
+
+        if (_departmentScarcityTarget > 0 && _jobPrimaryDepartments.TryGetValue(job, out var department))
+        {
+            var currentDepartmentWorkers = CountActiveWorkersForDepartment(department);
+            var missingDepartmentWorkers = Math.Max(0, _departmentScarcityTarget - currentDepartmentWorkers);
+            var departmentBonus = Math.Min(_departmentScarcityBonusCap, missingDepartmentWorkers * _departmentScarcityBonusPerMissing);
+            multiplier += departmentBonus;
+        }
+
+        return Math.Max(0.1f, multiplier);
+    }
+
+    private int CountActiveWorkersForJob(ProtoId<JobPrototype> job)
+    {
+        var count = 0;
+        var query = EntityQueryEnumerator<JobTrackingComponent, MindContainerComponent>();
+        while (query.MoveNext(out var uid, out var tracking, out var mindContainer))
+        {
+            if (!mindContainer.HasMind || tracking.Job != job)
+                continue;
+
+            if (!TryComp<MindComponent>(mindContainer.Mind!.Value, out var mind))
+                continue;
+
+            if (!_player.TryGetSessionById(mind.UserId, out var session)
+                || session.Status != SessionStatus.InGame
+                || session.AttachedEntity != uid)
+            {
+                continue;
+            }
+
+            count++;
+        }
+
+        return count;
+    }
+
+    private int CountActiveWorkersForDepartment(ProtoId<DepartmentPrototype> department)
+    {
+        var count = 0;
+        var query = EntityQueryEnumerator<JobTrackingComponent, MindContainerComponent>();
+        while (query.MoveNext(out var uid, out var tracking, out var mindContainer))
+        {
+            if (!mindContainer.HasMind || tracking.Job is not { } job)
+                continue;
+
+            if (!_jobPrimaryDepartments.TryGetValue(job, out var workerDepartment)
+                || workerDepartment != department)
+            {
+                continue;
+            }
+
+            if (!TryComp<MindComponent>(mindContainer.Mind!.Value, out var mind))
+                continue;
+
+            if (!_player.TryGetSessionById(mind.UserId, out var session)
+                || session.Status != SessionStatus.InGame
+                || session.AttachedEntity != uid)
+            {
+                continue;
+            }
+
+            count++;
+        }
+
+        return count;
+    }
+
     // HardLight: throttle accumulator. Payouts are tracked in whole seconds, so checking
     // every second instead of every tick is gameplay-neutral.
     private float _payoutCheckAccumulator;

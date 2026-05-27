@@ -134,6 +134,7 @@
   id: GeneticistPay
   payPerHour: 24000
   job: Geneticist
+  excludeFromScarcityBonus: true # VRS: RP-only role (therapist)
 
 - type: stationPay
   id: ParamedicPay
