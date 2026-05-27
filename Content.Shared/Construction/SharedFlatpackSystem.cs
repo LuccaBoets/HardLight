@@ -1,3 +1,4 @@
+using Content.Shared._VRS.Licensing; // VRS: ship-bound licensing
 using Content.Shared.Construction.Components;
 using Content.Shared.Construction.EntitySystems;
 using Content.Shared.Administration.Logs;
@@ -96,6 +97,9 @@ public abstract class SharedFlatpackSystem : EntitySystem
             var spawn = Spawn(comp.Entity, _map.GridTileToLocal(grid, gridComp, buildPos));
             if (TryComp(spawn, out TransformComponent? spawnXform)) // Frontier: rotatable flatpacks
                 spawnXform.LocalRotation = xform.LocalRotation.GetCardinalDir().ToAngle(); // Frontier: rotatable flatpacks
+            // VRS: mark flatpack-built licensable machines so first anchor auto-licenses to the ship.
+            if (HasComp<ShipLicenseRequiredComponent>(spawn) && !HasComp<ShipLicenseComponent>(spawn))
+                EnsureComp<ShipLicensePendingComponent>(spawn);
             _adminLogger.Add(LogType.Construction,
                 LogImpact.Low,
                 $"{ToPrettyString(args.User):player} unpacked {ToPrettyString(spawn):entity} at {xform.Coordinates} from {ToPrettyString(uid):entity}");

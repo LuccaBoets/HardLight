@@ -29,7 +29,7 @@
       Service:
         !type:SectorBankAccountInfo
         balance: 8000
-        increasePerSecond: 32 # TODO: move to ~65K per hour (~18/s), about enough for minimum wage for Frontier employees
+        increasePerSecond: 18 # VRS: 32->18, ~65K/hr per TODO
       Security:
         !type:SectorBankAccountInfo
         balance: 8000
@@ -41,7 +41,7 @@
       Frontier:
         !type:SectorBankAccountInfo
         balance: 8000
-        increasePerSecond: 36 # TODO: move to ~65K per hour (~18/s), about enough for minimum wage for Frontier employees
+        increasePerSecond: 18 # VRS: 36->18, ~65K/hr per TODO
       Nfsd:
         !type:SectorBankAccountInfo
         balance: 8000

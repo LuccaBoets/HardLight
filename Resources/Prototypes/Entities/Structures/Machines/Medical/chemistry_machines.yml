@@ -29,6 +29,7 @@
           components:
           - FitsInDispenser
   - type: Machine
+  - type: ShipLicenseRequired # VRS: must be licensed to a ship before anchoring on a player vessel
   - type: WiresPanel
   - type: WiresVisuals
   - type: ContainerContainer

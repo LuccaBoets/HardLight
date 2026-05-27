@@ -14,7 +14,7 @@
   parent: BaseVessel
   name: SBI Watchdog
   description: "A refurbished and repainted older model of the NSF Templar for use for Mercenaries and 'repurposed' for the Station Guard, mind the gap."
-  price: 20000
+  price: 19700
   category: Small
   group: Sr
   access: Brig # Oddball, matches guard ID, specific enough to exclude cadets

@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: NR Sparrow
   description: A small research and engineering vessel.
-  price: 35000
+  price: 35800
   category: Small
   group: Shipyard
   shuttlePath: /Maps/_NF/Shuttles/sparrow.yml

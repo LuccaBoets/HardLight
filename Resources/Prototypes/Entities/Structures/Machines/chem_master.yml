@@ -31,6 +31,7 @@
           - FitsInDispenser
   - type: ChemMaster
     pillDosageLimit: 20
+  - type: ShipLicenseRequired # VRS: must be licensed to a ship before anchoring on a player vessel
   - type: Physics
     bodyType: Static
   - type: Fixtures

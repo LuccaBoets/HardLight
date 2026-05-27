@@ -288,29 +288,50 @@ public sealed class NFCCVars
     /// Amount paid to a medical rescuer when a critically-injured patient is brought back to alive.
     /// </summary>
     public static readonly CVarDef<int> RewardsMedicalReviveAmount =
-        CVarDef.Create("nf14.rewards.medical_revive_amount", 10000, CVar.SERVERONLY);
+        CVarDef.Create("nf14.rewards.medical_revive_amount", 4000, CVar.SERVERONLY); // VRS: harsh economy 10000->4000
 
     /// <summary>
     /// Cooldown in minutes per rescued person for medical revive payouts.
     /// </summary>
     public static readonly CVarDef<float> RewardsMedicalReviveCooldownMinutes =
-        CVarDef.Create("nf14.rewards.medical_revive_cooldown_minutes", 10f, CVar.SERVERONLY);
+        CVarDef.Create("nf14.rewards.medical_revive_cooldown_minutes", 15f, CVar.SERVERONLY); // VRS: 10->15
 
     /// <summary>
     /// Amount paid to Security for killing a hostile mob (faction-hostile to NanoTrasen).
     /// </summary>
     public static readonly CVarDef<int> RewardsSecurityKillHostileAmount =
-        CVarDef.Create("nf14.rewards.security_kill_hostile_amount", 2000, CVar.SERVERONLY);
+        CVarDef.Create("nf14.rewards.security_kill_hostile_amount", 800, CVar.SERVERONLY); // VRS: 2000->800
 
     /// <summary>
     /// Amount paid to Security for killing an antagonist player.
     /// </summary>
     public static readonly CVarDef<int> RewardsSecurityKillAntagAmount =
-        CVarDef.Create("nf14.rewards.security_kill_antag_amount", 15000, CVar.SERVERONLY);
+        CVarDef.Create("nf14.rewards.security_kill_antag_amount", 6000, CVar.SERVERONLY); // VRS: 15000->6000
 
     /// <summary>
     /// Amount paid to each Security member at round end for each antagonist in custody.
     /// </summary>
     public static readonly CVarDef<int> RewardsSecurityCustodyPerAntagAmount =
-        CVarDef.Create("nf14.rewards.security_custody_per_antag_amount", 100000, CVar.SERVERONLY);
+        CVarDef.Create("nf14.rewards.security_custody_per_antag_amount", 25000, CVar.SERVERONLY); // VRS: 100000->25000
+
+    /*
+     * VRS: Ship-bound licensing
+     */
+    /// <summary>
+    /// Fraction of an item's appraisal charged when licensing it to a ship. Range 0..1.
+    /// </summary>
+    public static readonly CVarDef<float> LicensingFeeFraction =
+        CVarDef.Create("vrs.licensing.fee_fraction", 0.15f, CVar.SERVERONLY);
+
+    /// <summary>
+    /// If true, items with <c>ShipLicenseRequiredComponent</c> cannot be anchored without a matching license.
+    /// </summary>
+    public static readonly CVarDef<bool> LicensingRequireForAnchor =
+        CVarDef.Create("vrs.licensing.require_for_anchor", true, CVar.SERVERONLY);
+
+    /// <summary>
+    /// Multiplier applied to the resale price of bootleg-licensed items (set to 0..1 to penalize).
+    /// </summary>
+    public static readonly CVarDef<float> LicensingBootlegResalePenalty =
+        CVarDef.Create("vrs.licensing.bootleg_resale_penalty", 0.5f, CVar.SERVERONLY);
 }

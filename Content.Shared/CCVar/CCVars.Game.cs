@@ -412,4 +412,46 @@ public sealed partial class CCVars
     /// </summary>
     public static readonly CVarDef<TimeSpan> GameStationPayoutDelay =
         CVarDef.Create("game.station_payout_delay", TimeSpan.FromMinutes(20), CVar.SERVERONLY);
+
+    /// <summary>
+    /// Base multiplier applied to station job payouts before scarcity bonuses.
+    /// </summary>
+    public static readonly CVarDef<float> GameStationPayoutBaseMultiplier =
+        CVarDef.Create("game.station_payout_base_multiplier", 1.0f, CVar.SERVERONLY);
+
+    /// <summary>
+    /// Target active workers per job before job-level scarcity bonus stops applying.
+    /// </summary>
+    public static readonly CVarDef<int> GameStationPayoutJobScarcityTarget =
+        CVarDef.Create("game.station_payout_job_scarcity_target", 2, CVar.SERVERONLY);
+
+    /// <summary>
+    /// Additional payout multiplier per missing worker for the active job.
+    /// </summary>
+    public static readonly CVarDef<float> GameStationPayoutJobScarcityBonusPerMissing =
+        CVarDef.Create("game.station_payout_job_scarcity_bonus_per_missing", 0.10f, CVar.SERVERONLY);
+
+    /// <summary>
+    /// Maximum job-level scarcity bonus multiplier.
+    /// </summary>
+    public static readonly CVarDef<float> GameStationPayoutJobScarcityBonusCap =
+        CVarDef.Create("game.station_payout_job_scarcity_bonus_cap", 0.50f, CVar.SERVERONLY);
+
+    /// <summary>
+    /// Target active workers per primary department before department scarcity bonus stops applying.
+    /// </summary>
+    public static readonly CVarDef<int> GameStationPayoutDepartmentScarcityTarget =
+        CVarDef.Create("game.station_payout_department_scarcity_target", 6, CVar.SERVERONLY);
+
+    /// <summary>
+    /// Additional payout multiplier per missing worker for the active job's primary department.
+    /// </summary>
+    public static readonly CVarDef<float> GameStationPayoutDepartmentScarcityBonusPerMissing =
+        CVarDef.Create("game.station_payout_department_scarcity_bonus_per_missing", 0.03f, CVar.SERVERONLY);
+
+    /// <summary>
+    /// Maximum department-level scarcity bonus multiplier.
+    /// </summary>
+    public static readonly CVarDef<float> GameStationPayoutDepartmentScarcityBonusCap =
+        CVarDef.Create("game.station_payout_department_scarcity_bonus_cap", 0.30f, CVar.SERVERONLY);
 }

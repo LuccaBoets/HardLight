@@ -10,6 +10,7 @@
   - type: Item
     sprite: Objects/Tools/appraisal-tool.rsi
   - type: PriceGun
+  - type: ShipLicensingTool # VRS: dual-mode appraise/license
   - type: UseDelay
     delay: 3
   - type: Clothing

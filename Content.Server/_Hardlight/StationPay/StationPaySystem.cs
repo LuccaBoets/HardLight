@@ -10,6 +10,7 @@ using Content.Shared.Chat;
 using Content.Shared.Mind;
 using Content.Shared.Mind.Components;
 using Content.Shared.Roles;
+using Content.Shared.Roles.Jobs;
 using JetBrains.Annotations;
 using Robust.Shared.Configuration;
 using Robust.Shared.Enums; // HardLight
@@ -33,9 +34,18 @@ public sealed class StationPaySystem : EntitySystem
     // map of {Mind.OwnedEntity: lastPayoutTime} where lastPayoutTime was the round duration at time of payout
     // sorted in ascending order
     private readonly Dictionary<ProtoId<JobPrototype>, int> _jobPayoutRates = new();
+    private readonly Dictionary<ProtoId<JobPrototype>, ProtoId<DepartmentPrototype>> _jobPrimaryDepartments = new();
     private OrderedDictionary<EntityUid, int> _scheduledPayouts = new();
     private bool _roundEndProcessed; // ensure payouts run once per round
     private bool _pendingRoundStartResync; // HardLight
+
+    private float _stationPayBaseMultiplier = 1.0f;
+    private int _jobScarcityTarget = 2;
+    private float _jobScarcityBonusPerMissing = 0.10f;
+    private float _jobScarcityBonusCap = 0.50f;
+    private int _departmentScarcityTarget = 6;
+    private float _departmentScarcityBonusPerMissing = 0.03f;
+    private float _departmentScarcityBonusCap = 0.30f;
 
     public override void Initialize()
     {
@@ -45,6 +55,18 @@ public sealed class StationPaySystem : EntitySystem
         {
             _jobPayoutRates[proto.JobProto] = proto.PayPerHour;
             //Log.Debug($"[stationpay] loaded prototype: {proto.JobProto.Id} at {proto.PayPerHour}");
+        }
+
+        foreach (var department in _prototypeManager.EnumeratePrototypes<DepartmentPrototype>())
+        {
+            if (!department.Primary)
+                continue;
+
+            foreach (var role in department.Roles)
+            {
+                if (!_jobPrimaryDepartments.ContainsKey(role))
+                    _jobPrimaryDepartments[role] = department.ID;
+            }
         }
 
         SubscribeLocalEvent<GameRunLevelChangedEvent>(OnRunLevelChanged);
@@ -75,6 +97,13 @@ public sealed class StationPaySystem : EntitySystem
          */
         // SubscribeLocalEvent<MindRemovedMessage>(OnMindRemoved);
         Subs.CVar(_cfg, CCVars.GameStationPayoutDelay, time => PayoutDelay = (int)time.TotalSeconds, true);
+        Subs.CVar(_cfg, CCVars.GameStationPayoutBaseMultiplier, value => _stationPayBaseMultiplier = value, true);
+        Subs.CVar(_cfg, CCVars.GameStationPayoutJobScarcityTarget, value => _jobScarcityTarget = Math.Max(0, value), true);
+        Subs.CVar(_cfg, CCVars.GameStationPayoutJobScarcityBonusPerMissing, value => _jobScarcityBonusPerMissing = Math.Max(0f, value), true);
+        Subs.CVar(_cfg, CCVars.GameStationPayoutJobScarcityBonusCap, value => _jobScarcityBonusCap = Math.Max(0f, value), true);
+        Subs.CVar(_cfg, CCVars.GameStationPayoutDepartmentScarcityTarget, value => _departmentScarcityTarget = Math.Max(0, value), true);
+        Subs.CVar(_cfg, CCVars.GameStationPayoutDepartmentScarcityBonusPerMissing, value => _departmentScarcityBonusPerMissing = Math.Max(0f, value), true);
+        Subs.CVar(_cfg, CCVars.GameStationPayoutDepartmentScarcityBonusCap, value => _departmentScarcityBonusCap = Math.Max(0f, value), true);
     }
 
     private void OnRunLevelChanged(GameRunLevelChangedEvent ev)
@@ -230,12 +259,10 @@ public sealed class StationPaySystem : EntitySystem
             return false;
         }
 
-        var employedTime = (int)(secondsWorked / (double)PayoutDelay);
-
         // this could in principle be 0 if someone joined right before round end
-        if (employedTime <= 0)
+        if (secondsWorked <= 0)
         {
-            //Log.Debug($"[stationpay] Skipping payout for {uid} due to employedTime <= 0 (secondsWorked: {secondsWorked})");
+            //Log.Debug($"[stationpay] Skipping payout for {uid} due to secondsWorked <= 0");
             return false;
         }
 
@@ -248,8 +275,14 @@ public sealed class StationPaySystem : EntitySystem
             return false;
         }
 
-        var rate = _jobPayoutRates[(ProtoId<JobPrototype>)jobId];
-        var amount = employedTime * rate;
+        var jobProto = (ProtoId<JobPrototype>)jobId;
+        var rate = _jobPayoutRates[jobProto];
+        var scarcityMultiplier = GetScarcityMultiplier(jobProto);
+        var hoursWorked = secondsWorked / 3600.0;
+        var amount = (int)Math.Round(rate * hoursWorked * scarcityMultiplier);
+
+        if (amount <= 0)
+            return false;
         //Log.Info($"Paying entity {uid} ${amount} for {secondsWorked} seconds of work as {jobId.Value.Id}.");
 
         if (!_bank.TryBankDeposit(uid, amount))
@@ -273,6 +306,85 @@ public sealed class StationPaySystem : EntitySystem
             session.Channel);
 
         return true;
+    }
+
+    private float GetScarcityMultiplier(ProtoId<JobPrototype> job)
+    {
+        var multiplier = Math.Max(0f, _stationPayBaseMultiplier);
+
+        if (_jobScarcityTarget > 0)
+        {
+            var currentJobWorkers = CountActiveWorkersForJob(job);
+            var missingJobWorkers = Math.Max(0, _jobScarcityTarget - currentJobWorkers);
+            var jobBonus = Math.Min(_jobScarcityBonusCap, missingJobWorkers * _jobScarcityBonusPerMissing);
+            multiplier += jobBonus;
+        }
+
+        if (_departmentScarcityTarget > 0 && _jobPrimaryDepartments.TryGetValue(job, out var department))
+        {
+            var currentDepartmentWorkers = CountActiveWorkersForDepartment(department);
+            var missingDepartmentWorkers = Math.Max(0, _departmentScarcityTarget - currentDepartmentWorkers);
+            var departmentBonus = Math.Min(_departmentScarcityBonusCap, missingDepartmentWorkers * _departmentScarcityBonusPerMissing);
+            multiplier += departmentBonus;
+        }
+
+        return Math.Max(0.1f, multiplier);
+    }
+
+    private int CountActiveWorkersForJob(ProtoId<JobPrototype> job)
+    {
+        var count = 0;
+        var query = EntityQueryEnumerator<JobTrackingComponent, MindContainerComponent>();
+        while (query.MoveNext(out var uid, out var tracking, out var mindContainer))
+        {
+            if (!mindContainer.HasMind || tracking.Job != job)
+                continue;
+
+            if (!TryComp<MindComponent>(mindContainer.Mind!.Value, out var mind))
+                continue;
+
+            if (!_player.TryGetSessionById(mind.UserId, out var session)
+                || session.Status != SessionStatus.InGame
+                || session.AttachedEntity != uid)
+            {
+                continue;
+            }
+
+            count++;
+        }
+
+        return count;
+    }
+
+    private int CountActiveWorkersForDepartment(ProtoId<DepartmentPrototype> department)
+    {
+        var count = 0;
+        var query = EntityQueryEnumerator<JobTrackingComponent, MindContainerComponent>();
+        while (query.MoveNext(out var uid, out var tracking, out var mindContainer))
+        {
+            if (!mindContainer.HasMind || tracking.Job is not { } job)
+                continue;
+
+            if (!_jobPrimaryDepartments.TryGetValue(job, out var workerDepartment)
+                || workerDepartment != department)
+            {
+                continue;
+            }
+
+            if (!TryComp<MindComponent>(mindContainer.Mind!.Value, out var mind))
+                continue;
+
+            if (!_player.TryGetSessionById(mind.UserId, out var session)
+                || session.Status != SessionStatus.InGame
+                || session.AttachedEntity != uid)
+            {
+                continue;
+            }
+
+            count++;
+        }
+
+        return count;
     }
 
     // HardLight: throttle accumulator. Payouts are tracked in whole seconds, so checking
