@@ -442,6 +442,14 @@ public sealed partial class CCVars
         CVarDef.Create("economy.loadout_cost_multiplier", 0.5f, CVar.REPLICATED | CVar.SERVER);
 
     /// <summary>
+    /// VRS: multiplier applied to cargo bounty payouts at redemption time. Bounty income is one of the few
+    /// minute-one revenue paths for non-ship crew, so this lets admins tune it independently of cargo order
+    /// costs and appraisal pricing. Default 1.0 = no-op.
+    /// </summary>
+    public static readonly CVarDef<float> EconomyBountyPayoutMultiplier =
+        CVarDef.Create("economy.bounty_payout_multiplier", 1.0f, CVar.SERVERONLY);
+
+    /// <summary>
     /// VRS: starter bank balance applied on a character's FIRST spawn (i.e. while their saved balance is still
     /// the untouched <see cref="Content.Shared.Preferences.HumanoidCharacterProfile.DefaultBalance"/>). Once the
     /// character has earned or spent anything their persisted balance wins; this CVar is a tuning knob for the

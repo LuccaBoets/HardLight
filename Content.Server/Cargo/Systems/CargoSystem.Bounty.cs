@@ -11,6 +11,7 @@ using Content.Shared.Access.Components;
 using Content.Shared.Cargo;
 using Content.Shared.Cargo.Components;
 using Content.Shared.Cargo.Prototypes;
+using Content.Shared.CCVar;
 using Content.Shared.Database;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Labels.EntitySystems;
@@ -168,7 +169,10 @@ public sealed partial class CargoSystem
             if (args.AllowSideEffects)
                 database.CheckedBounties.Add(component.Id);
 
-            args.Price = bountyPrototype.Reward - _pricing.GetPrice(container.Owner, allowSideEffects: args.AllowSideEffects);
+            // VRS: scale the bounty's listed reward by the configured multiplier before subtracting
+            // the crate's intrinsic value, so the multiplier targets the bounty bonus specifically.
+            var scaledReward = (int)MathF.Round(bountyPrototype.Reward * _cfg.GetCVar(CCVars.EconomyBountyPayoutMultiplier));
+            args.Price = scaledReward - _pricing.GetPrice(container.Owner, allowSideEffects: args.AllowSideEffects);
         }
         finally
         {
