@@ -1,0 +1,253 @@
+# =============================================================================
+# VRS Job Requirement Overrides — single source of truth for playtime gating
+# =============================================================================
+#
+# How this works:
+#   - This file defines a `jobRequirementOverride` prototype.
+#   - When the CVar `game.role_timer_override` is set to this prototype's `id`
+#     (here: `VRSDefault`), the `requirements:` block on each listed job's
+#     YAML is REPLACED wholesale by the entries under `jobs:` below.
+#   - Jobs NOT listed here fall back to their own in-file requirements.
+#   - To disable all timers globally instead, set CVar `game.role_timers false`.
+#
+# To activate, add to server_config.toml:
+#   [game]
+#   role_timer_override = "VRSDefault"
+#
+# Requirement types available (from Content.Shared/Roles/JobRequirement/):
+#   !type:OverallPlaytimeRequirement   time: <seconds>
+#   !type:RoleTimeRequirement          role: <JobId>   time: <seconds>
+#   !type:DepartmentTimeRequirement    department: <Dept>  time: <seconds>
+#   !type:AgeRequirement               age: <years>
+#   !type:SpeciesRequirement           species: [SpeciesId, ...]
+#
+# Time is in SECONDS. Quick reference:
+#   1h = 3600   3h = 10800   5h = 18000   10h = 36000   20h = 72000   40h = 144000
+#
+# To override a job: uncomment its block and edit. To use vanilla requirements
+# for a job: leave its block commented out (or delete it).
+# =============================================================================
+
+- type: jobRequirementOverride
+  id: VRSDefault
+  jobs:
+
+    # ----- Command --------------------------------------------------------
+    Captain:
+    - !type:OverallPlaytimeRequirement
+      time: 72000   # 20h total
+    - !type:DepartmentTimeRequirement
+      department: Command
+      time: 18000   # 5h in any command role
+    StationCaptain:
+    - !type:OverallPlaytimeRequirement
+      time: 36000   # 10h
+    #CentralCommandOfficial: []
+    #CentralCommandDirectorate: []
+
+    # ----- Security -------------------------------------------------------
+    HeadOfSecurity:
+    - !type:OverallPlaytimeRequirement
+      time: 54000   # 15h
+    - !type:DepartmentTimeRequirement
+      department: Security
+      time: 18000   # 5h
+    Warden:
+    - !type:OverallPlaytimeRequirement
+      time: 18000   # 5h
+    - !type:RoleTimeRequirement
+      role: SecurityOfficer
+      time: 10800   # 3h
+    SecurityOfficer:
+    - !type:OverallPlaytimeRequirement
+      time: 10800   # 3h
+    Detective:
+    - !type:OverallPlaytimeRequirement
+      time: 10800
+    #SecurityCadet: []
+    #PrisonGuard: []
+    #SecurityGuard: []
+
+    # ----- Medical --------------------------------------------------------
+    ChiefMedicalOfficer:
+    - !type:OverallPlaytimeRequirement
+      time: 54000   # 15h
+    - !type:DepartmentTimeRequirement
+      department: Medical
+      time: 18000   # 5h
+    MedicalDoctor:
+    - !type:OverallPlaytimeRequirement
+      time: 7200    # 2h
+    Paramedic:
+    - !type:OverallPlaytimeRequirement
+      time: 10800   # 3h
+    Chemist:
+    - !type:OverallPlaytimeRequirement
+      time: 7200
+    #MedicalIntern: []
+    #DirectorOfCare: []
+    #Brigmedic: []
+    #Geneticist: []
+
+    # ----- Engineering ----------------------------------------------------
+    ChiefEngineer:
+    - !type:OverallPlaytimeRequirement
+      time: 54000
+    - !type:DepartmentTimeRequirement
+      department: Engineering
+      time: 18000
+    StationEngineer:
+    - !type:OverallPlaytimeRequirement
+      time: 7200
+    AtmosphericTechnician:
+    - !type:OverallPlaytimeRequirement
+      time: 10800
+    #TechnicalAssistant: []
+
+    # ----- Science --------------------------------------------------------
+    ResearchDirector:
+    - !type:OverallPlaytimeRequirement
+      time: 54000
+    - !type:DepartmentTimeRequirement
+      department: Epistemics
+      time: 18000
+    Scientist:
+    - !type:OverallPlaytimeRequirement
+      time: 7200
+    #ResearchAssistant: []
+    #ForensicMantis: []
+
+    # ----- Cargo / Salvage -----------------------------------------------
+    Quartermaster:
+    - !type:OverallPlaytimeRequirement
+      time: 36000   # 10h
+    - !type:DepartmentTimeRequirement
+      department: Cargo
+      time: 10800
+    SalvageSpecialist:
+    - !type:OverallPlaytimeRequirement
+      time: 7200
+    #CargoTechnician: []
+
+    # ----- Silicon --------------------------------------------------------
+    StationAi:
+    - !type:OverallPlaytimeRequirement
+      time: 36000   # 10h
+    Borg:
+    - !type:OverallPlaytimeRequirement
+      time: 18000   # 5h
+    #MedicalQuadBorg: []
+    #ServiceQuadBorg: []
+    #SalvageQuadBorg: []
+    #SecurityQuadBorg: []
+    #EngineeringQuadBorg: []
+
+    # ----- Civilian / Service (no requirements by default) ---------------
+    #Passenger: []
+    #Visitor: []
+    #Assistant: []
+    #Bartender: []
+    #Chef: []
+    #Botanist: []
+    #Janitor: []
+    #NFJanitor: []
+    #Clown: []
+    #Mime: []
+    #Musician: []
+    #Librarian: []
+    #Chaplain: []
+    #ServiceWorker: []
+    #Lawyer: []
+    #MailCarrier: []
+    #RadioHost: []
+
+    # ----- Wildcards ------------------------------------------------------
+    #Psychologist: []
+    #Reporter: []
+    #Boxer: []
+    #Zookeeper: []
+    #Prisoner: []
+
+    # ----- NFSD (Frontier law enforcement) -------------------------------
+    Sheriff:
+    - !type:OverallPlaytimeRequirement
+      time: 54000
+    - !type:DepartmentTimeRequirement
+      department: Nfsd
+      time: 18000
+    Bailiff:
+    - !type:OverallPlaytimeRequirement
+      time: 18000
+    - !type:RoleTimeRequirement
+      role: Deputy
+      time: 10800
+    SeniorOfficer:
+    - !type:OverallPlaytimeRequirement
+      time: 18000
+    - !type:RoleTimeRequirement
+      role: Deputy
+      time: 10800
+    Deputy:
+    - !type:OverallPlaytimeRequirement
+      time: 10800
+    NFDetective:
+    - !type:OverallPlaytimeRequirement
+      time: 10800
+    #Cadet: []
+    #PublicAffairsLiaison: []
+
+    # ----- Frontier civilian / interview roles ---------------------------
+    #StationTrafficController: []
+    #StationRepresentative: []
+    #Valet: []
+    #Pilot: []
+    #PilotInterview: []
+    #Mercenary: []
+    #MercenaryInterview: []
+    #Contractor: []
+    #ContractorInterview: []
+
+    # ----- USSP (Mono faction) -------------------------------------------
+    USSPCommissar:
+    - !type:OverallPlaytimeRequirement
+      time: 72000   # 20h
+    - !type:RoleTimeRequirement
+      role: USSPSergeant
+      time: 10800
+    USSPSergeant:
+    - !type:OverallPlaytimeRequirement
+      time: 36000   # 10h
+    - !type:RoleTimeRequirement
+      role: USSPCorporal
+      time: 10800
+    USSPCorporal:
+    - !type:OverallPlaytimeRequirement
+      time: 18000
+    - !type:RoleTimeRequirement
+      role: USSPRifleman
+      time: 7200
+    USSPRifleman:
+    - !type:OverallPlaytimeRequirement
+      time: 7200
+    USSPMedic:
+    - !type:OverallPlaytimeRequirement
+      time: 10800
+
+    # ----- Pirates --------------------------------------------------------
+    #NFPirateCaptain: []
+    #NFPirateFirstMate: []
+    #NFPirate: []
+
+    # ----- ERT / CentCom / Admin event roles (usually admin-only) --------
+    # Listing these will REPLACE any whitelist requirement on them — be careful.
+    #ERTLeader: []
+    #ERTSecurity: []
+    #ERTMedical: []
+    #ERTEngineer: []
+    #ERTJanitor: []
+    #ERTChaplain: []
+    #ERTMailCarrier: []
+    #CBURN: []
+    #DeathSquad: []
+    #ColonialNavyman: []
+    #Anomaly: []
