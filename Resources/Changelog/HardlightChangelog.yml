@@ -4254,3 +4254,9 @@ Entries:
       message: Add suitstorage shortcut
   id: 461
   time: '2026-05-24T00:12:43.0000000+00:00'
+- author: Illumos
+  changes:
+    - type: Add
+      message: Plumbing.
+  id: 462
+  time: '2026-05-27T02:45:55.0000000+00:00'
