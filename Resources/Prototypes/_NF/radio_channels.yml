@@ -1,9 +1,9 @@
-- type: radioChannel
-  id: Traffic
-  name: chat-radio-traffic
-  keycode: 'd'
-  frequency: 1022
-  color: "#CC6633"
+# - type: radioChannel
+  # id: Traffic
+  # name: chat-radio-traffic
+  # keycode: 'd'
+  # frequency: 1022
+  # color: "#CC6633"
 
 - type: radioChannel
   id: ColSec # HardLight
@@ -12,11 +12,11 @@
   frequency: 1023
   color: "#7eac69"
 
-# HardLight: legacy alias for ColSec to preserve older references.
-- type: radioChannel
-  id: Nfsd
-  name: chat-radio-colsec
-  keycode: 'w'
-  frequency: 1023
-  color: "#7eac69"
+# # HardLight: legacy alias for ColSec to preserve older references.
+# - type: radioChannel
+  # id: Nfsd
+  # name: chat-radio-colsec
+  # keycode: 'w'
+  # frequency: 1023
+  # color: "#7eac69"
 

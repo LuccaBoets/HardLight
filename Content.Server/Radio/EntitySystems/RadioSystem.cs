@@ -11,6 +11,8 @@ using Content.Shared.Chat;
 using Content.Shared.Abilities.Psionics;
 using Content.Shared.Database;
 using Content.Shared.Mobs.Components;
+using Content.Shared.NPC.Components;
+using Content.Shared.NPC.Systems;
 using Content.Shared.PDA; // HardLight
 using Content.Shared.Radio;
 using Content.Shared.Radio.Components;
@@ -47,6 +49,8 @@ public sealed class RadioSystem : EntitySystem
     [Dependency] private readonly ChatSystem _chat = default!;
     [Dependency] private readonly AccessReaderSystem _accessReader = default!; // HardLight
     [Dependency] private readonly LanguageSystem _language = default!; // Starlight
+    [Dependency] private readonly NpcFactionSystem _factions = default!;
+    [Dependency] private readonly SharedTransformSystem _transform = default!;
 
     // set used to prevent radio feedback loops.
     private readonly HashSet<string> _messages = new();
@@ -60,6 +64,25 @@ public sealed class RadioSystem : EntitySystem
         SubscribeLocalEvent<IntrinsicRadioTransmitterComponent, EntitySpokeEvent>(OnIntrinsicSpeak);
 
         _exemptQuery = GetEntityQuery<TelecomExemptComponent>();
+    }
+
+    private EntityUid? GetFactionListener(EntityUid receiver)
+    {
+        var current = receiver;
+
+        while (current.IsValid())
+        {
+            if (HasComp<NpcFactionMemberComponent>(current))
+                return current;
+
+            var parent = _transform.GetParentUid(current);
+            if (parent == current)
+                break;
+
+            current = parent;
+        }
+
+        return null;
     }
 
     private void OnIntrinsicSpeak(EntityUid uid, IntrinsicRadioTransmitterComponent component, EntitySpokeEvent args)
@@ -87,12 +110,12 @@ public sealed class RadioSystem : EntitySystem
         if (TryComp(uid, out ActorComponent? actor))
         {
             // Starlight start
-            var listener = component.Owner;
+            var listener = uid;
             var msg = args.OriginalChatMsg;
 
-            if (listener != null && !HasXenoglossy(listener, EntityManager) && !_language.CanUnderstand(listener, args.Language.ID))
+            if (!HasXenoglossy(listener, EntityManager) && !_language.CanUnderstand(listener, args.Language.ID))
                 msg = args.LanguageObfuscatedChatMsg;
-            else if (listener != null && args.MessageSource != uid)
+            else if (args.MessageSource != uid)
                 args.Receivers.Add(uid);
 
             _netMan.ServerSendMessage(new MsgChatMessage { Message = msg }, actor.PlayerSession.Channel);
@@ -236,6 +259,13 @@ public sealed class RadioSystem : EntitySystem
             var needServer = !channel.LongRange && !sourceServerExempt;
             if (needServer && !hasActiveServer)
                 continue;
+
+            if (channel.RestrictToSharedFaction)
+            {
+                var listener = GetFactionListener(receiver);
+                if (listener == null || !_factions.SharesAnyFaction((messageSource, CompOrNull<NpcFactionMemberComponent>(messageSource)), (listener.Value, CompOrNull<NpcFactionMemberComponent>(listener.Value))))
+                    continue;
+            }
 
             // check if message can be sent to specific receiver
             var attemptEv = new RadioReceiveAttemptEvent(channel, radioSource, receiver);
