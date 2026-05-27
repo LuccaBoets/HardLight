@@ -64,7 +64,7 @@
 
 
 
-      [color=#AAAAAA]This Warrant is only valid when requested by an agent of the ColSec and approved, signed, and stamped by a [italic]distinct[/italic] (unless impossible) officer ranked Warden or above or a Station Captain.[/color]
+      [color=#AAAAAA]This Warrant is only valid when requested by an agent of ColSec and approved, signed, and stamped by a [italic]distinct[/italic] (unless impossible) officer ranked Warden or above or a Station Captain.[/color]
 
 - type: entity # Creator: Starly (Shaw Clifflower)
   id: PaperWrittenNfsdReport
@@ -108,7 +108,7 @@
 
 
 
-      [color=#AAAAAA]I, the [italic]Warden or Head of Security[/italic] of the ColSec, or an agent acting on their behalf, certify that everything written in this report is correct and truthful. I am aware of the penalties should anything in this report be proven incorrect, falsified, or exaggerated.[/color]
+      [color=#AAAAAA]I, the [italic]Warden or Head of Security[/italic] of ColSec, or an agent acting on their behalf, certify that everything written in this report is correct and truthful. I am aware of the penalties should anything in this report be proven incorrect, falsified, or exaggerated.[/color]
 
 - type: entity
   id: PaperWrittenNfsdArrestWarrant
@@ -145,7 +145,7 @@
 
 
 
-      [color=#AAAAAA]This warrant is only valid when requested by an agent of the ColSec, and approved, signed and stamped by a distinct (unless impossible) officer ranked Warden or above, or a Station Captain.[/color]
+      [color=#AAAAAA]This warrant is only valid when requested by an agent of ColSec, and approved, signed and stamped by a distinct (unless impossible) officer ranked Warden or above, or a Station Captain.[/color]
 
 - type: entity # Creator: Kwentov (Vica)
   id: PaperWrittenNfsdArrestReport
@@ -332,7 +332,7 @@
           [bullet]XXXXXXXX, Station Captain
           [bullet]XXXXXXXX, Head of Security
 
-      This document authorizes the above vessel and its captain to assist and cooperate with the ColSec and authorities in neutralizing hostile bluespace threats. These include, but are not limited to:
+      This document authorizes the above vessel and its captain to assist and cooperate with ColSec and authorities in neutralizing hostile bluespace threats. These include, but are not limited to:
           [bullet] Cultist vessels
           [bullet] Syndicate vessels
           [bullet] Wizard Federation vessels
@@ -340,11 +340,11 @@
 
       This document does NOT deputize the authorized party. The authorized party is not granted special privileges to arrest, detain, and prosecute individuals associated with Nanotrasen.
 
-      [bold]Any contraband seized during operations aboard hostile vessels must be surrendered, either to the ColSec or the Station Captain, for a cash bounty. Failure to surrender contraband will lead to the forfeiture of this agreement, and the authorized party may be liable for criminal charges.[/bold]
+      [bold]Any contraband seized during operations aboard hostile vessels must be surrendered, either to ColSec or the Station Captain, for a cash bounty. Failure to surrender contraband will lead to the forfeiture of this agreement, and the authorized party may be liable for criminal charges.[/bold]
 
       The authorized party is to keep a copy of this document for inspection. The authorized party is expected to maintain contact with ColSec command and/or the Station Captain to minimize casualties.
 
-      Before engaging with hostile vessels, the authorized party is expected to follow any instructions given by the ColSec for staging or other preparation prior to boarding.
+      Before engaging with hostile vessels, the authorized party is expected to follow any instructions given by ColSec for staging or other preparation prior to boarding.
 
 
 
