@@ -1620,15 +1620,6 @@
 
 - type: entity
   parent: PosterBase
-  id: PosterContrabandInterdyne
-  name: "Interdyne Pharmaceutics: For the Health of Humankind"
-  description: "An advertisement for Interdyne Pharmaceutics' GeneClean clinics. 'Become the master of your own body!'"
-  components:
-  - type: Sprite
-    state: poster61_contraband
-
-- type: entity
-  parent: PosterBase
   id: PosterContrabandExoAcid
   name: "Exomorph Warning: Acid Spit!"
   description: "This poster warns you about an exomorph's acidic spit. Not that such exomorphs are real... Right?"
