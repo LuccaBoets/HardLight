@@ -1,14 +1,14 @@
-# - type: radioChannel
-  # id: USSP # HardLight: Captialized for consistency.
-  # name: chat-radio-ussp
-  # keycode: 'p'
-  # frequency: 1723
-  # color: "#b2224b"
+- type: radioChannel
+  id: USSP # HardLight: Captialized for consistency.
+  name: chat-radio-ussp
+  keycode: 'p'
+  frequency: 1723
+  color: "#b2224b"
 
-# - type: radioChannel
-  # id: USSPCommand # HardLight: Captialized for consistency.
-  # name: chat-radio-ussp-command
-  # keycode: 'i'
-  # frequency: 1725
-  # color: "#ff0026"
+- type: radioChannel
+  id: USSPCommand # HardLight: Captialized for consistency.
+  name: chat-radio-ussp-command
+  keycode: 'i'
+  frequency: 1725
+  color: "#ff0026"
 
