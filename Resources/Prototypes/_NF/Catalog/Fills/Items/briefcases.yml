@@ -84,9 +84,10 @@
   components:
   - type: SpawnItemsOnUse
     items:
-      - id: SpaceCash50000
+      - id: SpaceCash25000
+        amount: 2
       - id: SpaceCash10000
     sound:
       collection: storageRustle
   - type: StaticPrice # Require since you can still sell a ship that have it on it
-    price: 60000 # VRS: harsh economy 100000->60000
+    price: 60000 # VRS: harsh economy 100000->60000 (denominations: 25000x2 + 10000, SpaceCash50000 prototype does not exist)
