@@ -445,11 +445,11 @@ public sealed partial class CCVars
     /// VRS: starter bank balance applied on a character's FIRST spawn (i.e. while their saved balance is still
     /// the untouched <see cref="Content.Shared.Preferences.HumanoidCharacterProfile.DefaultBalance"/>). Once the
     /// character has earned or spent anything their persisted balance wins; this CVar is a tuning knob for the
-    /// new-joiner experience, not a per-round refill. Default matches DefaultBalance (30000) so it's a no-op
-    /// until admins tune it.
+    /// new-joiner experience, not a per-round refill. MRP default (5000) — enough to pick one cheap toy
+    /// (sidearm, tool, or kit) on spawn; expeditions are the real income path.
     /// </summary>
     public static readonly CVarDef<int> EconomyStartingBalance =
-        CVarDef.Create("economy.starting_balance", 30000, CVar.SERVERONLY);
+        CVarDef.Create("economy.starting_balance", 5000, CVar.SERVERONLY);
 
     /// <summary>
     /// Target active workers per job before job-level scarcity bonus stops applying.
