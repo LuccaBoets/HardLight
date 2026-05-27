@@ -420,6 +420,21 @@ public sealed partial class CCVars
         CVarDef.Create("game.station_payout_base_multiplier", 0.5f, CVar.SERVERONLY); // VRS: 10hr-first-ship tuning — base hourly halved so a small ship (~100-170k after hull bumps) is ~10+ hrs of work for a baseline job.
 
     /// <summary>
+    /// VRS: multiplier applied to all sell/appraisal prices (loot turn-in, ship resale, vending machine buy price
+    /// estimates). Scales the entire item economy in lockstep with the pay multiplier so consumables stay
+    /// proportionally affordable while ships (priced in raw YAML, not via this multiplier) remain the long-term goal.
+    /// </summary>
+    public static readonly CVarDef<float> EconomyAppraisalMultiplier =
+        CVarDef.Create("economy.appraisal_multiplier", 0.5f, CVar.SERVERONLY);
+
+    /// <summary>
+    /// VRS: multiplier applied to cargo order costs (the price the station pays per crate). Lets buy-side and
+    /// sell-side economy be tuned independently from job pay.
+    /// </summary>
+    public static readonly CVarDef<float> EconomyCargoOrderCostMultiplier =
+        CVarDef.Create("economy.cargo_order_cost_multiplier", 0.5f, CVar.SERVERONLY);
+
+    /// <summary>
     /// Target active workers per job before job-level scarcity bonus stops applying.
     /// </summary>
     public static readonly CVarDef<int> GameStationPayoutJobScarcityTarget =

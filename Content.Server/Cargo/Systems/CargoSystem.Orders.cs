@@ -6,6 +6,7 @@ using Content.Shared.Cargo.BUI;
 using Content.Shared.Cargo.Components;
 using Content.Shared.Cargo.Events;
 using Content.Shared.Cargo.Prototypes;
+using Content.Shared.CCVar;
 using Content.Shared.Database;
 using Content.Shared.Emag.Systems;
 using Content.Shared.IdentityManagement;
@@ -287,7 +288,10 @@ namespace Content.Server.Cargo.Systems
             if (!component.AllowedGroups.Contains(product.Group))
                 return;
 
-            var data = GetOrderData(args, product, GenerateOrderId(orderDatabase));
+            // VRS: economy.cargo_order_cost_multiplier scales station-side bulk-order prices.
+            var orderCostMultiplier = _cfg.GetCVar(CCVars.EconomyCargoOrderCostMultiplier);
+            var adjustedCost = (int)MathF.Max(1, MathF.Round(product.Cost * orderCostMultiplier));
+            var data = GetOrderData(args, product, adjustedCost, GenerateOrderId(orderDatabase));
 
             if (!TryAddOrder(stationUid.Value, component.Account, data, orderDatabase))
             {
@@ -342,9 +346,9 @@ namespace Content.Server.Cargo.Systems
             _audio.PlayPvs(_audio.ResolveSound(component.ErrorSound), uid);
         }
 
-        private static CargoOrderData GetOrderData(CargoConsoleAddOrderMessage args, CargoProductPrototype cargoProduct, int id)
+        private static CargoOrderData GetOrderData(CargoConsoleAddOrderMessage args, CargoProductPrototype cargoProduct, int cost, int id)
         {
-            return new CargoOrderData(id, cargoProduct.Product, cargoProduct.Name, cargoProduct.Cost, args.Amount, args.Requester, args.Reason);
+            return new CargoOrderData(id, cargoProduct.Product, cargoProduct.Name, cost, args.Amount, args.Requester, args.Reason);
         }
 
         public static int GetOutstandingOrderCount(StationCargoOrderDatabaseComponent component, ProtoId<CargoAccountPrototype> account)
