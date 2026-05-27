@@ -253,6 +253,7 @@
   description: A Radioisotope Thermoelectric Generator for long term power.
   suffix: 10kW
   components:
+  - type: ShipLicenseRequired # VRS: must be licensed to a ship before anchoring on a player vessel
   - type: PowerSupplier
     supplyRate: 10000 # supposed to be low power at no fuel cost to power derelicts
     heatSignatureRatio: 16 # Mono

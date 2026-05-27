@@ -35,6 +35,8 @@ public sealed class StationPaySystem : EntitySystem
     // sorted in ascending order
     private readonly Dictionary<ProtoId<JobPrototype>, int> _jobPayoutRates = new();
     private readonly Dictionary<ProtoId<JobPrototype>, ProtoId<DepartmentPrototype>> _jobPrimaryDepartments = new();
+    // VRS: jobs flagged as RP-only — ineligible for the understaffed scarcity bonus.
+    private readonly HashSet<ProtoId<JobPrototype>> _scarcityExcludedJobs = new();
     private OrderedDictionary<EntityUid, int> _scheduledPayouts = new();
     private bool _roundEndProcessed; // ensure payouts run once per round
     private bool _pendingRoundStartResync; // HardLight
@@ -54,6 +56,8 @@ public sealed class StationPaySystem : EntitySystem
         foreach (var proto in _prototypeManager.EnumeratePrototypes<StationPayPrototype>())
         {
             _jobPayoutRates[proto.JobProto] = proto.PayPerHour;
+            if (proto.ExcludeFromScarcityBonus)
+                _scarcityExcludedJobs.Add(proto.JobProto);
             //Log.Debug($"[stationpay] loaded prototype: {proto.JobProto.Id} at {proto.PayPerHour}");
         }
 
@@ -311,6 +315,10 @@ public sealed class StationPaySystem : EntitySystem
     private float GetScarcityMultiplier(ProtoId<JobPrototype> job)
     {
         var multiplier = Math.Max(0f, _stationPayBaseMultiplier);
+
+        // VRS: RP-only jobs (clown, mime, therapist, etc.) get the base multiplier but no scarcity bonus.
+        if (_scarcityExcludedJobs.Contains(job))
+            return Math.Max(0.1f, multiplier);
 
         if (_jobScarcityTarget > 0)
         {

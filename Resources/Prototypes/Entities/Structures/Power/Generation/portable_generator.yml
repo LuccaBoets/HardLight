@@ -8,6 +8,7 @@
   id: PortableGeneratorBase
   parent: [ BaseMachine, SmallConstructibleMachine, StructureWheeled]
   components:
+    - type: ShipLicenseRequired # VRS: must be licensed to a ship before anchoring on a player vessel
     # Basic properties
     - type: Transform
       anchored: False

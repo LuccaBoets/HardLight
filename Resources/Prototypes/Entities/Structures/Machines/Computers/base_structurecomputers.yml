@@ -5,6 +5,7 @@
   placement:
     mode: SnapgridCenter
   components:
+  - type: ShipLicenseRequired # VRS: must be licensed to a ship before anchoring on a player vessel
   - type: Animateable
   - type: MeleeSound
     soundGroups:

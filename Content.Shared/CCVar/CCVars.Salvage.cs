@@ -14,5 +14,5 @@ public sealed partial class CCVars
     ///     Cooldown for missions.
     /// </summary>
     public static readonly CVarDef<float>
-        SalvageExpeditionCooldown = CVarDef.Create("salvage.expedition_cooldown", 900f, CVar.REPLICATED); // VRS: harsh economy, 300->900 (was Frontier 780)
+        SalvageExpeditionCooldown = CVarDef.Create("salvage.expedition_cooldown", 300f, CVar.REPLICATED);
 }

@@ -21,5 +21,13 @@ public sealed partial class StationPayPrototype : IPrototype
     /// </summary>
     [DataField("job", required: true, serverOnly: true)]
     public ProtoId<JobPrototype> JobProto;
+
+    /// <summary>
+    /// VRS: if true, this job does not receive the understaffed scarcity bonus.
+    /// Used for roleplay-only jobs (clown, mime, chaplain, etc.) so that mechanically
+    /// unimportant roles aren't artificially incentivised when no-one is playing them.
+    /// </summary>
+    [DataField("excludeFromScarcityBonus", serverOnly: true)]
+    public bool ExcludeFromScarcityBonus;
 }
 

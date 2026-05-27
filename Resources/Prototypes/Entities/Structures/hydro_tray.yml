@@ -4,6 +4,7 @@
   id: hydroponicsTray
   description: An interstellar-grade space farmplot allowing for rapid growth and selective breeding of crops. Just... keep in mind the space weeds.
   components:
+  - type: ShipLicenseRequired # VRS: must be licensed to a ship before anchoring on a player vessel
   - type: Fixtures
     fixtures:
       fix1:

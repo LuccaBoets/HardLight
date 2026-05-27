@@ -65,16 +65,19 @@
   id: MusicianPay
   payPerHour: 20000 # New Minimum
   job: Musician
+  excludeFromScarcityBonus: true # VRS: RP-only role
 
 - type: stationPay
   id: MimePay
   payPerHour: 20000 # New Minimum
   job: Mime
+  excludeFromScarcityBonus: true # VRS: RP-only role
 
 - type: stationPay
   id: ClownPay
   payPerHour: 20000 # New Minimum
   job: Clown
+  excludeFromScarcityBonus: true # VRS: RP-only role
 
 - type: stationPay
   id: SalvageSpecialistPay
@@ -125,6 +128,7 @@
   id: PsychologistPay
   payPerHour: 24000 # Specialisation
   job: Psychologist
+  excludeFromScarcityBonus: true # VRS: RP-only role (therapist)
 
 - type: stationPay
   id: GeneticistPay
@@ -170,11 +174,13 @@
   id: ReporterPay
   payPerHour: 20000 # New Minimum
   job: Reporter
+  excludeFromScarcityBonus: true # VRS: RP-only role
 
 - type: stationPay
   id: BoxerPay
   payPerHour: 20000 # New Minimum
   job: Boxer
+  excludeFromScarcityBonus: true # VRS: RP-only role
 
 - type: stationPay
   id: ServiceWorkerPay
@@ -185,11 +191,13 @@
   id: LibrarianPay
   payPerHour: 20000 # New Minimum
   job: Librarian
+  excludeFromScarcityBonus: true # VRS: RP-only role
 
 - type: stationPay
   id: ChaplainPay
   payPerHour: 20000 # New Minimum
   job: Chaplain
+  excludeFromScarcityBonus: true # VRS: RP-only role
 
 - type: stationPay
   id: JanitorPay
