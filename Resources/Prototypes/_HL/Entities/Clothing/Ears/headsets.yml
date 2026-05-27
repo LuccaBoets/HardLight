@@ -8,11 +8,11 @@
   - type: ActiveRadio
     intrinsicChannels:
     #- Cartel
-    - EncryptionKeyCommon
+    - Common
   - type: EncryptionKeyHolder
     intrinsicChannels:
     #- Cartel
-    - EncryptionKeyCommon
+    - Common
   # HardLight end
   - type: Sprite
     sprite: _HL/Clothing/Ears/Headsets/cartel.rsi
