@@ -109,6 +109,8 @@ public sealed partial class LoadoutWindow : FancyWindow
     private void CalculateLoadoutCost(RoleLoadout loadout, IDependencyCollection collection)
     {
         var protoManager = collection.Resolve<IPrototypeManager>();
+        var cfg = collection.Resolve<Robust.Shared.Configuration.IConfigurationManager>();
+        var multiplier = cfg.GetCVar(Content.Shared.CCVar.CCVars.EconomyLoadoutCostMultiplier);
         var cost = 0;
         foreach (var loadoutGroup in loadout.SelectedLoadouts)
         {
@@ -116,7 +118,7 @@ public sealed partial class LoadoutWindow : FancyWindow
             {
                 if (protoManager.TryIndex(equipment.Prototype, out var equipProto))
                 {
-                    cost += equipProto.Price;
+                    cost += (int)MathF.Round(equipProto.Price * multiplier); // VRS: economy.loadout_cost_multiplier
                 }
             }
         }

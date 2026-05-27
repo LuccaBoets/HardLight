@@ -435,6 +435,13 @@ public sealed partial class CCVars
         CVarDef.Create("economy.cargo_order_cost_multiplier", 0.5f, CVar.SERVERONLY);
 
     /// <summary>
+    /// VRS: multiplier applied to loadout item prices at character spawn. Replicated so the lobby UI's running
+    /// cost display matches what is actually deducted from the player's bank account.
+    /// </summary>
+    public static readonly CVarDef<float> EconomyLoadoutCostMultiplier =
+        CVarDef.Create("economy.loadout_cost_multiplier", 0.5f, CVar.REPLICATED | CVar.SERVER);
+
+    /// <summary>
     /// Target active workers per job before job-level scarcity bonus stops applying.
     /// </summary>
     public static readonly CVarDef<int> GameStationPayoutJobScarcityTarget =

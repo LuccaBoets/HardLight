@@ -230,9 +230,12 @@ public sealed class StationSpawningSystem : SharedStationSpawningSystem
                     //Frontier - we handle bank stuff so we are wrapping each item spawn inside our own cached check.
                     //If the user's preferences haven't been loaded, only give them free items or fallbacks.
                     //This way, we will spawn every item we can afford in the order that they were originally sorted.
-                    if (loadoutProto.Price <= bankBalance && (loadoutProto.Price <= 0 || hasBalance))
+                    // VRS: economy.loadout_cost_multiplier scales the price actually deducted (client UI mirrors this).
+                    var loadoutCostMultiplier = _configurationManager.GetCVar(CCVars.EconomyLoadoutCostMultiplier);
+                    var adjustedLoadoutPrice = (int)MathF.Round(loadoutProto.Price * loadoutCostMultiplier);
+                    if (adjustedLoadoutPrice <= bankBalance && (adjustedLoadoutPrice <= 0 || hasBalance))
                     {
-                        bankBalance -= int.Max(0, loadoutProto.Price); // Treat negatives as zero.
+                        bankBalance -= int.Max(0, adjustedLoadoutPrice); // Treat negatives as zero.
                         EquipStartingGear(entity.Value, loadoutProto, raiseEvent: false);
                         equippedItems.Add(loadoutProto.ID);
                     }
