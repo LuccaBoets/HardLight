@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: HS Garden
   description: A small botany vessel dedicated to horiticultural experimentation.
-  price: 30300
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 39500
   category: Small
   group: Shipyard
   shuttlePath: /Maps/_NF/Shuttles/garden.yml

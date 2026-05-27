@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: LVHI Legman
   description: A small maneuverable shuttle with low operational costs for reporters who want to be first on a scene. Manufactured by Langstad-Voigt Heavy Industries.
-  price: 12600
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 16500
   category: Small
   group: Shipyard
   shuttlePath: /Maps/_NF/Shuttles/legman.yml

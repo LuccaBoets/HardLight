@@ -18,21 +18,36 @@
 - type: entity
   parent: SpaceCashExpedition
   id: SpaceCashExpeditionT1
-  name: spesos (6,000)
+  name: spesos (3,000)
+#  categories: [ HideSpawnMenu ]
+  components:
+  - type: SpawnItemsOnUse
+    items:
+      - id: SpaceCash2500
+      - id: SpaceCash500
+    sound:
+      collection: storageRustle
+  - type: StaticPrice # Require since you can still sell a ship that have it on it
+    price: 3000 # VRS: 10hr-first-ship tuning 6000->3000 (orig 10000)
+
+- type: entity
+  parent: SpaceCashExpedition
+  id: SpaceCashExpeditionT2
+  name: spesos (7,500)
 #  categories: [ HideSpawnMenu ]
   components:
   - type: SpawnItemsOnUse
     items:
       - id: SpaceCash5000
-      - id: SpaceCash1000
+      - id: SpaceCash2500
     sound:
       collection: storageRustle
   - type: StaticPrice # Require since you can still sell a ship that have it on it
-    price: 6000 # VRS: harsh economy 10000->6000
+    price: 7500 # VRS: 10hr-first-ship tuning 15000->7500 (orig 25000)
 
 - type: entity
   parent: SpaceCashExpedition
-  id: SpaceCashExpeditionT2
+  id: SpaceCashExpeditionT3
   name: spesos (15,000)
 #  categories: [ HideSpawnMenu ]
   components:
@@ -43,11 +58,26 @@
     sound:
       collection: storageRustle
   - type: StaticPrice # Require since you can still sell a ship that have it on it
-    price: 15000 # VRS: harsh economy 25000->15000
+    price: 15000 # VRS: 10hr-first-ship tuning 30000->15000 (orig 50000)
 
 - type: entity
   parent: SpaceCashExpedition
-  id: SpaceCashExpeditionT3
+  id: SpaceCashExpeditionT4
+  name: spesos (22,500)
+#  categories: [ HideSpawnMenu ]
+  components:
+  - type: SpawnItemsOnUse
+    items:
+      - id: SpaceCash20000
+      - id: SpaceCash2500
+    sound:
+      collection: storageRustle
+  - type: StaticPrice # Require since you can still sell a ship that have it on it
+    price: 22500 # VRS: 10hr-first-ship tuning 45000->22500 (orig 75000)
+
+- type: entity
+  parent: SpaceCashExpedition
+  id: SpaceCashExpeditionT5
   name: spesos (30,000)
 #  categories: [ HideSpawnMenu ]
   components:
@@ -58,36 +88,4 @@
     sound:
       collection: storageRustle
   - type: StaticPrice # Require since you can still sell a ship that have it on it
-    price: 30000 # VRS: harsh economy 50000->30000
-
-- type: entity
-  parent: SpaceCashExpedition
-  id: SpaceCashExpeditionT4
-  name: spesos (45,000)
-#  categories: [ HideSpawnMenu ]
-  components:
-  - type: SpawnItemsOnUse
-    items:
-      - id: SpaceCash20000
-        amount: 2
-      - id: SpaceCash5000
-    sound:
-      collection: storageRustle
-  - type: StaticPrice # Require since you can still sell a ship that have it on it
-    price: 45000 # VRS: harsh economy 75000->45000
-
-- type: entity
-  parent: SpaceCashExpedition
-  id: SpaceCashExpeditionT5
-  name: spesos (60,000)
-#  categories: [ HideSpawnMenu ]
-  components:
-  - type: SpawnItemsOnUse
-    items:
-      - id: SpaceCash25000
-        amount: 2
-      - id: SpaceCash10000
-    sound:
-      collection: storageRustle
-  - type: StaticPrice # Require since you can still sell a ship that have it on it
-    price: 60000 # VRS: harsh economy 100000->60000 (denominations: 25000x2 + 10000, SpaceCash50000 prototype does not exist)
+    price: 30000 # VRS: 10hr-first-ship tuning 60000->30000 (orig 100000)

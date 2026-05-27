@@ -3,7 +3,7 @@
   parent: BaseVesselAntag
   name: Hunter
   description: A small armored Syndicate assault shuttle, perfect for devious operations!
-  price: 54400
+  price: 152000 # VRS: 10hr-first-ship tuning bumped from 76000
   category: Small
   group: Syndicate
   shuttlePath: /Maps/_NF/Shuttles/Syndicate/hunter.yml

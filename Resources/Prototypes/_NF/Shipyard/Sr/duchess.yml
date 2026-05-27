@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: NT Duchess
   description: A mobile office and personal transport for the Harbor Master, based on the BB Bodkin. # HardLight: station representative<harbor master
-  price: 24900
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 32500
   category: Small
   group: Sr
   access: HeadOfPersonnel

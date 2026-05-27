@@ -3,7 +3,7 @@
   parent: BaseVessel
   name: NM Caduceus
   description: A former humanitarian vessel, the Caduceus now works as the best mobile hospital money can buy.
-  price: 149300
+  price: 313500 # VRS: 10hr-first-ship tuning bumped from 209000
   category: Large
   group: Medical
   shuttlePath: /Maps/_NF/Shuttles/caduceus.yml

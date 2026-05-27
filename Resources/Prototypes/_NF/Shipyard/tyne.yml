@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: BB Tyne
   description: A small, agile lifeboat with an exterior deck and survivor cabin for search and rescue operations.
-  price: 23600
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 30500
   category: Small
   group: Medical
   shuttlePath: /Maps/_NF/Shuttles/tyne.yml

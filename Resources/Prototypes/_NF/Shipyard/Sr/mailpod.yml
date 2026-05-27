@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: NC Mail Pod
   description: A cramped yet reliable shuttle for delivering packages.
-  price: 15000
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 19500
   category: Micro
   group: Sr
   access: Mail

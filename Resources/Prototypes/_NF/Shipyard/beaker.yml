@@ -3,7 +3,7 @@
   parent: BaseVessel
   name: SBI Beaker
   description: "A fully functional Chemistry Lab. Perfect for the prospecting chemist or high school chemistry teachers. Yeah, Science!"
-  price: 65300
+  price: 183000 # VRS: 10hr-first-ship tuning bumped from 91500
   category: Small
   group: Medical
   shuttlePath: /Maps/_NF/Shuttles/beaker.yml

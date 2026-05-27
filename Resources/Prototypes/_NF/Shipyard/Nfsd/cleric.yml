@@ -3,7 +3,7 @@
   parent: BaseVessel
   name: NSF Cleric
   description: Micro support vessel used for emergency rescues and first aid.
-  price: 25500 #Appraisal is 23510
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 33000 #Appraisal is 23510
   category: Micro
   group: Custom
   access: Security

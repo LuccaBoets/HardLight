@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: DYS Dove
   description: Versatile expedition-capable multi-purpose light freighter.
-  price: 82700
+  price: 174000 # VRS: 10hr-first-ship tuning bumped from 116000
   category: Medium
   group: Expedition
   shuttlePath: /Maps/_NF/Shuttles/Expedition/decadedove.yml

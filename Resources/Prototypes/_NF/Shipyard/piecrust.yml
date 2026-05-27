@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: NC Piecrust
   description: A combination animal ranch and pie bakery
-  price: 32700
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 42500
   category: Small
   group: Shipyard
   shuttlePath: /Maps/_NF/Shuttles/piecrust.yml

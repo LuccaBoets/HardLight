@@ -9,7 +9,7 @@
   parent: BaseVessel
   name: NTC Phantom
   description: An agile multi-functional bounty hunting and expedition ship.
-  price: 142500 #normally valued at 50k~ but has special roundstart shit etc, premium.
+  price: 299000 # VRS: 10hr-first-ship tuning bumped from 199500 #normally valued at 50k~ but has special roundstart shit etc, premium.
   category: Medium
   group: Expedition
   shuttlePath: /Maps/_NF/Shuttles/Expedition/phantom.yml

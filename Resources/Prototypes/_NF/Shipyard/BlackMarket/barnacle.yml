@@ -8,7 +8,7 @@
   parent: BaseVesselAntag
   name: Barnacle
   description: 'Nobody expects the lowly barnacle'
-  price: 27100
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 35000
   category: Small
   group: BlackMarket
   shuttlePath: /Maps/_NF/Shuttles/BlackMarket/barnacle.yml

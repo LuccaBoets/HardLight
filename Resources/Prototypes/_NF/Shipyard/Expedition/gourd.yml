@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: SLI Gourd
   description: The Gourd is a Science/Expedition vessel with a dedicated blast chamber.
-  price: 158400
+  price: 356000 # VRS: 10hr-first-ship tuning bumped from 237500
   category: Large
   group: Expedition
   shuttlePath: /Maps/_NF/Shuttles/Expedition/gourd.yml

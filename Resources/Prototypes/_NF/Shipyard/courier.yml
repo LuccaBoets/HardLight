@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: FSB Courier
   description: A compact cargo ship designed for hauling shipments.
-  price: 31900 # base 21000 + 10k EMU rental because Whatstone is a reasonable person who makes reasonable choices. 
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 41500 # base 21000 + 10k EMU rental because Whatstone is a reasonable person who makes reasonable choices.
   category: Small
   group: Shipyard
   shuttlePath: /Maps/_NF/Shuttles/courier.yml

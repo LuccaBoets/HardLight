@@ -417,7 +417,7 @@ public sealed partial class CCVars
     /// Base multiplier applied to station job payouts before scarcity bonuses.
     /// </summary>
     public static readonly CVarDef<float> GameStationPayoutBaseMultiplier =
-        CVarDef.Create("game.station_payout_base_multiplier", 1.0f, CVar.SERVERONLY);
+        CVarDef.Create("game.station_payout_base_multiplier", 0.5f, CVar.SERVERONLY); // VRS: 10hr-first-ship tuning — base hourly halved so a small ship (~100-170k after hull bumps) is ~10+ hrs of work for a baseline job.
 
     /// <summary>
     /// Target active workers per job before job-level scarcity bonus stops applying.

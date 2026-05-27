@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: BB Hammer
   description: A mobile engineering platform for deep-space repairs, upgrades and remodelling.
-  price: 44900
+  price: 117000 # VRS: 10hr-first-ship tuning bumped from 58500
   category: Medium
   group: Shipyard
   shuttlePath: /Maps/_NF/Shuttles/hammer.yml

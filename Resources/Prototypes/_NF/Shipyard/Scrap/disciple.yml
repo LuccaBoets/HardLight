@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: NSV Disciple
   description: A cheaply made amalgamation of religious ships. For the seasoned religious assistant.
-  price: 22900
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 30000
   category: Small
   group: Scrap
   shuttlePath: /Maps/_NF/Shuttles/Scrap/disciple.yml

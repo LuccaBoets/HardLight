@@ -4,7 +4,7 @@
   abstract: true
   name: AAA Bikeshed
   description: Questionably spaceworthy.
-  price: 50000
+  price: 140000 # VRS: 10hr-first-ship tuning bumped from 70000
   category: Medium
   group: Shipyard
   addComponents:

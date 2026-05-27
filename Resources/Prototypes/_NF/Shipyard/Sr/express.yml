@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: FSC Express
   description: A small endurance shuttle for express logistics support in Frontier space.
-  price: 17800
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 23000
   category: Small
   group: Sr
   access: Mail

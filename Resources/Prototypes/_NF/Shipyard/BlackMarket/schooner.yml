@@ -3,7 +3,7 @@
   parent: BaseVesselAntag
   name: Schooner
   description: A small wooden ship with 2 central cargo bays.
-  price: 66100
+  price: 185000 # VRS: 10hr-first-ship tuning bumped from 92500
   category: Medium
   group: BlackMarket
   shuttlePath: /Maps/_NF/Shuttles/BlackMarket/schooner.yml

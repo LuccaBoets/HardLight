@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: NC Prospector
   description: A small mining vessel designed to assist salvage operations.
-  price: 22200
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 29000
   category: Small
   group: Shipyard
   shuttlePath: /Maps/_NF/Shuttles/prospector.yml

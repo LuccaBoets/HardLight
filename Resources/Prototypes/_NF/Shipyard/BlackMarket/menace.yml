@@ -13,7 +13,7 @@
   parent: BaseVesselAntag
   name: Menace
   description: 'Mail is no longer an option: you either receive it or you die.'
-  price: 23500
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 30500
   category: Small
   group: BlackMarket
   shuttlePath: /Maps/_NF/Shuttles/BlackMarket/menace.yml

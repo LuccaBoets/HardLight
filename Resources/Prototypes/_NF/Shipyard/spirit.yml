@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: FSB Spirit
   description: The FSB Spirit is a search and rescue shuttle for experienced Frontier medics.
-  price: 15200
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 20000
   category: Small
   group: Medical
   shuttlePath: /Maps/_NF/Shuttles/spirit.yml

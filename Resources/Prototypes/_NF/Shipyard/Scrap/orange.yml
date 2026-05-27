@@ -3,7 +3,7 @@
   parent: BaseVessel
   name: SV Orange
   description: A cargo slash salvage shuttle made from scavenged wrecks, comes with some damage.
-  price: 17700
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 23000
   category: Small
   group: Scrap
   shuttlePath: /Maps/_NF/Shuttles/Scrap/orange.yml

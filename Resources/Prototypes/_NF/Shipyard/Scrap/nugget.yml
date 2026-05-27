@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: SV Nugget
   description: A flying hunk of wood and metal disguised as a kitchen shuttle. Not FDA approved.
-  price: 15400
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 20000
   category: Small
   group: Scrap
   shuttlePath: /Maps/_NF/Shuttles/Scrap/nugget.yml

@@ -3,7 +3,7 @@
   id: Vitalis
   name: CTC Vitalis
   description: A medium medical support vessel designed for cryogenic deployment.
-  price: 75200 #Appraisal is 53480
+  price: 158000 # VRS: 10hr-first-ship tuning bumped from 105500 #Appraisal is 53480
   category: Medium
   group: Medical
   shuttlePath: /Maps/_NF/Shuttles/vitalis.yml

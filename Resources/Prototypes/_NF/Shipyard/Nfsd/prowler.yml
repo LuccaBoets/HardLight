@@ -3,7 +3,7 @@
   parent: BaseVessel
   name: NSF Prowler
   description: A medium-sized patrol craft, the Prowler class is a dedicated deep space pursuit vessel with an advanced sensor suite and missle armament.
-  price: 94900
+  price: 199500 # VRS: 10hr-first-ship tuning bumped from 133000
   category: Medium
   group: Security
   access: Security

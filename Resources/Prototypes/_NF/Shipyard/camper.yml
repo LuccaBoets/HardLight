@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: SSS Camper
   description: A personal camper shuttle for those who prefer to live in emptiness of space.
-  price: 14400
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 18500
   category: Small
   group: Shipyard
   shuttlePath: /Maps/_NF/Shuttles/camper.yml

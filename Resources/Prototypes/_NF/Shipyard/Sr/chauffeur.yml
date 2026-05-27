@@ -14,7 +14,7 @@
   parent: BaseVessel
   name: NC Chauffeur
   description: A small transport shuttle with space for 4 passengers. Comes with the latest audio entertainment technology.
-  price: 20300
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 26500
   category: Small
   group: Sr
   access: Service

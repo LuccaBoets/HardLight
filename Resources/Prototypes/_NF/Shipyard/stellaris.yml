@@ -3,7 +3,7 @@
   parent: BaseVessel
   name: NT Stellaris
   description: A mobile theatre perfect for putting on any show.
-  price: 59000
+  price: 165000 # VRS: 10hr-first-ship tuning bumped from 82500
   category: Medium
   group: Shipyard
   shuttlePath: /Maps/_NF/Shuttles/stellaris.yml

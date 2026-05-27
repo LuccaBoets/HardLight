@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: KC Pathfinder
   description: Once a scout ship serving with the Nanotrasen Marine Expeditionary Forces, this now decommissioned expedition capable ship can be yours!
-  price: 56000
+  price: 157000 # VRS: 10hr-first-ship tuning bumped from 78500
   category: Small
   group: Expedition
   shuttlePath: /Maps/_NF/Shuttles/Expedition/pathfinder.yml

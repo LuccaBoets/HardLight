@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: DYS Dragonfly
   description: Highly modular salvaging vessel welded together from smaller re-purposed hulls.
-  price: 85500
+  price: 179000 # VRS: 10hr-first-ship tuning bumped from 119500
   category: Medium
   group: Expedition
   shuttlePath: /Maps/_NF/Shuttles/Expedition/dragonfly.yml

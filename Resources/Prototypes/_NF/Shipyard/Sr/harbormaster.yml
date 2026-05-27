@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: LVHI Harbormaster
   description: A small tugboat. Manufactured by Langstad-Voigt Heavy Industries.
-  price: 28500
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 37000
   category: Small
   group: Sr
   access: StationTrafficController

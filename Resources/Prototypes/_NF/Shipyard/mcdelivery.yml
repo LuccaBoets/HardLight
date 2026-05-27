@@ -10,7 +10,7 @@
   parent: BaseVessel
   name: DC McDelivery
   description: "Fast food fast ship, bring the McCargo meals to the people"
-  price: 10900
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 14000
   category: Micro
   group: Custom
   shuttlePath: /Maps/_NF/Shuttles/mcdelivery.yml

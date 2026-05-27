@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: NR Sparrow
   description: A small research and engineering vessel.
-  price: 35800
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 46500
   category: Small
   group: Shipyard
   shuttlePath: /Maps/_NF/Shuttles/sparrow.yml

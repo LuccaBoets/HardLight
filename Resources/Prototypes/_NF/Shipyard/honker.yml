@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: NT Honker
   description: HONK HONK HONK HONK HONK HONK
-  price: 23000
+  price: 100000 # VRS: 10hr-first-ship tuning bumped from 30000
   category: Small
   group: Shipyard
   shuttlePath: /Maps/_NF/Shuttles/honker.yml
