@@ -51,6 +51,7 @@ public sealed partial class AntagSelectionSystem : GameRuleSystem<AntagSelection
     [Dependency] private readonly TransformSystem _transform = default!;
     [Dependency] private readonly EntityWhitelistSystem _whitelist = default!;
     [Dependency] private readonly ISharedAdminLogManager _adminLogger = default!;
+    [Dependency] private readonly AntagOptOutSystem _optOut = default!; // VRS: opt-out filter + anti-repeat weighting
 
     // arbitrary random number to give late joining some mild interest.
     public const float LateJoinRandomChance = 0.5f;
@@ -306,7 +307,10 @@ public sealed partial class AntagSelectionSystem : GameRuleSystem<AntagSelection
             var session = (ICommonSession?)null;
             if (picking)
             {
-                if (!playerPool.TryPickAndTake(RobustRandom, out session) && noSpawner)
+                // VRS: weighted pick — biases against players who were antag recently. Within each
+                // preference tier (preferred / fallback / any-valid) the pick is weighted; the tier
+                // stratification itself is preserved.
+                if (!playerPool.TryPickAndTake(_optOut, out session) && noSpawner)
                 {
                     Log.Warning($"Couldn't pick a player for {ToPrettyString(ent):rule}, no longer choosing antags for this definition");
                     break;
@@ -572,6 +576,10 @@ public sealed partial class AntagSelectionSystem : GameRuleSystem<AntagSelection
             return false;
 
         if (ent.Comp.AssignedSessions.Contains(session))
+            return false;
+
+        // VRS: hard filter for players who have opted out of antag selection this round.
+        if (_optOut.IsOptedOut(session))
             return false;
 
         mind ??= session.GetMind();

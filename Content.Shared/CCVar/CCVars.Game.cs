@@ -442,6 +442,22 @@ public sealed partial class CCVars
         CVarDef.Create("economy.loadout_cost_multiplier", 0.5f, CVar.REPLICATED | CVar.SERVER);
 
     /// <summary>
+    /// VRS: extra selection weight added per round since a player was last selected as an antagonist. Higher
+    /// values bias selection more strongly toward players who haven't been antag recently. 0 = disabled
+    /// (purely random within preference tier). Default 0.5 = a player who last antagged 4 rounds ago gets
+    /// 3x the weight of someone who antagged last round.
+    /// </summary>
+    public static readonly CVarDef<float> AntagRepeatWeightPerRound =
+        CVarDef.Create("game.antag_repeat_weight_per_round", 0.5f, CVar.SERVERONLY);
+
+    /// <summary>
+    /// VRS: hard cap on the anti-repeat weight multiplier. Prevents players who never antag from being
+    /// effectively guaranteed every round once the count climbs.
+    /// </summary>
+    public static readonly CVarDef<float> AntagRepeatWeightMax =
+        CVarDef.Create("game.antag_repeat_weight_max", 5.0f, CVar.SERVERONLY);
+
+    /// <summary>
     /// VRS: multiplier applied to cargo bounty payouts at redemption time. Bounty income is one of the few
     /// minute-one revenue paths for non-ship crew, so this lets admins tune it independently of cargo order
     /// costs and appraisal pricing. Default 1.0 = no-op.
