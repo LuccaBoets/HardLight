@@ -16,7 +16,7 @@
 #
 # Requirement types available (from Content.Shared/Roles/JobRequirement/):
 #   !type:OverallPlaytimeRequirement   time: <seconds>
-#   !type:RoleTimeRequirement          role: <JobId>   time: <seconds>
+#   !type:RoleTimeRequirement          role: <PlayTimeTrackerId>   time: <seconds>
 #   !type:DepartmentTimeRequirement    department: <Dept>  time: <seconds>
 #   !type:AgeRequirement               age: <years>
 #   !type:SpeciesRequirement           species: [SpeciesId, ...]
@@ -56,7 +56,7 @@
     - !type:OverallPlaytimeRequirement
       time: 18000   # 5h
     - !type:RoleTimeRequirement
-      role: SecurityOfficer
+      role: JobSecurityOfficer
       time: 10800   # 3h
     SecurityOfficer:
     - !type:OverallPlaytimeRequirement
@@ -109,7 +109,7 @@
     - !type:OverallPlaytimeRequirement
       time: 54000
     - !type:DepartmentTimeRequirement
-      department: Epistemics
+      department: Science
       time: 18000
     Scientist:
     - !type:OverallPlaytimeRequirement
@@ -169,23 +169,26 @@
     #Prisoner: []
 
     # ----- NFSD (Frontier law enforcement) -------------------------------
+    # NFSD has no dedicated department prototype in this fork — Sheriff/Bailiff
+    # use Security department time. Deputy's PlayTimeTracker is JobSecurityOfficerOld
+    # (see Resources/Prototypes/_NF/Roles/Jobs/Nfsd/deputy.yml).
     Sheriff:
     - !type:OverallPlaytimeRequirement
       time: 54000
     - !type:DepartmentTimeRequirement
-      department: Nfsd
+      department: Security
       time: 18000
     Bailiff:
     - !type:OverallPlaytimeRequirement
       time: 18000
     - !type:RoleTimeRequirement
-      role: Deputy
+      role: JobSecurityOfficerOld
       time: 10800
     SeniorOfficer:
     - !type:OverallPlaytimeRequirement
       time: 18000
     - !type:RoleTimeRequirement
-      role: Deputy
+      role: JobSecurityOfficerOld
       time: 10800
     Deputy:
     - !type:OverallPlaytimeRequirement
@@ -212,19 +215,19 @@
     - !type:OverallPlaytimeRequirement
       time: 72000   # 20h
     - !type:RoleTimeRequirement
-      role: USSPSergeant
+      role: JobUSSPSergeant
       time: 10800
     USSPSergeant:
     - !type:OverallPlaytimeRequirement
       time: 36000   # 10h
     - !type:RoleTimeRequirement
-      role: USSPCorporal
+      role: JobUSSPCorporal
       time: 10800
     USSPCorporal:
     - !type:OverallPlaytimeRequirement
       time: 18000
     - !type:RoleTimeRequirement
-      role: USSPRifleman
+      role: JobUSSPRifleman
       time: 7200
     USSPRifleman:
     - !type:OverallPlaytimeRequirement
