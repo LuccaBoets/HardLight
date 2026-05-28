@@ -3,8 +3,7 @@ using System.Numerics;
 using Content.Server.Radio;
 using Content.Server.Radio.Components;
 using Content.Server.Radio.EntitySystems;
-using Content.Shared.NPC.Components;
-using Content.Shared.NPC.Systems;
+using Content.Shared._Mono.Company;
 using Robust.Shared.EntitySerialization.Systems;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
@@ -16,13 +15,12 @@ namespace Content.IntegrationTests.Tests.Radio;
 public sealed class FactionRadioChannelTests
 {
     [Test]
-    public async Task FactionChannelOnlyDeliversToSharedFactions()
+    public async Task FactionChannelOnlyDeliversToCurrentCompany()
     {
         await using var pair = await PoolManager.GetServerClient();
         var server = pair.Server;
         var entMan = server.ResolveDependency<IEntityManager>();
         var mapLoader = server.System<MapLoaderSystem>();
-        var factionSystem = server.System<NpcFactionSystem>();
         var radioSystem = server.System<RadioSystem>();
 
         await server.WaitAssertion(() =>
@@ -34,14 +32,14 @@ public sealed class FactionRadioChannelTests
             var alliedListener = entMan.SpawnEntity("MobHuman", new EntityCoordinates(grid, new Vector2(1.5f, 0.5f)));
             var outsiderListener = entMan.SpawnEntity("MobHuman", new EntityCoordinates(grid, new Vector2(2.5f, 0.5f)));
 
-            SetFaction((source, entMan.GetComponent<NpcFactionMemberComponent>(source)), factionSystem, "Syndicate");
-            SetFaction((alliedListener, entMan.GetComponent<NpcFactionMemberComponent>(alliedListener)), factionSystem, "Syndicate");
-            SetFaction((outsiderListener, entMan.GetComponent<NpcFactionMemberComponent>(outsiderListener)), factionSystem, "NanoTrasen");
+            SetCompany(entMan, source, "Arcadia");
+            SetCompany(entMan, alliedListener, "Arcadia");
+            SetCompany(entMan, outsiderListener, "InterdynePharmaceuticals");
 
             var alliedRadio = SpawnReceiverRadio(entMan, alliedListener, "Faction", "Mothership");
             var outsiderRadio = SpawnReceiverRadio(entMan, outsiderListener, "Faction", "Mothership");
 
-            radioSystem.SendRadioMessage(source, "shared faction only", "Faction", source);
+            radioSystem.SendRadioMessage(source, "current faction only", "Faction", source);
 
             Assert.Multiple(() =>
             {
@@ -64,10 +62,10 @@ public sealed class FactionRadioChannelTests
         await pair.CleanReturnAsync();
     }
 
-    private static void SetFaction(Entity<NpcFactionMemberComponent> ent, NpcFactionSystem factionSystem, string faction)
+    private static void SetCompany(IEntityManager entMan, EntityUid uid, string companyName)
     {
-        factionSystem.ClearFactions(ent);
-        factionSystem.AddFaction(ent, faction);
+        var company = entMan.EnsureComponent<CompanyComponent>(uid);
+        company.CompanyName = companyName;
     }
 
     private static EntityUid SpawnReceiverRadio(IEntityManager entMan, EntityUid listener, params string[] channels)

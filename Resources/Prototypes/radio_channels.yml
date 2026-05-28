@@ -133,6 +133,7 @@
   frequency: 1995
   color: "#7600B5"
   longRange: true
+  restrictToSharedFaction: true
 
 # - type: radioChannel
   # id: DominosRobotics

@@ -7,12 +7,11 @@ using Content.Server.Radio.Components;
 using Content.Server.Speech.Components;
 using Content.Shared.Access.Components; // HardLight
 using Content.Shared.Access.Systems; // HardLight
+using Content.Shared._Mono.Company;
 using Content.Shared.Chat;
 using Content.Shared.Abilities.Psionics;
 using Content.Shared.Database;
 using Content.Shared.Mobs.Components;
-using Content.Shared.NPC.Components;
-using Content.Shared.NPC.Systems;
 using Content.Shared.PDA; // HardLight
 using Content.Shared.Radio;
 using Content.Shared.Radio.Components;
@@ -49,7 +48,6 @@ public sealed class RadioSystem : EntitySystem
     [Dependency] private readonly ChatSystem _chat = default!;
     [Dependency] private readonly AccessReaderSystem _accessReader = default!; // HardLight
     [Dependency] private readonly LanguageSystem _language = default!; // Starlight
-    [Dependency] private readonly NpcFactionSystem _factions = default!;
     [Dependency] private readonly SharedTransformSystem _transform = default!;
 
     // set used to prevent radio feedback loops.
@@ -66,14 +64,20 @@ public sealed class RadioSystem : EntitySystem
         _exemptQuery = GetEntityQuery<TelecomExemptComponent>();
     }
 
-    private EntityUid? GetFactionListener(EntityUid receiver)
+    private bool TryGetRadioCompany(EntityUid entity, out string companyName)
     {
-        var current = receiver;
+        companyName = string.Empty;
+        var current = entity;
 
         while (current.IsValid())
         {
-            if (HasComp<NpcFactionMemberComponent>(current))
-                return current;
+            if (TryComp(current, out CompanyComponent? company)
+                && !string.IsNullOrWhiteSpace(company.CompanyName)
+                && !string.Equals(company.CompanyName, "None", StringComparison.Ordinal))
+            {
+                companyName = company.CompanyName;
+                return true;
+            }
 
             var parent = _transform.GetParentUid(current);
             if (parent == current)
@@ -82,7 +86,7 @@ public sealed class RadioSystem : EntitySystem
             current = parent;
         }
 
-        return null;
+        return false;
     }
 
     private void OnIntrinsicSpeak(EntityUid uid, IntrinsicRadioTransmitterComponent component, EntitySpokeEvent args)
@@ -262,8 +266,9 @@ public sealed class RadioSystem : EntitySystem
 
             if (channel.RestrictToSharedFaction)
             {
-                var listener = GetFactionListener(receiver);
-                if (listener == null || !_factions.SharesAnyFaction((messageSource, CompOrNull<NpcFactionMemberComponent>(messageSource)), (listener.Value, CompOrNull<NpcFactionMemberComponent>(listener.Value))))
+                if (!TryGetRadioCompany(messageSource, out var sourceCompany)
+                    || !TryGetRadioCompany(receiver, out var listenerCompany)
+                    || !string.Equals(sourceCompany, listenerCompany, StringComparison.Ordinal))
                     continue;
             }
 
