@@ -134,14 +134,6 @@ binds:
 - function: FocusConsoleChatWindow
   type: State
   key: Slash
-# VRS: Floofstation — subtle channel keybinds
-- function: FocusSubtle
-  type: State
-  key: Minus
-- function: FocusSubtleOOC
-  type: State
-  mod1: Shift
-  key: LBracket
 - function: EditorLinePlace
   type: State
   key: MouseLeft

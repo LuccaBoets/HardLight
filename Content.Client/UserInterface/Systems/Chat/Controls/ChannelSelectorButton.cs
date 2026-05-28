@@ -64,9 +64,7 @@ public sealed class ChannelSelectorButton : ChatPopupButton<ChannelSelectorPopup
             ChatSelectChannel.OOC => Color.LightSkyBlue,
             ChatSelectChannel.Dead => Color.MediumPurple,
             ChatSelectChannel.Admin => Color.HotPink,
-            ChatSelectChannel.Telepathic => Color.PaleVioletRed, //Nyano - Summary: determines the color for the chat.
-            ChatSelectChannel.Subtle => new Color(230, 230, 255), // VRS: Floofstation
-            ChatSelectChannel.SubtleOOC => new Color(255, 119, 130), // VRS: Floofstation
+            ChatSelectChannel.Telepathic => Color.PaleVioletRed, //Nyano - Summary: determines the color for the chat. 
             _ => Color.DarkGray
         };
     }

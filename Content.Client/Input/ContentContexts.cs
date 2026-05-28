@@ -22,9 +22,6 @@ namespace Content.Client.Input
             common.AddFunction(ContentKeyFunctions.FocusAdminChat);
             common.AddFunction(ContentKeyFunctions.FocusConsoleChat);
             common.AddFunction(ContentKeyFunctions.FocusDeadChat);
-            // VRS: Floofstation — subtle channel keybinds
-            common.AddFunction(ContentKeyFunctions.FocusSubtle);
-            common.AddFunction(ContentKeyFunctions.FocusSubtleOOC);
             common.AddFunction(ContentKeyFunctions.CycleChatChannelForward);
             common.AddFunction(ContentKeyFunctions.CycleChatChannelBackward);
             common.AddFunction(ContentKeyFunctions.EscapeContext);

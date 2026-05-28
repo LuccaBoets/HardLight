@@ -4,13 +4,13 @@ using Content.Shared.Chat;
 using Robust.Shared.Console;
 using Robust.Shared.Enums;
 
-namespace Content.Server._Floof.Chat.Commands
+namespace Content.Server.Chat.Commands
 {
     [AnyCommand]
     internal sealed class SubtleCommand : IConsoleCommand
     {
         public string Command => "subtle";
-        public string Description => "Perform a subtle action.";
+        public string Description => "Perform an subtle action.";
         public string Help => "subtle <text>";
 
         private const string SubtleColor = "#d3d3ff";
