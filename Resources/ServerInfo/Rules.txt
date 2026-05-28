@@ -24,6 +24,19 @@ All other rules are enforced upon receiving a player report.
   - [textlink="Section 12 — Escalation Guidelines" link="RuleC12"]
 
 
+  - [textlink="Section 1 — Behavioral Rules" link="RuleC1"]
+  - [textlink="Section 2 — Gameplay Rules" link="RuleC2"]
+  - [textlink="Section 3 — Metagaming Rules" link="RuleC3"]
+  - [textlink="Section 4 — New-Life Rules" link="RuleC4"]
+  - [textlink="Section 5 — Character Naming Rules" link="RuleC5"]
+  - [textlink="Section 6 — Roleplay Rules" link="RuleC6"]
+  - [textlink="Section 7 — Powergaming Rules" link="RuleC7"]
+  - [textlink="Section 8 — End-Of-Round (EOR) Rules" link="RuleC8"]
+  - [textlink="Section 10 — Command and Security Rules" link="RuleC10"]
+  - [textlink="Section 11 — Antagonist Rules" link="RuleC11"]
+  - [textlink="Section 12 — Escalation Guidelines" link="RuleC12"]
+
+
 [color=#ffff00][head=3]Section 1: Behavioral Rules[/head][/color]
 
 [color=#a4885c]1.1[/color] Be respectful to others out-of-character.

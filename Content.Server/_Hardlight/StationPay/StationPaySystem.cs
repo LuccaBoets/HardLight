@@ -255,11 +255,13 @@ public sealed class StationPaySystem : EntitySystem
         {
             //Log.Debug($"[stationpay] Attemped payout for {uid}, but no scheduled payout was found");
             return false;
+            return false;
         }
 
         if (!GetJobForEntity(uid, out var jobId))
         {
             //Log.Debug($"[stationpay] Attemped payout for {uid}, but no valid job found");
+            return false;
             return false;
         }
 
