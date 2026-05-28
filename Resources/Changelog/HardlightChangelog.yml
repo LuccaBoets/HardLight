@@ -4406,3 +4406,11 @@ Entries:
       message: Added Korpus Novy Mir company!
   id: 465
   time: '2026-05-28T21:55:17.0000000+00:00'
+- author: Sully669
+  changes:
+    - type: Fix
+      message: Blueprint litograph/material silo taking paper
+    - type: Add
+      message: Document paper can fill printers
+  id: 466
+  time: '2026-05-28T21:55:35.0000000+00:00'
