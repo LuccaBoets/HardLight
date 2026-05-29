@@ -255,9 +255,6 @@ paket-files/
 *.sln.iml
 .editorconfig
 
-# Local server runtime config
-/server_config.local.toml
-
 # CodeRush
 .cr/
 
