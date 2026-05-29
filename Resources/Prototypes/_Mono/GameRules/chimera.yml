@@ -20,7 +20,6 @@
     weight: 2
     maxOccurrences: 4 # You may think this is absurd, but it can only spawn 4 events max in normal schedulers anyways.
   - type: GameRule
-    minPlayers: 40
   - type: LoadMapRule
     gridPath: /Maps/_Mono/ShuttleEvent/sakuratsu_chimera.yml
 
@@ -35,7 +34,6 @@
     weight: 2
     maxOccurrences: 2 # You may think this is absurd, but it can only spawn 4 events max in normal schedulers anyways.
   - type: GameRule
-    minPlayers: 40
   - type: LoadMapRule
     gridPath: /Maps/_Mono/ShuttleEvent/olympus_chimera.yml
 
@@ -50,7 +48,6 @@
     weight: 2
     maxOccurrences: 4 # You may think this is absurd, but it can only spawn 4 events max in normal schedulers anyways.
   - type: GameRule
-    minPlayers: 40
   - type: LoadMapRule
     gridPath: /Maps/_Mono/ShuttleEvent/tethys_chimera.yml
 
@@ -65,7 +62,6 @@
     weight: 2
     maxOccurrences: 4 # You may think this is absurd, but it can only spawn 4 events max in normal schedulers anyways.
   - type: GameRule
-    minPlayers: 40
   - type: LoadMapRule
     gridPath: /Maps/_Mono/ShuttleEvent/legionnaire_chimera.yml
 

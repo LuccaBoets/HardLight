@@ -27,7 +27,6 @@
     weight: 2
     maxOccurrences: 4
   - type: GameRule
-    minPlayers: 32
   - type: LoadMapRule
     gridPath: /Maps/_Mono/ShuttleEvent/zenith.yml
 
@@ -42,7 +41,6 @@
     weight: 3
     maxOccurrences: 2
   - type: GameRule
-    minPlayers: 32
   - type: LoadMapRule
     gridPath: /Maps/_Mono/ShuttleEvent/zenith_e.yml
 
@@ -57,7 +55,6 @@
     weight: 2
     maxOccurrences: 4
   - type: GameRule
-    minPlayers: 32
   - type: LoadMapRule
     gridPath: /Maps/_Mono/ShuttleEvent/nebula.yml
 
@@ -72,7 +69,6 @@
     weight: 3
     maxOccurrences: 6
   - type: GameRule
-    minPlayers: 15
   - type: LoadMapRule
     gridPath: /Maps/_Mono/ShuttleEvent/wyrm.yml
 
@@ -87,7 +83,6 @@
     weight: 2 # rare but not too rare since it's in the T2 spawner
     maxOccurrences: 2
   - type: GameRule
-    minPlayers: 15
   - type: LoadMapRule
     gridPath: /Maps/_Mono/ShuttleEvent/razorn.yml
 
@@ -102,6 +97,5 @@
     weight: 3
     maxOccurrences: 1
   - type: GameRule
-    minPlayers: 60
   - type: LoadMapRule
     gridPath: /Maps/_Mono/ShuttleEvent/wyvern.yml
