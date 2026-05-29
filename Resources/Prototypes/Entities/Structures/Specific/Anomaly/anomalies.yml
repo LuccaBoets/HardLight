@@ -49,6 +49,7 @@
   - type: Psionic
     removable: false
     roller: false
+  - type: Dispellable
   - type: InnatePsionicPowers
     powersToAdd:
       - TelepathyPower

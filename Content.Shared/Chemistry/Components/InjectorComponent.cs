@@ -80,18 +80,21 @@ public sealed partial class InjectorComponent : Component
     /// Used when ActiveModeProtoId is set.
     /// </summary>
     [DataField]
+    [AutoNetworkedField] // HardLight
     public FixedPoint2? CurrentTransferAmount;
 
     /// <summary>
     /// Optional active injector mode prototype id.
     /// </summary>
     [DataField]
+    [AutoNetworkedField] // HardLight
     public ProtoId<InjectorModePrototype>? ActiveModeProtoId;
 
     /// <summary>
     /// Optional set of allowed injector modes for this injector.
     /// </summary>
     [DataField]
+    [AutoNetworkedField] // HardLight
     public List<ProtoId<InjectorModePrototype>>? AllowedModes;
 
     /// <summary>

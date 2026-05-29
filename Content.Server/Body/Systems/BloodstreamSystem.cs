@@ -28,6 +28,9 @@ namespace Content.Server.Body.Systems;
 
 public sealed class BloodstreamSystem : EntitySystem
 {
+    private const string SynthBloodReagent = "SynthBlood"; // HardLight
+    private const string NanitesReagent = "Nanites"; // HardLight
+    private const string InertNanitesReagent = "InertNanites"; // HardLight
     [Dependency] private readonly IGameTiming _gameTiming = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     [Dependency] private readonly IRobustRandom _robustRandom = default!;
@@ -190,15 +193,22 @@ public sealed class BloodstreamSystem : EntitySystem
                 // Reset the drunk and stutter time to zero
                 bloodstream.StatusTime = TimeSpan.Zero;
             }
-            
-            // Generic blood restoration system - restore original blood when no blood-changing effects remain
-            if (bloodstream.OriginalBloodReagent != null && bloodstream.BloodReagent != bloodstream.OriginalBloodReagent)
+
+            // HardLight start
+            // Only auto-restore blood for temporary reagent-driven changes.
+            // Permanent blood swaps (i.e. species/traits/zombification) call ChangeBloodReagent directly
+            // without adding a BloodModificationTrackerComponent and should not be reverted here.
+            if (HasComp<BloodModificationTrackerComponent>(uid)
+                && bloodstream.OriginalBloodReagent != null
+                && bloodstream.BloodReagent != bloodstream.OriginalBloodReagent)
+            // HardLight end
             {
                 // Check if any blood-changing reagents are still present
                 if (ShouldRestoreBlood(uid, bloodstream))
                 {
                     ChangeBloodReagent(uid, bloodstream.OriginalBloodReagent.Value, bloodstream);
                     bloodstream.OriginalBloodReagent = null;
+                    RemCompDeferred<BloodModificationTrackerComponent>(uid); // HardLight
                 }
             }
         }
@@ -211,7 +221,7 @@ public sealed class BloodstreamSystem : EntitySystem
     private void BuildBloodAffectingReagentsCache()
     {
         _bloodAffectingReagents.Clear();
-        
+
         foreach (var reagentProto in _prototypeManager.EnumeratePrototypes<ReagentPrototype>())
         {
             // Check all metabolism effects for ChangeBloodReagent
@@ -234,7 +244,7 @@ public sealed class BloodstreamSystem : EntitySystem
     private bool ShouldRestoreBlood(EntityUid uid, BloodstreamComponent bloodstream)
     {
         // Get the entity's chemical solution
-        if (!_solutionContainerSystem.ResolveSolution(uid, bloodstream.ChemicalSolutionName, 
+        if (!_solutionContainerSystem.ResolveSolution(uid, bloodstream.ChemicalSolutionName,
             ref bloodstream.ChemicalSolution, out var chemSolution))
             return true; // No chemicals = safe to restore
 
@@ -244,7 +254,7 @@ public sealed class BloodstreamSystem : EntitySystem
             if (quantity > FixedPoint2.Zero && _bloodAffectingReagents.Contains(reagentId.Prototype))
                 return false; // Found active blood-changing reagent
         }
-        
+
         return true; // No blood-affecting reagents found
     }
 
@@ -278,7 +288,7 @@ public sealed class BloodstreamSystem : EntitySystem
 
         // Fill blood solution with BLOOD
         // The DNA string might not be initialized yet, but the reagent data gets updated in the GenerateDnaEvent subscription
-        bloodSolution.AddReagent(new ReagentId(entity.Comp.BloodReagent, GetEntityBloodData(entity.Owner)), entity.Comp.BloodMaxVolume - bloodSolution.Volume);
+        bloodSolution.AddReagent(new ReagentId(entity.Comp.BloodReagent, GetEntityBloodData(entity.Owner, entity.Comp.BloodReagent)), entity.Comp.BloodMaxVolume - bloodSolution.Volume); // HardLight: Added entity.Comp.BloodReagent
     }
 
     private void OnDamageChanged(Entity<BloodstreamComponent> ent, ref DamageChangedEvent args)
@@ -332,17 +342,29 @@ public sealed class BloodstreamSystem : EntitySystem
     /// </summary>
     private void OnHealthBeingExamined(Entity<BloodstreamComponent> ent, ref HealthBeingExaminedEvent args)
     {
-        // Shows profusely bleeding at half the max bleed rate.
-        if (ent.Comp.BleedAmount > ent.Comp.MaxBleedAmount / 2)
+        // Shows massively bleeding at 0.75x the max bleed rate.
+        if (ent.Comp.BleedAmount > ent.Comp.MaxBleedAmount * 0.75f)
         {
             args.Message.PushNewline();
-            args.Message.AddMarkupOrThrow(Loc.GetString("bloodstream-component-profusely-bleeding", ("target", ent.Owner)));
+            args.Message.AddMarkupOrThrow(Loc.GetString("bloodstream-component-massive-bleeding", ("target", ent.Owner)));
         }
-        // Shows bleeding message when bleeding, but less than profusely.
-        else if (ent.Comp.BleedAmount > 0)
+        // Shows bleeding message when bleeding above half the max rate, but less than massively.
+        else if (ent.Comp.BleedAmount > ent.Comp.MaxBleedAmount * 0.5f)
+        {
+            args.Message.PushNewline();
+            args.Message.AddMarkupOrThrow(Loc.GetString("bloodstream-component-strong-bleeding", ("target", ent.Owner)));
+        }
+        // Shows bleeding message when bleeding above 0.25x the max rate, but less than half the max.
+        else if (ent.Comp.BleedAmount > ent.Comp.MaxBleedAmount * 0.25f)
         {
             args.Message.PushNewline();
             args.Message.AddMarkupOrThrow(Loc.GetString("bloodstream-component-bleeding", ("target", ent.Owner)));
+        }
+        // Shows bleeding message when bleeding below 0.25x the max cap
+        else if (ent.Comp.BleedAmount > 0)
+        {
+            args.Message.PushNewline();
+            args.Message.AddMarkupOrThrow(Loc.GetString("bloodstream-component-slight-bleeding", ("target", ent.Owner)));
         }
 
         // If the mob's blood level is below the damage threshhold, the pale message is added.
@@ -443,7 +465,7 @@ public sealed class BloodstreamSystem : EntitySystem
         }
 
         if (amount >= 0)
-            return _solutionContainerSystem.TryAddReagent(component.BloodSolution.Value, component.BloodReagent, amount, null, GetEntityBloodData(uid));
+            return _solutionContainerSystem.TryAddReagent(component.BloodSolution.Value, component.BloodReagent, amount, null, GetEntityBloodData(uid, component.BloodReagent)); // HardLight: Added component.BloodReagent
 
         // Removal is more involved,
         // since we also wanna handle moving it to the temporary solution
@@ -558,7 +580,7 @@ public sealed class BloodstreamSystem : EntitySystem
         component.BloodReagent = reagent;
 
         if (currentVolume > 0)
-            _solutionContainerSystem.TryAddReagent(component.BloodSolution.Value, component.BloodReagent, currentVolume, null, GetEntityBloodData(uid));
+            _solutionContainerSystem.TryAddReagent(component.BloodSolution.Value, component.BloodReagent, currentVolume, null, GetEntityBloodData(uid, component.BloodReagent)); // HardLight: Added component.BloodReagent
     }
 
     private void OnDnaGenerated(Entity<BloodstreamComponent> entity, ref GenerateDnaEvent args)
@@ -569,7 +591,7 @@ public sealed class BloodstreamSystem : EntitySystem
             {
                 List<ReagentData> reagentData = reagent.Reagent.EnsureReagentData();
                 reagentData.RemoveAll(x => x is DnaData);
-                reagentData.AddRange(GetEntityBloodData(entity.Owner));
+                reagentData.AddRange(GetEntityBloodData(entity.Owner, reagent.Reagent.Prototype)); // HardLight: Added reagent.Reagent.Prototype
             }
         }
         else
@@ -579,8 +601,15 @@ public sealed class BloodstreamSystem : EntitySystem
     /// <summary>
     /// Get the reagent data for blood that a specific entity should have.
     /// </summary>
-    public List<ReagentData> GetEntityBloodData(EntityUid uid)
+    public List<ReagentData> GetEntityBloodData(EntityUid uid, string? bloodReagent = null) // HardLight: Added string? bloodReagent = null
     {
+        // HardLight start
+        if (bloodReagent == SynthBloodReagent ||
+            bloodReagent == NanitesReagent ||
+            bloodReagent == InertNanitesReagent)
+            return new List<ReagentData>();
+        // HardLight end
+
         var bloodData = new List<ReagentData>();
         var dnaData = new DnaData();
 

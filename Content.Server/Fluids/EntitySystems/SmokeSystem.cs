@@ -273,7 +273,7 @@ public sealed class SmokeSystem : EntitySystem
         if (!_solutionContainerSystem.ResolveSolution(entity, bloodstream.ChemicalSolutionName, ref bloodstream.ChemicalSolution, out var chemSolution) || chemSolution.AvailableVolume <= 0)
             return;
 
-        var blockIngestion = _internals.AreInternalsWorking(entity);
+        var blockIngestion = _internals.AreInternalsWorking(entity) || !HasComp<RespiratorComponent>(entity);
 
         var cloneSolution = solution.Clone();
         var availableTransfer = FixedPoint2.Min(cloneSolution.Volume, component.TransferRate);

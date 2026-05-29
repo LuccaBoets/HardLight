@@ -1,7 +1,7 @@
 # 13-04-2026
 BorgModuleFireExtinguisher: BorgModuleJetpack
 BorgModuleDefibrilator: BorgModuleRescue
-BorgModuleTreatment: BorgModuleTopicaks
+BorgModuleTreatment: BorgModuleTopicals
 BorgModuleAdvancedTreatment: BorgModuleAdvancedChemical
 BorgModuleGrapplingGun: BorgModuleTraversal
 BorgModuleLightreplacer: BorgModuleCustodial
@@ -10,3 +10,9 @@ EncryptionKeyCentCom: EncryptionKeyColCom # Added because if we ever import a ma
 EncryptionKeyColComm: EncryptionKeyColCom
 # 22-04-2026 BEGONE EXPED COMPUTERS
 ComputerSalvageExpedition: null
+
+# 03-05-2026
+ClothingMaskNeckGaiter: ClothingGaiterCharcoal
+ClothingMaskNeckGaiterRed: ClothingGaiterRed
+ClothingShoesClothwrap: ClothingClothWrap
+ClothingShoesClothwrapTransparent: ClothingClothWrapTransparent

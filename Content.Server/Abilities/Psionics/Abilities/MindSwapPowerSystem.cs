@@ -145,10 +145,21 @@ namespace Content.Server.Abilities.Psionics
 
         private void OnSwapInit(EntityUid uid, MindSwappedComponent component, ComponentInit args)
         {
+            EnsureReturnAction(uid, component);
+        }
+
+        private void EnsureReturnAction(EntityUid uid, MindSwappedComponent component)
+        {
             _actions.AddAction(uid, ref component.MindSwapReturnActionEntity, component.MindSwapReturnActionId);
             _actions.TryGetActionData(component.MindSwapReturnActionEntity, out var actionData);
             if (actionData is { UseDelay: not null })
                 _actions.StartUseDelay(component.MindSwapReturnActionEntity);
+        }
+
+        public void EnsureReturnAction(EntityUid uid)
+        {
+            if (TryComp<MindSwappedComponent>(uid, out var component))
+                EnsureReturnAction(uid, component);
         }
 
         public void Swap(EntityUid performer, EntityUid target, bool end = false)
@@ -156,31 +167,48 @@ namespace Content.Server.Abilities.Psionics
             if (end && (!HasComp<MindSwappedComponent>(performer) || !HasComp<MindSwappedComponent>(target)))
                 return;
 
+            MindSwappedComponent? perfComp = null;
+            MindSwappedComponent? targetComp = null;
+
+            if (!end)
+            {
+                perfComp = EnsureComp<MindSwappedComponent>(performer);
+                targetComp = EnsureComp<MindSwappedComponent>(target);
+
+                perfComp.OriginalEntity = target;
+                targetComp.OriginalEntity = performer;
+
+                // Grant the return action before control transfers so the newly possessed body already has it.
+                EnsureReturnAction(performer, perfComp);
+                EnsureReturnAction(target, targetComp);
+            }
+
             // Get the minds first. On transfer, they'll be gone.
+            EntityUid performerMindId = default;
+            EntityUid targetMindId = default;
             MindComponent? performerMind = null;
             MindComponent? targetMind = null;
 
             // This is here to prevent missing MindContainerComponent Resolve errors.
-            if (!_mindSystem.TryGetMind(performer, out var performerMindId, out performerMind))
-            {
+            if (!_mindSystem.TryGetMind(performer, out performerMindId, out performerMind))
                 performerMind = null;
-            };
 
-            if (!_mindSystem.TryGetMind(target, out var targetMindId, out targetMind))
-            {
+            if (!_mindSystem.TryGetMind(target, out targetMindId, out targetMind))
                 targetMind = null;
-            };
-            //This is a terrible way to 'unattach' minds. I wanted to use UnVisit but in TransferTo's code they say
-            //To unnatch the minds, do it like this.
-            //Have to unnattach the minds before we reattach them via transfer. Still feels weird, but seems to work well.
-            _mindSystem.TransferTo(performerMindId, null);
-            _mindSystem.TransferTo(targetMindId, null);
-            // Do the transfer.
+
+            // Detach first without creating temporary ghosts so the subsequent swap is stable.
             if (performerMind != null)
-                _mindSystem.TransferTo(performerMindId, target, ghostCheckOverride: true, false, performerMind);
+                _mindSystem.TransferTo(performerMindId, null, createGhost: false, mind: performerMind);
 
             if (targetMind != null)
-                _mindSystem.TransferTo(targetMindId, performer, ghostCheckOverride: true, false, targetMind);
+                _mindSystem.TransferTo(targetMindId, null, createGhost: false, mind: targetMind);
+
+            // Do the transfer.
+            if (performerMind != null)
+                _mindSystem.TransferTo(performerMindId, target, ghostCheckOverride: true, createGhost: false, mind: performerMind);
+
+            if (targetMind != null)
+                _mindSystem.TransferTo(targetMindId, performer, ghostCheckOverride: true, createGhost: false, mind: targetMind);
 
             if (end)
             {
@@ -193,12 +221,6 @@ namespace Content.Server.Abilities.Psionics
                 RemComp<MindSwappedComponent>(target);
                 return;
             }
-
-            var perfComp = EnsureComp<MindSwappedComponent>(performer);
-            var targetComp = EnsureComp<MindSwappedComponent>(target);
-
-            perfComp.OriginalEntity = target;
-            targetComp.OriginalEntity = performer;
         }
 
         public void GetTrapped(EntityUid uid)

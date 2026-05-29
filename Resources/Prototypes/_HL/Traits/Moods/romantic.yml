@@ -1,0 +1,89 @@
+# Romantic mood pool — tenderness, closeness, and the sweet non-sexual side of desire.
+
+- type: dataset
+  id: EroticMoodsRomantic
+  values:
+  - RomanticHandholding
+  - RomanticKissing
+  - RomanticCuddling
+  - RomanticDateNight
+  - RomanticLoveLetter
+  - RomanticMorningAfter
+  - RomanticSweetNothings
+  - RomanticSlowDance
+  - RomanticBeingSpoiled
+  - RomanticPining
+  - RomanticPetNames
+  - RomanticQuietCompany
+  - RomanticProtective
+  - RomanticCasualAffection
+
+- type: mood
+  id: RomanticHandholding
+  moodName: hl-erotic-mood-romantic-handholding-name
+  moodDesc: hl-erotic-mood-romantic-handholding-desc
+
+- type: mood
+  id: RomanticKissing
+  moodName: hl-erotic-mood-romantic-kissing-name
+  moodDesc: hl-erotic-mood-romantic-kissing-desc
+
+- type: mood
+  id: RomanticCuddling
+  moodName: hl-erotic-mood-romantic-cuddling-name
+  moodDesc: hl-erotic-mood-romantic-cuddling-desc
+
+- type: mood
+  id: RomanticDateNight
+  moodName: hl-erotic-mood-romantic-datenight-name
+  moodDesc: hl-erotic-mood-romantic-datenight-desc
+
+- type: mood
+  id: RomanticLoveLetter
+  moodName: hl-erotic-mood-romantic-loveletter-name
+  moodDesc: hl-erotic-mood-romantic-loveletter-desc
+
+- type: mood
+  id: RomanticMorningAfter
+  moodName: hl-erotic-mood-romantic-morningafter-name
+  moodDesc: hl-erotic-mood-romantic-morningafter-desc
+
+- type: mood
+  id: RomanticSweetNothings
+  moodName: hl-erotic-mood-romantic-sweetnothings-name
+  moodDesc: hl-erotic-mood-romantic-sweetnothings-desc
+
+- type: mood
+  id: RomanticSlowDance
+  moodName: hl-erotic-mood-romantic-slowdance-name
+  moodDesc: hl-erotic-mood-romantic-slowdance-desc
+
+- type: mood
+  id: RomanticBeingSpoiled
+  moodName: hl-erotic-mood-romantic-spoiled-name
+  moodDesc: hl-erotic-mood-romantic-spoiled-desc
+
+- type: mood
+  id: RomanticPining
+  moodName: hl-erotic-mood-romantic-pining-name
+  moodDesc: hl-erotic-mood-romantic-pining-desc
+
+- type: mood
+  id: RomanticPetNames
+  moodName: hl-erotic-mood-romantic-petnames-name
+  moodDesc: hl-erotic-mood-romantic-petnames-desc
+
+- type: mood
+  id: RomanticQuietCompany
+  moodName: hl-erotic-mood-romantic-quietcompany-name
+  moodDesc: hl-erotic-mood-romantic-quietcompany-desc
+
+- type: mood
+  id: RomanticProtective
+  moodName: hl-erotic-mood-romantic-protective-name
+  moodDesc: hl-erotic-mood-romantic-protective-desc
+
+- type: mood
+  id: RomanticCasualAffection
+  moodName: hl-erotic-mood-romantic-casualaffection-name
+  moodDesc: hl-erotic-mood-romantic-casualaffection-desc

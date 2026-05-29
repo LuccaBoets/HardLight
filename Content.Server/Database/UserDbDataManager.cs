@@ -108,7 +108,10 @@ public sealed class UserDbDataManager : IPostInjectInit
             _sawmill.Error($"Load of user data failed: {e}");
 
             // Kick them from server, since something is hosed. Let them try again I guess.
-            session.Channel.Disconnect("Loading of server user data failed, this is a bug.");
+            var reason = e is UserDbLoadException userDbLoad
+                ? userDbLoad.UserMessage
+                : "Loading of server user data failed, this is a bug.";
+            session.Channel.Disconnect(reason);
 
             // We throw a OperationCanceledException so users of WaitLoadComplete() always see cancellation here.
             throw new OperationCanceledException("Load of user data cancelled due to unknown error");
@@ -162,6 +165,17 @@ public sealed class UserDbDataManager : IPostInjectInit
     }
 
     private sealed record UserData(CancellationTokenSource Cancel, Task Task);
+
+    public sealed class UserDbLoadException : Exception
+    {
+        public string UserMessage { get; }
+
+        public UserDbLoadException(string userMessage, Exception? innerException = null)
+            : base(userMessage, innerException)
+        {
+            UserMessage = userMessage;
+        }
+    }
 
     public delegate Task OnLoadPlayer(ICommonSession player, CancellationToken cancel);
 

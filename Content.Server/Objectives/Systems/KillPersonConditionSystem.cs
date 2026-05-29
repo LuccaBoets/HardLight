@@ -12,6 +12,7 @@ namespace Content.Server.Objectives.Systems;
 /// </summary>
 public sealed class KillPersonConditionSystem : EntitySystem
 {
+    [Dependency] private readonly RoundEndArrivalSystem _arrival = default!; // HardLight
     [Dependency] private readonly EmergencyShuttleSystem _emergencyShuttle = default!;
     [Dependency] private readonly IConfigurationManager _config = default!;
     [Dependency] private readonly SharedMindSystem _mind = default!;
@@ -39,7 +40,6 @@ public sealed class KillPersonConditionSystem : EntitySystem
             return 1f;
 
         var targetDead = _mind.IsCharacterDeadIc(mind);
-        var targetOnShuttle = _emergencyShuttle.IsTargetEscaping(mind.OwnedEntity.Value);
         if (!_config.GetCVar(CCVars.EmergencyShuttleEnabled) && requireMaroon)
         {
             requireDead = true;
@@ -49,17 +49,23 @@ public sealed class KillPersonConditionSystem : EntitySystem
         if (requireDead && !targetDead)
             return 0f;
 
-        // Always failed if the target needs to be marooned and the shuttle hasn't even arrived yet
-        if (requireMaroon && !_emergencyShuttle.EmergencyShuttleArrived)
-            return 0f;
-
-        // If the shuttle hasn't left, give 50% progress if the target isn't on the shuttle as a "almost there!"
+        // HardLight start
+        // Maroon-style objectives now resolve on the target's round-end survival state
+        // rather than whether they physically boarded the evac shuttle.
+        // HardLight end
         if (requireMaroon && !_emergencyShuttle.ShuttlesLeft)
-            return targetOnShuttle ? 0f : 0.5f;
+            return targetDead ? 0.5f : 0f; // HardLight: targetOnShuttle<targetDead
 
-        // If the shuttle has already left, and the target isn't on it, 100%
+        // HardLight start
+        // Once the round has actually ended, only targets that actually ended up
+        // at a safe arrival destination count as having made it.
+        // HardLight end
         if (requireMaroon && _emergencyShuttle.ShuttlesLeft)
-            return targetOnShuttle ? 0f : 1f;
+            return targetDead || !_arrival.CountsAsArrived(mind.OwnedEntity.Value) ? 1f : 0f; // HardLight
+
+        // HardLight: If evac is disabled, requireMaroon is normalized away above.
+        if (requireMaroon)
+            return 0f;
 
         return 1f; // Good job you did it woohoo
     }

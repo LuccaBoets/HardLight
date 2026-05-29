@@ -5,7 +5,6 @@ using Content.Server.Parallax;
 using Content.Shared.CCVar;
 using Content.Shared.Dataset;
 using Content.Shared.Gateway;
-using Content.Shared.Gateway.Components;
 using Content.Shared.Maps;
 using Content.Shared.Popups;
 using Content.Shared.Shuttles.Components;

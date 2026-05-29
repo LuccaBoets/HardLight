@@ -1,0 +1,39 @@
+# Author Info
+# GitHub: SmolGreenBuggo (https://github.com/SmolGreenBuggo)
+# Discord: kazako
+
+# Maintainer Info
+# Github: AutumnalModding
+# Discord: LilyflowerFDL
+
+- type: vessel
+  id: Gadfly
+  name: TSF Gadfly
+  description: A ColSec medical ship meant for triage and limited patrol work. It comes with a full chemistry lab with a small botany setup, and a special cell for treating/storing injured prisoners. Not suitable for long-term prisoner holding.
+  price: 39000 # 26180 apppraised, LL2 50% markup
+  category: Medium
+  group: Security
+  access: Security
+  shuttlePath: /Maps/_CS/Shuttles/Nfsd/gadfly.yml
+  guidebookPage: Null
+  class:
+  - Medical
+  engine:
+  - Uranium
+
+- type: gameMap
+  id: Gadfly
+  mapName: 'TSF Gadfly'
+  mapPath: /Maps/_CS/Shuttles/Nfsd/gadfly.yml
+  minPlayers: 0
+  stations:
+    Gadfly:
+      stationProto: StandardFrontierSecurityVessel
+      components:
+        - type: StationNameSetup
+          mapNameTemplate: 'Gadfly {1}'
+          nameGenerator:
+            !type:NanotrasenNameGenerator
+            prefixCreator: '14'
+        - type: StationJobs
+          availableJobs: {}

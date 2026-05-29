@@ -8,6 +8,7 @@ using Content.Shared._Shitmed.Targeting;
 using Content.Shared.Body.Part;
 using Content.Shared.Body.Systems;
 using Content.Shared.Chemistry.EntitySystems;
+using Content.Shared.Chat; // Starlight
 using Content.Shared.Damage;
 using Content.Shared.DoAfter;
 using Content.Shared.IdentityManagement;
@@ -26,6 +27,7 @@ using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
 using Robust.Shared.Timing;
 using System.Linq;
+using Content.Shared.FixedPoint; // Starlight
 using static Content.Server.Traits.Assorted.UnrevivableSystem;
 
 namespace Content.Server.Medical;
@@ -277,6 +279,19 @@ public sealed class HealthAnalyzerSystem : EntitySystem
             unrevivable = true;
         //HL END
 
+        // Starlight begin - Get a list of metabolizing chemicals
+        List<(string ReagentId, FixedPoint2 Quantity)>? metabolizingReagents = null;
+        if (TryComp<BloodstreamComponent>(target, out var bloodstreamComp) &&
+            _solutionContainerSystem.TryGetSolution(target, BloodstreamComponent.DefaultChemicalsSolutionName, out _, out var chemicalsSolution))
+        {
+            metabolizingReagents = new List<(string, FixedPoint2)>();
+            foreach (var (reagent, quantity) in chemicalsSolution.Contents)
+            {
+               metabolizingReagents.Add((reagent.Prototype, quantity));
+            }
+        }
+        // Starlight end
+
         if (HasComp<UncloneableComponent>(target)) // DeltaV: Uncloneable
             uncloneable = true;
 
@@ -290,7 +305,8 @@ public sealed class HealthAnalyzerSystem : EntitySystem
             uncloneable, // DeltaV: Uncloneable
             // Shitmed Change
             body,
-            part != null ? GetNetEntity(part) : null
+            part != null ? GetNetEntity(part) : null,
+            metabolizingReagents // Starlight
         ));
     }
 }

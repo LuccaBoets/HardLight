@@ -151,10 +151,11 @@ public sealed partial class ContrabandTurnInSystem : SharedContrabandTurnInSyste
                     if (!comp.TurnInValues.ContainsKey(console.RewardType))
                         continue;
 
-                    toSell.Add(ent);
                     var value = comp.TurnInValues[console.RewardType];
                     if (value <= 0)
                         continue;
+
+                    toSell.Add(ent); // HardLight: Moved down to prevent items marked as contraband but without a FUC value from being sold for nothing.
                     amount += value;
                 }
             }

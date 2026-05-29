@@ -1,0 +1,4 @@
+# Causes you to see a pink effect
+- type: statusEffect
+  id: Aphrodisiac
+  alwaysAllowed: true

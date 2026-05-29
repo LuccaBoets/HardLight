@@ -9,7 +9,7 @@
       time: 10800
   weight: -40 # HardLight
   startingGear: ValetGear
-  alwaysUseSpawner: true
+  alwaysUseSpawner: false # HardLight: true<false
   icon: "JobIconValet" # Frontier: JobIconServiceWorker<JobIconValet
   supervisors: job-supervisors-sr
   canBeAntag: false

@@ -254,7 +254,47 @@
     multiplier: 3
   - type: CrawlUnderObjects
     sneakSpeedModifier: 0.55
-    squeezeRadiusScale: 0.9
+    squeezeRadiusScale: 0.75
+    unsqueezedRadiusScale: 1.05
+
+- type: trait
+  id: VeryBig
+  name: very-big-name
+  description: very-big-text
+  category: Physical
+  cost: 3
+  replaceComponents: true
+  mutuallyExclusiveTraits:
+  - Small
+  - Tiny
+  components:
+  - type: SizeAttribute
+    tall: true
+  - type: TallWhitelist
+    scale: 1.5
+    borgScale: 1.1
+    borgFixtureRadius: 0.45
+    densityMultiplier: 1.25
+    cosmeticOnly: false
+  - type: CritThresholdModifier
+    critThresholdDelta: 25
+  - type: GunAccuracyModifier
+    spreadMultiplier: 1.25
+  - type: MeleeDamageModifier
+    flatBonus: 2
+    damageType: Blunt
+  - type: ThrowStrengthModifier
+    multiplier: 1.35
+  - type: TraitZoomModifier
+    multiplier: 1.15
+  - type: TraitMovementSpeedModifier
+    walkMultiplier: 0.7
+    sprintMultiplier: 0.75
+  - type: TraitCyborgPowerDrawModifier
+    multiplier: 3
+  - type: CrawlUnderObjects
+    sneakSpeedModifier: 0.55
+    squeezeRadiusScale: 0.65
     unsqueezedRadiusScale: 1.05
 
 - type: trait
@@ -280,6 +320,11 @@
     critThresholdDelta: -15
   - type: GunAccuracyModifier
     spreadMultiplier: 2
+  - type: GunUserThrowback
+    strength: 10
+    collisionStunTime: 1
+    impulseMultiplier: 2
+    damageMultiplier: 1
   - type: MeleeDamageModifier
     flatBonus: -2
     damageType: Blunt
@@ -322,6 +367,10 @@
   - type: GunAccuracyModifier
     spreadMultiplier: 3
   - type: GunUserThrowback
+    strength: 25
+    collisionStunTime: 2
+    impulseMultiplier: 5
+    damageMultiplier: 2
   - type: MeleeDamageModifier
     flatBonus: -3.5
     damageType: Blunt
@@ -342,10 +391,105 @@
   category: Physical
   cost: 0
   components:
-  - type: InteractionPopup
-    successChance: 1
-    interactSuccessString: petting-success-soft-floofy
-    interactFailureString: petting-failure-generic
-    interactSuccessSpawn: EffectHearts
-    interactSuccessSound:
-      path: /Audio/Animals/fox_squeak.ogg
+  - type: PettableInteractionOverride
+
+- type: trait
+  id: ArmAmputeeL
+  name: trait-amputee-left-arm-name
+  description: trait-amputee-left-arm-desc
+  category: Physical
+  cost: -6
+  mutuallyExclusiveTraits:
+  - ArmAmputeeR
+  components:
+  - type: Amputee
+    removeBodyPart: Arm
+    partSymmetry: Left
+
+- type: trait
+  id: ArmAmputeeR
+  name: trait-amputee-right-arm-name
+  description: trait-amputee-right-arm-desc
+  category: Physical
+  cost: -6
+  mutuallyExclusiveTraits:
+  - ArmAmputeeL
+  components:
+  - type: Amputee
+    removeBodyPart: Arm
+    partSymmetry: Right
+
+- type: trait
+  id: HardSkin
+  name: trait-hardskin-name
+  description: trait-hardskin-desc
+  category: Physical
+  cost: -4
+  speciesBlacklist:
+  - IPC
+  - Synth
+  components:
+  - type: BlockInjection
+    blockHypospray: true
+    blockInjectOnProjectile: true
+    blockReason: hardskin
+
+- type: trait
+  id: LegAmputeeL
+  name: trait-amputee-left-leg-name
+  description: trait-amputee-left-leg-desc
+  category: Physical
+  cost: -6
+  mutuallyExclusiveTraits:
+  - LegAmputeeR
+  - LegAmputeeBoth
+  - WheelchairBound
+  blacklist:
+    components:
+      - BorgChassis
+  components:
+  - type: Amputee
+    removeBodyPart: Leg
+    partSymmetry: Left
+  - type: BuckleOnMapInit
+    prototype: VehicleWheelchair
+
+- type: trait
+  id: LegAmputeeR
+  name: trait-amputee-right-leg-name
+  description: trait-amputee-right-leg-desc
+  category: Physical
+  cost: -6
+  mutuallyExclusiveTraits:
+  - LegAmputeeL
+  - LegAmputeeBoth
+  - WheelchairBound
+  blacklist:
+    components:
+      - BorgChassis
+  components:
+  - type: Amputee
+    removeBodyPart: Leg
+    partSymmetry: Right
+  - type: BuckleOnMapInit
+    prototype: VehicleWheelchair
+
+- type: trait
+  id: LegAmputeeBoth
+  name: trait-amputee-both-legs-name
+  description: trait-amputee-both-legs-desc
+  category: Physical
+  cost: -6
+  mutuallyExclusiveTraits:
+  - LegAmputeeL
+  - LegAmputeeR
+  - WheelchairBound
+  blacklist:
+    components:
+      - BorgChassis
+  components:
+  - type: Amputee
+    removeBodyPart: Leg
+    ignoreSymmetry: true
+  - type: BuckleOnMapInit
+    prototype: VehicleWheelchair

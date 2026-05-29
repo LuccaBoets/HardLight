@@ -31,6 +31,7 @@
   - type: UIFragment
     ui: !type:NanoChatUi
   - type: NanoChatCartridge
+    radioChannel: Common
   - type: Cartridge
     programName: nano-chat-program-name
     icon:

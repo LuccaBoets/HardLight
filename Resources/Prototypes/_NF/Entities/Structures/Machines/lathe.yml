@@ -51,6 +51,8 @@
   - type: Lathe
     idleState: icon
     runningState: icon
+    unlitIdleState: unlit
+    unlitRunningState: unlit-building
     staticPacks:
     - NFServiceTechfabDeprecatedStatic
     - ReportingStatic # DeltaV
@@ -238,6 +240,8 @@
   - type: Machine
     board: McServiceTechFabCircuitboard
   - type: Lathe
+    unlitIdleState: unlit
+    unlitRunningState: unlit-building
     staticPacks:
     - NFServiceTechfabDeprecatedStatic
     - ReportingStatic # DeltaV
@@ -274,6 +278,8 @@
   - type: Lathe
     idleState: icon
     runningState: icon
+    unlitIdleState: unlit
+    unlitRunningState: unlit-building
     staticPacks:
     - NFEngineeringTechfabDeprecatedStatic
     - NFInflatablesStatic
@@ -310,6 +316,8 @@
   - type: Lathe
     idleState: icon
     runningState: icon
+    unlitIdleState: unlit
+    unlitRunningState: unlit-building
     staticPacks:
     - NFSalvageTechfabDeprecatedStatic
     - NFInflatablesStatic
@@ -351,6 +359,8 @@
   - type: Lathe
     idleState: icon
     runningState: icon
+    unlitIdleState: unlit
+    unlitRunningState: unlit-building
     staticPacks:
     - SecurityAmmoStatic
     - NFNfsdTechfabDeprecatedStatic
@@ -395,6 +405,8 @@
   - type: Lathe
     idleState: icon
     runningState: icon
+    unlitIdleState: unlit
+    unlitRunningState: unlit-building
     staticPacks:
     - NFMercenaryTechfabDeprecatedStatic
     - CivilianAmmoRecipePack
@@ -543,6 +555,10 @@
     - NFBlueprints
   - type: RequireProjectileTarget
   - type: OreSiloClient
+  - type: MaterialStorage
+    whitelist:
+      tags:
+      - Paper
   - type: DeviceLinkSink
     ports:
       - FillbotAnyItem

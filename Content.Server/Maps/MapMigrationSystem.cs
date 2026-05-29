@@ -22,7 +22,7 @@ public sealed class MapMigrationSystem : EntitySystem
 #endif // Frontier
     [Dependency] private readonly IResourceManager _resMan = default!;
 
-    private static readonly string[] MigrationFiles = { "/migration.yml", "/nf_migration.yml" }; // Frontier: use array of migration files
+    private static readonly string[] MigrationFiles = { "/migration.yml", "/nf_migration.yml", "/hl_migration.yml" }; // Frontier: use array of migration files // HardLight: include hl_migration.yml so HL prototype renames apply on map load
 
     public override void Initialize()
     {

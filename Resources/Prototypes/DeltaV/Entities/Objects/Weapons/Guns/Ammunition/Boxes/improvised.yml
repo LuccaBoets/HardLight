@@ -99,7 +99,7 @@
   name: improvised ammunition box (12 gauge improvised)
   components:
   - type: BallisticAmmoProvider
-    proto: ShellShotgunImprovised
+    proto: ShellShotgun12_gaugeImprovised
   - type: Sprite
     layers:
     - state: base

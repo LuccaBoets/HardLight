@@ -78,4 +78,10 @@ trait-description-SquirtProducer = You have a slit between your legs.
 trait-name-Vampirism = Vampirism
 trait-description-Vampirism =
     Your body has evolved to be able to suck blood from beings that contain it and metabolize it into useful compounds.
-    You cannot eat normal food, but drinking blood satiates your hunger and thirst, and also improves your health.
+    You cannot eat normal food, and must drink blood to satiate your hunger and thirst, and both improve and upkeep your health.
+    When well-fed, you passively regenerate health. Your unarmed attacks are significantly stronger, but you take increased damage when starving.
+
+trait-name-LesserVampirism = Lesser Vampirism
+trait-description-LesserVampirism =
+    Your body has evolved to be able to suck blood from beings that contain it and metabolize it into useful compounds.
+    You can eat both normal food and drink blood to satiate your hunger and thirst. But as a lesser vampire you do not get the physical benefits.

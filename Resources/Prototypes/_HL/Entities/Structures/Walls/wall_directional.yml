@@ -1,0 +1,168 @@
+- type: entity
+  parent: BaseWallDirectional
+  id: WallDirectionalWood
+  name: directional wood wall
+  description: Cheap and cheerful wood plating.
+  components:
+  # Livyathan start: # I know it's weird to give them metal impact sounds, but normal wood walls do it, too.
+  - type: RangedDamageSound
+    soundGroups:
+      Brute:
+        collection:
+          MetalBulletImpact
+    soundTypes:
+      Heat:
+        collection:
+          MetalLaserImpact
+  - type: MeleeSound
+    soundGroups:
+      Brute:
+        collection: MetalThud
+  # Livyathan end
+  - type: Sprite
+    sprite: _HL/Structures/Walls/Directional/wood.rsi
+    state: directionalwallwood
+  - type: Icon
+    sprite: _HL/Structures/Walls/Directional/wood.rsi
+    state: directionalwallwood
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 150
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: WoodDestroyHeavy
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+  - type: Construction
+    graph: WallDirectionalWood
+    node: wallDirectionalWood
+    deconstructionTarget: start
+
+- type: entity
+  parent: BaseWallDirectional
+  id: WallDirectionalCardboard
+  name: directional cardboard wall
+  description: Budget cuts are hitting hard.
+  components:
+  - type: MeleeSound
+    soundGroups:
+      Brute:
+        path:
+          "/Audio/Weapons/pierce.ogg"
+  - type: Sprite
+    drawdepth: SmallObjects
+    sprite: _HL/Structures/Walls/Directional/cardboard.rsi
+    state: directionalwallcardboard
+  - type: Icon
+    sprite: _HL/Structures/Walls/Directional/cardboard.rsi
+    state: directionalwallcardboard
+  - type: Damageable
+    damageContainer: StructuralInorganic
+    damageModifierSet: Card
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.5,-0.5,0.5,-0.28125"
+        mask:
+        - FullTileMask
+        layer:
+        - FlimsyLayer
+        density: 250
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 40
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+  - type: Construction
+    graph: WallDirectionalCardboard
+    node: wallDirectionalCardboard
+    deconstructionTarget: start
+
+- type: entity
+  parent: BaseWallDirectional
+  id: WallDirectionalMining
+  name: directional mining wall
+  description: A mining wall built on a directional frame.
+  components:
+  - type: RangedDamageSound
+    soundGroups:
+      Brute:
+        collection:
+          MetalBulletImpact
+    soundTypes:
+      Heat:
+        collection:
+          MetalLaserImpact
+  - type: MeleeSound
+    soundGroups:
+      Brute:
+        collection: MetalThud
+  - type: Sprite
+    sprite: _HL/Structures/Walls/Directional/mining.rsi
+    state: directionalwallmining
+  - type: Icon
+    sprite: _HL/Structures/Walls/Directional/mining.rsi
+    state: directionalwallmining
+  - type: Damageable
+    damageModifierSet: StructuralMetallic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 225
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+  - type: Construction
+    graph: WallDirectionalMining
+    node: wallDirectionalMining
+    deconstructionTarget: start
+
+- type: entity
+  parent: BaseWallDirectional
+  id: WallDirectionalBasalt
+  name: directional basalt wall
+  description: A compact but durable basalt wall.
+  components:
+  - type: RangedDamageSound
+    soundGroups:
+      Brute:
+        collection:
+          MetalBulletImpact
+    soundTypes:
+      Heat:
+        collection:
+          MetalLaserImpact
+  - type: MeleeSound
+    soundGroups:
+      Brute:
+        collection: MetalThud
+  - type: Sprite
+    sprite: _HL/Structures/Walls/Directional/basalt.rsi
+    state: directionalwallbasalt
+  - type: Icon
+    sprite: _HL/Structures/Walls/Directional/basalt.rsi
+    state: directionalwallbasalt
+  - type: Damageable
+    damageContainer: Inorganic
+    damageModifierSet: StrongMetallic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 200
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+  - type: Construction
+    graph: WallDirectionalBasalt
+    node: wallDirectionalBasalt
+    deconstructionTarget: start

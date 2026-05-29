@@ -10,6 +10,11 @@
     Medicine:
       metabolismRate : 0.02
       effects:
+      - !type:Aphrodisiac
+        aphrodisiacPower: 6
+        conditions:
+        - !type:ConsentCondition
+          consent: Aphrodisiacs
       - !type:PopupMessage
         type: Local
         visualType: Large

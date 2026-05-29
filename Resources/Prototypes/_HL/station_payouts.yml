@@ -8,7 +8,7 @@
 
 - type: stationPay
   id: PrisonerPay
-  payPerHour: 20000
+  payPerHour: 5000 # Be grateful colcomm pays you at all.
   job: Prisoner
 
 - type: stationPay
@@ -125,6 +125,11 @@
   id: PsychologistPay
   payPerHour: 24000 # Specialisation
   job: Psychologist
+
+- type: stationPay
+  id: GeneticistPay
+  payPerHour: 24000
+  job: Geneticist
 
 - type: stationPay
   id: ParamedicPay

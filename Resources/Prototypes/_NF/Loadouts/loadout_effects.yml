@@ -15,9 +15,6 @@
     - SlimePerson
     - Vox
     - Sheleg # Different meds
-    - Avali # Amoxla user
-    - Felionoid # Amoxla user
-    - Resomi # Amoxla user
     inverted: true
 
 - type: loadoutEffectGroup

@@ -1,4 +1,3 @@
-using Robust.Shared.Audio;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
@@ -15,10 +14,4 @@ public sealed partial class BrainwashedComponent : Component
 
     [DataField]
     public EntityUid? Action;
-
-    [DataField]
-    public SoundSpecifier ChargingSound = new SoundPathSpecifier("/Audio/Effects/PowerSink/charge_fire.ogg");
-
-    [DataField]
-    public SoundSpecifier EngageSound = new SoundPathSpecifier("/Audio/Weapons/flash.ogg");
 }

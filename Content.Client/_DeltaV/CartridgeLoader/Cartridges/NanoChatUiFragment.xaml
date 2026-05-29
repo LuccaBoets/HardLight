@@ -10,7 +10,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later AND MIT
 <cartridges:NanoChatUiFragment
     xmlns="https://spacestation14.io"
     xmlns:cartridges="clr-namespace:Content.Client._DeltaV.CartridgeLoader.Cartridges"
-    xmlns:lookup="clr-namespace:Content.Client._DV.CartridgeLoader.Cartridges"
     xmlns:customControls="clr-namespace:Content.Client.Administration.UI.CustomControls"
     xmlns:controls="clr-namespace:Content.Client.UserInterface.Controls"
     Orientation="Vertical"
@@ -73,7 +72,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later AND MIT
                         Margin="0 0 4 0"
                         ToolTip="{Loc nano-chat-edit}">
                     <TextureRect StyleClasses="ButtonSquare"
-                                 TexturePath="/Textures/Interface/Icons/edit.png"
+                                 TexturePath="/Textures/Interface/VerbIcons/edit.svg.png"
                                  Stretch="KeepAspectCentered"
                                  MinSize="18 18" />
                 </Button>
@@ -265,12 +264,6 @@ SPDX-License-Identifier: AGPL-3.0-or-later AND MIT
                     </BoxContainer>
                 </BoxContainer>
                 </PanelContainer>
-
-                <!-- Lookup view (hidden by default) -->
-                <lookup:NanoChatLookupView Name="LookupView"
-                                          Visible="False"
-                                          HorizontalExpand="True"
-                                          VerticalExpand="True" />
         </BoxContainer>
     </BoxContainer>
 </cartridges:NanoChatUiFragment>

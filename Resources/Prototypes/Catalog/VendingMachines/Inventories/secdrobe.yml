@@ -8,7 +8,7 @@
     ClothingHeadHatBeretSecurity: 3
     ClothingHeadHatSecsoft: 3
     ClothingHeadBandRed: 3
-    ClothingMaskNeckGaiterRed: 3
+    ClothingGaiterRed: 3 # HL - Changed to ClothingGaiterRed
     ClothingHandsGlovesCombat: 3 # Frontier - Officers just walk around with yellow insulated gloves if you wont sell the combat gloves.
 #    ClothingHandsGlovesColorBlack: 3 # Frontier - No point in selling this, its like the none insulated gloves.
     ClothingHandsGlovesFingerless: 3

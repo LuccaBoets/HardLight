@@ -51,6 +51,7 @@
   conditions:
     - !type:EmptyOrWindowValidInTile
     - !type:NoWindowsInTile
+
 - type: construction
   id: GaslockHighFlow
   graph: Girder
@@ -76,3 +77,49 @@
   canBuildInImpassable: false
   conditions:
   - !type:TileNotBlocked
+
+# Directional
+
+- type: construction
+  id: WallDirectionalWood
+  graph: WallDirectionalWood
+  startNode: start
+  targetNode: wallDirectionalWood
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: true
+  canBuildInImpassable: true
+
+- type: construction
+  id: WallDirectionalCardboard
+  graph: WallDirectionalCardboard
+  startNode: start
+  targetNode: wallDirectionalCardboard
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: true
+  canBuildInImpassable: true
+
+- type: construction
+  id: WallDirectionalMining
+  graph: WallDirectionalMining
+  startNode: start
+  targetNode: wallDirectionalMining
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: true
+  canBuildInImpassable: true
+
+- type: construction
+  id: WallDirectionalBasalt
+  graph: WallDirectionalBasalt
+  startNode: start
+  targetNode: wallDirectionalBasalt
+  category: construction-category-structures
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: true
+  canBuildInImpassable: true

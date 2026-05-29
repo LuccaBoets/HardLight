@@ -1,7 +1,7 @@
 {
   "version": 1,
   "license": "CC-BY-SA-3.0",
-  "copyright": "Taken from ex666 https://github.com/ss220-space/Paradise/blob/master220/icons/mob/clothing/suit.dmi. Reptilian state by TiniestShark (Github)",
+  "copyright": "Taken from ex666 https://github.com/ss220-space/Paradise/blob/master220/icons/mob/clothing/suit.dmi. Avali state by DocMoth (Github). Reptilian state by TiniestShark (Github)",
   "size": {
     "x": 32,
     "y": 32
@@ -43,6 +43,14 @@
     },
     {
       "name": "on-equipped-HELMET-reptilian",
+      "directions": 4
+    },
+    {
+      "name": "off-equipped-HELMET-avali",
+      "directions": 4
+    },
+    {
+      "name": "on-equipped-HELMET-avali",
       "directions": 4
     }
   ]

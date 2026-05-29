@@ -27,7 +27,8 @@
     proto: EffectFlashBluespace
     mapCoords: true
   - type: BluespacePulseOnTrigger
-    radius: 8
+    radius: 10
+    stunSeconds: 4
   - type: UseDelay
     delay: 5
   - type: Stack

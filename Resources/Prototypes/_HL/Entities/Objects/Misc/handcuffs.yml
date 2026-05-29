@@ -1,0 +1,12 @@
+- type: entity
+  name: pink fluffy handcuffs
+  description: Soft, pink, fluffy handcuffs. Surprisingly effective at restraining people.
+  id: PinkFluffyHandcuffs
+  parent: Handcuffs
+  components:
+  - type: Handcuff
+    cuffedRSI: _HL/Objects/Misc/pink_fluffy_handcuffs.rsi
+    bodyIconState: body-overlay
+  - type: Sprite
+    sprite: _HL/Objects/Misc/pink_fluffy_handcuffs.rsi
+    state: pink_fluffy_handcuff

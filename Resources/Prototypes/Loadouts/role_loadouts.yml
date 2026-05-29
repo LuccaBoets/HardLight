@@ -47,16 +47,25 @@
 - type: roleLoadout
   id: JobPassenger
   groups:
-  - PassengerJumpsuit
-  - CommonBackpack
-  - PassengerNeck
-  - PassengerFace
-  - PassengerGloves
-  - PassengerOuterClothing
-  - PassengerShoes
-  - Glasses
+  - ContractorHead
+  - ContractorNeck
+  - ContractorJumpsuit
+  - ContractorGloves
+  - ContractorBackpack
+  - ContractorOuterClothing
+  - ContractorShoes
+  - ContractorFace
+  - ContractorGlasses
+  - ContractorBelt
+  - ContractorEars
   - ContractorBoxSurvival
-  - Trinkets
+  - ContractorPDA
+  - ContractorWallet
+  - ContractorImplanter
+  - ContractorBackpackItems
+  - ContractorHandItems
+  - NFSpeciesSpecific
+  - PassengerNeck
 
 - type: roleLoadout
   id: JobBartender
@@ -619,7 +628,6 @@
   - ContractorNeck
   - ContractorWallet
   - ContractorImplanter
-  - ContractorBackpackItems
   - ContractorHandItems
   - ContractorBoxSurvival
 # HardLight end

@@ -63,6 +63,7 @@ public sealed partial class GraphicsTab : Control
         Control.AddOptionCheckBox(CCVars.HudFpsCounterVisible, FpsCounterCheckBox);
         Control.AddOptionCheckBox(CCVars.ShowStructureSmoothing, ShowStructureSmoothingCheckBox); // HardLight
         Control.AddOptionCheckBox(CCVars.ShowCyborgSubtypeSprites, ShowCyborgSubtypesCheckBox); // HardLight
+        Control.AddOptionCheckBox(CCVars.ShowAphrodisiacEffects, ShowAphrodisiacEffectsCheckBox); // HardLight
 
         Control.Initialize();
 

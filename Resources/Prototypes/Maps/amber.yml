@@ -20,7 +20,7 @@
         lobbySortOrder: 1
       - type: StationJobs # HardLight: Reordered + additions added
         availableJobs:
-          # Command (8)
+          # Command (9)
           StationCaptain: [ 1, 1 ]
           HeadOfPersonnel: [ 1, 1 ]
           HeadOfSecurity: [ 1, 1 ]
@@ -29,6 +29,7 @@
           ResearchDirector: [ 1, 1 ]
           Quartermaster: [ 1, 1 ]
           StationRepresentative: [ 1, 1 ] # Harbor Master
+          StationTrafficController: [ 1, 1 ]
           # Silicon (2)
           StationAi: [ 1, 1 ]
           Borg: [ 3, 3 ]
@@ -83,6 +84,7 @@
           Musician: [ 2, 2 ]
           # Anomaly (1)
           Anomaly: [ 5, 5 ]
+
       - type: StationDeadDrop
         maxDeadDrops: 6 # small station
       - type: StationDeadDropReporting

@@ -290,7 +290,7 @@
       - id: ClothingHeadHatXmasCrown
         prob: 0.02
         orGroup: dresserthirdloot
-      - id: ClothingMaskNeckGaiter
+      - id: ClothingGaiterCharcoal # HL
         prob: 0.02
         orGroup: dressersecondloot
       - id: ClothingHeadHatBeretBrigmedic

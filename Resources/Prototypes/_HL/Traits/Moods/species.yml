@@ -1,0 +1,24 @@
+# Dataset of species names for the species attraction mood variable.
+# Values are display-ready plural forms substituted directly into the mood description.
+
+- type: dataset
+  id: EroticAttractionSpecies
+  values:
+  - vulpkanin
+  - felinids
+  - reptilians
+  - moths
+  - arachnids
+  - diona
+  - oni
+  - harpies
+  - kitsune
+  - rodents
+  - protogen
+  - shadekin
+  - thavens
+  - slimes
+  - synthetics
+  - skrell
+  - vox
+  - tajaran

@@ -3,7 +3,7 @@
   mapName: 'NCS Gax'
   mapPath: /Maps/gaxstation.yml # Floofstation
   minPlayers: 0
-  maxPlayers: 45
+  maxPlayers: 200
   fallback: true
   stations:
     Gaxstation:

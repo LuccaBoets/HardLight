@@ -128,6 +128,9 @@ uplink-security-armingsword-desc = Ancient design meets modern materials.
 uplink-security-captainsword-name = Captain's Sabre
 uplink-security-captainsword-desc = A sword normally reserved for captains, admiralty, and other high command. Has a small chance to reflect incoming projectiles.
 
+uplink-security-ccofficersword-name = Ornate Officer's Sabre
+uplink-security-ccofficersword-desc = A sword normally reserved for Colonial Command officials. It has a small chance to reflect projectiles. 
+
 uplink-security-pulsepistol-name = Pulse Pistol
 uplink-security-pulsepistol-desc = A high powered laser pistol normally reserved for elite ERT units. Has an internal battery, but requires using a security charging dock.
 
@@ -205,6 +208,9 @@ uplink-security-spaceblade-sec-desc = The latest in stun tech.
 
 uplink-security-contraband-forensics-module-name = Contraband Forenics Module
 uplink-security-contraband-forensics-module-desc = A program for scanning and reporting contraband dead drops and pods for bounties. Slots into a forensic scanner.
+
+uplink-security-pizza-sec-name = Donuts
+uplink-security-pizza-sec-desc = May not actually be donuts, but it IS objectively the next best thing. Pizza!
 
 uplink-security-lasercanon-name = laser cannon
 uplink-security-lasercanon-desc = A heavy duty, high powered laser sniper rifle.

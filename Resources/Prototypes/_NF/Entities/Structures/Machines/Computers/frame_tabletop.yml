@@ -19,6 +19,9 @@
     - type: InteractionOutline
     - type: Rotatable
     - type: Anchorable
+    - type: EdgeConnection # HardLight
+      connectionKey: tabletop_computers
+      allowedDirections: East, West
     - type: Construction
       graph: ComputerTabletop
       node: tabletop computer
@@ -38,6 +41,16 @@
         - map: [ "computerLayerKeys" ]
           sprite: Structures/Machines/computers.rsi
           state: generic_keys
+    # HardLight start
+    - type: GenericVisualizer
+      visuals:
+        enum.EdgeConnectionVisuals.ConnectionMask:
+          computerLayerBody:
+            None: { state: computer_tabletop }
+            West: { state: computer_tabletop }
+            East: { state: computer_tabletop }
+            East, West: { state: computer_tabletop }
+    # HardLight end
     - type: Damageable
       damageContainer: Inorganic
       damageModifierSet: Electronic
@@ -99,6 +112,9 @@
   id: ComputerTabletopBroken
   suffix: Tabletop
   components:
+  - type: EdgeConnection # HardLight
+    connectionKey: tabletop_computers
+    allowedDirections: East, West
   - type: Sprite
     drawdepth: SmallObjects
     sprite: _NF/Structures/Machines/computer_tabletop.rsi

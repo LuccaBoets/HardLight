@@ -373,3 +373,12 @@
 
 - type: Tag
   id: Pouch
+
+- type: Tag
+  id: Bunnysuit
+
+- type: Tag
+  id: Medipen
+
+- type: Tag
+  id: CCSabre

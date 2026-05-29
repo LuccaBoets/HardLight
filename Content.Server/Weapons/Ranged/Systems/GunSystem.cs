@@ -63,6 +63,7 @@ using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Weapons.Ranged.Events;
 using Content.Shared.Weapons.Ranged.Systems;
 using Content.Shared.Weapons.Hitscan.Components;
+using Content.Shared.Weapons.Hitscan.Events;
 using Content.Shared.Weapons.Reflect;
 using Robust.Server.GameObjects;
 using Robust.Server.Player;
@@ -78,7 +79,6 @@ using Content.Shared.Interaction; // Frontier
 using Content.Shared.Examine; // Frontier
 using Content.Shared.Hands.Components;
 using Content.Shared.Power;
-using Content.Shared._Starlight.NullSpace;
 
 namespace Content.Server.Weapons.Ranged.Systems;
 
@@ -88,7 +88,7 @@ public sealed partial class GunSystem : SharedGunSystem
     [Dependency] private readonly DamageExamineSystem _damageExamine = default!;
     [Dependency] private readonly PricingSystem _pricing = default!;
     [Dependency] private readonly SharedColorFlashEffectSystem _color = default!;
-    [Dependency] private readonly StaminaSystem _stamina = default!;
+    [Dependency] private readonly SharedStaminaSystem _stamina = default!;
     [Dependency] private readonly SharedContainerSystem _container = default!;
     [Dependency] private readonly SharedMapSystem _map = default!;
 
@@ -259,9 +259,6 @@ public sealed partial class GunSystem : SharedGunSystem
                                 // Checks if the laser should pass over unless targeted by its user
                                 foreach (var collide in rayCastResults)
                                 {
-                                    if (hitscan.Reflective != ReflectType.Energy && HasComp<NullSpaceComponent>(collide.HitEntity))
-                                        continue;
-
                                     if (collide.HitEntity != gun.Target &&
                                         CompOrNull<RequireProjectileTargetComponent>(collide.HitEntity)?.Active == true)
                                     {
@@ -331,6 +328,10 @@ public sealed partial class GunSystem : SharedGunSystem
                                 Logs.Add(LogType.HitScanHit,
                                     $"{hitName:target} hit by hitscan dealing {dmg.GetTotal():damage} damage");
                             }
+
+                            // Mono: notify gatherable systems about hitscan damage dealt
+                            var hitscanDmgEv = new HitscanDamageDealtEvent { Target = hitEntity, DamageDealt = dmg };
+                            RaiseLocalEvent(gunUid, ref hitscanDmgEv);
                         }
                     }
                     else
@@ -396,13 +397,17 @@ public sealed partial class GunSystem : SharedGunSystem
         }
 
         // Do a throw
-        if (!HasComp<ProjectileComponent>(uid))
+        if (!TryComp(uid, out ProjectileComponent? projectileComp))
         {
             RemoveShootable(uid);
             // TODO: Someone can probably yeet this a billion miles so need to pre-validate input somewhere up the call stack.
             ThrowingSystem.TryThrow(uid, mapDirection, gun.ProjectileSpeedModified, user);
             return;
         }
+
+        // VRS (Triad #3731): apply per-gun damage modifier
+        if (gun.DamageModifier != 1f)
+            projectileComp.Damage *= gun.DamageModifier;
 
         if (GunPrediction && user != null && TryComp<ActorComponent>(user, out var actor))
         {

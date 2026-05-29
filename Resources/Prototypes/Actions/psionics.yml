@@ -39,7 +39,7 @@
   components:
   - type: EntityTargetAction
     icon: Interface/VerbIcons/mind_swap.png
-    useDelay: 240
+    useDelay: 30
     checkCanAccess: false
     range: 8
     itemIconStyle: BigAction
@@ -62,7 +62,7 @@
   components:
   - type: InstantAction
     icon: Interface/VerbIcons/mind_swap_return.png
-    useDelay: 20
+    useDelay: 30
     checkCanInteract: false
     event: !type:MindSwapPowerReturnActionEvent
 
@@ -82,6 +82,21 @@
         - PsionicInsulation
         - Mindbroken
     event: !type:NoosphericZapPowerActionEvent
+
+- type: entity
+  id: NoosphericZapGun
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: HitscanBatteryAmmoProvider
+    proto: NoosphericZapBeam
+    fireCost: 1
+  - type: Battery
+    maxCharge: 10
+    startingCharge: 10
+  - type: Gun
+    soundGunshot:
+      path: /Audio/Effects/Lightning/lightningshock.ogg
+    projectileSpeed: 5
 
 - type: entity
   id: ActionPyrokinesis
@@ -308,6 +323,54 @@
           maxThrowRange: 3
           maxThrowStrength: 5
           spaceRange: 3
+
+- type: entity
+  id: ActionShadowkinShadeskip
+  name: action-name-shadeskip
+  description: action-description-shadowkin-shadeskip
+  #abstract: true
+  components:
+    - type: InstantAction
+      icon: { sprite: Interface/Actions/shadowkin_icons.rsi, state: shadeskip }
+      useDelay: 10
+      checkCanInteract: false
+      event: !type:AnomalyPowerActionEvent
+        settings:
+          powerName: "Shadowkin-Shadeskip"
+          manaCost: 25
+          checkInsulation: false
+          minGlimmer: 0
+          maxGlimmer: 0
+          doSupercritical: false
+        entitySpawnEntries:
+          - settings:
+              spawnOnPulse: true
+              minAmount: 5
+              maxAmount: 10
+              maxRange: 2.5
+            spawns:
+              - ShadowKudzu
+          - settings:
+              spawnOnPulse: true
+              minAmount: 1
+              maxAmount: 1
+              maxRange: 0.5
+            spawns:
+              - EffectFlashShadowkinShadeskip
+
+- type: entity
+  id: ActionDarkSwap
+  name: action-name-darkswap
+  description: action-description-darkswap
+  #abstract: true
+  components:
+    - type: InstantAction
+      icon: { sprite: Interface/Actions/shadowkin_icons.rsi, state: darkswap }
+      useDelay: 10
+      checkCanInteract: false
+      event: !type:DarkSwapActionEvent
+        manaCost: 100
+        #checkInsulation: false
 
 - type: entity
   id: ActionPyrokineticFlare

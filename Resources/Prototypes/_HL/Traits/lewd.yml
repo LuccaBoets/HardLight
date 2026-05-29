@@ -2,7 +2,7 @@
   id: EggLayerFertile
   name: hl-trait-egglayer-fertile-name
   description: hl-trait-egglayer-fertile-desc
-  category: Physical
+  category: Lewd
   mutuallyExclusiveTraits:
   - EggLayer
   - EggLayerInfertile
@@ -21,7 +21,7 @@
   id: EggLayer
   name: hl-trait-egglayer-name
   description: hl-trait-egglayer-desc
-  category: Physical
+  category: Lewd
   mutuallyExclusiveTraits:
   - EggLayerFertile
   - EggLayerInfertile
@@ -40,7 +40,7 @@
   id: EggLayerInfertile
   name: hl-trait-egglayer-infertile-name
   description: hl-trait-egglayer-infertile-desc
-  category: Physical
+  category: Lewd
   mutuallyExclusiveTraits:
   - EggLayerFertile
   - EggLayer
@@ -54,3 +54,14 @@
       eggSlowThreshold: 10
       eggSlowMult: 0.5
       eggLayDelay: 5
+
+- type: trait
+  id: Brainwasher
+  name: hl-trait-Brainwasher-name
+  description: hl-trait-Brainwasher-desc
+  category: Physical
+  cost: 1
+  components:
+    - type: Brainwasher
+      chardingDuration: 10
+      configureText: Configure Brainwashing Compulsions

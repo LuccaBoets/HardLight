@@ -198,7 +198,7 @@
   - type: AntagRandomObjectives
     sets:
     - groups: TraitorObjectiveGroups
-    maxDifficulty: 5
+    maxDifficulty: 8
   - type: AntagSelection
     agentName: traitor-round-end-agent-name
 
@@ -216,7 +216,7 @@
     definitions:
     - prefRoles: [ Traitor ]
       min: 1
-      max: 8
+      max: 5
       playerRatio: 10
       blacklist:
         components:

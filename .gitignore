@@ -307,3 +307,6 @@ Resources/MapImages
 # Direnv stuff
 .direnv/
 Resources/Prototypes/Entities/Clothing/OuterClothing/.yml
+
+# C# Dev Kit cache file
+*.lscache

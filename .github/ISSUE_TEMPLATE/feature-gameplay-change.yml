@@ -1,0 +1,84 @@
+name: Feature / Gameplay Change
+description: Propose a new feature, balance change, or gameplay mechanic
+labels: ["Feature Discussion"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Thanks for taking the time to propose a change!
+
+        Please fill out this form carefully. Incomplete or improperly formatted proposals may be closed.
+
+        **Important:** Only triage members will apply the `Feature Discussion` label. Discussing does not guarantee implementation.
+
+  - type: textarea
+    id: core_goal
+    attributes:
+      label: Core goal
+      description: What is the primary goal this proposal must achieve?
+      placeholder: "State the central outcome so discussion stays focused on solving this goal."
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Detailed description
+      description: Explain exactly what the change does, how it works, and why it's needed.
+      placeholder: "Include mechanics, interactions, and any balance reasoning..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Why this change?
+      description: What problem does it solve? How does it improve the game?
+      placeholder: "E.g., current system is frustrating because... this would help by..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type of change
+      description: Select the category that best fits
+      options:
+        - New feature / addition
+        - Balance tweak
+        - Gameplay mechanic overhaul
+        - Quality of life improvement
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: drawbacks
+    attributes:
+      label: Potential downsides
+      description: No idea is perfect - what could go wrong? What might players dislike?
+      placeholder: "E.g., might make X less useful, could be exploited if ..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Did you think of other ways to solve the same problem?
+      placeholder: "We could also do Y, but that would cause Z..."
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Submission checklist
+      description: Confirm the following before submitting
+      options:
+        - label: I have searched for existing issues (open/closed) and this is not a duplicate
+          required: true
+        - label: I understand that this proposal will need 48h discussion + 24h vote before possible implementation
+          required: true
+        - label: I am aware that directors may overrule a vote with a public reason
+          required: true

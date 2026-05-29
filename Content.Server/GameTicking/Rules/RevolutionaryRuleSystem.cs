@@ -29,6 +29,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using Content.Shared.Cuffs.Components;
 using Robust.Shared.Player;
+using Content.Shared.GameTicking;
 
 namespace Content.Server.GameTicking.Rules;
 
@@ -65,6 +66,7 @@ public sealed class RevolutionaryRuleSystem : GameRuleSystem<RevolutionaryRuleCo
         SubscribeLocalEvent<HeadRevolutionaryComponent, MobStateChangedEvent>(OnHeadRevMobStateChanged);
 
         SubscribeLocalEvent<RevolutionaryRoleComponent, GetBriefingEvent>(OnGetBriefing);
+        SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestartCleanup);
 
     }
 
@@ -87,6 +89,12 @@ public sealed class RevolutionaryRuleSystem : GameRuleSystem<RevolutionaryRuleCo
                 GameTicker.EndGameRule(uid, gameRule);
             }
         }
+    }
+
+    protected override void Ended(EntityUid uid, RevolutionaryRuleComponent component, GameRuleComponent gameRule, GameRuleEndedEvent args)
+    {
+        base.Ended(uid, component, gameRule, args);
+        CleanupRevolutionaryEntities();
     }
 
     protected override void AppendRoundEndText(EntityUid uid,
@@ -198,6 +206,29 @@ public sealed class RevolutionaryRuleSystem : GameRuleSystem<RevolutionaryRuleCo
     {
         if (ev.NewMobState == MobState.Dead || ev.NewMobState == MobState.Invalid)
             CheckRevsLose();
+    }
+
+    private void OnRoundRestartCleanup(RoundRestartCleanupEvent ev)
+    {
+        CleanupRevolutionaryEntities();
+    }
+
+    private void CleanupRevolutionaryEntities()
+    {
+        var revs = AllEntityQuery<RevolutionaryComponent>();
+        while (revs.MoveNext(out var uid, out _))
+        {
+            _npcFaction.RemoveFaction(uid, RevolutionaryNpcFaction);
+            RemCompDeferred<RevolutionaryComponent>(uid);
+        }
+
+        var headRevs = AllEntityQuery<HeadRevolutionaryComponent>();
+        while (headRevs.MoveNext(out var uid, out _))
+        {
+            _npcFaction.RemoveFaction(uid, RevolutionaryNpcFaction);
+            RemCompDeferred<HeadRevolutionaryComponent>(uid);
+            RemCompDeferred<RevolutionaryComponent>(uid);
+        }
     }
 
     /// <summary>

@@ -47,26 +47,6 @@ public sealed class ExpeditionDiskSystem : EntitySystem
         {
             component.DifficultyNumber = number;
         }
-
-        // Compute and store enemy field for quick inspection (faction+rating+type)
-        try
-        {
-            if (_prototypeManager.TryIndex<Content.Shared.Procedural.SalvageDifficultyPrototype>(component.Difficulty, out var difficultyProto))
-            {
-                var mission = _salvage.GetMission(component.MissionType, difficultyProto, component.Seed);
-                var factionProto = _prototypeManager.Index<SalvageFactionPrototype>(mission.Faction);
-                        var factionId = factionProto.ID ?? mission.Faction;
-                        if (factionId.StartsWith("NF", StringComparison.OrdinalIgnoreCase))
-                            factionId = factionId.Substring(2);
-                        else if (factionId.StartsWith("HL", StringComparison.OrdinalIgnoreCase))
-                            factionId = factionId.Substring(2);
-                        component.Enemy = $"{factionId}";
-            }
-        }
-        catch
-        {
-            // Ignore failures here; OnExamined will fallback if necessary.
-        }
     }
 
     public bool TryActivateFromConsole(EntityUid consoleUid, EntityUid diskUid, ExpeditionDiskComponent? component = null)
@@ -133,30 +113,20 @@ public sealed class ExpeditionDiskSystem : EntitySystem
             ("difficulty", difficultyNumber),
             ("objective", objective)));
 
-        // Show the enemy faction + rating + mission type (e.g. Snow5Destruction).
-        // Prefer the stored component.Enemy if present; otherwise compute, store, and show it.
-        if (!string.IsNullOrWhiteSpace(component.Enemy))
+        // Always derive enemy from the current mission so it matches the disk's actual seed/difficulty/type.
+        try
         {
-                args.PushMarkup($"Enemy: {component.Enemy}");
+            var factionProto = _prototypeManager.Index<SalvageFactionPrototype>(mission.Faction);
+            var factionId = factionProto.ID ?? mission.Faction;
+            if (factionId.StartsWith("NF", StringComparison.OrdinalIgnoreCase))
+                factionId = factionId.Substring(2);
+            else if (factionId.StartsWith("HL", StringComparison.OrdinalIgnoreCase))
+                factionId = factionId.Substring(2);
+            args.PushMarkup($"Enemy: {factionId}");
         }
-        else
+        catch
         {
-            try
-            {
-                var factionProto = _prototypeManager.Index<SalvageFactionPrototype>(mission.Faction);
-                var factionId = factionProto.ID ?? mission.Faction;
-                if (factionId.StartsWith("NF", StringComparison.OrdinalIgnoreCase))
-                    factionId = factionId.Substring(2);
-                else if (factionId.StartsWith("HL", StringComparison.OrdinalIgnoreCase))
-                    factionId = factionId.Substring(2);
-                var enemyField = $"{factionId}";
-                component.Enemy = enemyField;
-                    args.PushMarkup($"Enemy: {enemyField}");
-            }
-            catch
-            {
-                // If anything goes wrong resolving the faction, silently skip the field.
-            }
+            // If anything goes wrong resolving the faction, silently skip the field.
         }
 
         if (_timing.CurTime < component.CooldownEnd)

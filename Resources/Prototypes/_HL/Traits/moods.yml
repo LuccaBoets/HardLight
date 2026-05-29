@@ -1,0 +1,30 @@
+- type: traitCategory
+  id: EroticMoods
+  name: trait-category-erotic-moods
+
+- type: trait
+  id: VanillaEroticMoods
+  name: hl-trait-vanilla-erotic-moods-name
+  description: hl-trait-vanilla-erotic-moods-desc
+  category: EroticMoods
+  cost: 0
+  components:
+  - type: VanillaEroticMoods
+
+- type: trait
+  id: KinkyEroticMoods
+  name: hl-trait-kinky-erotic-moods-name
+  description: hl-trait-kinky-erotic-moods-desc
+  category: EroticMoods
+  cost: 0
+  components:
+  - type: KinkyEroticMoods
+
+- type: trait
+  id: RomanticMoods
+  name: hl-trait-romantic-moods-name
+  description: hl-trait-romantic-moods-desc
+  category: EroticMoods
+  cost: 0
+  components:
+  - type: RomanticMoods

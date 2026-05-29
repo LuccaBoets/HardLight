@@ -34,9 +34,21 @@ public sealed class PaintSystem : SharedPaintSystem
     {
         base.Initialize();
 
+        SubscribeLocalEvent<PaintedComponent, ComponentStartup>(OnPaintedStartup); // HardLight
+        SubscribeLocalEvent<PaintedComponent, MapInitEvent>(OnPaintedMapInit); // HardLight
         SubscribeLocalEvent<PaintComponent, AfterInteractEvent>(OnInteract);
         SubscribeLocalEvent<PaintComponent, PaintDoAfterEvent>(OnPaint);
         SubscribeLocalEvent<PaintComponent, GetVerbsEvent<UtilityVerb>>(OnPaintVerb);
+    }
+
+    private void OnPaintedStartup(EntityUid uid, PaintedComponent component, ComponentStartup args) // HardLight
+    {
+        UpdateAppearance(uid, component);
+    }
+
+    private void OnPaintedMapInit(EntityUid uid, PaintedComponent component, MapInitEvent args) // HardLight
+    {
+        UpdateAppearance(uid, component);
     }
 
     private void OnInteract(EntityUid uid, PaintComponent component, AfterInteractEvent args)

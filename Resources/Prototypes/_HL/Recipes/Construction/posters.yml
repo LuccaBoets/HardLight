@@ -1569,3 +1569,146 @@
   canBuildInImpassable: true
   conditions:
     - !type:WallmountCondition
+
+- type: construction
+  id: PosterMapBagel
+  graph: Poster
+  startNode: start
+  targetNode: PosterMapBagel
+  category: construction-category-Poster
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: true
+  canBuildInImpassable: true
+  conditions:
+    - !type:WallmountCondition
+
+- type: construction
+  id: PosterMapDelta
+  graph: Poster
+  startNode: start
+  targetNode: PosterMapDelta
+  category: construction-category-Poster
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: true
+  canBuildInImpassable: true
+  conditions:
+    - !type:WallmountCondition
+
+- type: construction
+  id: PosterMapMarathon
+  graph: Poster
+  startNode: start
+  targetNode: PosterMapMarathon
+  category: construction-category-Poster
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: true
+  canBuildInImpassable: true
+  conditions:
+    - !type:WallmountCondition
+
+- type: construction
+  id: PosterMapMoose
+  graph: Poster
+  startNode: start
+  targetNode: PosterMapMoose
+  category: construction-category-Poster
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: true
+  canBuildInImpassable: true
+  conditions:
+    - !type:WallmountCondition
+
+- type: construction
+  id: PosterMapPacked
+  graph: Poster
+  startNode: start
+  targetNode: PosterMapPacked
+  category: construction-category-Poster
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: true
+  canBuildInImpassable: true
+  conditions:
+    - !type:WallmountCondition
+
+- type: construction
+  id: PosterMapPillar
+  graph: Poster
+  startNode: start
+  targetNode: PosterMapPillar
+  category: construction-category-Poster
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: true
+  canBuildInImpassable: true
+  conditions:
+    - !type:WallmountCondition
+
+- type: construction
+  id: PosterMapSaltern
+  graph: Poster
+  startNode: start
+  targetNode: PosterMapSaltern
+  category: construction-category-Poster
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: true
+  canBuildInImpassable: true
+  conditions:
+    - !type:WallmountCondition
+
+- type: construction
+  id: PosterMapSplit
+  graph: Poster
+  startNode: start
+  targetNode: PosterMapSplit
+  category: construction-category-Poster
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: true
+  canBuildInImpassable: true
+  conditions:
+    - !type:WallmountCondition
+
+- type: construction
+  id: PosterMapLighthouse
+  graph: Poster
+  startNode: start
+  targetNode: PosterMapLighthouse
+  category: construction-category-Poster
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: true
+  canBuildInImpassable: true
+  conditions:
+    - !type:WallmountCondition
+
+- type: construction
+  id: PosterMapWaystation
+  graph: Poster
+  startNode: start
+  targetNode: PosterMapWaystation
+  category: construction-category-Poster
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: true
+  canBuildInImpassable: true
+  conditions:
+    - !type:WallmountCondition
+
+- type: construction
+  id: PosterMapOrigin
+  graph: Poster
+  startNode: start
+  targetNode: PosterMapOrigin
+  category: construction-category-Poster
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: true
+  canBuildInImpassable: true
+  conditions:
+    - !type:WallmountCondition

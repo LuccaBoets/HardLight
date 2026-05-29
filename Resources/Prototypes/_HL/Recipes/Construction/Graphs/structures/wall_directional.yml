@@ -1,0 +1,97 @@
+- type: constructionGraph
+  id: WallDirectionalWood
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: wallDirectionalWood
+          steps:
+            - material: WoodPlank
+              amount: 2
+              doAfter: 2
+    - node: wallDirectionalWood
+      entity: WallDirectionalWood
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: MaterialWoodPlank1
+              amount: 2
+            - !type:DeleteEntity {}
+          steps:
+            - tool: Prying
+              doAfter: 2
+
+- type: constructionGraph
+  id: WallDirectionalCardboard
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: wallDirectionalCardboard
+          steps:
+            - material: Cardboard
+              amount: 2
+              doAfter: 2
+    - node: wallDirectionalCardboard
+      entity: WallDirectionalCardboard
+      edges:
+        - to: start
+          completed:
+            - !type:PlaySound
+              sound: /Audio/Items/Toys/ToyFall2.ogg
+            - !type:SpawnPrototype
+              prototype: MaterialCardboard1
+              amount: 2
+            - !type:DeleteEntity {}
+          steps:
+            - tool: Slicing
+              doAfter: 2
+
+- type: constructionGraph
+  id: WallDirectionalMining
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: wallDirectionalMining
+          steps:
+            - material: Steel
+              amount: 3
+              doAfter: 3
+    - node: wallDirectionalMining
+      entity: WallDirectionalMining
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetSteel1
+              amount: 3
+            - !type:DeleteEntity {}
+          steps:
+            - tool: Welding
+              doAfter: 3
+
+- type: constructionGraph
+  id: WallDirectionalBasalt
+  start: start
+  graph:
+    - node: start
+      edges:
+        - to: wallDirectionalBasalt
+          steps:
+            - material: Steel
+              amount: 3
+              doAfter: 3
+    - node: wallDirectionalBasalt
+      entity: WallDirectionalBasalt
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetSteel1
+              amount: 3
+            - !type:DeleteEntity {}
+          steps:
+            - tool: Welding
+              doAfter: 3

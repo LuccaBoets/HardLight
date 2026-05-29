@@ -58,6 +58,19 @@
   id: NonconIcon
   name: Non-Con
   description: Opt in to see players who have Non-Con enabled
+  sortKey: Noncon1Icon
+
+- type: consentToggle
+  id: NonconAggressor
+  name: Non-Con Aggressor
+  description: "Mark yourself as a potential Non-Con aggressor. Combined with NonconIcon: shows a red marker with horns pointing UP to other opted-in players. If both Aggressor and Victim are enabled, the marker becomes purple with horns both up and down (Either)."
+  sortKey: Noncon2Aggressor
+
+- type: consentToggle
+  id: NonconVictim
+  name: Non-Con Victim
+  description: "Mark yourself as a potential Non-Con victim. Combined with NonconIcon: shows a blue marker with horns pointing DOWN to other opted-in players. If both Aggressor and Victim are enabled, the marker becomes purple with horns both up and down (Either)."
+  sortKey: Noncon3Victim
 
 - type: consentToggle
   id: NoClone

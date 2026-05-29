@@ -53,6 +53,7 @@
   - type: NpcFactionMember
     factions:
     - Dragon
+  - type: Dispellable
   - type: Sprite
     drawdepth: Mobs
     sprite: _HL/Mobs/Abyssal/abyssghost.rsi
@@ -149,6 +150,7 @@
   - type: NpcFactionMember
     factions:
     - Dragon
+  - type: Dispellable
   - type: Sprite
     drawdepth: Mobs
     sprite: _HL/Mobs/Abyssal/abysshand.rsi
@@ -225,3 +227,236 @@
   - type: OnUseTimerTrigger
     delay: 20
   - type: DeleteOnTrigger
+  
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare
+  parent: [ BaseMobAbyssGhost ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _HL/Mobs/Aliens/dark.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: clamp
+  - type: Bloodstream
+    bloodReagent: AbyssalBlood
+    bloodMaxVolume: 0
+  - type: MeleeWeapon
+    altDisarm: false
+    angle: 0
+    animation: WeaponArcSlash
+    soundHit:
+      path: /Audio/Effects/demon_attack1.ogg
+    damage:
+      types:
+        Slash: 50
+        
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare1
+  parent: [ BaseMobNightmare ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _HL/Mobs/Aliens/dark.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: agility
+      
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare2
+  parent: [ BaseMobNightmare ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _HL/Mobs/Aliens/dark.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: alive
+
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare3
+  parent: [ BaseMobNightmare ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _HL/Mobs/Aliens/dark.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: bananatalon
+
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare4
+  parent: [ BaseMobNightmare ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _HL/Mobs/Aliens/dark.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: barrier_naked
+
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare5
+  parent: [ BaseMobNightmare ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _HL/Mobs/Aliens/dark.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: bloated
+
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare6
+  parent: [ BaseMobNightmare ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _HL/Mobs/Aliens/dark.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: carrier
+
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare7
+  parent: [ BaseMobNightmare ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _HL/Mobs/Aliens/dark.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: crawler
+      
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare8
+  parent: [ BaseMobNightmare ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _HL/Mobs/Aliens/dark.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: founder
+
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare9
+  parent: [ BaseMobNightmare ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _HL/Mobs/Aliens/dark.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: golem
+
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare10
+  parent: [ BaseMobNightmare ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _HL/Mobs/Aliens/dark.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: jared
+
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare11
+  parent: [ BaseMobNightmare ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _HL/Mobs/Aliens/dark.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: leviathing
+
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare12
+  parent: [ BaseMobNightmare ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _HL/Mobs/Aliens/dark.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: pouncer
+
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare13
+  parent: [ BaseMobNightmare ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _HL/Mobs/Aliens/dark.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: pzero
+
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare14
+  parent: [ BaseMobNightmare ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _HL/Mobs/Aliens/dark.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: running
+
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare15
+  parent: [ BaseMobNightmare ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _HL/Mobs/Aliens/dark.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: thrown
+
+- type: entity
+  name: Nightmare
+  id: BaseMobNightmare16
+  parent: [ BaseMobNightmare ]
+  description: What the FUCK is that?!
+  components:
+  - type: Sprite
+    drawdepth: Mobs
+    sprite: _HL/Mobs/Aliens/dark.rsi
+    layers:
+    - map: [ "enum.DamageStateVisualLayers.Base" ]
+      state: vasophage

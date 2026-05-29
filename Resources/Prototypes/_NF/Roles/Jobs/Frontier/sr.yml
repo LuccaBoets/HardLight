@@ -62,7 +62,7 @@
     time: 36000 # 10 hrs
   weight: 10
   startingGear: SrGear
-  alwaysUseSpawner: true
+  alwaysUseSpawner: false
   icon: "JobIconHarborMaster"
   setPreference: true
   supervisors: job-supervisors-centcom
@@ -74,6 +74,7 @@
   - External
   - Brig
   - Frontier
+  - StationTrafficController
   - Mercenary
   special:
   - !type:AddImplantSpecial

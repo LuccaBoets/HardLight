@@ -3,7 +3,7 @@
   name: job-name-mail-carrier
   description: job-description-mail-carrier
   startingGear: MailCarrierGear
-  alwaysUseSpawner: true
+  alwaysUseSpawner: false # HardLight: true<false
   playTimeTracker: JobMailCarrier
   requirements:
     - !type:OverallPlaytimeRequirement

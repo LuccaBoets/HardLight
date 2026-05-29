@@ -236,6 +236,28 @@ public sealed partial class ShipyardSystem : SharedShipyardSystem
             vesselInfo.Vessel = vessel.ID;
         }
 
+        // HardLight start
+        // Purchased ships get added to the console station briefly for docking setup.
+        // Remove that stale membership once the ship has its own station so event targeting
+        // and other station-wide logic don't keep treating it as part of the outpost.
+        try
+        {
+            var consoleStation = _station.GetOwningStation(shipyardConsoleUid);
+            if (consoleStation != null &&
+                shuttleStation != null &&
+                consoleStation != shuttleStation &&
+                TryComp<StationMemberComponent>(shuttleUid, out var member) &&
+                member.Station == shuttleStation)
+            {
+                _station.RemoveGridFromStation(consoleStation.Value, shuttleUid);
+            }
+        }
+        catch (Exception rmEx)
+        {
+            Log.Warning($"[ShipPurchase(Console)] Failed to remove stale station membership from {ToPrettyString(shuttleUid)}: {rmEx.Message}");
+        }
+        // HardLight end
+
         if (TryComp<AccessComponent>(targetId, out var newCap))
         {
             var newAccess = newCap.Tags.ToList();

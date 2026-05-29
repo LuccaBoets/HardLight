@@ -7,6 +7,7 @@ using Content.IntegrationTests.Tests._NF;
 using Content.Server._HL.ColComm;
 using Content.Server.GameTicking;
 using Content.Server._NF.CryoSleep;
+using Content.Server._NF.RoundNotifications.Events;
 using Content.Server._NF.Roles.Systems;
 using Content.Server.Maps;
 using Content.Server.Station.Components;
@@ -821,6 +822,122 @@ public sealed class StationJobsTest
             Assert.That(jobsEvent.StationJobList.TryGetValue(stationNet, out var stationInfo), Is.True);
             Assert.That(stationInfo!.JobsAvailable.TryGetValue("Mercenary", out var lobbySlots), Is.True);
             Assert.That(lobbySlots, Is.EqualTo(0));
+        });
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test] // HardLight
+    public async Task RoundRestartStationDeletionDoesNotOpenTrackedJobsTest()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+
+        var prototypeManager = server.ResolveDependency<IPrototypeManager>();
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var entitySystemManager = entityManager.EntitySysManager;
+        var stationSystem = entitySystemManager.GetEntitySystem<StationSystem>();
+        var jobTracking = entitySystemManager.GetEntitySystem<JobTrackingSystem>();
+
+        var stationProto = prototypeManager.Index<GameMapPrototype>("FooStation");
+
+        var regularDeletionStation = EntityUid.Invalid;
+        var regularDeletionCrew = EntityUid.Invalid;
+        var restartDeletionStation = EntityUid.Invalid;
+        var restartDeletionCrew = EntityUid.Invalid;
+
+        await server.WaitPost(() =>
+        {
+            regularDeletionStation = stationSystem.InitializeNewStation(stationProto.Stations["Station"], null, "Regular Delete Station");
+            regularDeletionCrew = entityManager.SpawnEntity(null, MapCoordinates.Nullspace);
+            jobTracking.EnsureTrackedJob(regularDeletionCrew, "TCaptain", regularDeletionStation);
+
+            restartDeletionStation = stationSystem.InitializeNewStation(stationProto.Stations["Station"], null, "Restart Delete Station");
+            restartDeletionCrew = entityManager.SpawnEntity(null, MapCoordinates.Nullspace);
+            jobTracking.EnsureTrackedJob(restartDeletionCrew, "TCaptain", restartDeletionStation);
+        });
+
+        await server.WaitRunTicks(1);
+
+        await server.WaitPost(() =>
+        {
+            stationSystem.DeleteStation(regularDeletionStation);
+        });
+
+        await server.WaitRunTicks(1);
+
+        await server.WaitAssertion(() =>
+        {
+            Assert.That(entityManager.EntityExists(regularDeletionCrew), Is.True);
+            Assert.That(entityManager.GetComponent<Content.Shared._NF.Roles.Components.JobTrackingComponent>(regularDeletionCrew).Active, Is.False);
+        });
+
+        await server.WaitPost(() =>
+        {
+            entityManager.EventBus.RaiseEvent(EventSource.Local, new RoundRestartCleanupEvent());
+            stationSystem.DeleteStation(restartDeletionStation);
+        });
+
+        await server.WaitRunTicks(1);
+
+        await server.WaitAssertion(() =>
+        {
+            Assert.That(entityManager.EntityExists(restartDeletionCrew), Is.True);
+            Assert.That(entityManager.GetComponent<Content.Shared._NF.Roles.Components.JobTrackingComponent>(restartDeletionCrew).Active, Is.True);
+        });
+        await pair.CleanReturnAsync();
+    }
+
+    [Test] // HardLight
+    public async Task DeletingTrackedBodyReopensStationSlotTest()
+    {
+        await using var pair = await PoolManager.GetServerClient(new PoolSettings { Connected = true });
+        var server = pair.Server;
+
+        var prototypeManager = server.ResolveDependency<IPrototypeManager>();
+        var entityManager = server.ResolveDependency<IEntityManager>();
+        var entitySystemManager = server.ResolveDependency<IEntitySystemManager>();
+        var playerManager = server.ResolveDependency<Robust.Server.Player.IPlayerManager>();
+        var jobTracking = entitySystemManager.GetEntitySystem<JobTrackingSystem>();
+        var mindSystem = entitySystemManager.GetEntitySystem<SharedMindSystem>();
+        var stationJobs = entitySystemManager.GetEntitySystem<StationJobsSystem>();
+        var stationSystem = entitySystemManager.GetEntitySystem<StationSystem>();
+
+        var stationProto = prototypeManager.Index<GameMapPrototype>("FooStation");
+        var serverSession = playerManager.Sessions.Single();
+        var trackedUser = serverSession.UserId;
+
+        var station = EntityUid.Invalid;
+        var trackedCrew = EntityUid.Invalid;
+
+        await server.WaitPost(() =>
+        {
+            station = stationSystem.InitializeNewStation(stationProto.Stations["Station"], null, "Delete Tracked Body Station");
+            trackedCrew = entityManager.SpawnEntity("TestTrackedCrewMob", MapCoordinates.Nullspace);
+
+            jobTracking.EnsureTrackedJob(trackedCrew, "TCaptain", station);
+
+            var mind = mindSystem.CreateMind(trackedUser);
+            mindSystem.TransferTo(mind, trackedCrew, mind: mind);
+            playerManager.SetAttachedEntity(serverSession, trackedCrew);
+
+            Assert.That(stationJobs.TryAssignJob(station, "TCaptain", trackedUser), Is.True);
+        });
+
+        await server.WaitRunTicks(1);
+
+        await server.WaitPost(() =>
+        {
+            entityManager.DeleteEntity(trackedCrew);
+        });
+
+        await server.WaitRunTicks(1);
+
+        await server.WaitAssertion(() =>
+        {
+            Assert.That(stationJobs.IsPlayerJobTracked(station, trackedUser, "TCaptain"), Is.False);
+            Assert.That(stationJobs.TryGetJobSlot(station, "TCaptain", out var slots), Is.True);
+            Assert.That(slots, Is.EqualTo(5));
         });
 
         await pair.CleanReturnAsync();

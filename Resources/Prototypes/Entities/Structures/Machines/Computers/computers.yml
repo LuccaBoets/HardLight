@@ -38,6 +38,14 @@
         enum.WiresVisualLayers.MaintenancePanel:
           True: { visible: false }
           False: { visible: true }
+      # Starlight start
+      enum.EdgeConnectionVisuals.ConnectionMask:
+        computerLayerBody:
+          None: { state: computer, sprite: Structures/Machines/computers.rsi }
+          West: { state: computer_r, sprite: _Starlight/Structures/Machines/computers.rsi }
+          East: { state: computer_l, sprite: _Starlight/Structures/Machines/computers.rsi }
+          East, West: { state: computer_l_r, sprite: _Starlight/Structures/Machines/computers.rsi }
+      # Starlight end
   - type: AtmosAlertsComputer
   - type: ActivatableUI
     singleUser: true
@@ -526,6 +534,16 @@
       state: med_key
     - map: [ "enum.WiresVisualLayers.MaintenancePanel" ]
       state: generic_panel_open
+  # Starlight start
+  - type: GenericVisualizer
+    visuals:
+      enum.EdgeConnectionVisuals.ConnectionMask:
+        computerLayerBody:
+          None: { state: computer, sprite: Structures/Machines/computers.rsi }
+          West: { state: computer_r, sprite: _Starlight/Structures/Machines/computers.rsi }
+          East: { state: computer_l, sprite: _Starlight/Structures/Machines/computers.rsi }
+          East, West: { state: computer_l_r, sprite: _Starlight/Structures/Machines/computers.rsi }
+  # Starlight end
   - type: PointLight
     radius: 1.5
     energy: 1.6
@@ -576,7 +594,7 @@
   - type: UserInterface
     interfaces:
       enum.ResearchConsoleUiKey.Key:
-        type: ResearchConsoleBoundUserInterface # R&D Console rework
+        type: FancyResearchConsoleBoundUserInterface # Goobstation R&D Console rework (ported via Triad #1903)
       enum.ResearchClientUiKey.Key:
         type: ResearchClientBoundUserInterface
       enum.WiresUiKey.Key:
@@ -1316,7 +1334,7 @@
   #   guides: # Frontier
   #   - CargoBounties # Frontier
   #   - Cargo # Frontier
-  
+
 - type: entity
   parent: BaseComputerAiAccess
   id: ComputerFundingAllocation
@@ -1440,6 +1458,14 @@
           enum.WiresVisualLayers.MaintenancePanel:
             True: { visible: false }
             False: { visible: true }
+        # Starlight start
+        enum.EdgeConnectionVisuals.ConnectionMask:
+          computerLayerBody:
+            None: { state: computer, sprite: Structures/Machines/computers.rsi }
+            West: { state: computer_r, sprite: _Starlight/Structures/Machines/computers.rsi }
+            East: { state: computer_l, sprite: _Starlight/Structures/Machines/computers.rsi }
+            East, West: { state: computer_l_r, sprite: _Starlight/Structures/Machines/computers.rsi }
+        # Starlight end
     - type: SalvageExpeditionConsole
     - type: ActivatableUI
       key: enum.SalvageConsoleUiKey.Expedition
@@ -1862,6 +1888,14 @@
         enum.WiresVisualLayers.MaintenancePanel:
           True: { visible: false }
           False: { visible: true }
+      # Starlight start
+      enum.EdgeConnectionVisuals.ConnectionMask:
+        computerLayerBody:
+          None: { state: computer, sprite: Structures/Machines/computers.rsi }
+          West: { state: computer_r, sprite: _Starlight/Structures/Machines/computers.rsi }
+          East: { state: computer_l, sprite: _Starlight/Structures/Machines/computers.rsi }
+          East, West: { state: computer_l_r, sprite: _Starlight/Structures/Machines/computers.rsi }
+      # Starlight end
   - type: ApcPowerReceiver
     powerLoad: 1000
   - type: Computer

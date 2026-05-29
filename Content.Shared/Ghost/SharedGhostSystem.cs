@@ -109,12 +109,18 @@ namespace Content.Shared.Ghost
             if (!Resolve(uid, ref component))
                 return;
 
+            // HardLight start
+            if (component.CanReturnFromCryo == value)
+                return;
+
             component.CanReturnFromCryo = value;
+            Dirty(uid, component);
+            // HardLight end
         }
 
         public void SetCanReturnFromCryo(GhostComponent component, bool value)
         {
-            component.CanReturnFromCryo = value;
+            SetCanReturnFromCryo(component.Owner, value, component); // HardLight
         }
         // Frontier: uncryo status (mirroring CanReturnToBody)
     }

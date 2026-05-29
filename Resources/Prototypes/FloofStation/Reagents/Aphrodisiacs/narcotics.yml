@@ -10,6 +10,11 @@
     Narcotic:
       metabolismRate: 0.05
       effects:
+      - !type:Aphrodisiac
+        aphrodisiacPower: 10
+        conditions:
+        - !type:ConsentCondition
+          consent: Aphrodisiacs
       - !type:PopupMessage
         type: Local
         visualType: Medium

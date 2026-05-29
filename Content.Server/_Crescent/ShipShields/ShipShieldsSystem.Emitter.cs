@@ -17,7 +17,6 @@ namespace Content.Server._Crescent.ShipShields;
 public partial class ShipShieldsSystem
 {
     private const float MAX_EMP_DAMAGE = 10000f;
-    [Dependency] private readonly TriggerSystem _trigger = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
     public void InitializeEmitters()
@@ -63,12 +62,19 @@ public partial class ShipShieldsSystem
         if (TryComp<EmpOnTriggerComponent>(args.Deflected, out var emp))
         {
             component.Damage += Math.Clamp(emp.EnergyConsumption, 0f, MAX_EMP_DAMAGE);
-            _trigger.Trigger(args.Deflected);
+            // VRS: Deflected payload should damage the shield emitter only. Triggering the
+            // projectile after interception can spawn secondary effects (EMP/explosions) at the
+            // shield entity location, which players experience as blasts displaced to ship center
+            // (HL #1697).
+            RemCompDeferred<EmpOnTriggerComponent>(args.Deflected);
         }
 
         if (TryComp<ExplosiveComponent>(args.Deflected, out var exp) && _prototypeManager.TryIndex(exp.ExplosionType, out var type))
         {
             component.Damage += exp.TotalIntensity * (float)type.DamagePerIntensity.GetTotal();
+            // We already translated this explosive payload into emitter damage above; suppress
+            // world explosion side-effects when the projectile entity is deleted.
+            RemCompDeferred<ExplosiveComponent>(args.Deflected);
         }
 
         component.Damage += (float)args.Projectile.Damage.GetTotal();
@@ -83,6 +89,25 @@ public partial class ShipShieldsSystem
     private void OnShieldHitscanDeflected(EntityUid uid, ShipShieldEmitterComponent component, ref ShieldHitscanDeflectedEvent args)
     {
         component.Damage += args.Damage;
+    }
+
+    private void BreakEmitterFromMeteorImpact(EntityUid uid)
+    {
+        if (!TryComp<ShipShieldEmitterComponent>(uid, out var emitter))
+            return;
+
+        emitter.Damage = Math.Max(emitter.Damage, emitter.DamageLimit);
+        emitter.Recharging = true;
+
+        var removed = emitter.Shielded is { } shielded
+            ? RemoveEmitterShield(uid, emitter, shielded)
+            : RemoveEmitterShield(uid, emitter);
+
+        if (removed)
+            _audio.PlayPvs(emitter.PowerDownSound, uid, emitter.PowerDownSound.Params);
+
+        if (TryComp<ApcPowerReceiverComponent>(uid, out var receiver))
+            AdjustEmitterLoad(uid, emitter, receiver);
     }
 
     private void OnExamined(EntityUid uid, ShipShieldEmitterComponent component, ExaminedEvent args)

@@ -87,6 +87,12 @@
     - id: MedicalBountyTargetsSpawn
     - id: TickVents
     - id: AiVents
+    - id: Cultvents
+    - id: Syndivents
+    - id: Punkvents
+    - id: Explorervents
+    - id: Mercvents
+    - id: Zedvents
     - id: LizardVents
     - id: WawaVents
     - id: IrradiatedPests
@@ -110,6 +116,8 @@
     - id: RainbowDragonSpawn
     - id: MagicDragonSpawn
     - id: HoloDragonSpawn
+    - id: XenoQueenSpawn
+    - id: FatkidSpawn
     - id: KingRatMigration
     - id: NinjaSpawn
     - id: ParadoxCloneSpawn
@@ -374,6 +382,62 @@
       pickPlayer: false
       mindRoles:
       - MindRoleDragon
+
+- type: entity
+  parent: BaseGameRule
+  id: XenoQueenSpawn
+  components:
+  - type: StationEvent
+    startAnnouncement: station-event-vent-creatures-start-announcement
+    startAudio:
+      path: /Audio/Announcements/aliens.ogg
+    weight: 6
+    earliestStart: 40
+    reoccurrenceDelay: 400
+    minimumPlayers: 15
+    duration: null
+    requiredJobs:
+      HeadOfSecurity: 1
+      SecurityOfficer: 1
+      Warden: 1
+  - type: AntagSpawner
+    prototype: MobXenoQueenNPC
+  - type: AntagSelection
+    definitions:
+    - spawnerPrototype: SpawnPointGhostXenoQueen
+      min: 1
+      max: 1
+      pickPlayer: false
+      mindRoles:
+      - MindRoleGhostRoleSoloAntagonist
+
+- type: entity
+  parent: BaseGameRule
+  id: FatkidSpawn
+  components:
+  - type: StationEvent
+    startAnnouncement: station-event-vent-creatures-start-announcement
+    startAudio:
+      path: /Audio/Announcements/outbreak7.ogg
+    weight: 6
+    earliestStart: 40
+    reoccurrenceDelay: 400
+    minimumPlayers: 15
+    duration: null
+    requiredJobs:
+      HeadOfSecurity: 1
+      SecurityOfficer: 1
+      Warden: 1
+  - type: AntagSpawner
+    prototype: Fatkid
+  - type: AntagSelection
+    definitions:
+    - spawnerPrototype: SpawnPointGhostFatkid
+      min: 1
+      max: 1
+      pickPlayer: false
+      mindRoles:
+      - MindRoleGhostRoleSoloAntagonist
 
 - type: entity
   parent: BaseGameRule
@@ -765,7 +829,7 @@
     definitions:
     - spawnerPrototype: SpawnPointLoneNukeOperative
       min: 1
-      max: 1
+      max: 2
       pickPlayer: false
       startingGear: SyndicateLoneOperativeGearFull
       roleLoadout:
@@ -799,6 +863,7 @@
     occursDuringRoundEnd: false
     requiredJobs:
       HeadOfSecurity: 1
+      SecurityOfficer: 1
   - type: AlertLevelInterceptionRule
   - type: AntagSelection
     definitions:
@@ -806,7 +871,7 @@
       fallbackRoles: [ Traitor ]
       min: 1
       max: 2
-      playerRatio: 10
+      playerRatio: 30
       blacklist:
         components:
         - AntagImmune
@@ -830,6 +895,8 @@
     requiredJobs:
       StationCaptain: 1 # Can't have a revolution with no captain to mutinize
       HeadOfSecurity: 1
+      SecurityOfficer: 1
+      Warden: 1
   - type: AlertLevelInterceptionRule
   - type: AntagSelection
     selectionTime: PostPlayerSpawn
@@ -838,7 +905,7 @@
       min: 1
       max: 3
       lateJoinAdditional: true
-      playerRatio: 15
+      playerRatio: 30
       briefing:
         text: sleeper-head-rev-role-greeting
         color: CornflowerBlue
@@ -1638,7 +1705,7 @@
   - type: StationEvent
     startAnnouncement: station-event-vent-creatures-start-announcement
     startAudio:
-      path: /Audio/Announcements/attention.ogg
+      path: /Audio/Announcements/aliens.ogg
     earliestStart: 30
     reoccurrenceDelay: 200
     minimumPlayers: 30
@@ -1646,32 +1713,34 @@
     duration: 60
     requiredJobs:
       HeadOfSecurity: 1
+      SecurityOfficer: 1
+      Warden: 1
   - type: VentCrittersRule
     entries:
     - id: MobArgocyteSlurva
       prob: 0.008
     - id: MobArgocyteBarrier
-      prob: 0.001
+      prob: 0.01
     - id: MobArgocyteSkitter
-      prob: 0.001
+      prob: 0.01
     - id: MobArgocyteSwiper
-      prob: 0.001
+      prob: 0.01
     - id: MobArgocyteMolder
-      prob: 0.001
+      prob: 0.01
     - id: MobArgocytePouncer
-      prob: 0.001
+      prob: 0.01
     - id: MobArgocyteGlider
-      prob: 0.001
+      prob: 0.01
     - id: MobArgocyteHarvester
-      prob: 0.001
+      prob: 0.01
     - id: MobArgocyteCrawler
-      prob: 0.001
+      prob: 0.01
     - id: MobArgocyteEnforcer
-      prob: 0.001
+      prob: 0.01
     - id: MobArgocyteFounder
-      prob: 0.001
+      prob: 0.01
     - id: MobArgocyteLeviathing
-      prob: 0.0001
+      prob: 0.001
 
 - type: entity
   id: TickVents
@@ -1743,6 +1812,8 @@
     duration: 60
     requiredJobs:
       HeadOfSecurity: 1
+      SecurityOfficer: 1
+      Warden: 1
   - type: VentCrittersRule
     entries:
     - id: MobCarp
@@ -1774,6 +1845,8 @@
     duration: 60
     requiredJobs:
       HeadOfSecurity: 1
+      SecurityOfficer: 1
+      Warden: 1
   - type: VentCrittersRule
     entries:
     - id: MobBearSpace
@@ -1801,6 +1874,7 @@
     duration: 60
     requiredJobs:
       HeadOfSecurity: 1
+      SecurityOfficer: 1
       Warden: 1
   - type: VentCrittersRule
     entries:
@@ -1831,7 +1905,7 @@
     - id: ReagentSlimeIchor
       prob: 0.002
     - id: ReagentSlimeBleach
-      prob: 0.0001
+      prob: 0.001
     - id: ReagentSlimeSoap
       prob: 0.002
     - id: ReagentSlimeSpacelube
@@ -1857,11 +1931,11 @@
     - id: ReagentSlimeUnstableMutagen
       prob: 0.001
     - id: ReagentSlimeLead
-      prob: 0.0001
+      prob: 0.001
     - id: ReagentSlimechlorinetriflouride
       prob: 0.002
     - id: ReagentSlimePotassium
-      prob: 0.0002
+      prob: 0.001
     # - id: ReagentSlimeLotophagoiOil
       # prob: 0.0001
 
@@ -1873,7 +1947,7 @@
   - type: StationEvent
     startAnnouncement: station-event-vent-creatures-start-announcement
     startAudio:
-      path: /Audio/Announcements/attention.ogg
+      path: /Audio/Announcements/aliens.ogg
     earliestStart: 30
     reoccurrenceDelay: 200
     minimumPlayers: 30
@@ -1906,7 +1980,7 @@
     - id: MobXenoAcidRunnerPrimed
       prob: 0.0001
     - id: MobXenoLarva
-      prob: 0.001
+      prob: 0.01
     - id: MobXenoBoiler
       prob: 0.0001
     - id: MobXenoBoxerWarrior
@@ -2003,12 +2077,14 @@
     startAudio:
       path: /Audio/Announcements/attention.ogg
     earliestStart: 30
-    reoccurrenceDelay: 200
+    reoccurrenceDelay: 400
     minimumPlayers: 10
     weight: 6 # Really weak compared to other critters
     duration: 60
     requiredJobs:
       HeadOfSecurity: 1
+      SecurityOfficer: 1
+      Warden: 1
   - type: VentCrittersRule
     entries:
     - id: SpawnMobSyndicateNavalCaptain
@@ -2046,7 +2122,7 @@
   - type: StationEvent
     startAnnouncement: station-event-vent-creatures-start-announcement
     startAudio:
-      path: /Audio/Announcements/attention.ogg
+      path: /Audio/_HL/Freeallegiance/lizard10.ogg
     earliestStart: 30
     reoccurrenceDelay: 200
     minimumPlayers: 10
@@ -2054,12 +2130,14 @@
     duration: 60
     requiredJobs:
       HeadOfSecurity: 1
+      SecurityOfficer: 1
+      Warden: 1
   - type: VentCrittersRule
     entries:
     - id: SpawnMobDinosaurSmall
-      prob: 0.07
+      prob: 0.04
     - id: SpawnMobDinosaurMedium
-      prob: 0.03
+      prob: 0.02
     - id: SpawnMobDinosaurBig
       prob: 0.01
 
@@ -2071,7 +2149,7 @@
   - type: StationEvent
     startAnnouncement: station-event-vent-creatures-start-announcement
     startAudio:
-      path: /Audio/Announcements/attention.ogg
+      path: /Audio/Announcements/aliens.ogg
     earliestStart: 30
     reoccurrenceDelay: 200
     minimumPlayers: 10
@@ -2079,12 +2157,14 @@
     duration: 60
     requiredJobs:
       HeadOfSecurity: 1
+      SecurityOfficer: 1
+      Warden: 1
   - type: VentCrittersRule
     entries:
     - id: SpawnMobAberrantFleshExpeditions
-      prob: 0.07
+      prob: 0.02
     - id: SpawnMobAberrantFleshNewbornExpeditions
-      prob: 0.03
+      prob: 0.01
 
 - type: entity
   id: Explorervents
@@ -2094,7 +2174,7 @@
   - type: StationEvent
     startAnnouncement: station-event-vent-creatures-start-announcement
     startAudio:
-      path: /Audio/Announcements/attention.ogg
+      path: /Audio/Announcements/intercept.ogg
     earliestStart: 30
     reoccurrenceDelay: 200
     minimumPlayers: 10
@@ -2102,12 +2182,14 @@
     duration: 60
     requiredJobs:
       HeadOfSecurity: 1
+      SecurityOfficer: 1
+      Warden: 1
   - type: VentCrittersRule
     entries:
     - id: SpawnMobExplorerT1
-      prob: 0.05
+      prob: 0.04
     - id: SpawnMobExplorerT2
-      prob: 0.03
+      prob: 0.02
     - id: SpawnMobExplorerT3
       prob: 0.01
 
@@ -2119,7 +2201,7 @@
   - type: StationEvent
     startAnnouncement: station-event-vent-creatures-start-announcement
     startAudio:
-      path: /Audio/Announcements/attention.ogg
+      path: /Audio/Announcements/intercept.ogg
     earliestStart: 30
     reoccurrenceDelay: 200
     minimumPlayers: 10
@@ -2127,14 +2209,49 @@
     duration: 60
     requiredJobs:
       HeadOfSecurity: 1
+      SecurityOfficer: 1
+      Warden: 1
   - type: VentCrittersRule
     entries:
     - id: SpawnMobMercenaryT1
-      prob: 0.05
+      prob: 0.04
     - id: SpawnMobMercenaryT2
-      prob: 0.03
+      prob: 0.02
     - id: SpawnMobMercenaryT3
       prob: 0.01
+
+- type: entity
+  id: Zedvents
+  parent: [VentCrittersBase, BaseGameRule]
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StationEvent
+    startAnnouncement: station-event-vent-creatures-start-announcement
+    startAudio:
+      path: /Audio/Announcements/outbreak7.ogg
+    earliestStart: 30
+    reoccurrenceDelay: 200
+    minimumPlayers: 10
+    weight: 6 # Really weak compared to other critters
+    duration: 60
+    requiredJobs:
+      HeadOfSecurity: 1
+      SecurityOfficer: 1
+      Warden: 1
+  - type: VentCrittersRule
+    entries:
+    - id: MobZTaken
+      prob: 0.06
+    - id: MobZVasophage
+      prob: 0.04
+    - id: MobZHeadless
+      prob: 0.03
+    - id: MobZBloated
+      prob: 0.02
+    - id: MobZCarrier
+      prob: 0.01
+    - id: MobZP0
+      prob: 0.03
 
 - type: entity
   id: Punkvents
@@ -2144,7 +2261,7 @@
   - type: StationEvent
     startAnnouncement: station-event-vent-creatures-start-announcement
     startAudio:
-      path: /Audio/Announcements/attention.ogg
+      path: /Audio/Announcements/intercept.ogg
     earliestStart: 30
     reoccurrenceDelay: 200
     minimumPlayers: 10
@@ -2152,16 +2269,64 @@
     duration: 60
     requiredJobs:
       HeadOfSecurity: 1
+      SecurityOfficer: 1
+      Warden: 1
   - type: VentCrittersRule
     entries:
     - id: SpawnMobPunkT1
-      prob: 0.07
+      prob: 0.03
     - id: SpawnMobPunkT2
-      prob: 0.05
+      prob: 0.03
     - id: SpawnMobPunkT3
+      prob: 0.03
+    - id: MobPunkGangerSmg
+      prob: 0.03
+    - id: MobPunkGangerShotgun
+      prob: 0.02
+    - id: MobPunkGangerPistol
       prob: 0.03
     - id: SpawnMobPunkLeader
       prob: 0.01
+
+- type: entity
+  id: Cultvents
+  parent: [VentCrittersBase, BaseGameRule]
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: StationEvent
+    startAnnouncement: station-event-vent-creatures-start-announcement
+    startAudio:
+      path: /Audio/Announcements/intercept.ogg
+    earliestStart: 30
+    reoccurrenceDelay: 300
+    minimumPlayers: 10
+    weight: 6 # Really weak compared to other critters
+    duration: 60
+    requiredJobs:
+      HeadOfSecurity: 1
+      SecurityOfficer: 1
+      Warden: 1
+  - type: VentCrittersRule
+    entries:
+    - id: SpawnMobBloodCultistZealotMelee
+      prob: 0.03
+    - id: SpawnMobBloodCultLeech
+      prob: 0.03
+    - id: SpawnMobBloodCultistZealotRanged
+      prob: 0.03
+    - id: SpawnMobBloodCultistCaster
+      prob: 0.03
+    - id: BloodCultTurret
+      prob: 0.02
+    - id: SpawnMobBloodCultistAcolyte
+      prob: 0.03
+    - id: SpawnMobBloodCultistPriest
+      prob: 0.02
+    - id: SpawnMobBloodCultistJanitor
+      prob: 0.03
+    - id: MobBloodCultistAscended
+      prob: 0.01
+    
 
 - type: entity
   id: LizardVents
@@ -2182,33 +2347,33 @@
   - type: VentCrittersRule
     entries:
     - id: BlueRainLizard
-      prob: 0.001
+      prob: 0.005
     - id: HostileBlueRainLizard
-      prob: 0.0009
+      prob: 0.001
     - id: GreenRainLizard
-      prob: 0.001
+      prob: 0.004
     - id: HostileGreenRainLizard
-      prob: 0.0009
-    - id: PinkRainLizard
       prob: 0.001
+    - id: PinkRainLizard
+      prob: 0.005
     - id: HostilePinkRainLizard
-      prob: 0.0009
+      prob: 0.001
     - id: WhiteRainLizard
-      prob: 0.0009
+      prob: 0.001
     - id: HostileWhiteRainLizard
-      prob: 0.0008
+      prob: 0.001
     - id: CyanRainLizard
-      prob: 0.0009
+      prob: 0.001
     - id: HostileCyanRainLizard
-      prob: 0.0008
+      prob: 0.001
     - id: RedRainLizard
-      prob: 0.0006
+      prob: 0.001
     - id: HostileRedRainLizard
-      prob: 0.0005
+      prob: 0.001
     - id: TrainRainLizard
-      prob: 0.0003
+      prob: 0.001
     - id: HostileTrainRainLizard
-      prob: 0.0001
+      prob: 0.001
 
 - type: entity
   id: WawaVents
@@ -2227,7 +2392,7 @@
   - type: VentCrittersRule
     entries:
     - id: MobEmotionalSupportScurret
-      prob: 0.05
+      prob: 0.02
 
 - type: entity
   id: Beehallucination

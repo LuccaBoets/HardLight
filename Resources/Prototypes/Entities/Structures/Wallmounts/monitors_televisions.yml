@@ -14,6 +14,16 @@
       state: detective_television
   - type: Computer
     board: ComputerTelevisionCircuitboard
+  # HardLight start
+  - type: GenericVisualizer
+    visuals:
+      enum.EdgeConnectionVisuals.ConnectionMask:
+        computerLayerBody:
+          None: { state: television, sprite: Structures/Machines/computers.rsi }
+          West: { state: television, sprite: Structures/Machines/computers.rsi }
+          East: { state: television, sprite: Structures/Machines/computers.rsi }
+          East, West: { state: television, sprite: Structures/Machines/computers.rsi }
+  # HardLight end
   - type: PointLight
     radius: 1.5
     energy: 1.6
@@ -36,6 +46,9 @@
   name: telescreen frame
   description: Finally, some decent reception around here...
   components:
+  - type: EdgeConnection # HardLight
+    connectionKey: wallmount_computers
+    allowedDirections: East, West
   - type: Construction
     graph: WallmountTelescreen
     node: TelescreenFrame
@@ -47,6 +60,16 @@
         state: telescreen_frame
       - map: ["computerLayerScreen"]
         state: telescreen
+  # HardLight start
+  - type: GenericVisualizer
+    visuals:
+      enum.EdgeConnectionVisuals.ConnectionMask:
+        computerLayerBody:
+          None: { state: telescreen_frame, sprite: Structures/Machines/computers.rsi }
+          West: { state: telescreen_frame, sprite: Structures/Machines/computers.rsi }
+          East: { state: telescreen_frame, sprite: Structures/Machines/computers.rsi }
+          East, West: { state: telescreen_frame, sprite: Structures/Machines/computers.rsi }
+  # HardLight end
   # Frontier: remove fixtures, it's a wallmount device
   # - type: Fixtures
   #   fixtures:
@@ -149,6 +172,16 @@
         state: television_wall
       - map: ["computerLayerScreen"]
         state: television_wallscreen
+  # HardLight start
+  - type: GenericVisualizer
+    visuals:
+      enum.EdgeConnectionVisuals.ConnectionMask:
+        computerLayerBody:
+          None: { state: television_wall, sprite: Structures/Wallmounts/flatscreentv.rsi }
+          West: { state: television_wall, sprite: Structures/Wallmounts/flatscreentv.rsi }
+          East: { state: television_wall, sprite: Structures/Wallmounts/flatscreentv.rsi }
+          East, West: { state: television_wall, sprite: Structures/Wallmounts/flatscreentv.rsi }
+  # HardLight end
 
 - type: entity
   parent: WallmountTelevisionFrame

@@ -29,11 +29,14 @@
     id: PMCGun
 
 - type: entity # C-20r
-  parent: [ WeaponSubMachineGunC20r, BaseC2ContrabandMercenary ]
+  parent: [ BaseC2ContrabandUnredeemable, WeaponSubMachineGunC20r ] # HardLight: BaseC2ContrabandMercenary<BaseC2ContrabandUnredeemable; swapped parenting order
   name: PMC C-20r
   id: WeaponSubMachineGunC20rPMC
   description: A C-20r that has been properly registered for private security and mercenary use.
   components:
+  - type: Contraband # HardLight
+    turnInValues:
+      FrontierUplinkCoin: 0 # No fucks for you.
   - type: PirateBountyItem
     id: PMCGun
 
@@ -60,11 +63,14 @@
     price: 800
 
 - type: entity
-  parent: [ WeaponPistolViper, BaseC2ContrabandMercenary ]
+  parent: [ BaseC2ContrabandUnredeemable, WeaponPistolViper ] # HardLight: BaseC2ContrabandMercenary<BaseC2ContrabandUnredeemable; swapped parenting order
   name: PMC Viper
   id: WeaponPistolViperPMC
   description: A Viper that has been properly registered for private security and mercenary use.
   components:
+  - type: Contraband # HardLight
+    turnInValues:
+      FrontierUplinkCoin: 0 # No fucks for you.
   - type: PirateBountyItem
     id: PMCGun
 
@@ -125,8 +131,10 @@
 #   - type: PirateBountyItem
 #     id: CFCMLongarm
 
+# HardLight
+
 - type: entity # PMC Energy Shotgun
-  parent: [ WeaponEnergyShotgun, BaseC2ContrabandUnredeemable ]
+  parent: [ BaseC2ContrabandUnredeemable, WeaponEnergyShotgun ]
   name: PMC Energy Shotgun
   id: EnergyShotgunPMC
   description: A PMC version of the "One-Of-A-Kind" energy shotgun. Registered for mercenary use in a more mass-producable fashion.

@@ -1,16 +1,16 @@
 - type: constructionGraph
-  id: WallDirectional
+  id: WallDirectionalSolid # HardLight: WallDirectional<WallDirectionalSolid
   start: start
   graph:
     - node: start
       edges:
-        - to: wallDirectional
+        - to: wallDirectionalSolid # HardLight: wallDirectional<wallDirectionalSolid
           steps:
             - material: Steel
               amount: 2
               doAfter: 2
-    - node: wallDirectional
-      entity: WallDirectional
+    - node: wallDirectionalSolid # HardLight: wallDirectional<wallDirectionalSolid
+      entity: WallDirectionalSolid # HardLight: WallDirectional<WallDirectionalSolid
       edges:
         - to: start
           completed:

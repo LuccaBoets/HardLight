@@ -9,6 +9,13 @@
   id: BaseMobSpecies
   abstract: true
   components:
+  # Starlight-start: Languages
+  - type: LanguageKnowledge
+    speaks:
+    - GalacticCommon
+    understands:
+    - GalacticCommon
+  # Starlight-end
   - type: Wagging # Coyote: Wagging my tail :3
   - type: Sprite
     layers:
@@ -317,8 +324,10 @@
         Asphyxiation: -1.0
   - type: FireVisuals
     alternateState: Standing
+  - type: StunVisuals
   - type: LayingDown
   - type: OfferItem # _HL
+  - type: StumbleOnMissingLeg # _HL: limp until you fall when missing legs
 
   - type: Carriable # Goobstation
   - type: Genetics # Funkystation - Genetics

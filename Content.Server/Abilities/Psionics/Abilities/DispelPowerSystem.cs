@@ -54,6 +54,9 @@ namespace Content.Server.Abilities.Psionics
 
         private void OnDispelled(EntityUid uid, DispellableComponent component, DispelledEvent args)
         {
+            if (args.Handled)
+                return;
+
             QueueDel(uid);
             Spawn("Ash", Transform(uid).Coordinates);
             _popupSystem.PopupCoordinates(Loc.GetString("psionic-burns-up", ("item", uid)), Transform(uid).Coordinates, Filter.Pvs(uid), true, Shared.Popups.PopupType.MediumCaution);
@@ -63,6 +66,9 @@ namespace Content.Server.Abilities.Psionics
 
         private void OnDmgDispelled(EntityUid uid, DamageOnDispelComponent component, DispelledEvent args)
         {
+            if (args.Handled)
+                return;
+
             var damage = component.Damage;
             var modifier = (1 + component.Variance) - (_random.NextFloat(0, component.Variance * 2));
 

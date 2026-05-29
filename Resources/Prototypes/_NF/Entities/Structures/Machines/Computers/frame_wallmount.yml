@@ -1,11 +1,14 @@
 - type: entity
   id: BaseStructureComputerWallmount
-  parent: [BaseStructureWallmount, BaseStructure]
+  parent: [ BaseStructureWallmount, BaseStructure ]
   suffix: Wallmount
   abstract: true
   components:
     - type: Anchorable
     - type: InteractionOutline
+    - type: EdgeConnection # HardLight
+      connectionKey: wallmount_computers
+      allowedDirections: East, West
     - type: Construction
       graph: ComputerWallmount
       node: wallmount computer
@@ -19,6 +22,16 @@
         - map: [ "computerLayerScreen" ]
           sprite: _NF/Structures/Machines/computer_wallmount.rsi
           state: screen_generic
+    # HardLight start
+    - type: GenericVisualizer
+      visuals:
+        enum.EdgeConnectionVisuals.ConnectionMask:
+          computerLayerBody:
+            None: { state: computer_wallmount }
+            West: { state: computer_wallmount }
+            East: { state: computer_wallmount }
+            East, West: { state: computer_wallmount }
+    # HardLight end
     - type: Damageable
       damageContainer: Inorganic
       damageModifierSet: Electronic
@@ -66,10 +79,13 @@
           monitorUnsecured: { state: computer_monitor_unscrewed }
 
 - type: entity
-  parent: [BaseStructureWallmount, ComputerBroken]
+  parent: [ BaseStructureWallmount, ComputerBroken ]
   id: ComputerWallmountBroken
   suffix: Wallmount
   components:
+  - type: EdgeConnection # HardLight
+    connectionKey: wallmount_computers
+    allowedDirections: East, West
   - type: Sprite
     drawdepth: WallMountedItems
     sprite: _NF/Structures/Machines/computer_wallmount.rsi

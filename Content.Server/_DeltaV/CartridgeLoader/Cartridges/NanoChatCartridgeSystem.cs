@@ -9,21 +9,23 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later AND MIT
 
 using System.Linq;
+using Content.Server.Access.Systems;
 using Content.Server.Administration.Logs;
 using Content.Server.CartridgeLoader;
-using Content.Server.Power.Components;
+using Content.Server.GameTicking.Events;
 using Content.Server.Radio;
 using Content.Server.Radio.Components;
 using Content.Server.Station.Systems;
 using Content.Shared.Access.Components;
 using Content.Shared.CartridgeLoader;
 using Content.Shared.Database;
+using Content.Shared.GameTicking;
 using Content.Shared._DeltaV.CartridgeLoader.Cartridges;
 using Content.Shared._DeltaV.NanoChat;
 using Content.Shared.PDA;
-using Content.Shared.Radio.Components;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
+
 
 namespace Content.Server._DeltaV.CartridgeLoader.Cartridges;
 
@@ -32,10 +34,13 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
     [Dependency] private readonly CartridgeLoaderSystem _cartridge = default!;
     [Dependency] private readonly IAdminLogManager _adminLogger = default!;
     [Dependency] private readonly IGameTiming _timing = default!;
+    [Dependency] private readonly ILogManager _logManager = default!;
     [Dependency] private readonly IPrototypeManager _prototype = default!;
     [Dependency] private readonly SharedNanoChatSystem _nanoChat = default!;
     [Dependency] private readonly SharedUserInterfaceSystem _ui = default!;
     [Dependency] private readonly StationSystem _station = default!;
+
+    private ISawmill _sawmill = default!;
 
     // Messages in notifications get cut off after this point
     // no point in storing it on the comp
@@ -48,6 +53,11 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
     private readonly Dictionary<EntityUid, uint> _cardNumbers = [];
     private readonly Dictionary<EntityUid, HashSet<EntityUid>> _cartridgesByCard = [];
     private readonly Dictionary<EntityUid, EntityUid?> _trackedCardByCartridge = [];
+    // Cache of cards with ListNumber=true: cardUid → (number, name). Avoids full entity scan in UpdateUI.
+    private readonly Dictionary<EntityUid, (uint Number, string Name)> _listedCardInfo = [];
+    private bool _cardNumberCacheInitialized;
+    private bool _cartridgeTrackingCacheInitialized;
+    private bool _listedCardInfoCacheInitialized;
 
 
 
@@ -55,23 +65,52 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
     {
         base.Initialize();
 
+        _sawmill = _logManager.GetSawmill("nanochat");
+
         SubscribeLocalEvent<NanoChatCardComponent, ComponentStartup>(OnCardStartup);
         SubscribeLocalEvent<NanoChatCardComponent, ComponentShutdown>(OnCardShutdown);
         SubscribeLocalEvent<NanoChatCartridgeComponent, CartridgeUiReadyEvent>(OnUiReady);
         SubscribeLocalEvent<NanoChatCartridgeComponent, ComponentStartup>(OnCartridgeStartup);
         SubscribeLocalEvent<NanoChatCartridgeComponent, ComponentShutdown>(OnCartridgeShutdown);
         SubscribeLocalEvent<NanoChatCartridgeComponent, CartridgeMessageEvent>(OnMessage);
-        SubscribeLocalEvent<NanoChatNumberChangedEvent>(OnCardNumberChanged);
+        SubscribeLocalEvent<NanoChatCardComponent, NanoChatNumberChangedEvent>(OnCardNumberChanged);
+        SubscribeLocalEvent<EntityRenamedEvent>(OnEntityRenamed, after: new[] { typeof(IdCardSystem) });
+        SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestartCleanup);
+        SubscribeLocalEvent<RoundStartingEvent>(OnRoundStarting);
+    }
+
+    private void OnRoundRestartCleanup(RoundRestartCleanupEvent ev)
+    {
+        _cardsByNumber.Clear();
+        _cardNumbers.Clear();
+        _cartridgesByCard.Clear();
+        _trackedCardByCartridge.Clear();
+        _listedCardInfo.Clear();
+        _cardNumberCacheInitialized = false;
+        _cartridgeTrackingCacheInitialized = false;
+        _listedCardInfoCacheInitialized = false;
+    }
+
+    private void OnRoundStarting(RoundStartingEvent ev)
+    {
+        // Round startup is the safest point to repopulate from live entities.
+        RebuildCardNumberCache();
+        RebuildCartridgeTrackingCache();
+        RebuildListedCache();
     }
 
     private void OnCardStartup(Entity<NanoChatCardComponent> ent, ref ComponentStartup args)
     {
         RegisterCardNumber(ent.Owner, ent.Comp.Number);
+        if (TryUpdateListedCache(ent.Owner, ent.Comp))
+            UpdateUIForAllCards();
     }
 
     private void OnCardShutdown(Entity<NanoChatCardComponent> ent, ref ComponentShutdown args)
     {
         UnregisterCardNumber(ent.Owner, ent.Comp.Number);
+        if (_listedCardInfo.Remove(ent.Owner))
+            UpdateUIForAllCards();
     }
 
     private void OnCartridgeStartup(Entity<NanoChatCartridgeComponent> ent, ref ComponentStartup args)
@@ -85,10 +124,123 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
         _trackedCardByCartridge.Remove(ent.Owner);
     }
 
-    private void OnCardNumberChanged(ref NanoChatNumberChangedEvent args)
+    private void OnCardNumberChanged(EntityUid uid, NanoChatCardComponent comp, ref NanoChatNumberChangedEvent args)
     {
         UnregisterCardNumber(args.CardUid, args.OldNumber);
         RegisterCardNumber(args.CardUid, args.NewNumber);
+        if (TryUpdateListedCache(args.CardUid, comp))
+            UpdateUIForAllCards();
+    }
+
+    private void OnEntityRenamed(ref EntityRenamedEvent ev)
+    {
+        if (!TryComp<NanoChatCardComponent>(ev.Uid, out var card))
+            return;
+
+        if (TryUpdateListedCache(ev.Uid, card))
+            UpdateUIForAllCards();
+    }
+
+    private bool TryUpdateListedCache(EntityUid cardUid, NanoChatCardComponent card)
+    {
+        var hadEntry = _listedCardInfo.TryGetValue(cardUid, out var previous);
+
+        if (!card.ListNumber ||
+            card.Number is not uint number ||
+            !TryComp<IdCardComponent>(cardUid, out var idCard) ||
+            idCard.FullName is not string name)
+        {
+            if (!hadEntry)
+                return false;
+
+            _listedCardInfo.Remove(cardUid);
+            return true;
+        }
+
+        if (hadEntry && previous.Number == number && previous.Name == name)
+            return false;
+
+        _listedCardInfo[cardUid] = (number, name);
+        return true;
+    }
+
+    /// <summary>
+    ///     Rebuilds listed contacts from live entities when cache entries are missing due to init ordering.
+    /// </summary>
+    private void RebuildListedCache()
+    {
+        _listedCardInfo.Clear();
+
+        var query = EntityQueryEnumerator<NanoChatCardComponent, IdCardComponent>();
+        while (query.MoveNext(out var cardUid, out var nanoChatCard, out var idCard))
+        {
+            if (!nanoChatCard.ListNumber || nanoChatCard.Number is not uint number)
+                continue;
+
+            // Use FullName if available, otherwise use number as placeholder.
+            // This ensures cards appear in contacts even if identity hasn't resolved yet,
+            // avoiding the stale-name issue after round restarts with carryover entities.
+            var name = idCard.FullName ?? $"#{number:D4}";
+            _listedCardInfo[cardUid] = (number, name);
+        }
+
+        _listedCardInfoCacheInitialized = true;
+    }
+
+    /// <summary>
+    ///     Fully rebuilds card-number indexes from live entities.
+    /// </summary>
+    private void RebuildCardNumberCache()
+    {
+        _cardsByNumber.Clear();
+        _cardNumbers.Clear();
+
+        var query = EntityQueryEnumerator<NanoChatCardComponent>();
+        while (query.MoveNext(out var cardUid, out var card))
+        {
+            RegisterCardNumber(cardUid, card.Number);
+        }
+
+        _cardNumberCacheInitialized = true;
+    }
+
+    /// <summary>
+    ///     Fully rebuilds cartridge-to-card tracking from live entities.
+    /// </summary>
+    private void RebuildCartridgeTrackingCache()
+    {
+        _cartridgesByCard.Clear();
+        _trackedCardByCartridge.Clear();
+
+        var query = EntityQueryEnumerator<NanoChatCartridgeComponent>();
+        while (query.MoveNext(out var cartridgeUid, out var cartridge))
+        {
+            TrackCartridgeCard(cartridgeUid, cartridge.Card);
+        }
+
+        _cartridgeTrackingCacheInitialized = true;
+    }
+
+    /// <summary>
+    ///     Rebuilds card-number indexes when startup events were missed (e.g. round carryover entities).
+    /// </summary>
+    private void EnsureCardNumberCachePopulated()
+    {
+        if (_cardNumberCacheInitialized)
+            return;
+
+        RebuildCardNumberCache();
+    }
+
+    /// <summary>
+    ///     Rebuilds cartridge-to-card tracking when startup events were missed (e.g. round carryover entities).
+    /// </summary>
+    private void EnsureCartridgeTrackingCachePopulated()
+    {
+        if (_cartridgeTrackingCacheInitialized)
+            return;
+
+        RebuildCartridgeTrackingCache();
     }
 
     private void RegisterCardNumber(EntityUid cardUid, uint? number)
@@ -493,6 +645,7 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
     private void HandleToggleListNumber(Entity<NanoChatCardComponent> card)
     {
         _nanoChat.SetListNumber((card, card.Comp), !_nanoChat.GetListNumber((card, card.Comp)));
+        TryUpdateListedCache(card.Owner, card.Comp);
         UpdateUIForAllCards();
     }
 
@@ -595,28 +748,16 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
         Entity<NanoChatCartridgeComponent> sender,
         uint recipientNumber)
     {
-        return AttemptMessageDelivery(sender, recipientNumber, _station.GetOwningStation(sender), new Dictionary<EntityUid, bool>());
-    }
+        EnsureCardNumberCachePopulated();
 
-    private (bool failed, List<Entity<NanoChatCardComponent>> recipient) AttemptMessageDelivery(
-        Entity<NanoChatCartridgeComponent> sender,
-        uint recipientNumber,
-        EntityUid? senderStation,
-        Dictionary<EntityUid, bool> activeServerCache)
-    {
-        // First verify we can send from this device
         var channel = _prototype.Index(sender.Comp.RadioChannel);
-        var sendAttemptEvent = new RadioSendAttemptEvent(channel, sender);
+        var radioSource = GetRadioSource(sender);
+        var sendAttemptEvent = new RadioSendAttemptEvent(channel, radioSource);
         RaiseLocalEvent(ref sendAttemptEvent);
         if (sendAttemptEvent.Cancelled)
             return (true, new List<Entity<NanoChatCardComponent>>());
 
-        if (senderStation is not { } resolvedSenderStation || !HasActiveServer(resolvedSenderStation, activeServerCache))
-            return (true, new List<Entity<NanoChatCardComponent>>());
-
         var foundRecipients = new List<Entity<NanoChatCardComponent>>();
-
-        // Find all cards with matching number
         if (_cardsByNumber.TryGetValue(recipientNumber, out var recipientCardUids))
         {
             foreach (var cardUid in recipientCardUids)
@@ -627,77 +768,37 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
                 foundRecipients.Add((cardUid, card));
             }
         }
+        else
+        {
+            _sawmill.Warning($"[cache-miss] _cardsByNumber miss for #{recipientNumber:D4} — falling back to live query");
+            var fallbackQuery = EntityQueryEnumerator<NanoChatCardComponent>();
+            while (fallbackQuery.MoveNext(out var fallbackUid, out var fallbackCard))
+            {
+                if (fallbackCard.Number != recipientNumber)
+                    continue;
+
+                foundRecipients.Add((fallbackUid, fallbackCard));
+            }
+        }
 
         if (foundRecipients.Count == 0)
             return (true, foundRecipients);
 
-        // Now check if any of these cards can receive
         var deliverableRecipients = new List<Entity<NanoChatCardComponent>>();
         foreach (var recipient in foundRecipients)
         {
-            if (!_cartridgesByCard.TryGetValue(recipient.Owner, out var cartridgeUids))
+            if (recipient.Comp.PdaUid is not { } recipientPda)
+            continue;
+            var receiveAttemptEv = new RadioReceiveAttemptEvent(channel, radioSource, recipientPda);
+            RaiseLocalEvent(ref receiveAttemptEv);
+            if (receiveAttemptEv.Cancelled)
                 continue;
 
-            foreach (var receiverUid in cartridgeUids)
-            {
-                if (!TryComp<ActiveRadioComponent>(receiverUid, out _))
-                    continue;
-
-                // Check if devices are on same station/map
-                var recipientStation = _station.GetOwningStation(receiverUid);
-
-                // Both entities must be on a station
-                if (recipientStation == null)
-                    continue;
-
-                // Must be on same map/station unless long range allowed
-                if (!channel.LongRange && recipientStation != resolvedSenderStation)
-                    continue;
-
-                // Needs telecomms
-                if (!HasActiveServer(recipientStation.Value, activeServerCache))
-                    continue;
-
-                // Check if recipient can receive
-                var receiveAttemptEv = new RadioReceiveAttemptEvent(channel, sender, receiverUid);
-                RaiseLocalEvent(ref receiveAttemptEv);
-                if (receiveAttemptEv.Cancelled)
-                    continue;
-
-                // Found valid cartridge that can receive
-                deliverableRecipients.Add(recipient);
-                break; // Only need one valid cartridge per card
-            }
+            deliverableRecipients.Add(recipient);
+            break;
         }
 
         return (deliverableRecipients.Count == 0, deliverableRecipients);
-    }
-
-    /// <summary>
-    ///     Checks if there are any active telecomms servers on the given station
-    /// </summary>
-    private bool HasActiveServer(EntityUid station, Dictionary<EntityUid, bool>? activeServerCache = null)
-    {
-        if (activeServerCache != null && activeServerCache.TryGetValue(station, out var cached))
-            return cached;
-
-        // I have no idea why this isn't public in the RadioSystem
-        var query =
-            EntityQueryEnumerator<TelecomServerComponent, EncryptionKeyHolderComponent, ApcPowerReceiverComponent>();
-
-        while (query.MoveNext(out var uid, out _, out _, out var power))
-        {
-            if (_station.GetOwningStation(uid) == station && power.Powered)
-            {
-                if (activeServerCache != null)
-                    activeServerCache[station] = true;
-                return true;
-            }
-        }
-
-        if (activeServerCache != null)
-            activeServerCache[station] = false;
-        return false;
     }
 
     // Funky Station Start - Heavily modified to support group chats
@@ -777,20 +878,18 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
             return (true, new List<Entity<NanoChatCardComponent>>());
 
         var deliverableRecipients = new List<Entity<NanoChatCardComponent>>();
-        var senderStation = _station.GetOwningStation(sender);
-        var activeServerCache = new Dictionary<EntityUid, bool>();
 
         foreach (var memberNumber in groupRecipient.Members)
         {
             if (memberNumber == senderNumber)
                 continue;
 
-            var (failed, memberCards) = AttemptMessageDelivery(sender, memberNumber, senderStation, activeServerCache);
+            var (failed, memberCards) = AttemptMessageDelivery(sender, memberNumber);
             if (!failed)
                 deliverableRecipients.AddRange(memberCards);
         }
 
-        return (false, deliverableRecipients);
+        return (deliverableRecipients.Count == 0, deliverableRecipients);
     }
 
     /// <summary>
@@ -846,8 +945,22 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
     /// </summary>
     private void UpdateUIForCard(EntityUid cardUid)
     {
+        EnsureCartridgeTrackingCachePopulated();
+
         if (!_cartridgesByCard.TryGetValue(cardUid, out var cartridgeUids))
+        {
+            // Cache miss — fall back to live query (same timing issue as _cardsByNumber).
+            _sawmill.Warning($"[cache-miss] _cartridgesByCard miss for card={ToPrettyString(cardUid)} — falling back to live query");
+            var fallback = EntityQueryEnumerator<NanoChatCartridgeComponent, CartridgeComponent>();
+            while (fallback.MoveNext(out var fUid, out var fComp, out var fCartridge))
+            {
+                if (fComp.Card != cardUid || fCartridge.LoaderUid == null)
+                    continue;
+
+                UpdateUI((fUid, fComp), fCartridge.LoaderUid.Value);
+            }
             return;
+        }
 
         foreach (var uid in cartridgeUids)
         {
@@ -879,8 +992,23 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
     /// </summary>
     private NanoChatRecipient? GetCardInfo(uint number)
     {
+        EnsureCardNumberCachePopulated();
+
         if (!_cardsByNumber.TryGetValue(number, out var cardUids))
-            return null;
+        {
+            // Cache miss — fall back to live query (same as AttemptMessageDelivery).
+            _sawmill.Warning($"[cache-miss] _cardsByNumber miss in GetCardInfo for #{number:D4} — falling back to live query");
+            cardUids = [];
+            var fallback = EntityQueryEnumerator<NanoChatCardComponent>();
+            while (fallback.MoveNext(out var fUid, out var fCard))
+            {
+                if (fCard.Number == number)
+                    cardUids.Add(fUid);
+            }
+
+            if (cardUids.Count == 0)
+                return null;
+        }
 
         foreach (var uid in cardUids)
         {
@@ -902,6 +1030,21 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
         return null;
     }
 
+    /// <summary>
+    ///     Gets the most representative entity to use as a radio source for this cartridge.
+    /// </summary>
+    private EntityUid GetRadioSource(Entity<NanoChatCartridgeComponent> cartridge)
+    {
+        if (cartridge.Comp.Card is { } cardUid &&
+            TryComp<NanoChatCardComponent>(cardUid, out var card) &&
+            card.PdaUid is { } pdaUid)
+        {
+            return pdaUid;
+        }
+
+        return cartridge.Owner;
+    }
+
     private void OnUiReady(Entity<NanoChatCartridgeComponent> ent, ref CartridgeUiReadyEvent args)
     {
         _cartridge.RegisterBackgroundProgram(args.Loader, ent);
@@ -910,27 +1053,21 @@ public sealed class NanoChatCartridgeSystem : EntitySystem
 
     private void UpdateUI(Entity<NanoChatCartridgeComponent> ent, EntityUid loader)
     {
-        List<NanoChatRecipient>? contacts;
         if (_station.GetOwningStation(loader) is { } station)
-        {
             ent.Comp.Station = station;
 
-            contacts = [];
+        if (!_listedCardInfoCacheInitialized)
+            RebuildListedCache();
 
-            var query = AllEntityQuery<NanoChatCardComponent, IdCardComponent>();
-            while (query.MoveNext(out var entityId, out var nanoChatCard, out var idCardComponent))
-            {
-                if (nanoChatCard.ListNumber && nanoChatCard.Number is uint nanoChatNumber && idCardComponent.FullName is string fullName && _station.GetOwningStation(entityId) == station)
-                {
-                    contacts.Add(new NanoChatRecipient(nanoChatNumber, fullName));
-                }
-            }
-            contacts.Sort((contactA, contactB) => string.CompareOrdinal(contactA.Name, contactB.Name));
-        }
-        else
+        var contacts = new List<NanoChatRecipient>();
+
+        foreach (var (entityId, (nanoChatNumber, fullName)) in _listedCardInfo)
         {
-            contacts = null;
+            if (entityId != ent.Comp.Card)
+                contacts.Add(new NanoChatRecipient(nanoChatNumber, fullName));
         }
+
+        contacts.Sort((contactA, contactB) => string.CompareOrdinal(contactA.Name, contactB.Name));
 
         var recipients = new Dictionary<uint, NanoChatRecipient>();
         var messages = new Dictionary<uint, List<NanoChatMessage>>();

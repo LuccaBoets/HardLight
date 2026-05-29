@@ -22,7 +22,6 @@ public sealed partial class CryoSleepSystem
     private void InitReturning()
     {
         SubscribeNetworkEvent<WakeupRequestMessage>(OnWakeupMessage);
-        SubscribeLocalEvent<PlayerJoinedLobbyEvent>(e => ResetCryosleepState(e.PlayerSession.UserId));
         SubscribeLocalEvent<PlayerBeforeSpawnEvent>(e => ResetCryosleepState(e.Player.UserId));
     }
 
@@ -55,6 +54,12 @@ public sealed partial class CryoSleepSystem
 
         var cryopod = storedBody!.Value.Cryopod;
         var body = storedBody.Value.Body;
+        if (!Exists(body) || Deleted(body)) // HardLight
+        {
+            ResetCryosleepState(id.Value);
+            return ReturnToBodyStatus.BodyMissing;
+        }
+
         if (!Exists(cryopod) || Deleted(cryopod) || !TryComp<CryoSleepComponent>(cryopod, out var cryoComp))
         {
             var fallbackQuery = EntityQueryEnumerator<CryoSleepFallbackComponent, CryoSleepComponent>();
@@ -79,6 +84,7 @@ public sealed partial class CryoSleepSystem
                 return ReturnToBodyStatus.Occupied;
         }
 
+        UnregisterCryostorageBody(body, cryopod); // HardLight
         _storedBodies.Remove(id.Value);
         _mind.ControlMob(id.Value, body);
         // Force the mob to sleep

@@ -195,7 +195,7 @@ public partial class SharedBodySystem
             _humanoid.SetLayerVisibility((target, bodyAppearance), visualLayer, true, null, ref dirty);
             foreach (var marking in markingList)
             {
-                _humanoid.AddMarking(target, marking.MarkingId, marking.MarkingColors, true, true, true, bodyAppearance);
+                _humanoid.AddMarking(target, marking.MarkingId, marking.MarkingColors, marking.IsGlowing, true, true, bodyAppearance);
             }
         }
 

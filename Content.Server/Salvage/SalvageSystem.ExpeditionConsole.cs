@@ -261,7 +261,12 @@ public sealed partial class SalvageSystem
             // updates expComp.Completed based on objectives.
 
             // Trigger the same FTL process as normal expedition timeout
-            TriggerExpeditionFTLHome(expeditionMapUid.Value, expComp);
+            if (!TriggerExpeditionFTLHome(expeditionMapUid.Value, expComp))
+            {
+                data.CanFinish = true;
+                UpdateConsole((entity, component));
+                return;
+            }
 
             Log.Info($"Early expedition finish completed for {ToPrettyString(expeditionMapUid.Value)}");
         });
@@ -305,13 +310,13 @@ public sealed partial class SalvageSystem
     /// HardLight: Triggers the FTL home process for shuttles on an expedition map
     /// This is the same logic used in normal expedition timeout but extracted for early finish
     /// </summary>
-    private void TriggerExpeditionFTLHome(EntityUid expeditionMapUid, SalvageExpeditionComponent expedition)
+    private bool TriggerExpeditionFTLHome(EntityUid expeditionMapUid, SalvageExpeditionComponent expedition)
     {
         // Prevent duplicate triggering if expedition is already ending
         if (expedition.ReturnTriggered)
         {
             Log.Debug($"Expedition return already triggered for {expeditionMapUid}; ignoring duplicate early-finish request.");
-            return;
+            return false;
         }
 
         expedition.ReturnTriggered = true;
@@ -323,7 +328,7 @@ public sealed partial class SalvageSystem
         if (!TryGetExpeditionReturnMap(out var returnMapUid, out var targetSource))
         {
             Log.Error($"Could not resolve expedition return map (DefaultMap or ColComm) for early finish on expedition {expeditionMapUid}.");
-            return;
+            return false;
         }
 
         var mapId = Comp<MapComponent>(returnMapUid).MapId;
@@ -346,6 +351,7 @@ public sealed partial class SalvageSystem
         // Clean up console state and schedule expedition deletion
         CleanupExpeditionConsoleState(expeditionMapUid);
         QueueExpeditionDeletionWhenEmpty(expeditionMapUid);
+        return true;
     }
 
     // HardLight: Helper to announce early finish with grid-local filter

@@ -1,7 +1,7 @@
 ## Plushies
 
 - type: entity
-  parent: BaseItem
+  parent: BaseItemHarmless
   id: BasePlushie
   abstract: true
   components:
@@ -11,6 +11,7 @@
     tags:
       - Payload
       - ClothMade
+      - RoomSaveable
   - type: EmitSoundOnUse
     sound:
       collection: ToySqueak
@@ -1329,7 +1330,7 @@
 
 - type: entity
   abstract: true
-  parent: BaseItem
+  parent: BaseItemHarmless
   id: FoamWeaponBase
   components:
   - type: Sprite
@@ -1370,7 +1371,7 @@
         ents: []
 
 - type: entity
-  parent: BaseItem
+  parent: BaseItemHarmless
   id: ToyGunBase
   name: ToyGunBase
   description: A rooty tooty point and shooty.
@@ -1442,7 +1443,7 @@
     hideValues: true # Frontier
 
 - type: entity
-  parent: BaseItem
+  parent: BaseItemHarmless
   id: FoamBlade
   name: foamblade
   description: It says "Sternside Changs number 1 fan" on it.
@@ -1475,6 +1476,22 @@
   - type: Sprite
     sprite: Objects/Fun/toys.rsi
     state: basketball
+  # Upstream start: Placeholder; port upstream PR #37189
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape: !type:PhysShapeCircle
+          radius: 0.25
+        density: 20
+        mask:
+        - ItemMask
+        restitution: 0.8 # bouncy
+        friction: 0.2
+  - type: Catchable
+    catchChance: 0.8
+    catchSuccessSound:
+      path: /Audio/Effects/Footsteps/bounce.ogg
+  # Upstream end
   - type: EmitSoundOnCollide
     sound:
       path: /Audio/Effects/Footsteps/bounce.ogg
@@ -1494,6 +1511,25 @@
   - type: Sprite
     sprite: Objects/Fun/toys.rsi
     state: football
+  # Upstream start: Placeholder; port upstream PR #37189
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape: !type:PhysShapeCircle
+          radius: 0.25
+        density: 20
+        mask:
+        - ItemMask
+        restitution: 0.5 # a little bouncy
+        friction: 0.2
+  - type: Catchable
+    catchChance: 0.8
+    catchSuccessSound:
+      path: /Audio/Effects/Footsteps/bounce.ogg
+  - type: EmitSoundOnCollide
+    sound:
+      path: /Audio/Effects/Footsteps/bounce.ogg
+  # Upstream end
   - type: Item
     size: Small
     sprite: Objects/Fun/toys.rsi
@@ -1501,6 +1537,47 @@
 
 - type: entity
   parent: BaseItem
+  id: TennisBall
+  name: tennis ball
+  description: A fuzzy orb of endless betrayal.
+  components:
+  - type: Sprite
+    sprite: Objects/Fun/Balls/tennisball.rsi
+    state: icon
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape: !type:PhysShapeCircle
+          radius: 0.25
+        density: 20
+        mask:
+        - ItemMask
+        restitution: 0.5 # a little bouncy
+        friction: 0.2
+  - type: Catchable
+    catchChance: 0.8
+    catchSuccessSound:
+      path: /Audio/Effects/Footsteps/bounce.ogg
+  - type: EmitSoundOnCollide
+    sound:
+      path: /Audio/Effects/Footsteps/bounce.ogg
+  - type: Item
+    size: Small
+    sprite: Objects/Fun/Balls/tennisball.rsi
+  - type: EmitSoundOnUse
+    sound:
+      collection: ToySqueak
+      params:
+        volume: -4
+  - type: UseDelay
+  - type: Clothing
+    slots: [mask]
+  - type: Tag
+    tags:
+    - PetWearable
+
+- type: entity
+  parent: BaseItemHarmless
   id: BeachBall
   name: beach ball
   description: The simple beach ball is one of Nanotrasen's most popular products. 'Why do we make beach balls? Because we can! (TM)' - Nanotrasen
@@ -1508,6 +1585,23 @@
   - type: Sprite
     sprite: Objects/Fun/toys.rsi
     state: beachball
+  # Upstream start: Placeholder; port upstream PR #37189
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape: !type:PhysShapeCircle
+          radius: 0.3
+          position: "0,-0.2"
+        density: 20
+        mask:
+        - ItemMask
+        restitution: 0.1 # not bouncy
+        friction: 0.2
+  - type: Catchable
+    catchChance: 0.8
+    catchSuccessSound:
+      path: /Audio/Effects/Footsteps/bounce.ogg
+  # Upstream end
   - type: EmitSoundOnCollide
     sound:
       path: /Audio/Effects/Footsteps/bounce.ogg
@@ -1519,7 +1613,7 @@
     modifier: 0.05
 
 - type: entity
-  parent: BaseItem
+  parent: BaseItemHarmless
   id: BalloonSyn
   name: syndie balloon
   description: Handed out to the bravest souls who survived the "atomic twister" ride at Syndieland.
@@ -1538,7 +1632,7 @@
     - Balloon
 
 - type: entity
-  parent: BaseItem
+  parent: BaseItemHarmless
   id: BalloonNT
   name: nanotrasen balloon
   description: Specially designed to inflict maximum psychological damage to Syndicate operatives.
@@ -1557,7 +1651,7 @@
     - Balloon
 
 - type: entity
-  parent: BaseItem
+  parent: BaseItemHarmless
   id: BalloonCorgi
   name: corgi balloon
   description: Just like owning a real dog - but a lot floatier.
@@ -1576,7 +1670,7 @@
     - Balloon
 
 - type: entity
-  parent: BaseItem
+  parent: BaseItemHarmless
   id: SingularityToy
   name: singuloth-brand toy
   description: Mass-produced by a sadistic corporate conglomerate!
@@ -1596,7 +1690,7 @@
     heldPrefix: singularitytoy
 
 - type: entity
-  parent: BaseItem
+  parent: BaseItemHarmless
   id: TeslaToy
   name: Teddy Tesla
   description: The favorite toy of the great engineer Nikola Tesla.
@@ -1664,7 +1758,7 @@
   - type: SurveillanceCameraMonitor
 
 - type: entity
-  parent: BaseItem
+  parent: BaseItemHarmless
   id: ToySword
   name: toy sword
   description: New Sandy-Cat plastic sword! Comes with realistic sound and full color! Looks almost like the real thing!
@@ -1754,7 +1848,7 @@
 
 
 - type: entity
-  parent: BaseItem
+  parent: BaseItemHarmless
   id: FoamCutlass
   name: foam cutlass
   description: Cosplay as a pirate and force your friends to walk the plank.
@@ -1774,7 +1868,7 @@
     sprite: Objects/Weapons/Melee/cutlass.rsi
 
 - type: entity
-  parent: BaseItem
+  parent: BaseItemHarmless
   id: CardSword
   name: cardboard sword
   description: A cardboard tube fashioned into the shape of a sword.
@@ -1880,7 +1974,7 @@
           Blunt: 0
 
 - type: entity
-  parent: BaseItem
+  parent: BaseItemHarmless
   id: WhoopieCushion
   name: whoopie cushion
   description: A practical joke device involving flatulence humour.

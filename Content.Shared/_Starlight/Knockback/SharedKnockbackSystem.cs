@@ -21,7 +21,7 @@ public abstract partial class SharedKnockbackSystem : EntitySystem
     [Dependency] protected readonly SharedTransformSystem _transformSystem = default!;
     [Dependency] private readonly ThrowingSystem _throwing = default!;
     [Dependency] private readonly InventorySystem _inventory = default!;
-    [Dependency] private readonly StaminaSystem _stamina = default!;
+    [Dependency] private readonly SharedStaminaSystem _stamina = default!; // HardLight: StaminSystem<SharedStaminaSystem
     public override void Initialize()
     {
         SubscribeLocalEvent<KnockbackByUserTagComponent, GunShotEvent>(OnGunShot);

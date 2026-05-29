@@ -6,7 +6,7 @@ namespace Content.Server._Funkystation.Genetics.Mutations.Systems;
 
 public sealed class MutationStaminaRegenerationBoostSystem : EntitySystem
 {
-    [Dependency] private readonly StaminaSystem _staminaSystem = default!;
+    [Dependency] private readonly SharedStaminaSystem _staminaSystem = default!; // HardLight: StaminSystem<SharedStaminaSystem
     public override void Update(float frameTime)
     {
         base.Update(frameTime);

@@ -4,6 +4,7 @@ using Content.Shared.Clothing.EntitySystems;
 using Content.Shared.Interaction;
 using Content.Shared.Interaction.Events;
 using Content.Shared.Item;
+using Content.Shared.Item.ItemToggle;
 using Content.Shared.Item.ItemToggle.Components;
 using Content.Shared.Popups;
 using Content.Shared.Temperature;
@@ -22,6 +23,7 @@ public abstract class SharedItemSwitchSystem : EntitySystem
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
     [Dependency] private readonly SharedItemSystem _item = default!;
+    [Dependency] private readonly ItemToggleSystem _itemToggle = default!;
     [Dependency] private readonly ClothingSystem _clothing = default!;
 
     private EntityQuery<ItemSwitchComponent> _query;
@@ -136,6 +138,15 @@ public abstract class SharedItemSwitchSystem : EntitySystem
             State = key
         };
         RaiseLocalEvent(uid, ref attempt);
+
+        if (ent.Comp.States.TryGetValue(ent.Comp.State, out var currentState)
+            && currentState.Components is not null
+            && currentState.RemoveComponents
+            && TryComp<ItemToggleComponent>(uid, out var itemToggle)
+            && itemToggle.Activated)
+        {
+            _itemToggle.TryDeactivate((uid, itemToggle), user, predicted: comp.Predictable);
+        }
 
         if (ent.Comp.States.TryGetValue(ent.Comp.State, out var prevState) && prevState.RemoveComponents && prevState.Components is not null)
             EntityManager.RemoveComponents(ent, prevState.Components);

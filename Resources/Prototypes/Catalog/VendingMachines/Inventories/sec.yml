@@ -36,9 +36,9 @@
     TrackingImplanter: 5
     ClothingEyesGlassesNullSpace: 4
     BluespaceFlasher: 4
-    GrenadeDePhase: 4
     ClothingNullHarness: 4
-  # contrabandInventory: # Frontier
-  #   WeaponMeleeNeedle: 2 # Frontier
-  #   FoodDonutHomer: 12 # Frontier
+    NullspaceLocator: 2
+    BluespaceFlash: 1
+  contrabandInventory:
+    PinkFluffyHandcuffs: 1 # pretty funny
 

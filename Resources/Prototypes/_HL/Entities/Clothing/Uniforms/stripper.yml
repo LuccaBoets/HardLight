@@ -1,0 +1,102 @@
+- type: entity
+  parent: ClothingUniformBase
+  id: StripperOutfitWhite
+  name: white stripper outfit
+  components:
+  - type: Sprite
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_white.rsi
+  - type: Clothing
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_white.rsi
+  - type: Tag
+    tags:
+    - WhitelistChameleon
+
+- type: entity
+  parent: StripperOutfitWhite
+  id: StripperOutfitBlue
+  name: blue stripper outfit
+  components:
+  - type: Sprite
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_blue.rsi
+  - type: Clothing
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_blue.rsi
+
+- type: entity
+  parent: StripperOutfitWhite
+  id: StripperOutfitYellow
+  name: yellow stripper outfit
+  components:
+  - type: Sprite
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_yellow.rsi
+  - type: Clothing
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_yellow.rsi
+
+- type: entity
+  parent: StripperOutfitWhite
+  id: StripperOutfitGreen
+  name: green stripper outfit
+  components:
+  - type: Sprite
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_green.rsi
+  - type: Clothing
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_green.rsi
+
+- type: entity
+  parent: StripperOutfitWhite
+  id: StripperOutfitRed
+  name: red stripper outfit
+  components:
+  - type: Sprite
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_red.rsi
+  - type: Clothing
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_red.rsi
+
+- type: entity
+  parent: StripperOutfitWhite
+  id: StripperOutfitOrange
+  name: orange stripper outfit
+  components:
+  - type: Sprite
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_orange.rsi
+  - type: Clothing
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_orange.rsi
+
+- type: entity
+  parent: StripperOutfitWhite
+  id: StripperOutfitPurple
+  name: purple stripper outfit
+  components:
+  - type: Sprite
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_purple.rsi
+  - type: Clothing
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_purple.rsi
+
+- type: entity
+  parent: StripperOutfitWhite
+  id: StripperOutfitBlack
+  name: black stripper outfit
+  components:
+  - type: Sprite
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_black.rsi
+  - type: Clothing
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_black.rsi
+
+- type: entity
+  parent: StripperOutfitWhite
+  id: StripperOutfitLatexBlue
+  name: blue latex stripper outfit
+  components:
+  - type: Sprite
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_latex_blue.rsi
+  - type: Clothing
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_latex_blue.rsi
+
+- type: entity
+  parent: StripperOutfitWhite
+  id: StripperOutfitLatexPink
+  name: pink latex stripper outfit
+  components:
+  - type: Sprite
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_latex_pink.rsi
+  - type: Clothing
+    sprite: _HL/Clothing/Uniforms/Stripper/stripper_latex_pink.rsi

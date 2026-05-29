@@ -13,8 +13,8 @@
     contents:
       - id: WeaponPistolDualetta
       - id: WeaponPistolDualetta
-      - id: MagazinePistolHighCapacity
-      - id: MagazinePistolHighCapacity
+      - id: Magazine9x19mmPistolHighCapacityFMJ # HardLight: MagazinePistolHighCapacity<Magazine9x19mmPistolHighCapacityFMJ
+      - id: Magazine9x19mmPistolHighCapacityFMJ # HardLight: MagazinePistolHighCapacity<Magazine9x19mmPistolHighCapacityFMJ
       - id: ClothingHandsGlovesCombat
       - id: ClothingUniformJumpsuitDetectiveGrey
       - id: ClothingOuterCoatDetectiveLoadout

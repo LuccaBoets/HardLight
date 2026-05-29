@@ -10,6 +10,21 @@
     "states": [
         {
             "name": "noncon"
+        },
+        {
+            "name": "noncon_victim"
+        },
+        {
+            "name": "noncon_either"
+        },
+        {
+            "name": "noncon_cb_aggressor"
+        },
+        {
+            "name": "noncon_cb_victim"
+        },
+        {
+            "name": "noncon_cb_either"
         }
     ]
 }

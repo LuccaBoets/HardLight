@@ -168,8 +168,8 @@
     heatingCoefficient: 0.01 # Not complete protection from fire
     coolingCoefficient: 0.01
   - type: ClothingSpeedModifier
-    walkModifier: 0.8
-    sprintModifier: 0.8
+    walkModifier: 0.95 # Hardlight
+    sprintModifier: 0.95 # Hardlight
   - type: HeldSpeedModifier
   - type: Item
     size: Huge

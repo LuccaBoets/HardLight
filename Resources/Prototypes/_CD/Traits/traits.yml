@@ -1,20 +1,20 @@
 - type: trait
   id: Synthetic
-  name: trait-synth-name
-  description: trait-synth-desc
+  name: trait-synthetic-name
+  description: trait-synthetic-desc
   category: Physical
-  cost: 0 # Hardlight: Why did this cost 4?
+  cost: 3 # HardLight: It does actual stuff now
   speciesBlacklist: # HardLight
   - IPC
   - Synth
-  # Begin DeltaV Additions - blacklist IPCs
   blacklist:
     components:
       - BorgChassis
-  # End DeltaV Additions - blacklist IPCs
   components:
-    - type: Synth
-    - type: IntrinsicRadioReceiver # Hardlight start: Give you Trinary
+    - type: Synthetic
+    # Hardlight start: Gives Trinary and EAL
+    - type: LanguageSpeaker
+    - type: IntrinsicRadioReceiver
     - type: IntrinsicRadioTransmitter
       intrinsicChannels:
       - Trinary
@@ -27,3 +27,7 @@
       preserveExistingChannels: true
       intrinsicChannels:
       - Trinary
+  languagesSpoken:
+    - Machine
+  languagesUnderstood:
+    - Machine # Hardlight end

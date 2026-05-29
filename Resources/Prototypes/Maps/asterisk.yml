@@ -3,7 +3,7 @@
   mapName: 'Asterisk'
   mapPath: /Maps/asterisk.yml # Floofstation
   minPlayers: 0
-  maxPlayers: 60
+  maxPlayers: 200
   stations:
     Asterisk:
       stationProto: StandardNanotrasenStation

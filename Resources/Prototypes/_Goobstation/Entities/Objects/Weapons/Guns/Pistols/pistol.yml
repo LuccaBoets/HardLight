@@ -31,22 +31,22 @@
     slots:
       gun_magazine:
         name: Magazine
-        startingItem: MagazinePistolHighCapacity
+        startingItem: Magazine9x19mmPistolHighCapacityFMJ # HardLight: MagazinePistolHighCapacity<Magazine9x19mmPistolHighCapacityFMJ
         insertSound: /Audio/Weapons/Guns/MagIn/pistol_magin.ogg
         ejectSound: /Audio/Weapons/Guns/MagOut/pistol_magout.ogg
         priority: 2
         whitelist:
           tags:
-          - MagazinePistol
-          - MagazinePistolHighCapacity
+          - Magazine9x19mmPistolFMJ # HardLight: MagazinePistol<Magazine9x19mmPistolFMJ
+          - Magazine9x19mmPistolHighCapacityFMJ # HardLight: MagazinePistolHighCapacity<Magazine9x19mmPistolHighCapacityFMJ
         whitelistFailPopup: gun-magazine-whitelist-fail
       gun_chamber:
         name: Chamber
-        startingItem: CartridgePistol
+        startingItem: Cartridge9x19mmFMJ # HardLight: CartridgePistol<Cartridge9x19mmFMJ
         priority: 1
         whitelist:
           tags:
-          - CartridgePistol
+          - Cartridge9x19mmFMJ # HardLight: CartridgePistol<Cartridge9x19mmFMJ
   - type: Tag
     tags:
     - WeaponPistolDualetta
@@ -60,10 +60,10 @@
       - WeaponPistolDualetta
 
 - type: entity
-  parent: [ BaseItem, BaseC3PirateContraband ]
+  parent: [ NFBaseWeaponRevolverChamber45, BaseItem, BaseC3PirateContraband ]
   id: WeaponPistolAnaconda
   name: Anaconda
-  description: A heavy pistol capable of supplying itself with the ammo on the way using a built-in fabricator.
+  description: A heavy pistol.
   components:
   - type: Item
     size: Small
@@ -91,15 +91,13 @@
     - SemiAuto
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/hpistol.ogg
-  - type: BasicEntityAmmoProvider
-    proto: BulletAnaconda
-    capacity: 7
-    count: 7
-  - type: RechargeBasicEntityAmmo
-    rechargeCooldown: 4
-    rechargeSound:
-      path: /Audio/Weapons/Guns/Cock/shotgun_close.ogg
-  - type: AmmoCounter
   - type: ContainerContainer
     containers:
-      ballistic-ammo: !type:Container
+      revolver-ammo: !type:Container
+  - type: RevolverAmmoProvider
+    whitelist:
+      tags:
+        - Cartridge45_magnumFMJ
+        - SpeedLoader45_magnumFMJ
+    proto: Cartridge45_ACPFMJ
+  - type: AmmoCounter

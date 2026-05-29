@@ -1,0 +1,122 @@
+# Vanilla erotic mood pool — common sexual preferences and dynamics.
+# Add new mood IDs to the dataset, then define the matching 'type: mood' entry below.
+
+- type: dataset
+  id: EroticMoodsVanilla
+  values:
+  - EroticVanillaSubmissive
+  - EroticVanillaDominant
+  - EroticVanillaOralGiving
+  - EroticVanillaOralReceiving
+  - EroticVanillaAnal
+  - EroticVanillaGroping
+  - EroticVanillaBreeding
+  - EroticVanillaThreesome
+  - EroticVanillaExhibitionist
+  - EroticVanillaVoyeur
+  - EroticVanillaBodyWorship
+  - EroticVanillaDirtyTalk
+  - EroticVanillaTeasing
+  - EroticVanillaCumMarking
+  - EroticVanillaSpeciesAttraction
+  - EroticVanillaHandjob
+  - EroticVanillaKnotting
+  - EroticVanillaCollar
+
+- type: mood
+  id: EroticVanillaSubmissive
+  moodName: hl-erotic-mood-vanilla-submissive-name
+  moodDesc: hl-erotic-mood-vanilla-submissive-desc
+  conflicts:
+  - EroticVanillaDominant
+
+- type: mood
+  id: EroticVanillaDominant
+  moodName: hl-erotic-mood-vanilla-dominant-name
+  moodDesc: hl-erotic-mood-vanilla-dominant-desc
+  conflicts:
+  - EroticVanillaSubmissive
+
+- type: mood
+  id: EroticVanillaOralGiving
+  moodName: hl-erotic-mood-vanilla-oral-giving-name
+  moodDesc: hl-erotic-mood-vanilla-oral-giving-desc
+
+- type: mood
+  id: EroticVanillaOralReceiving
+  moodName: hl-erotic-mood-vanilla-oral-receiving-name
+  moodDesc: hl-erotic-mood-vanilla-oral-receiving-desc
+
+- type: mood
+  id: EroticVanillaAnal
+  moodName: hl-erotic-mood-vanilla-anal-name
+  moodDesc: hl-erotic-mood-vanilla-anal-desc
+
+- type: mood
+  id: EroticVanillaGroping
+  moodName: hl-erotic-mood-vanilla-groping-name
+  moodDesc: hl-erotic-mood-vanilla-groping-desc
+
+- type: mood
+  id: EroticVanillaBreeding
+  moodName: hl-erotic-mood-vanilla-breeding-name
+  moodDesc: hl-erotic-mood-vanilla-breeding-desc
+  requiredConsent: Cum
+
+- type: mood
+  id: EroticVanillaThreesome
+  moodName: hl-erotic-mood-vanilla-threesome-name
+  moodDesc: hl-erotic-mood-vanilla-threesome-desc
+
+- type: mood
+  id: EroticVanillaExhibitionist
+  moodName: hl-erotic-mood-vanilla-exhibitionist-name
+  moodDesc: hl-erotic-mood-vanilla-exhibitionist-desc
+
+- type: mood
+  id: EroticVanillaVoyeur
+  moodName: hl-erotic-mood-vanilla-voyeur-name
+  moodDesc: hl-erotic-mood-vanilla-voyeur-desc
+
+- type: mood
+  id: EroticVanillaBodyWorship
+  moodName: hl-erotic-mood-vanilla-bodyworship-name
+  moodDesc: hl-erotic-mood-vanilla-bodyworship-desc
+
+- type: mood
+  id: EroticVanillaDirtyTalk
+  moodName: hl-erotic-mood-vanilla-dirtytalk-name
+  moodDesc: hl-erotic-mood-vanilla-dirtytalk-desc
+
+- type: mood
+  id: EroticVanillaTeasing
+  moodName: hl-erotic-mood-vanilla-teasing-name
+  moodDesc: hl-erotic-mood-vanilla-teasing-desc
+
+- type: mood
+  id: EroticVanillaCumMarking
+  moodName: hl-erotic-mood-vanilla-cummarking-name
+  moodDesc: hl-erotic-mood-vanilla-cummarking-desc
+  requiredConsent: Cum
+
+- type: mood
+  id: EroticVanillaSpeciesAttraction
+  moodName: hl-erotic-mood-vanilla-species-name
+  moodDesc: hl-erotic-mood-vanilla-species-desc
+  moodVars:
+    species: EroticAttractionSpecies
+
+- type: mood
+  id: EroticVanillaHandjob
+  moodName: hl-erotic-mood-vanilla-handjob-name
+  moodDesc: hl-erotic-mood-vanilla-handjob-desc
+
+- type: mood
+  id: EroticVanillaKnotting
+  moodName: hl-erotic-mood-vanilla-knotting-name
+  moodDesc: hl-erotic-mood-vanilla-knotting-desc
+
+- type: mood
+  id: EroticVanillaCollar
+  moodName: hl-erotic-mood-vanilla-collar-name
+  moodDesc: hl-erotic-mood-vanilla-collar-desc
