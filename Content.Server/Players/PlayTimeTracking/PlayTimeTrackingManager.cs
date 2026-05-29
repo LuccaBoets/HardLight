@@ -211,6 +211,17 @@ public sealed partial class PlayTimeTrackingManager : ISharedPlaytimeManager, IP
         return GetTrackerTimes(session);
     }
 
+    public bool TryGetPlayTimes(ICommonSession session, [NotNullWhen(true)] out IReadOnlyDictionary<string, TimeSpan>? playTimes)
+    {
+        playTimes = null;
+
+        if (!TryGetTrackerTimes(session, out var times))
+            return false;
+
+        playTimes = times;
+        return true;
+    }
+
     private void SendPlayTimes(ICommonSession pSession)
     {
         var roles = GetTrackerTimes(pSession);
