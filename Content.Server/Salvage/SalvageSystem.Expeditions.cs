@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using Content.Server.Salvage.Expeditions;
@@ -290,13 +291,24 @@ public sealed partial class SalvageSystem
         UpdateExpeditionConsole(expeditionComp);
     }
 
-    private bool TryClaimMission(SalvageExpeditionDataComponent component, ushort missionIndex, out SalvageMissionParams mission)
+    private bool TryClaimMission(SalvageExpeditionDataComponent component, ushort missionIndex, [NotNullWhen(true)] out SalvageMissionParams? mission)
     {
-        if (!component.Missions.TryGetValue(missionIndex, out mission))
+        SalvageMissionParams? claimedMission;
+        if (!component.Missions.TryGetValue(missionIndex, out claimedMission))
+        {
+            mission = null;
             return false;
+        }
+
+        if (claimedMission == null)
+        {
+            mission = null;
+            return false;
+        }
 
         component.Missions.Remove(missionIndex);
-        component.ActiveMissions[missionIndex] = mission;
+        component.ActiveMissions[missionIndex] = claimedMission;
+        mission = claimedMission;
         SyncPrimaryActiveMission(component);
         return true;
     }
