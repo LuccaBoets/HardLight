@@ -64,6 +64,8 @@ using Content.Server.DeviceLinking.Systems;
 using Content.Server.EUI;
 using Content.Server.Fluids.EntitySystems;
 using Content.Server.Humanoid;
+using Content.Server.Preferences.Managers; // HardLight
+using Content.Server.Traits; // HardLight
 using Content.Shared.Administration.Logs;
 using Content.Shared.Cloning;
 using Content.Shared.Cloning.Events;
@@ -73,6 +75,7 @@ using Content.Shared.Inventory;
 using Content.Shared.Implants;
 using Content.Shared.Implants.Components;
 using Content.Shared.NameModifier.EntitySystems;
+using Content.Shared.Preferences; // HardLight
 using Content.Shared.StatusEffect;
 using Content.Shared.Storage;
 using Content.Shared.Storage.EntitySystems;
@@ -83,6 +86,8 @@ using Robust.Shared.Prototypes;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Content.Shared._EinsteinEngines.Silicon.Components;
+using Content.Shared.Mind; // HardLight
+using Robust.Server.Player; // HardLight
 using Robust.Shared.Random;
 
 namespace Content.Server.Cloning;
@@ -103,6 +108,10 @@ public sealed partial class CloningSystem : EntitySystem
     [Dependency] private readonly SharedStorageSystem _storage = default!;
     [Dependency] private readonly SharedSubdermalImplantSystem _subdermalImplant = default!;
     [Dependency] private readonly NameModifierSystem _nameMod = default!;
+    [Dependency] private readonly SharedMindSystem _mind = default!; // HardLight
+    [Dependency] private readonly IServerPreferencesManager _prefs = default!; // HardLight
+    [Dependency] private readonly IPlayerManager _player = default!; // HardLight
+    [Dependency] private readonly TraitSystem _traits = default!; // HardLight
 
     /// <summary>
     ///     Spawns a clone of the given humanoid mob at the specified location or in nullspace.
@@ -131,6 +140,7 @@ public sealed partial class CloningSystem : EntitySystem
         _humanoidSystem.CloneAppearance(original, clone.Value);
 
         CloneComponents(original, clone.Value, settings);
+        ApplySelectedTraits(original, clone.Value); // HardLight
 
         // Add equipment first so that SetEntityName also renames the ID card.
         if (settings.CopyEquipment != null)
@@ -152,6 +162,23 @@ public sealed partial class CloningSystem : EntitySystem
 
         _adminLogger.Add(LogType.Chat, LogImpact.Medium, $"The body of {original:player} was cloned as {clone.Value:player}");
         return true;
+    }
+
+    private void ApplySelectedTraits(EntityUid original, EntityUid clone) // HardLight
+    {
+        if (!_mind.TryGetMind(original, out _, out var mind) ||
+            mind.UserId == null ||
+            _prefs.GetPreferences(mind.UserId.Value).SelectedCharacter is not HumanoidCharacterProfile profile)
+        {
+            return;
+        }
+
+        string? playerName = null;
+        if (_player.TryGetSessionById(mind.UserId.Value, out var session))
+            playerName = session.Name;
+
+        // Clone equipment separately; replay only the selected trait components here.
+        _traits.ApplyProfileTraits(clone, profile, playerName, addTraitGear: false);
     }
 
     /// <summary>
@@ -278,7 +305,7 @@ public sealed partial class CloningSystem : EntitySystem
             var mob = Spawn(speciesPrototype.Prototype, Transform(uid).MapPosition);
             _humanoidSystem.CloneAppearance(bodyToClone, mob);
 
-            ///Nyano - Summary: adds the potential psionic trait to the reanimated mob. 
+            ///Nyano - Summary: adds the potential psionic trait to the reanimated mob.
             EnsureComp<PotentialPsionicComponent>(mob);
 
             var ev = new CloningEvent(bodyToClone, mob);

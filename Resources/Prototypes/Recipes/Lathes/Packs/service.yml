@@ -24,6 +24,7 @@
   - MopItem
   - Holoprojector
   - WetFloorSign
+  - WireBrush
 
 - type: latheRecipePack
   id: ServiceBoardsStatic
@@ -69,4 +70,4 @@
   - ReagentGrinderIndustrialMachineCircuitboard
   - JukeboxCircuitBoard
   - DawInstrumentMachineCircuitboard
-  - SlopDispenserMachineCircuitboard
+  - SlopDispenserMachineCircuitboard # HardLight

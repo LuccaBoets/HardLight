@@ -251,6 +251,115 @@
   suffix: CYN182, Filled
   categories: [ HideSpawnMenu ]
   components:
+  - type: Storage # Shutting up the fucking test.
+    maxItemSize: Small
+    grid:
+    - 0,0,5,3
+    whitelist:
+      components:
+        - Handcuff
+      tags:
+        - Magazine9x19mmSpecial
+        - Magazine762x39mmSubsonic
+        - Magazine127x99mm
+        - HLMagazineCaselessRifle
+        - HLMagazineCaselessRifleShort
+        - HLMagazinePistolCaselessRifle
+        - NFMagazineRifle20
+        - MagazinePistolSubMachineGun
+        - NFMagazinePistol45
+        - NFMagazineSubMachineGunTopMountedPistol35
+        - NFMagazineSubMachineGunPistol45
+        - NFMagazinePistol35
+        - NFMagazineHighCapacityPistol35
+        - NFMagazineSubMachineGunPistol35
+        - NFMagazineClipRifle20
+        - NFMagazineRifle30
+        - NFMagazineLowCapacityRifle30
+        - NFMagazineDrumRifle20
+        - NFMagazineSubMachineGunnTopMountedPistol35
+        - MagazineShotgun
+        - NFMagazineBoxRifle30
+        - MagazineMagnum
+        - MagazineMagnumSubMachineGun
+        - MagazineGrenade
+        - MagazinePistolSubMachineGunTopMounted
+        - MagazinePistol
+        - MagazinePistolHighCapacity
+        - MagazinePistolSubMachineGunn
+        - MagazineLightRifleBox
+        - MagazineLightRifle
+        - MagazineLightRiflePan
+        - MagazineCaselessRifle
+        - MagazinePistolCaselessRifle
+        - MagazineRifle
+        - MagazineNovaliteC1
+        - NFMagazineRi20
+        - NFMagazineBoRifle30
+        - NFMagazineCrifle20
+        - NFMagazineDrRifle20
+        - NFMagazinePi35
+        - NFMagazineHiCaPistol35
+        - NFMagazineSuMaGunPistol35
+        - MagazineAMR
+        - MagazineRailgunTag
+        - Magazine75Bolt
+        - MagazineRiotGun
+        - MagazineEsar550Tag
+        - ForgedRifleMagazine
+        - Magazine762x51mmFMJ
+        - Magazine762x51mmLowCapacityFMJ
+        - Magazine762x51mmBox
+        - Magazine762x54mmRFMJ
+        - Magazine762x54mmRBox
+        - Magazine556x45mmFMJ
+        - Magazine556x45mmBox
+        - Magazine762x39mmFMJ
+        - Magazine762x39mmLowCapacityFMJ
+        - Magazine762x39mmBox
+        - Magazine46x30mmPistolFMJ
+        - Magazine46x30mmPistolHighCapacityFMJ
+        - Magazine46x30mmSubMachineGunFMJ
+        - Magazine46x30mmSubMachineGunTopMountedFMJ
+        - Magazine46x30mmFMJBox
+        - Magazine45_ACPPistolFMJ
+        - Magazine45_ACPPistolHighCapacityFMJ
+        - Magazine45_ACPSubMachineGunFMJ
+        - Magazine45_ACPSubMachineGunTopMountedFMJ
+        - Magazine45_ACPFMJBox
+        - Magazine45_magnumPistolFMJ
+        - Magazine9x19mm
+        - Magazine9x19mmImprovised
+        - Magazine9x19mmSMGImprovised
+        - Magazine9x19mmPistolFMJ
+        - Magazine9x19mmPistolHighCapacityFMJ
+        - Magazine9x19mmSubMachineGunFMJ
+        - Magazine9x19mmSubMachineGunTopMountedFMJ
+        - Magazine9x19mmFMJBox
+        - Magazine57x28mmPistolFMJ
+        - Magazine57x28mmPistolHighCapacityFMJ
+        - Magazine57x28mmSubMachineGunFMJ
+        - Magazine57x28mmSubMachineGunTopMountedFMJ
+        - Magazine57x28mmFMJBox
+        - MagazineDP29
+        - Magazine8x65mmSKR
+        - MagazineBox8x65mmSKR
+        - Magazine12_gaugeBuckshot
+        - MagazineDMR
+        - MagazineAsmgt
+        - MagazineBattery
+        - MagazinePistolDP
+        - MagazineRifleM52
+        - MagazineSMGPPSH
+        - MagazineSMGUzi
+        - MagazineCalico
+        - Magazine635x40mmCaseless
+        - Magazine762x39mmPan
+        - Magazine635x40mmCaselessPistol
+        - Magazine12_gaugeBuckshot
+        - Magazine45_magnumSubMachineGunFMJ
+        - Magazine8x65mmSKR # mono
+        - Magazine40mm
   - type: Tag
     tags:
     - Admin

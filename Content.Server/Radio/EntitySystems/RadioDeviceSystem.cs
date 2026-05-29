@@ -220,7 +220,7 @@ public sealed class RadioDeviceSystem : EntitySystem
 
         var channel = _protoMan.Index<RadioChannelPrototype>(component.BroadcastChannel)!;
         if (_recentlySent.Add((args.Message, args.Source, channel)))
-            _radio.SendRadioMessage(args.Source, args.Message, channel, uid, /*Nuclear-14-start*/ frequency: component.Frequency /*Nuclear-14-end*/);
+            _radio.SendRadioMessage(args.Source, args.Message, channel, uid, /*Nuclear-14-start*/ frequency: component.Frequency /*Nuclear-14-end*/, originalMessage: args.OriginalMessage);
     }
 
     private void OnAttemptListen(EntityUid uid, RadioMicrophoneComponent component, ListenAttemptEvent args)
@@ -246,12 +246,14 @@ public sealed class RadioDeviceSystem : EntitySystem
 
         // log to chat so people can identity the speaker/source, but avoid clogging ghost chat if there are many radios
 
+        var message = args.OriginalChatMsg.Message;
         _chat.TrySendInGameICMessage(uid,
-            args.Message,
+            message, // HardLight: args.Message<message
             component.SpeakNormally ? InGameICChatType.Speak : InGameICChatType.Whisper, // Goobstation - radio host
             ChatTransmitRange.GhostRangeLimitNoAdminCheck,
             nameOverride: name,
-            checkRadioPrefix: component.SpeakNormally);
+            checkRadioPrefix: component.SpeakNormally,
+            languageOverride: args.Language); // Starlight
     }
 
     private void OnIntercomEncryptionChannelsChanged(Entity<IntercomComponent> ent, ref EncryptionChannelsChangedEvent args)

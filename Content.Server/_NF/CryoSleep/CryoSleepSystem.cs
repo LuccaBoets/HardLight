@@ -72,6 +72,7 @@ public sealed partial class CryoSleepSystem : EntitySystem
         SubscribeLocalEvent<CryoSleepComponent, DestructionEventArgs>((e, c, _) => EjectBody(e, c));
         SubscribeLocalEvent<CryoSleepComponent, CryoStoreDoAfterEvent>(OnAutoCryoSleep);
         SubscribeLocalEvent<CryoSleepComponent, DragDropTargetEvent>(OnEntityDragDropped);
+        SubscribeLocalEvent<CryostorageContainedComponent, EntityTerminatingEvent>(OnCryostorageContainedTerminating); // HardLight
         SubscribeLocalEvent<RoundRestartCleanupEvent>(OnRoundRestart);
 
         InitReturning();
@@ -218,6 +219,12 @@ public sealed partial class CryoSleepSystem : EntitySystem
         args.Handled |= InsertBody(args.Dragged, ent, false);
     }
 
+    private void OnCryostorageContainedTerminating(Entity<CryostorageContainedComponent> ent, ref EntityTerminatingEvent args) // HardLight
+    {
+        if (ent.Comp.UserId is { } userId)
+            ResetCryosleepState(userId);
+    }
+
     public bool InsertBody(EntityUid? toInsert, Entity<CryoSleepComponent> cryopod, bool force)
     {
         if (toInsert == null)
@@ -286,7 +293,8 @@ public sealed partial class CryoSleepSystem : EntitySystem
         if (!TryComp<CryoSleepComponent>(cryopod, out var cryo))
             return;
 
-        // HardLight start: Body may have unrelated active do-afters.
+        // HardLight start
+        // Body may have unrelated active do-afters.
         // Clear them before moving to paused cryospace,
         // otherwise update-driven cleanup can leave client-side bars frozen indefinitely.
         _doAfter.CancelAndClearAll(bodyId);
@@ -321,7 +329,8 @@ public sealed partial class CryoSleepSystem : EntitySystem
         _container.Remove(bodyId, cryo.BodyContainer, reparent: false, force: true);
         UpdateOccupancyAppearance(cryopod, false); // HardLight
         _transform.SetCoordinates(bodyId, new EntityCoordinates(storage, Vector2.Zero));
-
+        if (!deleteEntity)
+            RegisterCryostorageBody(bodyId, cryopod, id); // HardLight
         RaiseLocalEvent(bodyId, new CryosleepEnterEvent(cryopod, mind?.UserId), true);
 
         if (deleteEntity)
@@ -369,15 +378,45 @@ public sealed partial class CryoSleepSystem : EntitySystem
         return component.BodyContainer.ContainedEntity != null;
     }
 
-    // HardLight start: Method to update the visual state of the cryopod based on whether it's occupied or not.
-    // It is called whenever a body is inserted or ejected from the pod.
-    private void UpdateOccupancyAppearance(EntityUid uid, bool occupied)
+    private void RegisterCryostorageBody(EntityUid body, EntityUid cryopod, NetUserId? userId) // HardLight
+    {
+        if (!TryComp<CryostorageComponent>(cryopod, out var cryostorage))
+            return;
+
+        var contained = EnsureComp<CryostorageContainedComponent>(body);
+        contained.Cryostorage = cryopod;
+        contained.UserId = userId;
+        Dirty(body, contained);
+
+        if (!cryostorage.StoredPlayers.Contains(body))
+        {
+            cryostorage.StoredPlayers.Add(body);
+            Dirty(cryopod, cryostorage);
+        }
+    }
+
+    private void UnregisterCryostorageBody(EntityUid body, EntityUid cryopod) // HardLight
+    {
+        if (TryComp<CryostorageContainedComponent>(body, out var contained))
+        {
+            contained.Cryostorage = null;
+            contained.UserId = null;
+            Dirty(body, contained);
+        }
+
+        if (!TryComp<CryostorageComponent>(cryopod, out var cryostorage))
+            return;
+
+        if (cryostorage.StoredPlayers.Remove(body))
+            Dirty(cryopod, cryostorage);
+    }
+
+    private void UpdateOccupancyAppearance(EntityUid uid, bool occupied) // HardLight
     {
         _appearance.SetData(uid, CryostorageVisuals.Full, occupied);
     }
 
-    // HardLight start: Method to cancel the auto-cryo-sleep do-after event associated with a cryopod.
-    private void CancelCryoStoreDoAfter(CryoSleepComponent component)
+    private void CancelCryoStoreDoAfter(CryoSleepComponent component) // HardLight
     {
         var doAfterId = component.CryosleepDoAfter;
         component.CryosleepDoAfter = null;
@@ -387,7 +426,6 @@ public sealed partial class CryoSleepSystem : EntitySystem
 
         _doAfter.Cancel(doAfterId);
     }
-    // HardLight end
 
     private void OnRoundRestart(RoundRestartCleanupEvent args)
     {

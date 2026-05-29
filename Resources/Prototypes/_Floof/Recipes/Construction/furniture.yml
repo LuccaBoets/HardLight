@@ -1,0 +1,11 @@
+- type: construction
+  id: FurnStripPole
+  graph: Lewd
+  startNode: start
+  targetNode: FurnStripPole
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  conditions:
+    - !type:TileNotBlocked

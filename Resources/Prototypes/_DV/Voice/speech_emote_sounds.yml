@@ -82,6 +82,8 @@
       collection: FeroxiGnashes # Flooftier
     MonkeyScreeches: # Frontier
       collection: MonkeyScreeches # Frontier
+    Trill: # Hardlight
+      collection: FelionoidTrills # Hardlight
 
 - type: emoteSounds
   id: MobDog
@@ -315,7 +317,7 @@
     Gekker: # Floof
       collection: VulpkaninGekkers
     Squeak: #HL
-      path: /Audio/Animals/fox_squeak.ogg #HL
+      path: /Audio/_DV/Voice/Kitsune/fox_squeal1.ogg #HL
     Yip: #HL
       path: /Audio/_Starlight/Effects/yip.ogg #HL
     Pout: #HL
@@ -377,7 +379,7 @@
     Gekker: # Floof
       collection: VulpkaninGekkers
     Squeak: #HL
-      path: /Audio/Animals/fox_squeak.ogg #HL
+      path: /Audio/_DV/Voice/Kitsune/fox_squeal1.ogg #HL
     Yip: #HL
       path: /Audio/_Starlight/Effects/yip.ogg #HL
     Pout: #HL

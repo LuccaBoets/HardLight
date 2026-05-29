@@ -63,6 +63,7 @@
       120: Dead
     stateAlertDict:
       Alive: BorgHealth
+      Dead: BorgDead
     showOverlays: false
   - type: Stamina
     critThreshold: 120
@@ -97,6 +98,15 @@
   - type: ProtectedFromStepTriggers
   - type: NoSlip
   - type: Insulated
+  # Starlight-start: Languages
+  - type: LanguageKnowledge
+    speaks:
+    - GalacticCommon
+    - Machine
+    understands:
+    - GalacticCommon
+    - Machine
+  # Starlight-end
   - type: LeashAnchor # Floofstation
     kind: Intrinsic
 

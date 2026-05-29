@@ -345,7 +345,7 @@
     #    - id: ClothingBeltSecurityFilled # Frontier
     #    - id: ClothingEyesGlassesSecurity # Frontier
     #    - id: ClothingHeadsetAltSecurity # Frontier
-    - id: ClothingMaskNeckGaiter
+    - id: ClothingGaiterCharcoal # HL
     #    - id: ClothingOuterCoatHoSTrench # Frontier
     #    - id: ClothingShoesBootsJack # Frontier
     #    - id: DoorRemoteSecurity # Frontier

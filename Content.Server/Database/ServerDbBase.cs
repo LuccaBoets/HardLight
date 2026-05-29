@@ -15,12 +15,14 @@ using Content.Shared.Database;
 using Content.Shared.Ghost.Roles;
 using Content.Shared.Humanoid;
 using Content.Shared.Humanoid.Markings;
+using Content.Shared.Humanoid.Prototypes;
 using Content.Shared.Preferences;
 using Content.Shared.Preferences.Loadouts;
 using Content.Shared.Roles;
 using Content.Shared.Traits;
 using Microsoft.EntityFrameworkCore;
 using Robust.Shared.Enums;
+using Robust.Shared.IoC;
 using Robust.Shared.Network;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Utility;
@@ -31,13 +33,16 @@ namespace Content.Server.Database
     public abstract class ServerDbBase
     {
         private readonly ISawmill _opsLog;
+        private readonly IPrototypeManager _prototypeManager;
 
         public event Action<DatabaseNotification>? OnNotificationReceived;
 
         /// <param name="opsLog">Sawmill to trace log database operations to.</param>
-        public ServerDbBase(ISawmill opsLog)
+        /// <param name="prototypeManager">Used for fetching species prototype</param>
+        public ServerDbBase(ISawmill opsLog, IPrototypeManager prototypeManager)
         {
             _opsLog = opsLog;
+            _prototypeManager = prototypeManager;
         }
 
         #region Preferences
@@ -49,27 +54,79 @@ namespace Content.Server.Database
 
             var prefs = await db.DbContext
                 .Preference
-                .Include(p => p.Profiles).ThenInclude(h => h.Jobs)
-                .Include(p => p.Profiles).ThenInclude(h => h.Antags)
-                .Include(p => p.Profiles).ThenInclude(h => h.Traits)
-                .Include(p => p.Profiles)
-                    .ThenInclude(h => h.Loadouts)
-                    .ThenInclude(l => l.Groups)
-                    .ThenInclude(group => group.Loadouts)
-                .AsSplitQuery()
+                .AsNoTracking()
                 .SingleOrDefaultAsync(p => p.UserId == userId.UserId, cancel);
 
             if (prefs is null)
                 return null;
 
-            var maxSlot = prefs.Profiles.Max(p => p.Slot) + 1;
-            var profiles = new Dictionary<int, ICharacterProfile>(maxSlot);
-            foreach (var profile in prefs.Profiles)
+            var profileRows = await db.DbContext
+                .Profile
+                .Where(p => p.PreferenceId == prefs.Id)
+                .Include(h => h.Jobs)
+                .Include(h => h.Antags)
+                .Include(h => h.Traits)
+                .Include(h => h.Loadouts)
+                    .ThenInclude(l => l.Groups)
+                    .ThenInclude(group => group.Loadouts)
+                .AsSplitQuery()
+                .AsNoTracking()
+                .ToListAsync(cancel);
+
+            if (profileRows.Count == 0)
             {
-                profiles[profile.Slot] = ConvertProfiles(profile);
+                _opsLog.Warning($"Preference row for user {userId} contains no character profiles.");
+                throw new InvalidOperationException($"Preference row for user {userId} contains no character profiles.");
             }
 
-            return new PlayerPreferences(profiles, prefs.SelectedCharacterSlot, Color.FromHex(prefs.AdminOOCColor));
+            var maxSlot = profileRows.Max(p => p.Slot) + 1;
+            var profiles = new Dictionary<int, ICharacterProfile>(maxSlot);
+            var malformedCount = 0;
+            var malformedSlots = new List<int>();
+
+            foreach (var profile in profileRows)
+            {
+                try
+                {
+                    profiles[profile.Slot] = ConvertProfiles(profile, _prototypeManager);
+                }
+                catch (Exception e)
+                {
+                    malformedCount++;
+                    malformedSlots.Add(profile.Slot);
+                    _opsLog.Error($"Failed converting profile slot {profile.Slot} for user {userId}: {e}");
+                }
+            }
+
+            if (malformedCount > 0)
+            {
+                _opsLog.Warning($"Skipped malformed profile slots for user {userId}: {malformedCount}/{profileRows.Count}. Slots=[{string.Join(",", malformedSlots)}]");
+            }
+
+            if (profiles.Count == 0)
+            {
+                _opsLog.Error($"All profiles failed conversion for user {userId}; refusing to return empty preferences.");
+                throw new InvalidOperationException($"All profiles failed conversion for user {userId}.");
+            }
+
+            var selectedSlot = prefs.SelectedCharacterSlot;
+            if (!profiles.ContainsKey(selectedSlot))
+            {
+                selectedSlot = profiles.Keys.Min();
+            }
+
+            Color adminColor;
+            try
+            {
+                adminColor = Color.FromHex(prefs.AdminOOCColor);
+            }
+            catch (Exception e)
+            {
+                _opsLog.Warning($"Invalid admin OOC color for user {userId}, using default: {e}");
+                adminColor = Color.Red;
+            }
+
+            return new PlayerPreferences(profiles, selectedSlot, adminColor);
         }
 
         public async Task SaveSelectedCharacterIndexAsync(NetUserId userId, int index)
@@ -189,7 +246,7 @@ namespace Content.Server.Database
             prefs.SelectedCharacterSlot = newSlot;
         }
 
-        private static HumanoidCharacterProfile ConvertProfiles(Profile profile)
+        private static HumanoidCharacterProfile ConvertProfiles(Profile profile, IPrototypeManager prototypeManager)
         {
             var jobs = profile.Jobs.ToDictionary(j => new ProtoId<JobPrototype>(j.JobName), j => (JobPriority) j.Priority);
             var antags = profile.Antags.Select(a => new ProtoId<AntagPrototype>(a.AntagName));
@@ -252,6 +309,14 @@ namespace Content.Server.Database
             if (loadouts.Remove(HumanoidCharacterProfile.SpeciesLoadoutDatabaseKey, out var speciesLoadoutValue))
             {
                 speciesLoadout = speciesLoadoutValue;
+
+                // `__species_loadout` is only the DB storage key. Restore the actual role prototype
+                // immediately so later profile validation never indexes the sentinel as a prototype.
+                if (prototypeManager.TryIndex<SpeciesPrototype>(profile.Species, out var speciesProto) &&
+                    speciesProto.Loadout != null)
+                {
+                    speciesLoadout.Role = speciesProto.Loadout.Value;
+                }
             }
             // Far Horizons End
 

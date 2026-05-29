@@ -3,6 +3,8 @@ using Content.Shared.Administration;
 using Content.Shared.GameTicking;
 using Content.Server.GameTicking;
 using Content.Server.Mind;
+using Content.Server._NF.Roles.Systems; // HardLight
+using Content.Shared._NF.Roles.Components; // HardLight
 using Robust.Server.Player;
 using Robust.Shared.Console;
 
@@ -52,6 +54,9 @@ namespace Content.Server.Ghost
             }
 
             var minds = _entities.System<MindSystem>();
+            if (_entities.TryGetComponent<JobTrackingComponent>(controlled, out var tracking)) // HardLight
+                _entities.System<JobTrackingSystem>().OpenJob((controlled, tracking), player.UserId);
+
             if (minds.TryGetMind(player, out var mindId, out var mind))
                 minds.WipeMind(mindId, mind);
             else

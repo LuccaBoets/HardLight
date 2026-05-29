@@ -8,13 +8,13 @@
     shoes: ClothingShoesColorBlack
 
 - type: loadout
-  id: ContractorClothingShoesClothwrap
+  id: ContractorClothingClothWrap
   hideEffects:
   - !type:GroupLoadoutEffect
     proto: ShoesCapableNF
   price: 50
   equipment:
-    shoes: ClothingShoesClothwrap
+    shoes: ClothingClothWrap
 
 - type: loadout
   id: ContractorClothingShoesTourist

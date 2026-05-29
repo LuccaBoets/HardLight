@@ -13,7 +13,7 @@ mass-sleep-initialization-feedback = Reaching out to the minds around me, I have
 mass-sleep-power-metapsionic-feedback = {CAPITALIZE($entity)} bears the indelible mark of a dream thief.
 
 # Mind Swap
-mind-swap-power-description = Swap minds with the target. Either can change back after 20 seconds.
+mind-swap-power-description = Swap minds with the target. Either can change back after 30 seconds.
 mind-swap-power-initialization-feedback = I can feel the bonds of soul and body wither at my whim, my vessel may be replaced with that of another.
 mind-swap-power-metapsionic-feedback = {CAPITALIZE($entity)} lacks a strong bond with their vessel, as if their connection with spirit is malleable.
 

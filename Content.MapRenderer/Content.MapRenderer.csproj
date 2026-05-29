@@ -5,11 +5,12 @@
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <Nullable>enable</Nullable>
     <ServerGarbageCollection>true</ServerGarbageCollection>
+    <IsTestProject>false</IsTestProject>
+    <StartupObject>Content.MapRenderer.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Content.IntegrationTests\Content.IntegrationTests.csproj" />
-    <ProjectReference Include="..\RobustToolbox\Robust.UnitTesting\Robust.UnitTesting.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,5 +18,6 @@
     <PackageReference Include="SixLabors.ImageSharp" />
   </ItemGroup>
 
+  <Import Project="..\RobustToolbox\Imports\Testing.props" />
   <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
 </Project>

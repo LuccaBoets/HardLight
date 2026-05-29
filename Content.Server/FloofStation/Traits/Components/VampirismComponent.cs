@@ -33,4 +33,40 @@ public sealed partial class VampirismComponent : Component
 
     [DataField]
     public float UnitsToSucc = 10; //
+
+    [DataField("overfedWalkMultiplier")]
+    public float OverfedWalkMultiplier = 1f;
+
+    [DataField("overfedSprintMultiplier")]
+    public float OverfedSprintMultiplier = 1f;
+
+    [DataField("peckishWalkMultiplier")]
+    public float PeckishWalkMultiplier = 1f;
+
+    [DataField("peckishSprintMultiplier")]
+    public float PeckishSprintMultiplier = 1f;
+
+    [DataField("starvingWalkMultiplier")]
+    public float StarvingWalkMultiplier = 1f;
+
+    [DataField("starvingSprintMultiplier")]
+    public float StarvingSprintMultiplier = 1f;
+
+    /// <summary>
+    ///     Passive health regeneration when overfed (damage healed per second).
+    /// </summary>
+    [DataField("overfedRegenAmount")]
+    public float OverfedRegenAmount = 0.5f;
+
+    /// <summary>
+    ///     Damage multiplier for unarmed attacks.
+    /// </summary>
+    [DataField("unarmedDamageMultiplier")]
+    public float UnarmedDamageMultiplier = 1.3f;
+
+    /// <summary>
+    ///     Damage multiplier when starving (vulnerability).
+    /// </summary>
+    [DataField("starvingDamageMultiplier")]
+    public float StarvingDamageMultiplier = 1.5f;
 }

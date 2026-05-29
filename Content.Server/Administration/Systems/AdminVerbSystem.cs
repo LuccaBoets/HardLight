@@ -5,9 +5,9 @@ using Content.Server.Disposal.Tube;
 using Content.Server.EUI;
 using Content.Server.Ghost.Roles;
 using Content.Server.Mind;
-using Content.Server.Mind.Commands;
 using Content.Server.Prayer;
 using Content.Server.Station.Systems;
+using Content.Server.Traits; // HardLight
 using Content.Shared.Administration;
 using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Chemistry.EntitySystems;
@@ -62,6 +62,7 @@ namespace Content.Server.Administration.Systems
         [Dependency] private readonly SharedPopupSystem _popup = default!;
         [Dependency] private readonly StationSystem _stations = default!;
         [Dependency] private readonly StationSpawningSystem _spawning = default!;
+        [Dependency] private readonly TraitSystem _traits = default!; // HardLight
         [Dependency] private readonly ExamineSystemShared _examine = default!;
         [Dependency] private readonly AdminFrozenSystem _freeze = default!;
         [Dependency] private readonly IPlayerManager _playerManager = default!;
@@ -163,6 +164,7 @@ namespace Content.Server.Administration.Systems
 
                             var profile = _gameTicker.GetPlayerProfile(targetActor.PlayerSession);
                             var mobUid = _spawning.SpawnPlayerMob(coords.Value, null, profile, stationUid, session: targetActor.PlayerSession); // Frontier: added session
+                            _traits.ApplyProfileTraits(mobUid, profile, targetActor.PlayerSession.Name); // HardLight
 
                             if (_mindSystem.TryGetMind(args.Target, out var mindId, out var mindComp))
                                 _mindSystem.TransferTo(mindId, mobUid, true, mind: mindComp);
@@ -188,7 +190,8 @@ namespace Content.Server.Administration.Systems
                             var stationUid = _stations.GetOwningStation(args.Target);
 
                             var profile = _gameTicker.GetPlayerProfile(targetActor.PlayerSession);
-                            _spawning.SpawnPlayerMob(coords.Value, null, profile, stationUid, session: targetActor.PlayerSession); // Frontier: added session
+                            var mobUid = _spawning.SpawnPlayerMob(coords.Value, null, profile, stationUid, session: targetActor.PlayerSession); // Frontier: Added session, // HardLight: Added var mobUid =
+                            _traits.ApplyProfileTraits(mobUid, profile, targetActor.PlayerSession.Name); // HardLight
                         },
                         ConfirmationPopup = true,
                         Impact = LogImpact.High,
@@ -490,7 +493,7 @@ namespace Content.Server.Administration.Systems
                     Text = Loc.GetString("make-sentient-verb-get-data-text"),
                     Category = VerbCategory.Debug,
                     Icon = new SpriteSpecifier.Texture(new ("/Textures/Interface/VerbIcons/sentient.svg.192dpi.png")),
-                    Act = () => MakeSentientCommand.MakeSentient(args.Target, EntityManager),
+                    Act = () => _mindSystem.MakeSentient(args.Target),
                     Impact = LogImpact.Medium
                 };
                 args.Verbs.Add(verb);

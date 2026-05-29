@@ -4,7 +4,7 @@
   description: job-description-passenger
   playTimeTracker: JobPassengerOld
   setPreference: true
-  startingGear: PassengerGear
+  # startingGear: PassengerGear # HardLight
   icon: "JobIconPassenger"
   # supervisors: job-supervisors-everyone
   access:

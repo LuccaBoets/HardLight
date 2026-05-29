@@ -1,0 +1,132 @@
+# Kinky erotic mood pool — specific fetish and kink dynamics.
+# Moods with requiredConsent are skipped if the player hasn't enabled that consent toggle.
+
+- type: dataset
+  id: EroticMoodsKinky
+  values:
+  - EroticKinkyHunter
+  - EroticKinkyQuarry
+  - EroticKinkyBondage
+  - EroticKinkyDegradation
+  - EroticKinkySizeDifference
+  - EroticKinkyMusk
+  - EroticKinkyLatex
+  - EroticKinkyDocking
+  - EroticKinkySexToys
+  - EroticKinkyCorruption
+  - EroticKinkyCnC
+  - EroticKinkyVampirism
+  - EroticKinkyBrainwashing
+  - EroticKinkyVore
+  - EroticKinkyOviposition
+  - EroticKinkyMilking
+  - EroticKinkyPublicUse
+  - EroticKinkyAphrodisiacs
+  - EroticKinkyElectrocution
+
+- type: mood
+  id: EroticKinkyHunter
+  moodName: hl-erotic-mood-kinky-hunter-name
+  moodDesc: hl-erotic-mood-kinky-hunter-desc
+  conflicts:
+  - EroticKinkyQuarry
+
+- type: mood
+  id: EroticKinkyQuarry
+  moodName: hl-erotic-mood-kinky-quarry-name
+  moodDesc: hl-erotic-mood-kinky-quarry-desc
+  conflicts:
+  - EroticKinkyHunter
+
+- type: mood
+  id: EroticKinkyBondage
+  moodName: hl-erotic-mood-kinky-bondage-name
+  moodDesc: hl-erotic-mood-kinky-bondage-desc
+  conflicts:
+  - EroticKinkyHunter
+
+- type: mood
+  id: EroticKinkyDegradation
+  moodName: hl-erotic-mood-kinky-degradation-name
+  moodDesc: hl-erotic-mood-kinky-degradation-desc
+
+- type: mood
+  id: EroticKinkySizeDifference
+  moodName: hl-erotic-mood-kinky-sizediff-name
+  moodDesc: hl-erotic-mood-kinky-sizediff-desc
+
+- type: mood
+  id: EroticKinkyMusk
+  moodName: hl-erotic-mood-kinky-musk-name
+  moodDesc: hl-erotic-mood-kinky-musk-desc
+
+- type: mood
+  id: EroticKinkyLatex
+  moodName: hl-erotic-mood-kinky-latex-name
+  moodDesc: hl-erotic-mood-kinky-latex-desc
+
+- type: mood
+  id: EroticKinkyDocking
+  moodName: hl-erotic-mood-kinky-docking-name
+  moodDesc: hl-erotic-mood-kinky-docking-desc
+
+- type: mood
+  id: EroticKinkySexToys
+  moodName: hl-erotic-mood-kinky-sextoys-name
+  moodDesc: hl-erotic-mood-kinky-sextoys-desc
+
+- type: mood
+  id: EroticKinkyCorruption
+  moodName: hl-erotic-mood-kinky-corruption-name
+  moodDesc: hl-erotic-mood-kinky-corruption-desc
+
+- type: mood
+  id: EroticKinkyCnC
+  moodName: hl-erotic-mood-kinky-cnc-name
+  moodDesc: hl-erotic-mood-kinky-cnc-desc
+  requiredConsent: NonconIcon
+
+- type: mood
+  id: EroticKinkyVampirism
+  moodName: hl-erotic-mood-kinky-vampirism-name
+  moodDesc: hl-erotic-mood-kinky-vampirism-desc
+
+- type: mood
+  id: EroticKinkyBrainwashing
+  moodName: hl-erotic-mood-kinky-brainwashing-name
+  moodDesc: hl-erotic-mood-kinky-brainwashing-desc
+  requiredConsent: MindControl
+
+- type: mood
+  id: EroticKinkyVore
+  moodName: hl-erotic-mood-kinky-vore-name
+  moodDesc: hl-erotic-mood-kinky-vore-desc
+  requiredConsent: Vore
+
+- type: mood
+  id: EroticKinkyOviposition
+  moodName: hl-erotic-mood-kinky-oviposition-name
+  moodDesc: hl-erotic-mood-kinky-oviposition-desc
+  requiredConsent: Cum
+
+- type: mood
+  id: EroticKinkyMilking
+  moodName: hl-erotic-mood-kinky-milking-name
+  moodDesc: hl-erotic-mood-kinky-milking-desc
+  requiredConsent: Cum
+
+- type: mood
+  id: EroticKinkyPublicUse
+  moodName: hl-erotic-mood-kinky-publicuse-name
+  moodDesc: hl-erotic-mood-kinky-publicuse-desc
+
+- type: mood
+  id: EroticKinkyAphrodisiacs
+  moodName: hl-erotic-mood-kinky-aphrodisiacs-name
+  moodDesc: hl-erotic-mood-kinky-aphrodisiacs-desc
+  requiredConsent: Aphrodisiacs
+
+- type: mood
+  id: EroticKinkyElectrocution
+  moodName: hl-erotic-mood-kinky-electrocution-name
+  moodDesc: hl-erotic-mood-kinky-electrocution-desc

@@ -140,13 +140,13 @@
     shoes: ClothingUnderSocksCoderValid
 
 - type: loadout
-  id: ContractorClothingShoesClothwrapTransparent
+  id: ContractorClothingClothWrapTransparent
   hideEffects:
   - !type:GroupLoadoutEffect
     proto: ShoesCapableNF
   price: 50
   equipment:
-    shoes: ClothingShoesClothwrapTransparent
+    shoes: ClothingClothWrapTransparent
 
 
 # Outer clothing

@@ -30,6 +30,8 @@
     producingSound: /Audio/Machines/circuitprinter.ogg
     idleState: icon
     runningState: icon
+    unlitIdleState: unlit
+    unlitRunningState: unlit-building
     dynamicPacks:
     # Universal content packs (available)
     - UniversalRailgunAmmo

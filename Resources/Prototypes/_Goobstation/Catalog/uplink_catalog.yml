@@ -27,7 +27,7 @@
   icon: { sprite: /Textures/_Goobstation/Objects/Weapons/Guns/Pistols/dualetta.rsi, state: icon }
   productEntity: BriefcaseSyndieDualettaBundleFilled
   cost:
-    Telecrystal: 50
+    Telecrystal: 10 # HardLight: 50<10
   categories:
   - UplinkWeaponry
 
@@ -38,7 +38,7 @@
   icon: { sprite: /Textures/_Goobstation/Objects/Weapons/Guns/Pistols/dualetta.rsi, state: icon }
   productEntity: BoxDualettaKit
   cost:
-    Telecrystal: 30
+    Telecrystal: 6 # HardLight: 30<6
   categories:
   - UplinkWeaponry
 
@@ -122,10 +122,10 @@
   description: uplink-holo-cigar-desc
   productEntity: HoloCigar
   cost:
-    Telecrystal: 35
+    Telecrystal: 7 # HardLight: 35<7
   categories:
   - UplinkWearables
-  conditions:
-  - !type:BuyerSpeciesCondition
-    whitelist:
-    - Human
+  # conditions: # Hardlight: Speciesism bad
+  # - !type:BuyerSpeciesCondition
+  #   whitelist:
+  #   - Human

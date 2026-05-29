@@ -50,6 +50,13 @@ public sealed class StationPaySystem : EntitySystem
         SubscribeLocalEvent<GameRunLevelChangedEvent>(OnRunLevelChanged);
         SubscribeLocalEvent<RoleAddedEvent>(OnRoleAddedEvent);
         SubscribeLocalEvent<RoleRemovedEvent>(OnRoleRemovedEvent);
+        // Keep payout scheduling aligned across mind transfers between bodies; RoleAdded/RoleRemoved
+        // do not fire when a mind moves between entities, so the schedule could be stranded on the
+        // old body and silently fail. JobTrackingSystem already owns the directed
+        // <JobTrackingComponent, MindAddedMessage/MindRemovedMessage> subscription, so we hook the
+        // broadcast variant and gate on the component ourselves.
+        SubscribeLocalEvent<MindAddedMessage>(OnAnyMindAdded);
+        SubscribeLocalEvent<MindRemovedMessage>(OnAnyMindRemoved);
 
         /*
          * TODO: account for disconnecting players
@@ -99,7 +106,7 @@ public sealed class StationPaySystem : EntitySystem
         // payout anyone who worked less than an hour at round end
         foreach (var (uid, lastPayout) in _scheduledPayouts)
         {
-            PayoutFor(uid, now - lastPayout);
+            _ = PayoutFor(uid, now - lastPayout);
         }
 
         _scheduledPayouts.Clear();
@@ -184,18 +191,45 @@ public sealed class StationPaySystem : EntitySystem
         _scheduledPayouts.Remove((EntityUid)args.Mind.OwnedEntity);
     }
 
-    private void PayoutFor(EntityUid uid, int secondsWorked)
+    // Re-schedule payouts when a mind moves into a job-tracked body (mid-round body swap, cloning, etc.).
+    // Mirrors the OnRoleAddedEvent gating but uses the in-game-attached session as the authoritative check.
+    private void OnAnyMindAdded(MindAddedMessage args)
+    {
+        var uid = args.Container.Owner;
+        if (!HasComp<JobTrackingComponent>(uid)
+            || !HasComp<BankAccountComponent>(uid)
+            || !GetJobForEntity(uid, out _)
+            || !_player.TryGetSessionById(args.Mind.Comp.UserId, out var session)
+            || session.Status != SessionStatus.InGame
+            || session.AttachedEntity != uid)
+        {
+            return;
+        }
+
+        TrySchedulePayout(uid);
+    }
+
+    // Drop schedule entries for bodies that are no longer minded so the Update loop doesn't
+    // tight-loop retrying payouts against an entity that can never receive one.
+    private void OnAnyMindRemoved(MindRemovedMessage args)
+    {
+        _scheduledPayouts.Remove(args.Container.Owner);
+    }
+
+    private bool PayoutFor(EntityUid uid, int secondsWorked)
     {
         if (!_scheduledPayouts.ContainsKey(uid))
         {
             //Log.Debug($"[stationpay] Attemped payout for {uid}, but no scheduled payout was found");
-            return;
+            return false;
+            return false;
         }
 
         if (!GetJobForEntity(uid, out var jobId))
         {
             //Log.Debug($"[stationpay] Attemped payout for {uid}, but no valid job found");
-            return;
+            return false;
+            return false;
         }
 
         var employedTime = (int)(secondsWorked / (double)PayoutDelay);
@@ -204,7 +238,16 @@ public sealed class StationPaySystem : EntitySystem
         if (employedTime <= 0)
         {
             //Log.Debug($"[stationpay] Skipping payout for {uid} due to employedTime <= 0 (secondsWorked: {secondsWorked})");
-            return;
+            return false;
+        }
+
+        // Don't deposit if there's no in-game session attached to this body. Returning false here
+        // (instead of true) leaves the schedule unadvanced so the missed interval is retried once
+        // the player is back in-game, rather than silently dropped.
+        if (!_player.TryGetSessionByEntity(uid, out var session)
+            || session.Status != SessionStatus.InGame)
+        {
+            return false;
         }
 
         var rate = _jobPayoutRates[(ProtoId<JobPrototype>)jobId];
@@ -213,20 +256,6 @@ public sealed class StationPaySystem : EntitySystem
 
         if (_bank.TryBankDeposit(uid, amount))
         {
-            if (!TryComp<MindContainerComponent>(uid, out var mc)
-                || !mc.HasMind
-                || !TryComp<MindComponent>(mc.Mind.Value, out var mind))
-            {
-                //Log.Debug($"[stationpay] Skipping payout for {uid} due to no mind present");
-                return;
-            }
-
-            if (!_player.TryGetSessionById(mind.UserId, out var session))
-            {
-                //Log.Debug($"[stationpay] Skipping payout for {uid} due to no session");
-                return;
-            }
-
             var job = _prototypeManager.Index<JobPrototype>(jobId);
             var message = Loc.GetString("stationpay-notify-payment",
                 ("pay", amount),
@@ -243,7 +272,15 @@ public sealed class StationPaySystem : EntitySystem
                 EntityUid.Invalid,
                 false,
                 session.Channel);
+
+            return true;
+
+            return true;
         }
+
+        return false;
+
+        return false;
         /* else
             Log.Error("[stationpay] Failed to deposit station pay for uid: " + uid); */
     }
@@ -299,19 +336,14 @@ public sealed class StationPaySystem : EntitySystem
             _duePayoutsScratch.Add((uid, scheduledPayoutTime));
         }
 
-        // Remove all due entries; re-add at scheduledPayoutTime + PayoutDelay (matches prior semantics,
-        // including catch-up payouts when scheduled times are in the past). Since the not-due tail is
-        // already sorted ascending and the rescheduled times are also in ascending order
-        // (oldScheduled was ascending, and we add a constant), a 2-way merge into the OrderedDictionary
-        // preserves the global ascending invariant. The simplest correct approach: drop them all,
-        // pay each, then insert each rescheduled entry at the right position via Insert.
-        for (var i = 0; i < _duePayoutsScratch.Count; i++)
-            _scheduledPayouts.Remove(_duePayoutsScratch[i].Uid);
-
         for (var i = 0; i < _duePayoutsScratch.Count; i++)
         {
             var (uid, oldScheduled) = _duePayoutsScratch[i];
-            var newScheduled = oldScheduled + PayoutDelay;
+            // Pay first, then decide whether to advance the schedule. If payout failed (e.g. player
+            // briefly offline / not yet attached), keep the original scheduled time so the interval
+            // is retried on the next Update tick instead of silently consumed.
+            var payoutSucceeded = PayoutFor(uid, PayoutDelay);
+            var newScheduled = payoutSucceeded ? oldScheduled + PayoutDelay : oldScheduled;
 
             // Find insertion index in ascending order. Most rescheduled entries land at the end,
             // so search from the back for amortized O(1).
@@ -319,8 +351,6 @@ public sealed class StationPaySystem : EntitySystem
             while (insertIdx > 0 && _scheduledPayouts.GetAt(insertIdx - 1).Value > newScheduled)
                 insertIdx--;
             _scheduledPayouts.Insert(insertIdx, uid, newScheduled);
-
-            PayoutFor(uid, PayoutDelay);
         }
 
         base.Update(frameTime);

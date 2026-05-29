@@ -27,8 +27,13 @@ public sealed partial class NanoChatUiFragment : BoxContainer
 {
     [Dependency] private readonly IGameTiming _timing = default!;
 
+    private bool _pendingScrollToBottom;
+    private uint? _lastScrolledChat;
+    private readonly Dictionary<uint, int> _lastMessageCounts = [];
+
     private readonly NewChatPopup _newChatPopup;
     private readonly EditChatPopup _editChatPopup;
+    private readonly NanoChatLookupView _lookupPopup;
     private readonly CreateGroupChatPopup _createGroupChatPopup; // Funky Station - Create Group Chat Popup
     private readonly InviteToGroupPopup _inviteToGroupPopup; // Funky Station - Group Chat Invite Popup
     private readonly GroupMembersPopup _groupMembersPopup; // Funky Station - Group Chat Members Popup
@@ -52,6 +57,7 @@ public sealed partial class NanoChatUiFragment : BoxContainer
 
         _newChatPopup = new();
         _editChatPopup = new();
+        _lookupPopup = new();
         _createGroupChatPopup = new(); // Funky Station - Create Group Chat Popup
         _inviteToGroupPopup = new(); // Funky Station - Group Chat Invite Popup
         _groupMembersPopup = new(); // Funky Station - Group Chat Members Popup
@@ -178,14 +184,17 @@ public sealed partial class NanoChatUiFragment : BoxContainer
             }
         };
 
-        LookupButton.OnPressed += _ => ToggleView();
-        LookupView.OnStartChat += contact =>
+        LookupButton.OnPressed += _ =>
+        {
+            _lookupPopup.OpenCentered();
+        };
+        _lookupPopup.OnStartChat += contact =>
         {
             if (OnMessageSent is { } handler)
             {
                 handler(NanoChatUiMessageType.NewChat, contact.Number, contact.Name, contact.JobTitle);
                 SelectChat(contact.Number);
-                ToggleView();
+                _lookupPopup.Close();
             }
         };
         ListNumberButton.OnPressed += _ =>
@@ -221,13 +230,6 @@ public sealed partial class NanoChatUiFragment : BoxContainer
         MessageInput.GrabKeyboardFocus();
     }
     // Funky Station End - Emoji Picker
-
-    private void ToggleView()
-    {
-        ChatView.Visible = !ChatView.Visible;
-        LookupView.Visible = !ChatView.Visible;
-        LookupButton.Pressed = LookupView.Visible;
-    }
 
     public enum CycleDirection : byte
     {
@@ -556,10 +558,35 @@ public sealed partial class NanoChatUiFragment : BoxContainer
 
         MessageList.InvalidateMeasure();
         MessagesScroll.InvalidateMeasure();
+        InvalidateArrange();
 
-        // Scroll to bottom after messages are added
-        if (MessageList.Parent is ScrollContainer scroll)
-            scroll.SetScrollValue(new Vector2(0, float.MaxValue));
+        
+        var newCount = chatMessages.Count;
+        var prevCount = activeChat.HasValue ? _lastMessageCounts.GetValueOrDefault(activeChat.Value, -1) : -1;
+        if (activeChat != _lastScrolledChat || newCount > prevCount)
+        {
+            _pendingScrollToBottom = true;
+            _lastScrolledChat = activeChat;
+        }
+        if (activeChat.HasValue)
+            _lastMessageCounts[activeChat.Value] = newCount;
+    }
+
+    protected override Vector2 ArrangeOverride(Vector2 finalSize)
+    {
+        var result = base.ArrangeOverride(finalSize);
+
+        if (_pendingScrollToBottom)
+        {
+            _pendingScrollToBottom = false;
+          
+            if (MessageList.DesiredSize.Y > MessagesScroll.Size.Y)
+                MessagesScroll.SetScrollValue(new Vector2(0, float.MaxValue));
+            else
+                MessagesScroll.SetScrollValue(Vector2.Zero);
+        }
+
+        return result;
     }
 
     private void UpdateMuteButton()
@@ -616,7 +643,7 @@ public sealed partial class NanoChatUiFragment : BoxContainer
         UpdateMessages(state.Messages);
         UpdateCurrentChat();
         UpdateMuteChatButton();
-        LookupView.UpdateContactList(state);
+        _lookupPopup.UpdateContactList(state);
 
         // Funky Station - Refresh any open popups
         RefreshOpenPopups();

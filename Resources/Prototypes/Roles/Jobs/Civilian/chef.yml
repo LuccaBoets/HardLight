@@ -6,7 +6,7 @@
   setPreference: true
   requirements:
     - !type:DepartmentTimeRequirement
-      department: Civilian
+      department: Service # Hardlight Civilian > Service
       time: 1800 # 0.5 hr
   weight: 60 # HardLight
   startingGear: ChefGear

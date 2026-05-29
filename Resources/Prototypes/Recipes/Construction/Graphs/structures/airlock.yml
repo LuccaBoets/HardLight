@@ -196,10 +196,30 @@
 
 ## High security door
   - node: highSecDoor
+    entity: HighSecDoor #Hardlight
+    doNotReplaceInheritingEntities: true #Hardlight
     actions:
     - !type:SetWiresPanelSecurity
       wiresAccessible: true
     edges:
+    #Hardlight Giving HighSecDoor a path through to wired for a complete deconstruction path
+    - to: wired
+      conditions:
+      - !type:EntityAnchored {}
+      - !type:DoorWelded {}
+      - !type:DoorBolted
+        value: false
+      - !type:WirePanel {}
+      - !type:AllWiresCut
+      completed:
+      - !type:EmptyAllContainers
+        pickup: true
+        emptyAtUser: true
+      steps:
+      - tool: Prying
+        doAfter: 5
+    #End Hardlight
+        
     - to: medSecurityUnfinished
       conditions:
       - !type:WirePanel {}

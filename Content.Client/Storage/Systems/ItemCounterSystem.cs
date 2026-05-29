@@ -1,7 +1,9 @@
 using Content.Shared.Rounding;
 using Content.Shared.Stacks;
+using Content.Shared.Storage; // HardLight
 using Content.Shared.Storage.Components;
-using Content.Shared.Storage.EntitySystems;
+using Content.Shared.Storage.EntitySystems; // HardLight
+using Content.Shared.Whitelist;
 using Robust.Client.GameObjects;
 using Robust.Shared.Containers;
 
@@ -11,6 +13,7 @@ public sealed class ItemCounterSystem : SharedItemCounterSystem
 {
     [Dependency] private readonly AppearanceSystem _appearanceSystem = default!;
     [Dependency] private readonly SpriteSystem _sprite = default!;
+    [Dependency] private readonly EntityWhitelistSystem _whitelistSystem = default!; // HardLight
 
     public override void Initialize()
     {
@@ -67,5 +70,21 @@ public sealed class ItemCounterSystem : SharedItemCounterSystem
         if (_appearanceSystem.TryGetData<int>(msg.Container.Owner, StackVisuals.Actual, out var actual))
             return actual;
         return null;
+    }
+
+    // HardLight: Override to count items in container filtered by whitelist.
+    protected override int? GetCurrentCount(EntityUid uid, ItemCounterComponent itemCounter)
+    {
+        if (!TryComp<StorageComponent>(uid, out var component))
+            return null;
+
+        var count = 0;
+        foreach (var entity in component.Container.ContainedEntities)
+        {
+            if (_whitelistSystem.IsWhitelistPass(itemCounter.Count, entity))
+                count++;
+        }
+
+        return count;
     }
 }

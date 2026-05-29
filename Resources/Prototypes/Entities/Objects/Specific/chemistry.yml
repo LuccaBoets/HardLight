@@ -232,6 +232,7 @@
   description: Used to contain chemicals or solutions without reactions.
   id: CryostasisBeaker
   components:
+  - type: PreservesSpoilage # HardLight
   - type: Spillable
     solution: beaker
   - type: Sprite
@@ -521,6 +522,7 @@
   name: cryostasis syringe
   description: A syringe used to contain chemicals or solutions without reactions.
   components:
+  - type: PreservesSpoilage # HardLight
   - type: Sprite
     layers:
     - state: syringe1

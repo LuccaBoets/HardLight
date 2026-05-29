@@ -13,6 +13,16 @@ public sealed class SurveillanceCameraMapSystem : EntitySystem
     {
         SubscribeLocalEvent<SurveillanceCameraComponent, MoveEvent>(OnCameraMoved);
         SubscribeLocalEvent<SurveillanceCameraComponent, EntityUnpausedEvent>(OnCameraUnpaused);
+        // HardLight: clean up the per-grid marker when the camera entity is removed so the
+        // SurveillanceCameraMapComponent.Cameras dictionary doesn't accumulate dead entries
+        // across the round (each entry is replicated to every observer of the grid via PVS,
+        // so leaks here grow per-tick network payload as cameras are destroyed/recreated).
+        // We listen on EntityTerminating rather than ComponentShutdown because
+        // SurveillanceCameraSystem already owns the (SurveillanceCameraComponent, ComponentShutdown)
+        // subscription slot and Robust's directed bus only allows one handler per (comp, event) pair.
+        // EntityTerminating fires before the entity is removed, so the transform/grid lookup below
+        // still resolves correctly.
+        SubscribeLocalEvent<SurveillanceCameraComponent, EntityTerminatingEvent>(OnCameraTerminating);
 
         SubscribeNetworkEvent<RequestCameraMarkerUpdateMessage>(OnRequestCameraMarkerUpdate);
     }
@@ -30,21 +40,60 @@ public sealed class SurveillanceCameraMapSystem : EntitySystem
         if (Terminating(uid))
             return;
 
-        var oldGridUid = _transform.GetGrid(args.OldPosition);
-        var newGridUid = _transform.GetGrid(args.NewPosition);
+        // HardLight perf: cameras are anchored in normal play, so MoveEvent typically only
+        // arrives on map-init or when a grid containing the camera moves and the transform
+        // tree propagates. In the propagation case the parent (and therefore the grid) is
+        // unchanged AND the local position is unchanged, so there is nothing to update and
+        // we can skip the GetGrid lookups and the EnsureComp/Dirty path entirely.
+        if (!args.ParentChanged && args.OldPosition.Position.Equals(args.NewPosition.Position))
+            return;
 
-        if (oldGridUid != newGridUid && oldGridUid is not null && !Terminating(oldGridUid.Value))
+        // Only do the cross-grid removal work when the parent actually changed -- if the
+        // parent is the same entity, the resolved grid cannot have changed.
+        if (args.ParentChanged)
         {
-            if (TryComp<SurveillanceCameraMapComponent>(oldGridUid, out var oldMapComp))
+            var oldGridUid = _transform.GetGrid(args.OldPosition);
+            var newGridUid = _transform.GetGrid(args.NewPosition);
+
+            if (oldGridUid != newGridUid && oldGridUid is not null && !Terminating(oldGridUid.Value))
             {
-                var netEntity = GetNetEntity(uid);
-                if (oldMapComp.Cameras.Remove(netEntity))
-                    Dirty(oldGridUid.Value, oldMapComp);
+                if (TryComp<SurveillanceCameraMapComponent>(oldGridUid, out var oldMapComp))
+                {
+                    var netEntity = GetNetEntity(uid);
+                    if (oldMapComp.Cameras.Remove(netEntity))
+                        Dirty(oldGridUid.Value, oldMapComp);
+                }
             }
+
+            if (newGridUid is not null && !Terminating(newGridUid.Value))
+                UpdateCameraMarker((uid, comp));
+            return;
         }
 
-        if (newGridUid is not null && !Terminating(newGridUid.Value))
-            UpdateCameraMarker((uid, comp));
+        // Same parent, but local position changed (rare for anchored cameras; e.g. an admin
+        // teleport without re-anchoring). Refresh the marker so the position stays in sync.
+        UpdateCameraMarker((uid, comp));
+    }
+
+    private void OnCameraTerminating(EntityUid uid, SurveillanceCameraComponent comp, ref EntityTerminatingEvent args)
+    {
+        // HardLight: walk the transform once to find the owning grid/map, then remove this
+        // camera's NetEntity from the marker dictionary if present. Guarded so it works
+        // whether the camera is being destroyed alone or as part of a grid teardown
+        // (Terminating(grid) check avoids dirtying a grid that is itself shutting down).
+        if (!TryComp(uid, out TransformComponent? xform))
+            return;
+
+        var gridUid = xform.GridUid ?? xform.MapUid;
+        if (gridUid is null || Terminating(gridUid.Value))
+            return;
+
+        if (!TryComp<SurveillanceCameraMapComponent>(gridUid.Value, out var mapComp))
+            return;
+
+        var netEntity = GetNetEntity(uid);
+        if (mapComp.Cameras.Remove(netEntity))
+            Dirty(gridUid.Value, mapComp);
     }
 
     private void OnRequestCameraMarkerUpdate(RequestCameraMarkerUpdateMessage args)

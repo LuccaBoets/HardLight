@@ -6,33 +6,33 @@
   placement:
     mode: SnapgridCenter
   components:
-    - type: InteractionOutline
-    - type: Clickable
-    - type: Transform
-      anchored: true
-    - type: Sprite
-      sprite: Structures/Machines/station_map.rsi
-      drawdepth: WallMountedItems
-      layers:
-        - state: station_map_broken
-    - type: Damageable
-      damageContainer: StructuralInorganic
-    - type: Destructible
-      thresholds:
-        - trigger:
-            !type:DamageTrigger
-            damage: 100
-          behaviors:
-            - !type:PlaySoundBehavior
-              sound:
-                collection: GlassBreak
-            - !type:DoActsBehavior
-              acts: [ "Destruction" ]
-    # Mono
-    - type: ShipRepairable
-      repairTo: StationMap
-      repairTime: 3
-      repairCost: 6
+  - type: InteractionOutline
+  - type: Clickable
+  - type: Transform
+    anchored: true
+  - type: Sprite
+    sprite: Structures/Machines/station_map.rsi
+    drawdepth: WallMountedItems
+    layers:
+    - state: station_map_broken
+  - type: Damageable
+    damageContainer: StructuralInorganic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 100
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: GlassBreak
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+  # Mono
+  - type: ShipRepairable
+    repairTo: StationMap
+    repairTime: 3
+    repairCost: 6
 
 - type: entity
   id: StationMap
@@ -43,60 +43,77 @@
   placement:
     mode: SnapgridCenter
   components:
-    - type: StationMap
-    - type: Transform
-      anchored: true
-    - type: Sprite
-      sprite: Structures/Machines/station_map.rsi
-      layers:
-      - map: ["computerLayerBody"]
-        state: station_map0
-      - map: ["computerLayerScreen"]
-        state: unshaded
-    - type: Icon
-      sprite: Structures/Machines/station_map.rsi
+  - type: StationMap
+  - type: EdgeConnection # HardLight
+    connectionKey: wallmount_computers
+    allowedDirections: East, West
+  - type: Transform
+    anchored: true
+  - type: Sprite
+    sprite: Structures/Machines/station_map.rsi
+    layers:
+    - map: [ "computerLayerBody" ]
       state: station_map0
-    - type: ContainerFill
-      containers:
-        board: [ StationMapCircuitboard ]
-    - type: ContainerContainer
-      containers:
-        board: !type:Container
-    - type: ApcPowerReceiver
-      powerLoad: 200
-    - type: WallMount
-      arc: 360
-    - type: ExtensionCableReceiver
-    - type: Construction
-      graph: StationMap
-      node: station_map
-    - type: ActivatableUIRequiresPower
-    - type: ActivatableUI
-      key: enum.StationMapUiKey.Key
-    - type: Destructible
-      thresholds:
-        - trigger:
-            !type:DamageTrigger
-            damage: 100
-          behaviors:
-            - !type:PlaySoundBehavior
-              sound:
-                collection: GlassBreak
-            - !type:SpawnEntitiesBehavior
-              spawn:
-                StationMapBroken:
-                  min: 1
-                  max: 1
-            - !type:DoActsBehavior
-              acts: [ "Destruction" ]
-    - type: UserInterface
-      interfaces:
-        enum.StationMapUiKey.Key:
-          type: StationMapBoundUserInterface
-    # Mono
-    - type: ShipRepairable
-      repairTime: 3
-      repairCost: 6
+    - map: [ "computerLayerScreen" ]
+      state: unshaded
+  - type: Icon
+    sprite: Structures/Machines/station_map.rsi
+    state: station_map0
+  - type: GenericVisualizer
+    visuals:
+      # HardLight start
+      enum.ComputerVisuals.Powered:
+        computerLayerScreen:
+          True: { visible: true, shader: unshaded }
+          False: { visible: false }
+      enum.EdgeConnectionVisuals.ConnectionMask:
+        computerLayerBody:
+          None: { state: station_map0, sprite: Structures/Machines/station_map.rsi }
+          West: { state: station_map0, sprite: Structures/Machines/station_map.rsi }
+          East: { state: station_map0, sprite: Structures/Machines/station_map.rsi }
+          East, West: { state: station_map0, sprite: Structures/Machines/station_map.rsi }
+      # HardLight end
+  - type: ContainerFill
+    containers:
+      board: [ StationMapCircuitboard ]
+  - type: ContainerContainer
+    containers:
+      board: !type:Container
+  - type: ApcPowerReceiver
+    powerLoad: 200
+  - type: WallMount
+    arc: 360
+  - type: ExtensionCableReceiver
+  - type: Construction
+    graph: StationMap
+    node: station_map
+  - type: ActivatableUIRequiresPower
+  - type: ActivatableUI
+    key: enum.StationMapUiKey.Key
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 100
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: GlassBreak
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          StationMapBroken:
+            min: 1
+            max: 1
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+  - type: UserInterface
+    interfaces:
+      enum.StationMapUiKey.Key:
+        type: StationMapBoundUserInterface
+  # Mono
+  - type: ShipRepairable
+    repairTime: 3
+    repairCost: 6
 
 - type: entity
   id: StationMapAssembly

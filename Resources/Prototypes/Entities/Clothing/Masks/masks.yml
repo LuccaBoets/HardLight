@@ -600,32 +600,34 @@
     tags:
     - IPCMaskWearable # EE - IPCs
 
-- type: entity
-  parent: ClothingMaskBase
-  id: ClothingMaskNeckGaiter
-  name: neck gaiter
-  description: Stylish neck gaiter for your neck, can protect from the cosmic wind?...
-  components:
-  - type: Sprite
-    sprite: Clothing/Mask/neckgaiter.rsi
-  - type: Clothing
-    sprite: Clothing/Mask/neckgaiter.rsi
-  - type: IdentityBlocker
-    coverage: MOUTH
-  - type: Tag
-    tags:
-    - WhitelistChameleon
-    - IPCMaskWearable # EE - IPCs
+# HL - Disabled
+# - type: entity
+#   parent: ClothingMaskBase
+#   id: ClothingMaskNeckGaiter
+#   name: neck gaiter
+#   description: Stylish neck gaiter for your neck, can protect from the cosmic wind?...
+#   components:
+#   - type: Sprite
+#     sprite: Clothing/Mask/neckgaiter.rsi
+#   - type: Clothing
+#     sprite: Clothing/Mask/neckgaiter.rsi
+#   - type: IdentityBlocker
+#     coverage: MOUTH
+#   - type: Tag
+#     tags:
+#     - WhitelistChameleon
+#     - IPCMaskWearable # EE - IPCs
 
-- type: entity
-  parent: ClothingMaskNeckGaiter
-  id: ClothingMaskNeckGaiterRed
-  name: red neck gaiter
-  components:
-  - type: Sprite
-    sprite: Clothing/Mask/neckgaiterred.rsi
-  - type: Clothing
-    sprite: Clothing/Mask/neckgaiterred.rsi
+# - type: entity
+#   parent: ClothingMaskNeckGaiter
+#   id: ClothingMaskNeckGaiterRed
+#   name: red neck gaiter
+#   components:
+#   - type: Sprite
+#     sprite: Clothing/Mask/neckgaiterred.rsi
+#   - type: Clothing
+#     sprite: Clothing/Mask/neckgaiterred.rsi
+# HL - End
 
 - type: entity
   parent: ClothingMaskClownBase

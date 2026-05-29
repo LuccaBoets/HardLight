@@ -765,6 +765,9 @@
   id: HighRiskItem
 
 - type: Tag
+  id: Hypospray
+
+- type: Tag
   id: HighSecDoor
 
 - type: Tag
@@ -1192,6 +1195,12 @@
   id: RifleStock
 
 - type: Tag
+  id: AICoreElectronics
+
+- type: Tag
+  id: WeaponShotgunBigBuddy
+
+- type: Tag
   id: Ring
 
 - type: Tag
@@ -1220,6 +1229,9 @@
 
 - type: Tag
   id: RollingPin
+
+- type: Tag
+  id: RoomSaveable # Unanchored items with this tag are preserved in room saves
 
 - type: Tag
   id: SaltShaker
@@ -1528,6 +1540,9 @@
   id: Wine
 
 - type: Tag
+  id: WireBrush
+
+- type: Tag
   id: Wirecutter
 
 - type: Tag
@@ -1584,7 +1599,9 @@
 
 - type: Tag
   id: CartridgeShell
-  
+
 - type: Tag
   id: BoneArmor
 
+- type: Tag
+  id: JetInjector

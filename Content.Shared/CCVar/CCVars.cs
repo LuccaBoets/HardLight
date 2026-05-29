@@ -267,5 +267,11 @@ public sealed partial class CCVars : CVars
     public static readonly CVarDef<bool> ShowCyborgSubtypeSprites =
         CVarDef.Create("display.show_cyborg_subtypes", true, CVar.ARCHIVE | CVar.CLIENTONLY);
 
+    /// <summary>
+    /// HardLight: Whether to render the screen overlay applied while under the effects of an aphrodisiac.
+    /// </summary>
+    public static readonly CVarDef<bool> ShowAphrodisiacEffects =
+        CVarDef.Create("display.show_aphrodisiac_effects", true, CVar.ARCHIVE | CVar.CLIENTONLY);
+
 }
 #endregion

@@ -1,17 +1,19 @@
 using Content.Shared.Abilities.Psionics;
 using Content.Shared.Nyanotrasen.Abilities.Psionics;
-using Content.Server.Projectiles;
+using Content.Server.Electrocution;
 using Content.Server.Weapons.Ranged.Systems;
-using Content.Shared.Projectiles;
+using Content.Shared.Weapons.Ranged.Components;
 using Content.Shared.Actions.Events;
-using Robust.Shared.Map;
+using Robust.Shared.Prototypes;
 
 namespace Content.Server.Abilities.Psionics
 {
     public sealed class NoosphericZapPowerSystem : EntitySystem
     {
+        private static readonly EntProtoId NoosphericZapGunPrototype = "NoosphericZapGun";
+
         [Dependency] private readonly SharedPsionicAbilitiesSystem _psionics = default!;
-        [Dependency] private readonly ProjectileSystem _projectile = default!;
+        [Dependency] private readonly ElectrocutionSystem _electrocution = default!;
         [Dependency] private readonly GunSystem _gun = default!;
 
 
@@ -26,17 +28,16 @@ namespace Content.Server.Abilities.Psionics
             if (!_psionics.OnAttemptPowerUse(args.Performer, "noospheric zap"))
                 return;
 
-            // Spawn and shoot a TeslaGunBullet projectile
-            var xform = Transform(args.Performer);
-            var targetXform = Transform(args.Target);
-            
-            var projectile = Spawn("TeslaGunBullet", xform.Coordinates);
-            var proj = EnsureComp<ProjectileComponent>(projectile);
-            _projectile.SetShooter(projectile, proj, args.Performer);
+            var performerCoords = Comp<TransformComponent>(args.Performer).Coordinates;
+            var targetCoords = Comp<TransformComponent>(args.Target).Coordinates;
 
-            // Shoot the projectile towards the target
-            var targetCoords = new EntityCoordinates(args.Target, targetXform.LocalPosition);
-            _gun.ShootProjectile(projectile, targetCoords.Position - xform.LocalPosition, xform.LocalPosition, args.Performer);
+            var zapGun = Spawn(NoosphericZapGunPrototype, performerCoords);
+            if (TryComp<GunComponent>(zapGun, out var gunComp))
+                _gun.AttemptShoot(args.Performer, zapGun, gunComp, targetCoords, args.Target);
+
+            QueueDel(zapGun);
+
+            _electrocution.TryDoElectrocution(args.Target, args.Performer, 1, TimeSpan.FromSeconds(3), refresh: true, ignoreInsulation: true);
 
             _psionics.LogPowerUsed(args.Performer, "noospheric zap");
             args.Handled = true;

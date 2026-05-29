@@ -62,3 +62,84 @@
   icon:
     sprite: /Textures/Interface/Misc/noncon.rsi
     state: noncon
+
+# Aggressor flavor (red) - same sprite as default NonconIcon
+- type: securityIcon
+  id: NonconIconAggressor
+  priority: 2
+  locationPreference: Right
+  layer: Mod
+  offset: -3
+  xOffset: 2
+  isShaded: true
+  icon:
+    sprite: /Textures/Interface/Misc/noncon.rsi
+    state: noncon
+
+# Victim flavor (blue)
+- type: securityIcon
+  id: NonconIconVictim
+  priority: 2
+  locationPreference: Right
+  layer: Mod
+  offset: -3
+  xOffset: 2
+  isShaded: true
+  icon:
+    sprite: /Textures/Interface/Misc/noncon.rsi
+    state: noncon_victim
+
+# Either / both flavor (purple)
+- type: securityIcon
+  id: NonconIconEither
+  priority: 2
+  locationPreference: Right
+  layer: Mod
+  offset: -3
+  xOffset: 2
+  isShaded: true
+  icon:
+    sprite: /Textures/Interface/Misc/noncon.rsi
+    state: noncon_either
+
+# --- Colorblind-safe palette variants ---
+# Selected via the consent.noncon_colorblind_palette client CVar.
+# Shapes are identical to the default variants (horns up / down / both),
+# only the color differs. Palette is amber / teal-green / lavender — chosen
+# along the Okabe-Ito axis for protan/deutan/tritan distinguishability.
+
+- type: securityIcon
+  id: NonconIconAggressorColorblind
+  priority: 2
+  locationPreference: Right
+  layer: Mod
+  offset: -3
+  xOffset: 2
+  isShaded: true
+  icon:
+    sprite: /Textures/Interface/Misc/noncon.rsi
+    state: noncon_cb_aggressor
+
+- type: securityIcon
+  id: NonconIconVictimColorblind
+  priority: 2
+  locationPreference: Right
+  layer: Mod
+  offset: -3
+  xOffset: 2
+  isShaded: true
+  icon:
+    sprite: /Textures/Interface/Misc/noncon.rsi
+    state: noncon_cb_victim
+
+- type: securityIcon
+  id: NonconIconEitherColorblind
+  priority: 2
+  locationPreference: Right
+  layer: Mod
+  offset: -3
+  xOffset: 2
+  isShaded: true
+  icon:
+    sprite: /Textures/Interface/Misc/noncon.rsi
+    state: noncon_cb_either

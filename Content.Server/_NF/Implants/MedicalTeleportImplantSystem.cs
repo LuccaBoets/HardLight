@@ -1,5 +1,6 @@
 using Content.Server.Implants;
 using Content.Server.Radio.EntitySystems;
+using Content.Server.Salvage.Expeditions;
 using Content.Shared._HL.Rescue.Rescue;
 using Content.Shared._NF.Implants.Components;
 using Content.Shared.Humanoid;
@@ -23,8 +24,10 @@ namespace Content.Server._NF.Implants;
 
 /// <summary>
 /// Handles delayed teleportation for entities implanted with <see cref="MedicalTeleportImplantComponent"/>.
-/// When the implanted owner dies, a fulton-like extraction is scheduled for 10 seconds later. If the owner
-/// is revived before the timer elapses, the extraction is canceled.
+// HardLight start
+/// When the implanted owner dies on a salvage expedition map, a fulton-like extraction is scheduled.
+/// If the owner is revived before the timer elapses, the extraction is canceled.
+// HardLight end
 /// </summary>
 public sealed class MedicalTeleportImplantSystem : EntitySystem
 {
@@ -108,6 +111,10 @@ public sealed class MedicalTeleportImplantSystem : EntitySystem
 
         // Only start when entering Dead state
         if (newState != MobState.Dead)
+            return;
+
+        // HardLight: Rescue extractions are expedition-only.
+        if (!IsOnExpedition(owner))
             return;
 
         // If no beacon, do nothing
@@ -248,5 +255,11 @@ public sealed class MedicalTeleportImplantSystem : EntitySystem
         }
 
         return best;
+    }
+
+    private bool IsOnExpedition(EntityUid owner) // HardLight
+    {
+        var mapUid = Transform(owner).MapUid;
+        return mapUid != null && HasComp<SalvageExpeditionComponent>(mapUid.Value);
     }
 }

@@ -199,11 +199,7 @@ public sealed class LobbyUIController : UIController, IOnStateEntered<LobbyState
                 // Create a new profile with the company set to "None"
                 humanoid = humanoid.WithCompany("None");
 
-                // Update the character in preferences
-                if (_preferencesManager.Preferences != null)
-                {
-                    _preferencesManager.UpdateCharacter(humanoid, _preferencesManager.Preferences.SelectedCharacterIndex);
-                }
+                // Never auto-write during preview refresh. Profile persistence must be explicit.
             }
         }
         catch (Exception e)

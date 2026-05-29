@@ -106,16 +106,14 @@
   - type: SurgeryTarget
   - type: UserInterface
     interfaces:
-    - key: enum.VoiceMaskUIKey.Key
-      type: VoiceMaskBoundUserInterface
-    - key: enum.HumanoidMarkingModifierKey.Key
-      type: HumanoidMarkingModifierBoundUserInterface
-    - key: enum.StrippingUiKey.Key
-      type: StrippableBoundUserInterface
-    - key: enum.HumanoidMarkingModifierKey.Key
-      type: HumanoidMarkingModifierBoundUserInterface
-    - key: enum.CMSurgeryUIKey.Key
-      type: CMSurgeryBui
+      enum.VoiceMaskUIKey.Key:
+        type: VoiceMaskBoundUserInterface
+      enum.HumanoidMarkingModifierKey.Key:
+        type: HumanoidMarkingModifierBoundUserInterface
+      enum.StrippingUiKey.Key:
+        type: StrippableBoundUserInterface
+      enum.CMSurgeryUIKey.Key:
+        type: CMSurgeryBui
   - type: Huggable
   - type: Tackleable
     stun: 10

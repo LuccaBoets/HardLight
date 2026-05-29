@@ -16,12 +16,12 @@ public sealed class BrainwashEditor(SharedBrainwashedSystem sharedBrainwashedSys
             return;
 
         var entity = _entityManager.GetEntity(message.Target);
-        _entityManager.TryGetComponent<BrainwashedComponent>(entity, out var brainwashedComponent);
-        if (brainwashedComponent != null)
-            sharedBrainwashedSystem.SetCompulsions(entity, brainwashedComponent, message.Compulsions);
+        _entityManager.TryGetComponent<BrainwasherComponent>(entity, out var brainwasherComponent);
+        if (brainwasherComponent != null)
+            sharedBrainwashedSystem.SetCompulsions(entity, brainwasherComponent, message.Compulsions);
     }
 
-    public void UpdateCompulsions(BrainwashedComponent brainwashedComponent, EntityUid entity)
+    public void UpdateCompulsions(BrainwasherComponent brainwashedComponent, EntityUid entity)
     {
         _compulsions = brainwashedComponent.Compulsions;
         _target = entity;

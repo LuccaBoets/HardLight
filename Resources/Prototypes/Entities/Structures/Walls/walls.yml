@@ -588,6 +588,8 @@
     - type: IconSmooth
       key: walls
       base: plastitanium
+    - type: StaticPrice
+      price: 250
 
 
 - type: entity
@@ -709,7 +711,6 @@
     repairTime: 5
     repairCost: 6
 
-
 - type: entity
   parent: WallDiagonal
   id: WallPlastitaniumDiagonal
@@ -762,6 +763,8 @@
   - type: ShipRepairable
     repairTime: 20
     repairCost: 50
+  - type: StaticPrice
+    price: 250
 
 - type: entity
   id: WallPlastitaniumDiagonalIndestructible
@@ -816,6 +819,8 @@
   - type: ShipRepairable
     repairTime: 20
     repairCost: 50
+  - type: StaticPrice
+    price: 250
 
 
 - type: entity
@@ -1198,6 +1203,7 @@
   - type: ShipRepairable
     repairTime: 5
     repairCost: 6
+
 - type: entity
   parent: BaseWall
   id: WallShuttle
@@ -1525,7 +1531,6 @@
     repairTime: 6
     repairCost: 10
 
-
 - type: entity
   parent: BaseWall
   id: WallWood
@@ -1623,7 +1628,6 @@
     delay: 8 #Frontier
     fx: EffectRCDDeconstruct8 #Frontier
 
-
 # Lavalend Walls
 
 - type: entity
@@ -1682,7 +1686,6 @@
   - type: ShipRepairable
     repairTime: 4
     repairCost: 5
-
 
 - type: entity
   parent: WallDiagonal

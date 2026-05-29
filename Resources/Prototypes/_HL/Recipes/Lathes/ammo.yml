@@ -95,6 +95,35 @@
   completetime: 5
   materials:
     Plasteel: 10
+    
+- type: latheRecipe
+  id: AmmoBoxSmallEmpty
+  result: AmmoBoxSmallEmpty
+  completetime: 5
+  materials:
+    Steel: 100
+  
+- type: latheRecipe
+  id: AmmoBoxMediumEmpty
+  result: AmmoBoxMediumEmpty
+  completetime: 5
+  materials:
+    Steel: 100
+    
+- type: latheRecipe
+  id: AmmoBoxLargeEmpty
+  result: AmmoBoxLargeEmpty
+  completetime: 5
+  materials:
+    Steel: 100    
+
+- type: latheRecipe
+  id: AmmoBoxShotgunEmpty
+  result: AmmoBoxShotgunEmpty
+  completetime: 5
+  materials:
+    Steel: 100
+    
 
 - type: latheRecipe
   id: AmmoBoxBig

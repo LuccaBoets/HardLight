@@ -40,6 +40,13 @@ public sealed partial class ConsentWindow : FancyWindow
         ConsentFreetext.Placeholder = new Rope.Leaf(Loc.GetString("consent-window-freetext-placeholder"));
         ConsentFreetext.OnTextChanged += _ => UnsavedChanges();
 
+        // Colorblind-friendly Non-Con marker palette is a viewer-side preference
+        // (CLIENTONLY ARCHIVE CVar). Bind the checkbox both ways so the user can
+        // toggle it from the consent menu and the value persists in their config.
+        NonconColorblindCheckBox.Pressed = _configManager.GetCVar(ConsentSystemCCVars.ConsentNonconColorblindPalette);
+        NonconColorblindCheckBox.OnToggled += args =>
+            _configManager.SetCVar(ConsentSystemCCVars.ConsentNonconColorblindPalette, args.Pressed);
+
         var consentToggles = _prototypeManager.EnumeratePrototypes<ConsentTogglePrototype>()
             .OrderBy(x => x.SortKey);
         foreach (var toggle in consentToggles)

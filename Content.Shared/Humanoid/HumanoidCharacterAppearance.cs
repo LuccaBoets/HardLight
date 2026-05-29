@@ -228,7 +228,7 @@ public sealed partial class HumanoidCharacterAppearance : ICharacterAppearance, 
                 break;
             default:
                 break;
-                
+
         }
         // Starlight - End
 
@@ -251,6 +251,8 @@ public sealed partial class HumanoidCharacterAppearance : ICharacterAppearance, 
                 break;
             case HumanoidSkinColor.AnimalFur: // Einstein Engines - Tajaran
                 newSkinColor = Humanoid.SkinColor.ProportionalAnimalFurColor(newSkinColor);
+                break;
+            case HumanoidSkinColor.AnyColour: // Hardlight
                 break;
         }
 

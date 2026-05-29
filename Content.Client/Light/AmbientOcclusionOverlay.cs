@@ -99,8 +99,9 @@ public sealed class AmbientOcclusionOverlay : Overlay
                     var localMatrix = Matrix3x2.Multiply(matrix, invMatrix);
 
                     worldHandle.SetTransform(localMatrix);
-                    // 4 pixels
-                    worldHandle.DrawRect(Box2.UnitCentered.Enlarged(distance / EyeManager.PixelsPerMeter), Color.White);
+                    // HardLight: Expand by configured AO distance while preserving the occluder's actual shape.
+                    var occluderBox = entry.Component.BoundingBox;
+                    worldHandle.DrawRect(occluderBox.Enlarged(distance / EyeManager.PixelsPerMeter), Color.White); // HardLight: Box2.UnitCentered<occluderBox
                 }
             }, Color.Transparent);
 

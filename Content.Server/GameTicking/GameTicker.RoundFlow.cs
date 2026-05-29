@@ -14,6 +14,7 @@ using Content.Server.Shuttles.Systems;
 using Content.Server.Station.Components;
 using Content.Server.Station.Systems; // Add this if missing
 using Content.Server.Worldgen.Systems;
+using Content.Shared._HL.Rescue.Rescue; // Hardlight
 using Content.Shared._NF.Shipyard.Components;
 using Content.Shared.CCVar;
 using Content.Shared.Database;
@@ -903,7 +904,18 @@ namespace Content.Server.GameTicking
             //            _mapManager.Restart();
 
             //            _banManager.Restart();
+            if (_map.MapExists(DefaultMap))
+                _map.DeleteMap(DefaultMap);
+
             _gameMapManager.ClearSelectedMap();
+
+            // Hardlight start - Delete all rescue beacons from the previous round before the new map loads
+            var rescueBeaconQuery = EntityQueryEnumerator<RescueBeaconComponent>();
+            while (rescueBeaconQuery.MoveNext(out var beaconUid, out var beacon))
+            {
+                QueueDel(beaconUid);
+            }
+            // Hardlight end
 
             // Clear up any game rules.
 
@@ -918,7 +930,7 @@ namespace Content.Server.GameTicking
             //{
             //    _playerGameStatuses[session.UserId] = LobbyEnabled ? PlayerGameStatus.NotReadyToPlay : PlayerGameStatus.ReadyToPlay;
             //}
-            // DefaultMap = default; // This will set DefaultMap to 0 (invalid)
+            DefaultMap = MapId.Nullspace;
             RoundId = 0;
 
             // Remove all job slots from every station

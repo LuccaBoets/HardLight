@@ -208,9 +208,69 @@
     RedRegaliaSuit: 4
     ClothingUniformJumpsuitVampir: 4
     ClothingUniformDama235123: 4
-    # End Coats / Hardlight End
+    MaidUniformLatex: 4
+    MaidUniformAlt: 4
+    MaidUniform: 4
+    MaidGloves: 4
+    MaidGlovesLatex: 4
+    DominantHeels: 4
+    KneeBoots: 4
+    LatexSocks: 4
+    LatexHeels: 4
+    StripperOutfitWhite: 4
+    StripperOutfitBlue: 4
+    StripperOutfitYellow: 4
+    StripperOutfitGreen: 4
+    StripperOutfitRed: 4
+    StripperOutfitOrange: 4
+    StripperOutfitPurple: 4
+    StripperOutfitBlack: 4
+    StripperOutfitLatexBlue: 4
+    StripperOutfitLatexPink: 4
+    BunnysuitBoxUnionJack: 6
+    BunnysuitBoxUSSP: 6
+    BunnysuitBoxNetrunner: 6
+    BunnysuitBoxMail: 6
+    BunnysuitBoxJanitor: 6
+    BunnysuitBoxRobotics: 6
+    BunnysuitBoxMiner: 6
+    BunnysuitBoxSyndie: 6
+    BunnysuitBoxCargo: 6
+    BunnysuitBoxScience: 6
+    BunnysuitBoxCoroner: 6
+    BunnysuitBoxChemist: 6
+    BunnysuitBoxVirology: 6
+    BunnysuitBoxGenetics: 6
+    BunnysuitBoxDoctor: 6
+    BunnysuitBoxChaplain: 6
+    BunnysuitBoxBotanist: 6
+    BunnysuitBoxPrisoner: 6
+    BunnysuitBoxLiberty: 6
+    BunnysuitBoxCaptain: 6
+    BunnysuitBoxChef: 6
+    BunnysuitBoxQuartermaster: 6
+    BunnysuitBoxChiefEngineer: 6
+    BunnysuitBoxPsychologist: 6
+    BunnysuitBoxBar: 6
+    BunnysuitBoxParamedic: 6
+    BunnysuitBoxEngineer: 6
+    BunnysuitBoxAtmos: 6
+    BunnysuitBoxChiefMedicalOfficer: 6
+    BunnysuitBoxResearchDirector: 6
+    BunnysuitBoxCrimson: 6
+    BunnysuitBoxCrimsonWhite: 6
+    BunnysuitBoxCrimsonGold: 6
+    BunnysuitBoxHeadOfPersonnel: 6
+    BunnysuitBoxRed: 6
+    BunnysuitBoxGreen: 6
+    BunnysuitBoxTeal: 6
+    BunnysuitBoxLawRed: 6
+    BunnysuitBoxLawTeal: 6
+    BunnysuitBoxLawBlack: 6
+    BunnysuitBoxClown: 6
+    BunnysuitBoxMime: 6
   contrabandInventory:
-    ClothingMaskNeckGaiter: 2
+    # ClothingMaskNeckGaiter: 2 - HL
     ClothingUniformJumpsuitTacticool: 1
     ClothingUniformJumpskirtTacticool: 1
     ToyFigurinePassenger: 1

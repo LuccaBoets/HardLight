@@ -28,7 +28,7 @@ public sealed partial class LamiaSystem : EntitySystem
     [Dependency] private readonly SharedContainerSystem _containerSystem = default!;
 
     private Queue<(SegmentedEntitySegmentComponent segment, EntityUid lamia)> _segments = new();
-    
+
     private ProtoId<TagPrototype> _lamiaHardsuitTag = "AllowLamiaHardsuit";
 
     public override void Initialize()
@@ -37,6 +37,7 @@ public sealed partial class LamiaSystem : EntitySystem
         //Parent subscriptions
         // Hitscan filtering is disabled in this codebase.
         SubscribeLocalEvent<SegmentedEntityComponent, InsertIntoEntityStorageAttemptEvent>(OnLamiaStorageInsertAttempt);
+        SubscribeLocalEvent<SegmentedEntityComponent, EntGotInsertedIntoContainerMessage>(OnGotInsertedIntoContainer); //Added due to EntInsertedIntoContainerMessage failing to fire for disposals
         SubscribeLocalEvent<SegmentedEntityComponent, EntInsertedIntoContainerMessage>(OnInsertedIntoContainer);
         SubscribeLocalEvent<SegmentedEntityComponent, EntRemovedFromContainerMessage>(OnRemovedFromContainer);
         SubscribeLocalEvent<SegmentedEntityComponent, DidEquipEvent>(OnDidEquipEvent);
@@ -186,6 +187,10 @@ public sealed partial class LamiaSystem : EntitySystem
             ? segmentedComponent.InitialSegmentId
             : segmentedComponent.SegmentId, Transform(segmentuid).Coordinates);
 
+        // Segments are positioned explicitly and constrained to the body by joints, so
+        // grid traversal only adds recursive reparent work when the head crosses grids.
+        Transform(segment).GridTraversal = false;
+
         var segmentComponent = EnsureComp<SegmentedEntitySegmentComponent>(segment);
 
         segmentComponent.Lamia = parentuid;
@@ -257,6 +262,33 @@ public sealed partial class LamiaSystem : EntitySystem
         args.Cancelled = true;
     }
 
+    /// <summary>
+    /// Checks if the segmented entity has been inserted into a container and deletes their segments if true. This prevents further issues with segment logic.
+    /// <see cref="OnInsertedIntoContainer"/> failed to execute, so its code was copied to this event handler instead.
+    /// </summary>
+    /// <param name="ent"></param>
+    /// <param name="args"></param>
+    private void OnGotInsertedIntoContainer(Entity<SegmentedEntityComponent> ent, ref EntGotInsertedIntoContainerMessage args)
+    {
+        ent.Deconstruct(out var entityUid, out var component);
+
+        // Only delete segments when entering actual entity storage (lockers, crates, disposals, etc.)
+        // Skip map/grid containers and other non-storage containers
+        if (_net.IsClient)
+            return;
+
+        // The entity being inserted must be the segmented entity itself, not something else
+        if (args.Entity != entityUid)
+            return;
+
+        // Check if container and owner exist and is an entity storage container (locker, crate, disposal, etc.)
+        var containerOwner = args.Container?.Owner ?? EntityUid.Invalid;
+        if (!containerOwner.IsValid() || !Exists(containerOwner))
+            return;
+
+        DeleteSegments(component);
+    }
+
     private void OnInsertedIntoContainer(EntityUid uid, SegmentedEntityComponent component, EntInsertedIntoContainerMessage args)
     {
         // Only delete segments when entering actual entity storage (lockers, crates, disposals, etc.)
@@ -272,7 +304,7 @@ public sealed partial class LamiaSystem : EntitySystem
         var containerOwner = args.Container?.Owner ?? EntityUid.Invalid;
         if (!containerOwner.IsValid() || !Exists(containerOwner) || !HasComp<SharedEntityStorageComponent>(containerOwner))
             return;
-            
+
         DeleteSegments(component);
     }
 
@@ -291,7 +323,7 @@ public sealed partial class LamiaSystem : EntitySystem
         var containerOwner = args.Container?.Owner ?? EntityUid.Invalid;
         if (!containerOwner.IsValid() || !Exists(containerOwner) || !HasComp<SharedEntityStorageComponent>(containerOwner))
             return;
-            
+
         if (component.Segments.Count == 0 && !_containerSystem.IsEntityInContainer(uid))
         {
             SpawnSegments(uid, component);
@@ -340,7 +372,8 @@ public sealed partial class LamiaSystem : EntitySystem
     private void OnParentChanged(EntityUid uid, SegmentedEntityComponent component, ref EntParentChangedMessage args)
     {
         //If the change was NOT to a different map
-        if (args.OldMapId == args.Transform.MapUid)
+        //Added conditional to ensure entity is not inside a container to avoid trying to spawn segments after they had been deleted by OnGotInsertedIntoContainer event handler
+        if (args.OldMapId == args.Transform.MapUid && !_containerSystem.IsEntityInContainer(uid))
             RespawnSegments(uid, component);
     }
 }

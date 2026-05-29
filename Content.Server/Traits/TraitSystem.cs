@@ -12,6 +12,7 @@ using Content.Shared.Hands.Components;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.Movement.Systems; // HardLight
 using Content.Shared.Players;
+using Content.Shared.Preferences; // HardLight
 using Content.Shared.Roles;
 using Content.Shared.Traits;
 using Content.Shared.Whitelist;
@@ -23,6 +24,7 @@ using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using System.Linq;
+using Content.Server._Starlight.Language; // Starlight
 
 namespace Content.Server.Traits;
 
@@ -82,7 +84,24 @@ public sealed class TraitSystem : EntitySystem
             // Check requirements if they exist
             if (traitPrototype.Requirements.Count > 0)
             {
-                var job = _prototype.Index<JobPrototype>(args.JobId ?? _prototype.EnumeratePrototypes<JobPrototype>().First().ID);
+                // VRS: guard against missing/unset job to avoid InvalidOperationException from First() when no job prototypes are loaded.
+                // The original `job` local was unused; we only need to confirm a job is resolvable so requirement checks downstream remain meaningful.
+                var hasJob = args.JobId is { } jobId && _prototype.HasIndex<JobPrototype>(jobId);
+                if (!hasJob)
+                {
+                    var any = false;
+                    foreach (var _ in _prototype.EnumeratePrototypes<JobPrototype>())
+                    {
+                        any = true;
+                        break;
+                    }
+                    if (!any)
+                    {
+                        DebugTools.Assert("TraitSystem: no JobPrototype available to evaluate trait requirements.");
+                        continue;
+                    }
+                }
+
                 var playTimes = _playTimeTracking.GetTrackerTimes(args.Player);
 
                 var requirementsMet = true;
@@ -111,9 +130,37 @@ public sealed class TraitSystem : EntitySystem
     }
 
     /// <summary>
+    /// HardLight: Applies the selected traits from a humanoid profile to an existing entity.
+    /// This is intended for non-standard spawn paths like admin spawning or cloning
+    /// that already have a validated profile and just need its trait components replayed.
+    /// </summary>
+    public void ApplyProfileTraits(EntityUid uid, HumanoidCharacterProfile profile, string? playerName = null, bool addTraitGear = true)
+    {
+        var sortedTraits = new List<TraitPrototype>();
+        foreach (var traitId in profile.TraitPreferences)
+        {
+            if (_prototype.TryIndex<TraitPrototype>(traitId, out var traitPrototype))
+                sortedTraits.Add(traitPrototype);
+        }
+
+        sortedTraits.Sort();
+
+        foreach (var traitPrototype in sortedTraits)
+        {
+            if (traitPrototype.Logins.Count > 0 &&
+                (playerName == null || !traitPrototype.Logins.Contains(playerName)))
+            {
+                continue;
+            }
+
+            AddTrait(uid, traitPrototype, addTraitGear);
+        }
+    }
+
+    /// <summary>
     ///     Adds a single Trait Prototype to an Entity.
     /// </summary>
-    public void AddTrait(EntityUid uid, TraitPrototype traitPrototype)
+    public void AddTrait(EntityUid uid, TraitPrototype traitPrototype, bool addTraitGear = true) // HardLight: Added bool addTraitGear
     {
         // Check whitelist/blacklist
         if (_whitelistSystem.IsWhitelistFail(traitPrototype.Whitelist, uid) ||
@@ -123,11 +170,31 @@ public sealed class TraitSystem : EntitySystem
         // Add all components required by the prototype
         EntityManager.AddComponents(uid, traitPrototype.Components, traitPrototype.ReplaceComponents); // Hardlight: Added ReplaceComponents
 
+            // Starlight start
+            var language = EntityManager.System<LanguageSystem>();
+
+            if (traitPrototype.RemoveLanguagesSpoken is not null)
+                foreach (var lang in traitPrototype.RemoveLanguagesSpoken)
+                    language.RemoveLanguage(uid, lang, true, false); // HardLight: args.Mob<uid
+
+            if (traitPrototype.RemoveLanguagesUnderstood is not null)
+                foreach (var lang in traitPrototype.RemoveLanguagesUnderstood)
+                    language.RemoveLanguage(uid, lang, false, true); // HardLight: args.Mob<uid
+
+            if (traitPrototype.LanguagesSpoken is not null)
+                foreach (var lang in traitPrototype.LanguagesSpoken)
+                    language.AddLanguage(uid, lang, true, false); // HardLight: args.Mob<uid
+
+            if (traitPrototype.LanguagesUnderstood is not null)
+                foreach (var lang in traitPrototype.LanguagesUnderstood)
+                    language.AddLanguage(uid, lang, false, true); // HardLight: args.Mob<uid
+            // Starlight end
+
         // HardLight: Force an immediate refresh so movement penalties/bonuses apply on spawn.
         _movementSpeed.RefreshMovementSpeedModifiers(uid);
 
         // Add item required by the trait
-        if (traitPrototype.TraitGear != null && TryComp(uid, out HandsComponent? handsComponent))
+        if (addTraitGear && traitPrototype.TraitGear != null && TryComp(uid, out HandsComponent? handsComponent)) // HardLight: Added addTraitGear
         {
             var coords = Transform(uid).Coordinates;
             var inhandEntity = EntityManager.SpawnEntity(traitPrototype.TraitGear, coords);

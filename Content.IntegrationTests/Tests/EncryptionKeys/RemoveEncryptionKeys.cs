@@ -12,6 +12,7 @@ public sealed class RemoveEncryptionKeys : InteractionTest
     {
         await SpawnTarget("ClothingHeadsetGrey");
         var comp = Comp<EncryptionKeyHolderComponent>();
+        await InteractUsing("EncryptionKeyCommon");// Hardlight: Our headsets have intrinsic keys, as such we've got to add a common key first to perform the test.
 
         Assert.Multiple(() =>
         {

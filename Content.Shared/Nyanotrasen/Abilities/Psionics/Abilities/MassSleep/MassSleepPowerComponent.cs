@@ -7,10 +7,11 @@ namespace Content.Shared.Abilities.Psionics
     [RegisterComponent]
     public sealed partial class MassSleepPowerComponent : Component
     {
-        public float Radius = 1.25f;
+        [DataField("radius")]
+        public float Radius = 3f;
         [DataField("massSleepActionId",
         customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
-        public string? MassSleepActionId = "ActionTelegnosis";
+        public string? MassSleepActionId = "ActionMassSleep";
 
         [DataField("massSleepActionEntity")]
         public EntityUid? MassSleepActionEntity;

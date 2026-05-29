@@ -68,7 +68,9 @@ public sealed partial class PuddleSystem : SharedPuddleSystem
 
     private static readonly ProtoId<ReagentPrototype> CopperBlood = "CopperBlood";
 
-    private static string[] _standoutReagents = [Blood, Slime, CopperBlood];
+    private static readonly ProtoId<ReagentPrototype> SynthBlood = "SynthBlood"; // HardLight
+
+    private static string[] _standoutReagents = [Blood, Slime, CopperBlood, SynthBlood]; // HardLight: SynthBlood
 
     // Using local deletion queue instead of the standard queue so that we can easily "undelete" if a puddle
     // loses & then gains reagents in a single tick.

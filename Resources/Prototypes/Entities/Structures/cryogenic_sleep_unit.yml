@@ -4,8 +4,7 @@
   name: cryogenic sleep unit
   description: A super-cooled container that keeps crewmates safe during space travel.
   components:
-# HardLight start
-#  - type: Anchorable
+#  - type: Anchorable # HardLight
 #    flags:
 #    - Anchorable
   - type: Transform
@@ -16,33 +15,32 @@
     layers:
     - state: sleeper_0
       map: ["base"]
-#  - type: UserInterface
-#    interfaces:
-#      enum.CryostorageUIKey.Key:
-#        type: CryostorageBoundUserInterface
-#  - type: ActivatableUI
-#    key: enum.CryostorageUIKey.Key
-#  - type: AccessReader
-#    breakOnAccessBreaker: false
-#    access: [["Cryogenics"]]
-#  - type: InteractionOutline
+  - type: UserInterface
+    interfaces:
+      enum.CryostorageUIKey.Key:
+        type: CryostorageBoundUserInterface
+  - type: ActivatableUI
+    key: enum.CryostorageUIKey.Key
+  - type: AccessReader
+    breakOnAccessBreaker: false
+    access: [["Cryogenics"]]
+  - type: InteractionOutline
   - type: Cryostorage
-#  - type: Physics
-#    canCollide: false
-#  - type: DragInsertContainer
-#    containerId: storage
-#    entryDelay: 2
-#  - type: ExitContainerOnMove
-#    containerId: storage
+  - type: Physics
+    canCollide: false
+  - type: DragInsertContainer
+    containerId: storage
+    entryDelay: 2
+  - type: ExitContainerOnMove
+    containerId: storage
   - type: PointLight
     color: Lime
     radius: 1.5
     energy: 0.5
     castShadows: false
-#  - type: ContainerContainer
-#    containers:
-#      storage: !type:ContainerSlot
-# HardLight end
+  - type: ContainerContainer
+    containers:
+      storage: !type:ContainerSlot
   - type: Appearance
   - type: GenericVisualizer
     visuals:

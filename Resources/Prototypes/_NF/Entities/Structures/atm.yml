@@ -3,6 +3,9 @@
   parent: BaseComputer
   abstract: true
   components:
+  - type: EdgeConnection # HardLight
+    connectionKey: atm_computers
+    allowedDirections: East, West
   - type: ActivatableUIRequiresPower
   - type: ActivatableUI
     singleUser: true
@@ -61,7 +64,7 @@
         type: BankATMWithdrawOnlyMenuBoundUserInterface
 
 - type: entity
-  parent: [BaseStructureDisableToolUse, BaseStructureIndestructible, ComputerBankATMDeposit]
+  parent: [ BaseStructureDisableToolUse, BaseStructureIndestructible, ComputerBankATMDeposit ]
   id: ComputerBankATM
   components:
   - type: Sprite
@@ -69,10 +72,20 @@
     noRot: true
     sprite: _NF/Structures/Machines/atm/atm.rsi
     layers:
-    - map: ["computerLayerBody"]
+    - map: [ "computerLayerBody" ]
       state: icon
-    - map: ["computerLayerScreen"]
+    - map: [ "computerLayerScreen" ]
       state: unshaded
+  # HardLight start
+  - type: GenericVisualizer
+    visuals:
+      enum.EdgeConnectionVisuals.ConnectionMask:
+        computerLayerBody:
+          None: { state: icon, sprite: _NF/Structures/Machines/atm/atm.rsi }
+          West: { state: icon, sprite: _NF/Structures/Machines/atm/atm.rsi }
+          East: { state: icon, sprite: _NF/Structures/Machines/atm/atm.rsi }
+          East, West: { state: icon, sprite: _NF/Structures/Machines/atm/atm.rsi }
+  # HardLight end
 
 - type: entity
   parent: ComputerBankATMWithdraw
@@ -83,46 +96,76 @@
     noRot: true
     sprite: _NF/Structures/Machines/atm/atm.rsi
     layers:
-    - map: ["computerLayerBody"]
+    - map: [ "computerLayerBody" ]
       state: icon
-    - map: ["computerLayerScreen"]
+    - map: [ "computerLayerScreen" ]
       state: unshaded
+  # HardLight start
+  - type: GenericVisualizer
+    visuals:
+      enum.EdgeConnectionVisuals.ConnectionMask:
+        computerLayerBody:
+          None: { state: icon, sprite: _NF/Structures/Machines/atm/atm.rsi }
+          West: { state: icon, sprite: _NF/Structures/Machines/atm/atm.rsi }
+          East: { state: icon, sprite: _NF/Structures/Machines/atm/atm.rsi }
+          East, West: { state: icon, sprite: _NF/Structures/Machines/atm/atm.rsi }
+  # HardLight end
   - type: Computer
     board: ComputerWithdrawBankATMComputerCircuitboard
 
 - type: entity
   suffix: Wallmount
-  parent: [BaseStructureDisableToolUse, BaseStructureIndestructible, BaseStructureComputerWallmount, ComputerBankATMDeposit]
+  parent: [ BaseStructureDisableToolUse, BaseStructureIndestructible, BaseStructureComputerWallmount, ComputerBankATMDeposit ]
   id: ComputerWallmountBankATM
   components:
   - type: Sprite
     netsync: false
     sprite: _NF/Structures/Machines/atm/wall_atm.rsi
     layers:
-      - map: ["computerLayerBody"]
+      - map: [ "computerLayerBody" ]
         state: icon
-      - map: ["computerLayerScreen"]
+      - map: [ "computerLayerScreen" ]
         state: unshaded
+  # HardLight start
+  - type: GenericVisualizer
+    visuals:
+      enum.EdgeConnectionVisuals.ConnectionMask:
+        computerLayerBody:
+          None: { state: icon, sprite: _NF/Structures/Machines/atm/wall_atm.rsi }
+          West: { state: icon, sprite: _NF/Structures/Machines/atm/wall_atm.rsi }
+          East: { state: icon, sprite: _NF/Structures/Machines/atm/wall_atm.rsi }
+          East, West: { state: icon, sprite: _NF/Structures/Machines/atm/wall_atm.rsi }
+  # HardLight end
 
 - type: entity
   suffix: Wallmount
-  parent: [BaseStructureComputerWallmount, ComputerBankATMWithdraw]
+  parent: [ BaseStructureComputerWallmount, ComputerBankATMWithdraw ]
   id: ComputerWallmountWithdrawBankATM
   components:
   - type: Sprite
     netsync: false
     sprite: _NF/Structures/Machines/atm/wall_atm.rsi
     layers:
-      - map: ["computerLayerBody"]
+      - map: [ "computerLayerBody" ]
         state: icon
-      - map: ["computerLayerScreen"]
+      - map: [ "computerLayerScreen" ]
         state: unshaded
+  # HardLight start
+  - type: GenericVisualizer
+    visuals:
+      enum.EdgeConnectionVisuals.ConnectionMask:
+        computerLayerBody:
+          None: { state: icon, sprite: _NF/Structures/Machines/atm/wall_atm.rsi }
+          West: { state: icon, sprite: _NF/Structures/Machines/atm/wall_atm.rsi }
+          East: { state: icon, sprite: _NF/Structures/Machines/atm/wall_atm.rsi }
+          East, West: { state: icon, sprite: _NF/Structures/Machines/atm/wall_atm.rsi }
+  # HardLight end
   - type: Computer
     board: ComputerWithdrawBankATMComputerCircuitboard
 
 - type: entity
   suffix: BlackMarket
-  parent: [BaseStructureDisableToolUse, BaseStructureDestructible, ComputerBankATMDeposit]
+  parent: [ BaseStructureDisableToolUse, BaseStructureDestructible, ComputerBankATMDeposit ]
   id: ComputerBlackMarketBankATM
   description: Has some sketchy looking modifications and a sticker that says DEPOSIT FEE 30%
   components:
@@ -131,10 +174,20 @@
     noRot: true
     sprite: _NF/Structures/Machines/atm/illegal_atm.rsi
     layers:
-    - map: ["computerLayerBody"]
+    - map: [ "computerLayerBody" ]
       state: icon
-    - map: ["computerLayerScreen"]
+    - map: [ "computerLayerScreen" ]
       state: unshaded
+  # HardLight start
+  - type: GenericVisualizer
+    visuals:
+      enum.EdgeConnectionVisuals.ConnectionMask:
+        computerLayerBody:
+          None: { state: icon, sprite: _NF/Structures/Machines/atm/illegal_atm.rsi }
+          West: { state: icon, sprite: _NF/Structures/Machines/atm/illegal_atm.rsi }
+          East: { state: icon, sprite: _NF/Structures/Machines/atm/illegal_atm.rsi }
+          East, West: { state: icon, sprite: _NF/Structures/Machines/atm/illegal_atm.rsi }
+  # HardLight end
   - type: ActivatableUI
     key: enum.BankATMMenuUiKey.BlackMarket
   - type: UserInterface
@@ -147,7 +200,7 @@
 
 - type: entity
   suffix: Wallmount, BlackMarket
-  parent: [BaseStructureDisableToolUse, BaseStructureDestructible, BaseStructureComputerWallmount, ComputerBankATMDeposit]
+  parent: [ BaseStructureDisableToolUse, BaseStructureDestructible, BaseStructureComputerWallmount, ComputerBankATMDeposit ]
   id: ComputerWallmountBlackMarketBankATM
   description: Has some sketchy looking modifications and a sticker that says DEPOSIT FEE 30%
   components:
@@ -155,10 +208,20 @@
     netsync: false
     sprite: _NF/Structures/Machines/atm/wall_illegal_atm.rsi
     layers:
-    - map: ["computerLayerBody"]
+    - map: [ "computerLayerBody" ]
       state: icon
-    - map: ["computerLayerScreen"]
+    - map: [ "computerLayerScreen" ]
       state: unshaded
+  # HardLight start
+  - type: GenericVisualizer
+    visuals:
+      enum.EdgeConnectionVisuals.ConnectionMask:
+        computerLayerBody:
+          None: { state: icon, sprite: _NF/Structures/Machines/atm/wall_illegal_atm.rsi }
+          West: { state: icon, sprite: _NF/Structures/Machines/atm/wall_illegal_atm.rsi }
+          East: { state: icon, sprite: _NF/Structures/Machines/atm/wall_illegal_atm.rsi }
+          East, West: { state: icon, sprite: _NF/Structures/Machines/atm/wall_illegal_atm.rsi }
+  # HardLight end
   - type: ActivatableUI
     key: enum.BankATMMenuUiKey.BlackMarket
   - type: UserInterface
@@ -171,7 +234,7 @@
 
 - type: entity
   name: station administration console
-  parent: [BaseStructureDisableScrewing, BaseStructureDisablePrying, BaseStructureIndestructible, BaseStructureAccessReaderImmuneToEmag, ComputerBankATMBase]
+  parent: [ BaseStructureDisableScrewing, BaseStructureDisablePrying, BaseStructureIndestructible, BaseStructureAccessReaderImmuneToEmag, ComputerBankATMBase ]
   id: BaseStationAdminBankATM
   abstract: true
   description: Used to transfer funds to and from the station's bank account.
@@ -180,15 +243,25 @@
     netsync: false
     sprite: Structures/Machines/computers.rsi
     layers:
-    - map: ["computerLayerBody"]
+    - map: [ "computerLayerBody" ]
       state: computer
-    - map: ["computerLayerKeyboard"]
+    - map: [ "computerLayerKeyboard" ]
       state: generic_keyboard
-    - map: ["computerLayerScreen"]
+    - map: [ "computerLayerScreen" ]
       sprite: _NF/Structures/Machines/computers.rsi
       state: station_atm
-    - map: ["computerLayerKeys"]
+    - map: [ "computerLayerKeys" ]
       state: id_key
+  # HardLight start
+  - type: GenericVisualizer
+    visuals:
+      enum.EdgeConnectionVisuals.ConnectionMask:
+        computerLayerBody:
+          None: { state: computer, sprite: Structures/Machines/computers.rsi }
+          West: { state: computer_r, sprite: _Starlight/Structures/Machines/computers.rsi }
+          East: { state: computer_l, sprite: _Starlight/Structures/Machines/computers.rsi }
+          East, West: { state: computer_l_r, sprite: _Starlight/Structures/Machines/computers.rsi }
+  # HardLight end
   - type: StationBankATM
     cashSlot:
       name: station-bank-ATM-cashSlot

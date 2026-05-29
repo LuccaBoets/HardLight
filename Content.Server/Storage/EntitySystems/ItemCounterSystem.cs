@@ -27,5 +27,21 @@ namespace Content.Server.Storage.EntitySystems
 
             return count;
         }
+
+        // HardLight: Override to count items in container filtered by whitelist.
+        protected override int? GetCurrentCount(EntityUid uid, ItemCounterComponent itemCounter)
+        {
+            if (!TryComp<StorageComponent>(uid, out var component))
+                return null;
+
+            var count = 0;
+            foreach (var entity in component.Container.ContainedEntities)
+            {
+                if (_whitelistSystem.IsWhitelistPass(itemCounter.Count, entity))
+                    count++;
+            }
+
+            return count;
+        }
     }
 }

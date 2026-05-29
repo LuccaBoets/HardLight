@@ -8,7 +8,7 @@
   },
   "states": [
     {
-      "name": "directionalwall",
+      "name": "directionalwallsolid",
       "directions": 4
     }
   ]

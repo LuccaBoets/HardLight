@@ -4,7 +4,7 @@
   description: job-description-stc
   playTimeTracker: JobStc
   startingGear: StcGear
-  alwaysUseSpawner: true
+  alwaysUseSpawner: false # HardLight: true<false
   requirements:
     - !type:OverallPlaytimeRequirement
       time: 72000 # 20 hrs
@@ -13,10 +13,10 @@
       time: 10800 # 3 hrs
   canBeAntag: false
   icon: "JobIconStc"
-  supervisors: job-supervisors-captain
-  weight: 160
-  displayWeight: 50 # Second from the top
-  setPreference: false # HardLight: true<false
+  supervisors: job-supervisors-sr # HardLight: -captain<-sr
+  weight: 0 # HardLight: 160<0
+  # displayWeight: 50 # Second from the top
+  setPreference: true
   access:
   - Command # HardLight
   - Service
@@ -24,6 +24,7 @@
   - External
   - Brig # HardLight
   - Frontier
+  - StationTrafficController
   special:
   - !type:AddImplantSpecial
     implants: [ MindShieldImplant ]
@@ -41,3 +42,4 @@
     - RubberStampStc
     - BoxFolderStc
     - ShipVoucherFrontierStc
+    - EncryptionKeyTraffic

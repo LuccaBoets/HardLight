@@ -47,7 +47,7 @@ public sealed partial class InviteToGroupPopup : DefaultWindow
 
         if (_allContacts.Count == 0)
         {
-            ContactsList.AddChild(new Label { Text = Loc.GetString("nano-chat-look-up-no-server") });
+            ContactsList.AddChild(new Label { Text = Loc.GetString("nano-chat-no-results") });
             return;
         }
 

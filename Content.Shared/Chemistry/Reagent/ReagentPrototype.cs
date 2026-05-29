@@ -140,6 +140,27 @@ namespace Content.Shared.Chemistry.Reagent
         public bool Absorbent = false;
 
         /// <summary>
+        /// HardLight: If set, this reagent will immediately convert into the specified reagent
+        /// when contained somewhere that does not preserve spoilage-sensitive reagents.
+        /// </summary>
+        [DataField]
+        public ProtoId<ReagentPrototype>? SpoilsInto;
+
+        /// <summary>
+        /// HardLight: How long this reagent can remain in an invalid storage context before spoiling.
+        /// Zero means it spoils immediately.
+        /// </summary>
+        [DataField]
+        public TimeSpan SpoilTime = TimeSpan.Zero;
+
+        /// <summary>
+        /// HardLight: Whether containers marked as preserving spoilage-sensitive reagents prevent this reagent from spoiling.
+        /// Synth bodies still count as valid hosts regardless.
+        /// </summary>
+        [DataField]
+        public bool PreservedBySpoilageContainers = true;
+
+        /// <summary>
         /// How easily this reagent becomes fizzy when aggitated.
         /// 0 - completely flat, 1 - fizzes up when nudged.
         /// </summary>

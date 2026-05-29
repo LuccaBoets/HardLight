@@ -174,3 +174,267 @@
       path: /Audio/Items/bikehorn.ogg
     Ping:
       path: /Audio/Effects/Cargo/ping.ogg
+
+- type: emoteSounds # Avali sounds to protoavali
+  id: MaleProtoAvali
+  params:
+    variation: 0.125
+  sounds:
+    Scream:
+      path: /Audio/_Starlight/Effects/avali_scream.ogg
+    Laugh:
+      path: /Audio/_Starlight/Voice/Avali/avali_laugh.ogg
+    Sneeze:
+      collection: MaleSneezes
+    Cough:
+      collection: MaleCoughs
+    CatMeow:
+      collection: CatMeows
+    CatHisses:
+      collection: CatHisses
+    MonkeyScreeches:
+      collection: MonkeyScreeches
+    Purr:
+      collection: FelionoidPurrs
+    Yawn:
+      collection: MaleYawn
+    Snore:
+      collection: Snores
+    Sigh:
+      collection: MaleSigh
+    Crying:
+      path: /Audio/_Starlight/Voice/Avali/avali_cry.ogg
+    Whistle:
+      path: /Audio/Voice/Resomi/resomi_whistle.ogg
+    Weh:
+      collection: Weh
+    Hew:
+      collection: Hew
+    Gasp:
+      collection: MaleGasp
+    DefaultDeathgasp:
+      collection: MaleDeathGasp
+    Mew:
+      collection: FelionoidMews
+    Meow:
+      collection: FelionoidMeows
+    Trill:
+      collection: FelionoidTrills
+    Bark:
+      collection: Bark
+    Yip:
+      path: /Audio/_Starlight/Effects/yip.ogg
+    Whine:
+      collection: Whine
+    Growl:
+      collection: Growl
+    Howl:
+      path: /Audio/_Starlight/Effects/howl.ogg
+    Squish:
+      collection: Squishes
+    Click:
+      path: /Audio/Voice/Arachnid/arachnid_click.ogg
+    Chitter:
+      path: /Audio/Voice/Moth/moth_chitter.ogg
+    Squeak:
+      path: /Audio/Voice/Moth/moth_squeak.ogg
+    Beep:
+      path: /Audio/Machines/twobeep.ogg
+    Chime:
+      path: /Audio/Machines/chime.ogg
+    Buzz:
+      path: /Audio/Machines/buzz-sigh.ogg
+    Buzz-Two:
+      path: /Audio/Machines/buzz-two.ogg
+    Honk:
+      path: /Audio/Items/bikehorn.ogg
+    Ping:
+      path: /Audio/Effects/Cargo/ping.ogg
+    Chirp:
+      collection: ResomiChirp
+    Scree:
+      collection: ResomiScrees
+    Call:
+      collection: ResomiCalls
+    Squawk:
+      collection: ResomiSquawk
+    Wurble:
+      path: /Audio/_Starlight/Voice/Shadekin/wurble.ogg
+    Snarl:
+      collection: VulpkaninSnarls
+  
+- type: emoteSounds
+  id: FemaleProtoAvali
+  params:
+    variation: 0.125
+  sounds:
+    Snarl:
+      collection: VulpkaninSnarls
+    Wurble:
+      path: /Audio/_Starlight/Voice/Shadekin/wurble.ogg
+    Chirp:
+      collection: ResomiChirp
+    Scree:
+      collection: ResomiScrees
+    Call:
+      collection: ResomiCalls
+    Squawk:
+      collection: ResomiSquawk
+    Scream:
+      path: /Audio/_Starlight/Effects/avali_scream.ogg
+    Laugh:
+      path: /Audio/_Starlight/Voice/Avali/avali_laugh.ogg
+    Sneeze:
+      collection: FemaleSneezes
+    Cough:
+      collection: FemaleCoughs
+    Purr:
+      collection: FelionoidPurrs
+    CatMeow:
+      collection: CatMeows
+    CatHisses:
+      collection: CatHisses
+    MonkeyScreeches:
+      collection: MonkeyScreeches
+    Yawn:
+      collection: FemaleYawn
+    Snore:
+      collection: Snores
+    Sigh:
+      collection: FemaleSigh
+    Crying:
+      path: /Audio/_Starlight/Voice/Avali/avali_cry.ogg
+    Whistle:
+      path: /Audio/Voice/Resomi/resomi_whistle.ogg
+    Weh:
+      collection: Weh
+    Hew:
+      collection: Hew
+    Gasp:
+      collection: FemaleGasp
+    DefaultDeathgasp:
+      collection: FemaleDeathGasp
+    Mew:
+      collection: FelionoidMews
+    Meow:
+      collection: FelionoidMeows
+    Trill:
+      collection: FelionoidTrills
+    Bark:
+      collection: Bark
+    Yip:
+      path: /Audio/_Starlight/Effects/yip.ogg
+    Whine:
+      collection: Whine
+    Growl:
+      collection: Growl
+    Howl:
+      path: /Audio/_Starlight/Effects/howl.ogg
+    Squish:
+      collection: Squishes
+    Click:
+      path: /Audio/Voice/Arachnid/arachnid_click.ogg
+    Chitter:
+      path: /Audio/Voice/Moth/moth_chitter.ogg
+    Squeak:
+      path: /Audio/Voice/Moth/moth_squeak.ogg
+    Beep:
+      path: /Audio/Machines/twobeep.ogg
+    Chime:
+      path: /Audio/Machines/chime.ogg
+    Buzz:
+      path: /Audio/Machines/buzz-sigh.ogg
+    Buzz-Two:
+      path: /Audio/Machines/buzz-two.ogg
+    Honk:
+      path: /Audio/Items/bikehorn.ogg
+    Ping:
+      path: /Audio/Effects/Cargo/ping.ogg
+  
+- type: emoteSounds # Resomi sounds to protoresomi
+  id: UnisexProtoResomi
+  params:
+    variation: 0.125
+  sounds:
+    Snarl:
+      collection: VulpkaninSnarls
+    Wurble:
+      collection: ResomiWurble
+    Chirp:
+      collection: ResomiChirp
+    Scree:
+      collection: ResomiScrees
+    Call:
+      collection: ResomiCalls
+    Squawk:
+      collection: ResomiSquawk
+    Scream:
+      path: /Audio/Voice/Resomi/resomi_scream.ogg
+    Laugh:
+      collection: ResomiLaugh
+    Sneeze:
+      collection: FemaleSneezes
+    Cough:
+      collection: FemaleCoughs
+    Purr:
+      collection: FelionoidPurrs
+    CatMeow:
+      collection: CatMeows
+    CatHisses:
+      collection: CatHisses
+    MonkeyScreeches:
+      collection: MonkeyScreeches
+    Yawn:
+      collection: FemaleYawn
+    Snore:
+      collection: Snores
+    Sigh:
+      collection: FemaleSigh
+    Crying:
+      collection: ResomiCry
+    Whistle:
+      path: /Audio/Voice/Resomi/resomi_whistle.ogg
+    Weh:
+      collection: Weh
+    Hew:
+      collection: Hew
+    Gasp:
+      collection: FemaleGasp
+    DefaultDeathgasp:
+      collection: FemaleDeathGasp
+    Mew:
+      collection: FelionoidMews
+    Meow:
+      collection: FelionoidMeows
+    Trill:
+      collection: FelionoidTrills
+    Bark:
+      collection: Bark
+    Yip:
+      path: /Audio/_Starlight/Effects/yip.ogg
+    Whine:
+      collection: Whine
+    Growl:
+      collection: Growl
+    Howl:
+      path: /Audio/_Starlight/Effects/howl.ogg
+    Squish:
+      collection: Squishes
+    Click:
+      path: /Audio/Voice/Arachnid/arachnid_click.ogg
+    Chitter:
+      path: /Audio/Voice/Moth/moth_chitter.ogg
+    Squeak:
+      path: /Audio/Voice/Moth/moth_squeak.ogg
+    Beep:
+      path: /Audio/Machines/twobeep.ogg
+    Chime:
+      path: /Audio/Machines/chime.ogg
+    Buzz:
+      path: /Audio/Machines/buzz-sigh.ogg
+    Buzz-Two:
+      path: /Audio/Machines/buzz-two.ogg
+    Honk:
+      path: /Audio/Items/bikehorn.ogg
+    Ping:
+      path: /Audio/Effects/Cargo/ping.ogg

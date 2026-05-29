@@ -49,3 +49,21 @@
     Telecrystal: 8
   categories:
   - UplinkCybernetics
+
+- type: listing
+  id: UplinkMarriage
+  name: uplink-marriage-axe-name
+  description: uplink-marriage-axe-desc
+  icon:
+    {
+      sprite: /Textures/_Starlight/Objects/Weapons/Melee/marriage_axe.rsi,
+      state: icon,
+    }
+  discountCategory: veryRareDiscounts
+  discountDownTo:
+    Telecrystal: 16 # HL: 2 -> 4 discount, 2 isn't much.
+  productEntity: MarriageAxe
+  cost:
+    Telecrystal: 20
+  categories:
+    - UplinkWeaponry

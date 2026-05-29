@@ -158,17 +158,9 @@ namespace Content.Client.Lobby
                     {
                         Preferences = new PlayerPreferences(characters, Preferences.SelectedCharacterIndex, Preferences.AdminOOCColor);
 
-                        // Update the selected character on the server if needed
-                        var selectedIndex = Preferences.SelectedCharacterIndex;
-                        if (characters.TryGetValue(selectedIndex, out var selectedProfile))
-                        {
-                            var msg = new MsgUpdateCharacter
-                            {
-                                Profile = selectedProfile,
-                                Slot = selectedIndex
-                            };
-                            _netManager.ClientSendMessage(msg);
-                        }
+                        // Do not auto-write to the server on load. If the loaded profile set is a fallback,
+                        // silently persisting here can overwrite valid server-side data.
+                        Logger.GetSawmill("preferences").Warning("Locally sanitized invalid company IDs in loaded preferences; skipping automatic server write.");
                     }
                 }
             }

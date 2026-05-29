@@ -6,6 +6,8 @@
   cost: 4 # Whilst they can still eat everything this is literally only a positive trait.
   speciesBlacklist:
     - IPC
+  mutuallyExclusiveTraits:
+    - LesserVampirism
   components:
     - type: Vampirism
       succDelay: 3
@@ -16,3 +18,39 @@
         - Crayon
         - Paper
       isSpecialDigestibleExclusive: true
+      # Hardlight start
+      overfedWalkMultiplier: 1.1
+      overfedSprintMultiplier: 1.1
+      peckishWalkMultiplier: 0.9
+      peckishSprintMultiplier: 0.9
+      starvingWalkMultiplier: 0.75
+      starvingSprintMultiplier: 0.75
+      overfedRegenAmount: 0.5
+      unarmedDamageMultiplier: 1.3
+      starvingDamageMultiplier: 1.5
+      # Hardlight end
+
+- type: trait
+  id: LesserVampirism
+  name: trait-name-LesserVampirism
+  description: trait-description-LesserVampirism
+  category: Physical
+  cost: 2
+  speciesBlacklist:
+    - IPC
+  mutuallyExclusiveTraits:
+    - Vampirism
+  components:
+    - type: Vampirism
+      succDelay: 3
+      # Hardlight start
+      overfedWalkMultiplier: 1.0
+      overfedSprintMultiplier: 1.0
+      peckishWalkMultiplier: 1.0
+      peckishSprintMultiplier: 1.0
+      starvingWalkMultiplier: 1.0
+      starvingSprintMultiplier: 1.0
+      overfedRegenAmount: 0
+      unarmedDamageMultiplier: 1.0
+      starvingDamageMultiplier: 1.0
+      # Hardlight end

@@ -2,10 +2,10 @@ using Content.Server.Actions;
 using Content.Server.Humanoid;
 using Content.Server.Inventory;
 using Content.Server.Mobs.Components;
-using Content.Server.Mind.Commands;
 using Content.Server.Polymorph.Components;
-using Content.Shared.Actions;
+using Content.Shared.Actions; // HardLight
 using Content.Shared.Buckle;
+using Content.Shared.Buckle.Components;
 using Content.Shared.Coordinates;
 using Content.Shared.Damage;
 using Content.Shared.Destructible;
@@ -23,6 +23,7 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
+using Robust.Shared.Serialization.Manager; // Starlight
 
 namespace Content.Server.Polymorph.Systems;
 
@@ -46,6 +47,7 @@ public sealed partial class PolymorphSystem : EntitySystem
     [Dependency] private readonly TransformSystem _transform = default!;
     [Dependency] private readonly SharedMindSystem _mindSystem = default!;
     [Dependency] private readonly MetaDataSystem _metaData = default!;
+    [Dependency] private readonly ISerializationManager _serialization = default!; // Starlight
 
     private const string RevertPolymorphId = "ActionRevertPolymorph";
 
@@ -114,13 +116,6 @@ public sealed partial class PolymorphSystem : EntitySystem
         {
             action.EntityIcon = component.Parent;
             action.UseDelay = TimeSpan.FromSeconds(component.Configuration.Delay);
-
-            if (TryComp<HLLivyathanComponent>(uid, out var hlLivyathan))
-            {
-                action.UseDelay = TimeSpan.FromSeconds(hlLivyathan.DragonMorphDoAfter);
-                action.EntityIcon = null;
-                action.Icon = new SpriteSpecifier.Rsi(new ResPath("/Textures/Mobs/Species/Skeleton/parts.rsi"), "skull_icon");
-            }
         }
     }
 
@@ -137,11 +132,7 @@ public sealed partial class PolymorphSystem : EntitySystem
     private void OnRevertPolymorphActionEvent(Entity<PolymorphedEntityComponent> ent,
         ref RevertPolymorphActionEvent args)
     {
-        if (args.Handled)
-            return;
-
         Revert((ent, ent));
-        args.Handled = true;
     }
 
     private void OnBeforeFullyEaten(Entity<PolymorphedEntityComponent> ent, ref BeforeFullyEatenEvent args)
@@ -207,7 +198,8 @@ public sealed partial class PolymorphSystem : EntitySystem
             return null;
 
         // mostly just for vehicles
-        _buckle.TryUnbuckle(uid, uid, true);
+        if (TryComp<BuckleComponent>(uid, out var buckle) && buckle.Buckled)
+            _buckle.TryUnbuckle(uid, uid, buckle, true);
 
         var targetTransformComp = Transform(uid);
 
@@ -222,7 +214,21 @@ public sealed partial class PolymorphSystem : EntitySystem
                 ("child", Identity.Entity(child, EntityManager))),
                 child);
 
-        MakeSentientCommand.MakeSentient(child, EntityManager);
+        _mindSystem.MakeSentient(child);
+
+        // Starlight start
+        // Copy specified components over
+        foreach (var compName in configuration.CopiedComponents)
+        {
+            if (!_compFact.TryGetRegistration(compName, out var reg)
+                || !EntityManager.TryGetComponent(uid, reg.Idx, out var comp))
+                continue;
+
+            var copy = _serialization.CreateCopy(comp, notNullableOverride: true);
+            copy.Owner = child;
+            AddComp(child, copy, true);
+        }
+        // Startlight end
 
         var polymorphedComp = _compFact.GetComponent<PolymorphedEntityComponent>();
         polymorphedComp.Parent = uid;

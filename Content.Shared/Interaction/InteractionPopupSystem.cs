@@ -9,6 +9,7 @@ using Robust.Shared.Audio;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
+using Robust.Shared.Prototypes; // HardLight
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
 
@@ -207,5 +208,31 @@ public sealed class InteractionPopupSystem : EntitySystem
     public void SetInteractFailureString(Entity<InteractionPopupComponent> ent, string str)
     {
         ent.Comp.InteractFailureString = str;
+    }
+
+    /// <summary>
+    /// HardLight: Applies a full interaction popup override to an entity.
+    /// </summary>
+    public void ConfigureInteractionPopup(
+        Entity<InteractionPopupComponent> ent,
+        float successChance,
+        string? successString,
+        string? failureString,
+        SoundSpecifier? successSound,
+        SoundSpecifier? failureSound,
+        EntProtoId? successSpawn,
+        EntProtoId? failureSpawn,
+        string? messagePerceivedByOthers,
+        bool soundPerceivedByOthers)
+    {
+        ent.Comp.SuccessChance = successChance;
+        ent.Comp.InteractSuccessString = successString;
+        ent.Comp.InteractFailureString = failureString;
+        ent.Comp.InteractSuccessSound = successSound;
+        ent.Comp.InteractFailureSound = failureSound;
+        ent.Comp.InteractSuccessSpawn = successSpawn;
+        ent.Comp.InteractFailureSpawn = failureSpawn;
+        ent.Comp.MessagePerceivedByOthers = messagePerceivedByOthers;
+        ent.Comp.SoundPerceivedByOthers = soundPerceivedByOthers;
     }
 }

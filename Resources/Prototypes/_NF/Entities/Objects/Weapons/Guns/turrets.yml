@@ -23,16 +23,72 @@
       path: /Audio/Weapons/Guns/Gunshots/taser2.ogg
       params:
         variation: 0.125
+  - type: Sprite
+    sprite: _NF/Objects/Weapons/Guns/Turrets/disabler.rsi
+    drawdepth: Mobs
+    layers:
+    - state: base
+      map: ["enum.GunVisualLayers.Base"]
+    - state: unshaded
+      map: ["CdetTurretGlow"]
+      shader: unshaded
+    - state: mag-0
+      map: ["enum.GunVisualLayers.Mag"]
+      shader: unshaded
   - type: ProjectileBatteryAmmoProvider
     proto: NFBulletDisablerStaminaOnly
     fireCost: 10
+  - type: BatteryWeaponFireModes
+    fireModes:
+    - proto: NFBulletDisablerStaminaOnly
+      fireCost: 10
+    - proto: NFBulletLaserHeavy
+      fireCost: 10
+  - type: GenericVisualizer
+    visuals:
+      enum.BatteryWeaponFireModeVisuals.State:
+        enum.GunVisualLayers.Base:
+          NFBulletDisablerStaminaOnly: { sprite: _NF/Objects/Weapons/Guns/Turrets/disabler.rsi, state: base }
+          NFBulletLaserHeavy: { sprite: _NF/Objects/Weapons/Guns/Turrets/laser.rsi, state: base }
+        CdetTurretGlow:
+          NFBulletDisablerStaminaOnly: { sprite: _NF/Objects/Weapons/Guns/Turrets/disabler.rsi, state: unshaded }
+          NFBulletLaserHeavy: { sprite: _NF/Objects/Weapons/Guns/Turrets/laser.rsi, state: unshaded }
+        enum.GunVisualLayers.Mag:
+          NFBulletDisablerStaminaOnly: { sprite: _NF/Objects/Weapons/Guns/Turrets/disabler.rsi }
+          NFBulletLaserHeavy: { sprite: _NF/Objects/Weapons/Guns/Turrets/laser.rsi }
+  - type: CdetReactiveLethal
+    nonLethalSound:
+      path: /Audio/Weapons/Guns/Gunshots/taser2.ogg
+      params:
+        variation: 0.125
+    lethalSound:
+      path: /Audio/Weapons/Guns/Gunshots/laser.ogg
+      params:
+        variation: 0.125
   - type: NpcFactionMember
     factions:
     - ContrabandDetection
+  - type: NPCRetaliation
+    attackMemoryLength: 5
+  - type: DisableCdetOnAlertLevel
   - type: Construction
     deconstructionTarget: null
     graph: WeaponTurretContrabandDenyingPackingGraph
     node: WeaponTurretContrabandDenyingPacked
+
+- type: entity # Targets players wearing contra and all hostile to NT factions
+  id: WeaponTurretLethalContrabandDenyingDeployed
+  name: CDET
+  description: |-
+   A Contraband Denying Energy Turret (CDET). A laser turret with built-in microreactor. Use screwdriver to disassemble.
+  parent: WeaponTurretContrabandDenyingDeployed
+  components:
+  - type: CdetReactiveLethal
+    normalFireMode: 1
+  - type: Construction
+    deconstructionTarget: null
+    graph: WeaponTurretLethalContrabandDenyingPackingGraph
+    node: WeaponTurretLethalContrabandDenyingPacked
 
 - type: entity # folded turret
   id: WeaponTurretContrabandDenyingPacked
@@ -58,6 +114,29 @@
     shape:
     - 0,0,3,3
     sprite: _NF/Objects/Weapons/Guns/Turrets/disabler.rsi
+    
+- type: entity # folded turret
+  id: WeaponTurretLethalContrabandDenyingPacked
+  name: packed CDET
+  description: |-
+   A disassembled and packed Contraband Denying Energy Turret (CDET).
+  suffix: NT, Packed
+  parent: WeaponTurretContrabandDenyingPacked
+  components:
+  - type: WeaponCaseInsertable
+  - type: MultiHandedItem
+  - type: SpawnAfterInteract
+    prototype: WeaponTurretLethalContrabandDenyingDeployed
+    doAfter: 5
+    removeOnInteract: true
+  - type: Sprite
+    sprite: _NF/Objects/Weapons/Guns/Turrets/laser.rsi
+    state: packed
+  - type: Item
+    size: Ginormous
+    shape:
+    - 0,0,3,3
+    sprite: _NF/Objects/Weapons/Guns/Turrets/laser.rsi
 
 - type: constructionGraph # deconstruction graph
   id: WeaponTurretContrabandDenyingPackingGraph
@@ -70,6 +149,24 @@
       completed:
       - !type:SpawnPrototype
             prototype: WeaponTurretContrabandDenyingPacked
+            amount: 1
+      - !type:EmptyAllContainers
+      - !type:DeleteEntity {}
+      steps:
+        - tool: Screwing
+          doAfter: 14
+          
+- type: constructionGraph # deconstruction graph
+  id: WeaponTurretLethalContrabandDenyingPackingGraph
+  start: WeaponTurretLethalContrabandDenyingPacked
+  graph:
+  - node: WeaponTurretLethalContrabandDenyingPacked
+    entity: WeaponTurretLethalContrabandDenyingDeployed
+    edges:
+    - to: WeaponTurretLethalContrabandDenyingPacked
+      completed:
+      - !type:SpawnPrototype
+            prototype: WeaponTurretLethalContrabandDenyingPacked
             amount: 1
       - !type:EmptyAllContainers
       - !type:DeleteEntity {}
@@ -336,3 +433,33 @@
       steps:
         - tool: Screwing
           doAfter: 14
+
+- type: entity
+  id: NFSpawnMobWeaponTurretLaserContraband
+  parent: MarkerBase
+  name: CDET spawner
+  suffix: Hostile, Frontier
+  components:
+  - type: Sprite
+    layers:
+    - state: red
+    - sprite: _NF/Objects/Weapons/Guns/Turrets/laser.rsi
+      state: base
+  - type: ConditionalSpawner
+    prototypes:
+    - WeaponTurretLethalContrabandDenyingDeployed
+    
+- type: entity
+  id: NFSpawnMobWeaponTurretDisablerContraband
+  parent: MarkerBase
+  name: CDET spawner
+  suffix: Hostile, Frontier
+  components:
+  - type: Sprite
+    layers:
+    - state: red
+    - sprite: _NF/Objects/Weapons/Guns/Turrets/disabler.rsi
+      state: base
+  - type: ConditionalSpawner
+    prototypes:
+    - WeaponTurretContrabandDenyingDeployed

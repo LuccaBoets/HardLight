@@ -46,16 +46,6 @@ public sealed partial class DoAfterArgs
     [DataField]
     public bool Hidden;
 
-    // Starlight-start
-    [NonSerialized]
-    [DataField]
-    public EntityUid? DistanceTarget;
-
-    [DataField]
-    public NetEntity? NetDistanceTarget;
-
-    // Starlight-end
-
     #region Event options
     /// <summary>
     ///     The event that will get raised when the DoAfter has finished. If null, this will simply raise a <see cref="SimpleDoAfterEvent"/>
@@ -285,7 +275,6 @@ public sealed partial class DoAfterArgs
         NetTarget = other.NetTarget;
         NetUsed = other.NetUsed;
         NetEventTarget = other.NetEventTarget;
-        NetDistanceTarget = other.NetDistanceTarget; // Starlight-edit
 
         Event = other.Event.Clone();
     }

@@ -5,6 +5,13 @@
   save: false
   abstract: true
   components:
+  - type: LanguageKnowledge
+    speaks:
+    - GalacticCommon
+    - Machine
+    understands:
+    - GalacticCommon
+    - Machine
   - type: Sprite
   - type: Icon # It will not have an icon in the adminspawn menu without this. Body parts seem fine for whatever reason.
     sprite: _HL/Mobs/Species/Synth/parts.rsi
@@ -18,7 +25,7 @@
     damageOverlayGroups:
       Brute:
         sprite: Mobs/Effects/brute_damage.rsi
-        color: "#8afffd"
+        color: "#3f1b66cc"
   - type: ZombieImmune
   - type: Sanitized
   - type: Uncloneable
@@ -74,14 +81,14 @@
           32:
             sprite: _HL/Mobs/Species/Synth/displacement.rsi
             state: shoes
-  - type: Carriable # Frontier: Carrying system from nyanotrasen.
-  - type: TypingIndicator # Mono
+  - type: Carriable
+  - type: TypingIndicator
     proto: robot
-  - type: Speech # Frontier
+  - type: Speech
     speechVerb: Robotic
     speechSounds: Borg
-    allowedEmotes: [ 'Thump', 'Purr', 'Beep', 'Ping', 'Buzz' ] # Frontier + Protogen & Reptilian stuff
-  - type: Vocal # Mono
+    allowedEmotes: [ 'Thump', 'Purr', 'Beep', 'Ping', 'Buzz' ]
+  - type: Vocal
     sounds:
       Male: UnisexSilicon
       Female: UnisexSilicon
@@ -107,20 +114,9 @@
     intrinsicChannels:
     - Trinary
   - type: Bloodstream
-    bloodReagent: InertNanites
+    bloodReagent: SynthBlood
+    bloodMaxVolume: 270
     bloodRefreshAmount: 0.0
-  - type: HLBloodLevelPassiveDamage
-    allowedStates:
-    - Alive
-    - Critical
-    allowedDamageGroups:
-    - Brute
-    - Burn
-    bloodLevelDecrease: 1.1
-    damage:
-      groups:
-        Brute: -7
-        Burn: -7
   - type: BlockInjection
     blockHypospray: true
     blockInjectOnProjectile: true
@@ -130,21 +126,21 @@
     coldDamageThreshold: 55
     coldDamage:
       types:
-        Cold: 0.1 #per second, scales with temperature & other constants
+        Cold: 0.1 # per second, scales with temperature & other constants
     heatDamage:
       types:
-        Heat: 1.5 #per second, scales with temperature & other constants
+        Heat: 1.5 # per second, scales with temperature & other constants
   - type: Barotrauma
     damage:
       types:
-        Blunt: 0.3 #per second, scales with pressure and other constants.
+        Blunt: 0.3 # per second, scales with pressure and other constants.
   - type: TemperatureSpeed
     thresholds:
       100: 0.7
       75: 0.4
       55: 0.2
   - type: LayingDown
-  - type: OfferItem # HL
+  - type: OfferItem
 
 - type: entity
   parent: BaseSpeciesDummy

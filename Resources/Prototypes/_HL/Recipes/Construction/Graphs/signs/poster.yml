@@ -600,6 +600,63 @@
               amount: 1
               doAfter: 1
 
+    # Legit Poster Nodes
+        - to: PosterMapBagel
+          steps:
+            - material: Paper
+              amount: 1
+              doAfter: 1
+        - to: PosterMapDelta
+          steps:
+            - material: Paper
+              amount: 1
+              doAfter: 1
+        - to: PosterMapMarathon
+          steps:
+            - material: Paper
+              amount: 1
+              doAfter: 1
+        - to: PosterMapMoose
+          steps:
+            - material: Paper
+              amount: 1
+              doAfter: 1
+        - to: PosterMapPacked
+          steps:
+            - material: Paper
+              amount: 1
+              doAfter: 1
+        - to: PosterMapPillar
+          steps:
+            - material: Paper
+              amount: 1
+              doAfter: 1
+        - to: PosterMapSaltern
+          steps:
+            - material: Paper
+              amount: 1
+              doAfter: 1
+        - to: PosterMapSplit
+          steps:
+            - material: Paper
+              amount: 1
+              doAfter: 1
+        - to: PosterMapLighthouse
+          steps:
+            - material: Paper
+              amount: 1
+              doAfter: 1
+        - to: PosterMapWaystation
+          steps:
+            - material: Paper
+              amount: 1
+              doAfter: 1
+        - to: PosterMapOrigin
+          steps:
+            - material: Paper
+              amount: 1
+              doAfter: 1
+
     # Contraband Poster Nodes
     - node: PosterContrabandFreeTonto
       entity: PosterContrabandFreeTonto
@@ -1890,9 +1947,130 @@
           steps:
             - tool: Prying
               doAfter: 1
-
     - node: PosterDuskEnclave
       entity: PosterDuskEnclave
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetPaper
+              amount: 1
+          steps:
+            - tool: Prying
+              doAfter: 1
+    #Map Poster Nodes
+    - node: PosterMapBagel
+      entity: PosterMapBagel
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetPaper
+              amount: 1
+          steps:
+            - tool: Prying
+              doAfter: 1
+    - node: PosterMapDelta
+      entity: PosterMapDelta
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetPaper
+              amount: 1
+          steps:
+            - tool: Prying
+              doAfter: 1
+    - node: PosterMapMarathon
+      entity: PosterMapMarathon
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetPaper
+              amount: 1
+          steps:
+            - tool: Prying
+              doAfter: 1
+    - node: PosterMapMoose
+      entity: PosterMapMoose
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetPaper
+              amount: 1
+          steps:
+            - tool: Prying
+              doAfter: 1
+    - node: PosterMapPacked
+      entity: PosterMapPacked
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetPaper
+              amount: 1
+          steps:
+            - tool: Prying
+              doAfter: 1
+    - node: PosterMapPillar
+      entity: PosterMapPillar
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetPaper
+              amount: 1
+          steps:
+            - tool: Prying
+              doAfter: 1
+    - node: PosterMapSaltern
+      entity: PosterMapSaltern
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetPaper
+              amount: 1
+          steps:
+            - tool: Prying
+              doAfter: 1
+    - node: PosterMapSplit
+      entity: PosterMapSplit
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetPaper
+              amount: 1
+          steps:
+            - tool: Prying
+              doAfter: 1
+    - node: PosterMapLighthouse
+      entity: PosterMapLighthouse
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetPaper
+              amount: 1
+          steps:
+            - tool: Prying
+              doAfter: 1
+    - node: PosterMapWaystation
+      entity: PosterMapWaystation
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetPaper
+              amount: 1
+          steps:
+            - tool: Prying
+              doAfter: 1
+    - node: PosterMapOrigin
+      entity: PosterMapOrigin
       edges:
         - to: start
           completed:

@@ -111,6 +111,7 @@ ui-options-ambient-occlusion = Show Ambient Occlusion
 ui-options-fps-counter = Show FPS counter
 ui-options-show-structure-smoothing = Show extended wall and window smoothing
 ui-options-show-cyborg-subtypes = Show unique Cyborg subtype sprites
+ui-options-show-aphrodisiac-effects = Show effects of aphrodisiacs
 ui-options-vp-width = Viewport width:
 ui-options-hud-layout = HUD layout:
 
@@ -372,6 +373,7 @@ ui-options-enable-color-name = Add colors to character names
 ui-options-colorblind-friendly = Colorblind friendly mode
 ui-options-reduced-motion = Reduce motion of visual effects
 ui-options-screen-shake-intensity = Screen shake intensity
+ui-options-no-filters = Disable species vision
 
 ## EE - Combat Options
 ui-options-function-look-up = Look up/Take aim

@@ -118,14 +118,14 @@
   - type: Damageable
     damageContainer: StructuralInorganic
     damageModifierSet: RGlass
-  - type: StaticPrice
-    price: 100
   - type: Construction
     graph: Plastitanium
     node: plastitaniumWindow
   - type: ShipRepairable
     repairTime: 20
     repairCost: 50
+  - type: StaticPrice
+    price: 250
 
 - type: entity
   id: PlastitaniumWindowDiagonalBase
@@ -231,3 +231,6 @@
   - type: ShipRepairable
     repairTime: 20
     repairCost: 50
+  - type: StaticPrice
+    price: 250
+
