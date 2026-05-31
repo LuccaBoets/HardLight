@@ -177,7 +177,7 @@
   position: 1, 2
   cost: 5000
   recipeUnlocks:
-  - ClothingBackpackElectropack
+  - NFClothingBackpackElectropack
 
 # Tier 2
 

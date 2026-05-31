@@ -84,6 +84,23 @@
   - WeaponLaserCarbine # Frontier
   - WeaponXrayCannon # Frontier
   - WeaponTemperatureGun # Frontier
+  - WeaponShotgunKammerer # Frontier
+  - NFWeaponEnergyPistolLaserSvalinn # Frontier
+  - WeaponSubMachineSmart # Goobstation
+  - WeaponLMGRatel # Mono
+  - WeaponShotgunBigBuddy # Mono
+  - WeaponShotgunBigJohnny # Mono
+  - WeaponShotgunEnforcerMerc # Mono
+  - WeaponRifleVulcanMerc # Mono
+  - WeaponSubMachineGunVector9x19mm # Mono
+  - WeaponSubMachineGunFirestarter # Mono
+  - WeaponRifleAk # Mono
+  - WeaponSubMachineGunWt550 # Mono
+  - WeaponRiflePrometheus # Mono
+  - WeaponRifleVulcanFCMC # Mono
+  - WeaponRadAx # Mono
+  - HardlightShield # Mono
+  - WeaponShockMaul # Mono
 
 - type: latheRecipePack # Frontier
   id: SecurityDisablers # Frontier

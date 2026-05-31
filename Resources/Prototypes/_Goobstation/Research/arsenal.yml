@@ -6,7 +6,7 @@
     state: gygax
   discipline: Arsenal
   tier: 1
-  position: 2, 10
+  position: 1, 10
   cost: 5000
   recipeUnlocks:
   - GygaxHarness
@@ -30,7 +30,7 @@
     state: mecha_missilerack
   discipline: Arsenal
   tier: 2
-  position: 3, 10
+  position: 2, 9
   cost: 12000
   recipeUnlocks:
   - WeaponMechCombatMissileRack8
@@ -44,7 +44,7 @@
     state: durand
   discipline: Arsenal
   tier: 2
-  position: 2, 11
+  position: 1, 11
   cost: 13000
   recipeUnlocks:
   - DurandHarness

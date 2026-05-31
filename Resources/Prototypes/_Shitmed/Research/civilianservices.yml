@@ -15,7 +15,7 @@
   cost: 45000
 
   recipeUnlocks:
-  - ShitmedOmnimedTool
+  - OmnimedTool
   technologyPrerequisites:
   - CyberneticEnhancements
   position: -2, 13

@@ -15,7 +15,7 @@
   - NFBlueprintConstructionBagOfHolding
   technologyPrerequisites:
   - AdvancedToolsTechnology
-  position: -2, 18
+  position: -3, 18
 
 - type: technology
   id: HardsuitsBasic

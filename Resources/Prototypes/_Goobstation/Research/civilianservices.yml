@@ -10,7 +10,7 @@
     state: icon
   discipline: CivilianServices
   tier: 1
-  position: 2, -1
+  position: 1, -1
   cost: 5000
   recipeUnlocks:
   - StationRadioCircuitboard

@@ -95,6 +95,7 @@
   - FlailRLeg
   - SpyglassHarness
   - MaceHarness
+  - PowerCageMech
 
 - type: latheRecipePack
   id: S2MechBoards

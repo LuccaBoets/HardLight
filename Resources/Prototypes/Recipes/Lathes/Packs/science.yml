@@ -43,6 +43,10 @@
   - ClothingBackpackDuffelHolding
   - ClothingBackpackMessengerHolding # HL
   - ClothingBackpackTacticalHolding # HL
+  - ClothingOuterHardsuitCarp # Mono
+  - ClothingShoesBootsMagVoid # Mono
+  - ClothingEyesNightVisionGoggles # White
+  - ClothingEyesThermalVisionGoggles # White
 
 - type: latheRecipePack
   id: PowerCells
@@ -103,6 +107,7 @@
   - ArtifactAnalyzerMachineCircuitboard
   - ArtifactCrusherMachineCircuitboard
   - ResearchComputerCircuitboard # Frontier: add research computer
+  - AiCoreElectronics # HardLight
 
 - type: latheRecipePack
   id: CameraBoards

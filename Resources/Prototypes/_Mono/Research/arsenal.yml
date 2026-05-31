@@ -15,6 +15,7 @@
   - MercArmementSimple
   - AdvancedParts
   position: 3, 1
+
 - type: technology
   id: MercArmementSimple
   name: research-technology-merc-armement-simple
@@ -35,10 +36,11 @@
   - WeaponSubMachineGunWt550
   - WeaponRiflePrometheus
   - WeaponRifleVulcanFCMC
-  - WeaponShotgunKammererNF
+  - WeaponShotgunKammerer
   technologyPrerequisites:
   - BasicParts
   position: 2, 1
+  
 - type: technology
   id: AdvancedMeleeCombatOptions
   name: research-technology-advanced-melee-combat-options
@@ -56,4 +58,4 @@
   technologyPrerequisites:
   - AdvancedRiotControl
   - SuperParts
-  position: 4, 2
+  position: 5, 2
