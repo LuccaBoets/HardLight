@@ -60,7 +60,7 @@ public sealed class DisableCdetOnAlertLevelSystem : EntitySystem
             return;
 
         currentAlert ??= GetCurrentAlert(ent.Owner);
-        var disabled = ent.Comp.DisabledAlertLevels.Contains(currentAlert);
+        var disabled = IsDisabledForAlert(ent, currentAlert);
 
         if (disabled)
         {
@@ -80,7 +80,19 @@ public sealed class DisableCdetOnAlertLevelSystem : EntitySystem
 
     private bool IsDisabledForCurrentAlert(Entity<DisableCdetOnAlertLevelComponent> ent)
     {
-        return ent.Comp.DisabledAlertLevels.Contains(GetCurrentAlert(ent.Owner));
+        return IsDisabledForAlert(ent, GetCurrentAlert(ent.Owner));
+    }
+
+    private static bool IsDisabledForAlert(Entity<DisableCdetOnAlertLevelComponent> ent, string? currentAlert)
+    {
+        if (string.IsNullOrEmpty(currentAlert))
+            return false;
+
+        if (ent.Comp.DisabledAlertLevels.Contains(currentAlert))
+            return true;
+
+        return ent.Comp.EnabledAlertLevels.Count > 0
+            && !ent.Comp.EnabledAlertLevels.Contains(currentAlert);
     }
 
     private string GetCurrentAlert(EntityUid uid)

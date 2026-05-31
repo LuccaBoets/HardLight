@@ -62,6 +62,7 @@ using Robust.Shared.Prototypes;
 using Content.Shared.Paint;
 using Content.Shared.Labels.Components;
 using Content.Shared.Labels.EntitySystems;
+using Content.Shared.NameModifier.Components;
 using Content.Shared.Sprite;
 using Content.Shared.Tag;
 using Content.Shared.Clothing.Components;
@@ -162,7 +163,8 @@ namespace Content.Server.Shuttles.Save
                         try
                         {
                             var coordinates = new EntityCoordinates(job.GridOwner, entityData.Position);
-                            var newEntity = SpawnEntityWithComponents(entityData, coordinates, job.ClearDefaultsForContainers);
+                            job.ContainersToClear.TryGetValue(entityData.EntityId, out var containerSlotsToClear);
+                            var newEntity = SpawnEntityWithComponents(entityData, coordinates, job.ClearDefaultsForContainers, containerSlotsToClear);
                             if (newEntity != null)
                             {
                                 job.IdMap[entityData.EntityId] = newEntity.Value;
@@ -194,7 +196,8 @@ namespace Content.Server.Shuttles.Save
                         try
                         {
                             var tempCoordinates = new EntityCoordinates(job.GridOwner, Vector2.Zero);
-                            var containedEntity = SpawnEntityWithComponents(entityData, tempCoordinates, job.ClearDefaultsForContainers);
+                            job.ContainersToClear.TryGetValue(entityData.EntityId, out var containerSlotsToClear);
+                            var containedEntity = SpawnEntityWithComponents(entityData, tempCoordinates, job.ClearDefaultsForContainers, containerSlotsToClear);
 
                             if (containedEntity != null)
                             {
@@ -275,6 +278,7 @@ namespace Content.Server.Shuttles.Save
             public Queue<EntityData> NonContained = new();
             public Queue<EntityData> Contained = new();
             public Dictionary<string, EntityUid> IdMap = new();
+            public Dictionary<string, HashSet<string>> ContainersToClear = new(StringComparer.Ordinal);
             public bool DecalsPending;
             public DecalGridChunkCollection? DecalChunkCollection;
             public int SpawnedNonContained;
@@ -377,9 +381,7 @@ namespace Content.Server.Shuttles.Save
                 {
                     try
                     {
-                        var decalNode = _serializationManager.WriteValue(decalComponent.ChunkCollection, notNullableOverride: true);
-                        var decalYaml = _serializer.Serialize(decalNode);
-                        gridData.DecalData = decalYaml;
+                        gridData.DecalData = SerializeDecalData(decalComponent.ChunkCollection);
                     }
                     catch (Exception ex)
                     {
@@ -513,7 +515,7 @@ namespace Content.Server.Shuttles.Save
                 {
                     GridId = gridId.ToString(),
                     AtmosphereData = null,
-                    DecalData = null
+                    DecalData = SerializeDecalsInBounds(gridId, bounds)
                 };
 
                 var tiles = _map.GetAllTiles(gridId, grid);
@@ -576,8 +578,9 @@ namespace Content.Server.Shuttles.Save
                     }
                 }
 
-                // Second pass: unanchored loose items with the RoomSaveable tag (plushies, pillows,
-                // potted plants, etc.). Tools and gameplay items without the tag are excluded.
+                // Second pass: preserve loose top-level room contents. The room loader now
+                // restores their anchored state explicitly, so movable furniture and dropped
+                // items can round-trip without being deleted or welded to the floor.
                 var childEnumerator2 = gridTransform.ChildEnumerator;
                 while (childEnumerator2.MoveNext(out var childUid2))
                 {
@@ -617,11 +620,6 @@ namespace Content.Server.Shuttles.Save
                         continue;
 
                     if (excludeVending && _entityManager.HasComponent<VendingMachineComponent>(childUid2))
-                        continue;
-
-                    // Only save unanchored items explicitly tagged for room preservation.
-                    // Gameplay items (tools, weapons, spray painters, etc.) lack this tag and are dropped.
-                    if (!_tagSystem.HasTag(childUid2, "RoomSaveable"))
                         continue;
 
                     var entityData2 = SerializeEntity(childUid2, childTransform2, proto2, gridId, roomMode: true);
@@ -768,8 +766,7 @@ namespace Content.Server.Shuttles.Save
             {
                 try
                 {
-                    var decalNode = _serializationManager.WriteValue(decalComponent.ChunkCollection, notNullableOverride: true);
-                    gridData.DecalData = _serializer.Serialize(decalNode);
+                    gridData.DecalData = SerializeDecalData(decalComponent.ChunkCollection);
                 }
                 catch (Exception ex)
                 {
@@ -1262,7 +1259,9 @@ namespace Content.Server.Shuttles.Save
             {
                 try
                 {
-                    var decalChunkCollection = _deserializer.Deserialize<DecalGridChunkCollection>(primaryGridData.DecalData);
+                    var decalChunkCollection = DeserializeDecalData(primaryGridData.DecalData);
+                    if (decalChunkCollection == null)
+                        throw new InvalidOperationException("Saved decal data was empty or could not be parsed.");
                     // Ensure the grid has a DecalGridComponent
                     _entityManager.EnsureComponent<DecalGridComponent>(newGrid.Owner);
 
@@ -1361,6 +1360,7 @@ namespace Content.Server.Shuttles.Save
             // Pre-filter entities into separate lists in a single pass
             var nonContainedEntities = new List<EntityData>();
             var containedEntitiesList = new List<EntityData>();
+            var containersToClear = BuildSavedContainerSlotMap(primaryGridData.Entities);
 
             foreach (var entity in primaryGridData.Entities)
             {
@@ -1386,6 +1386,7 @@ namespace Content.Server.Shuttles.Save
                     job = new ShipLoadJob { GridOwner = newGrid.Owner, ClearDefaultsForContainers = true };
                     _shipLoadJobs.Add(job);
                 }
+                job.ContainersToClear = containersToClear;
                 foreach (var e in nonContainedEntities)
                 {
                     job.NonContained.Enqueue(e);
@@ -1399,7 +1400,8 @@ namespace Content.Server.Shuttles.Save
                     {
                         var coordinates = new EntityCoordinates(newGrid.Owner, entityData.Position);
                         // In standard sync load we clear defaults so saved container contents can be re-inserted
-                        var newEntity = SpawnEntityWithComponents(entityData, coordinates, clearDefaultsForContainers: true);
+                        containersToClear.TryGetValue(entityData.EntityId, out var containerSlotsToClear);
+                        var newEntity = SpawnEntityWithComponents(entityData, coordinates, clearDefaultsForContainers: true, containerSlotsToClear: containerSlotsToClear);
                         if (newEntity != null)
                         {
                             entityIdMapping[entityData.EntityId] = newEntity.Value;
@@ -1434,7 +1436,8 @@ namespace Content.Server.Shuttles.Save
                     {
                         var tempCoordinates = new EntityCoordinates(newGrid.Owner, Vector2.Zero);
                         // In standard sync load we clear defaults for containers; legacy path handles false separately
-                        var containedEntity = SpawnEntityWithComponents(entityData, tempCoordinates, clearDefaultsForContainers: true);
+                        containersToClear.TryGetValue(entityData.EntityId, out var containerSlotsToClear);
+                        var containedEntity = SpawnEntityWithComponents(entityData, tempCoordinates, clearDefaultsForContainers: true, containerSlotsToClear: containerSlotsToClear);
                         if (containedEntity != null)
                         {
                             entityIdMapping[entityData.EntityId] = containedEntity.Value;
@@ -1510,6 +1513,7 @@ namespace Content.Server.Shuttles.Save
 
             var entityIdMapping = new Dictionary<string, EntityUid>();
             var hasContainerData = primaryGridData.Entities.Any(e => e.IsContainer || e.IsContained);
+            var containersToClear = BuildSavedContainerSlotMap(primaryGridData.Entities);
 
             if (!hasContainerData)
             {
@@ -1527,15 +1531,13 @@ namespace Content.Server.Shuttles.Save
                     {
                         RestoreRoomComponents(newEntity.Value, entityData);
                         entityIdMapping[entityData.EntityId] = newEntity.Value;
-                        // Room saves filter to Anchored-only entities, but the serialized
-                        // TransformComponent is intentionally skipped. Re-anchor here so
-                        // furniture/walls/etc. don't end up loose on the floor after load.
-                        TryReAnchorRoomEntity(newEntity.Value);
+                        RestoreRoomAnchorState(newEntity.Value, entityData.Anchored);
                     }
                 }
 
                 RestoreStorageLocations(primaryGridData.Entities, entityIdMapping);
                 RefreshRoomMachines(primaryGridData.Entities, entityIdMapping);
+                RestoreGridDecals(targetGrid, primaryGridData.DecalData);
                 return;
             }
 
@@ -1559,21 +1561,21 @@ namespace Content.Server.Shuttles.Save
             foreach (var entityData in nonContained)
             {
                 var coords = new EntityCoordinates(targetGrid, entityData.Position + offset);
-                var newEntity = SpawnEntityWithComponents(entityData, coords, clearDefaultsForContainers: true);
+                containersToClear.TryGetValue(entityData.EntityId, out var containerSlotsToClear);
+                var newEntity = SpawnEntityWithComponents(entityData, coords, clearDefaultsForContainers: true, containerSlotsToClear: containerSlotsToClear);
                 if (newEntity != null)
                 {
                     RestoreRoomComponents(newEntity.Value, entityData);
                     entityIdMapping[entityData.EntityId] = newEntity.Value;
-                    // Room saves filter to Anchored-only entities at the top level; re-anchor
-                    // since the serialized TransformComponent (and thus its Anchored flag) is skipped.
-                    TryReAnchorRoomEntity(newEntity.Value);
+                    RestoreRoomAnchorState(newEntity.Value, entityData.Anchored);
                 }
             }
 
             foreach (var entityData in contained)
             {
                 var tempCoords = new EntityCoordinates(targetGrid, Vector2.Zero);
-                var containedEntity = SpawnEntityWithComponents(entityData, tempCoords, clearDefaultsForContainers: true);
+                containersToClear.TryGetValue(entityData.EntityId, out var containerSlotsToClear);
+                var containedEntity = SpawnEntityWithComponents(entityData, tempCoords, clearDefaultsForContainers: true, containerSlotsToClear: containerSlotsToClear);
                 if (containedEntity == null)
                     continue;
 
@@ -1599,6 +1601,7 @@ namespace Content.Server.Shuttles.Save
 
             RestoreStorageLocations(primaryGridData.Entities, entityIdMapping);
             RefreshRoomMachines(primaryGridData.Entities, entityIdMapping);
+            RestoreGridDecals(targetGrid, primaryGridData.DecalData);
         }
 
         public EntityUid ReconstructShip(ShipGridData shipGridData)
@@ -1668,7 +1671,9 @@ namespace Content.Server.Shuttles.Save
             {
                 try
                 {
-                    var decalChunkCollection = _deserializer.Deserialize<DecalGridChunkCollection>(primaryGridData.DecalData);
+                    var decalChunkCollection = DeserializeDecalData(primaryGridData.DecalData);
+                    if (decalChunkCollection == null)
+                        throw new InvalidOperationException("Saved decal data was empty or could not be parsed.");
                     var decalsRestored = 0;
                     var decalsFailed = 0;
 
@@ -2266,6 +2271,74 @@ namespace Content.Server.Shuttles.Save
             }
         }
 
+        private void RestoreGridDecals(EntityUid gridUid, string? decalData)
+        {
+            if (string.IsNullOrWhiteSpace(decalData))
+                return;
+
+            try
+            {
+                var decalChunkCollection = DeserializeDecalData(decalData);
+                if (decalChunkCollection == null)
+                    return;
+                _entityManager.EnsureComponent<DecalGridComponent>(gridUid);
+
+                foreach (var (_, chunk) in decalChunkCollection.ChunkCollection)
+                {
+                    foreach (var (_, decal) in chunk.Decals)
+                    {
+                        var decalCoords = new EntityCoordinates(gridUid, decal.Coordinates);
+                        _decalSystem.TryAddDecal(decal.Id, decalCoords, out _, decal.Color, decal.Angle, decal.ZIndex, decal.Cleanable);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _sawmill.Error($"Failed to restore decal data on existing grid: {ex.Message}");
+            }
+        }
+
+        internal string? TransformSerializedDecalData(string? decalData, Func<Decal, Decal> transform, Func<Decal, bool>? predicate = null)
+        {
+            if (string.IsNullOrWhiteSpace(decalData))
+                return null;
+
+            var collection = DeserializeDecalData(decalData);
+            if (collection == null)
+                return null;
+
+            var chunkCollection = new Dictionary<Vector2i, DecalChunk>();
+
+            foreach (var (_, chunk) in collection.ChunkCollection)
+            {
+                foreach (var (decalId, decal) in chunk.Decals)
+                {
+                    if (predicate != null && !predicate(decal))
+                        continue;
+
+                    var transformed = transform(decal);
+                    var chunkIndices = SharedDecalSystem.GetChunkIndices(transformed.Coordinates);
+                    if (!chunkCollection.TryGetValue(chunkIndices, out var targetChunk))
+                    {
+                        targetChunk = new DecalChunk();
+                        chunkCollection[chunkIndices] = targetChunk;
+                    }
+
+                    targetChunk.Decals[decalId] = transformed;
+                }
+            }
+
+            if (chunkCollection.Count == 0)
+                return null;
+
+            var transformedCollection = new DecalGridChunkCollection(chunkCollection)
+            {
+                NextDecalId = collection.NextDecalId
+            };
+
+            return SerializeDecalData(transformedCollection);
+        }
+
 
         private ComponentData? SerializeStackComponent(StackComponent stack)
         {
@@ -2278,9 +2351,7 @@ namespace Content.Server.Shuttles.Save
 
         private void RestoreStackComponent(EntityUid entityUid, ComponentData componentData)
         {
-            if (!componentData.Properties.TryGetValue("Count", out var countObj))
-                return;
-            if (!int.TryParse(countObj?.ToString(), out var count) || count <= 0)
+            if (!TryGetIntProperty(componentData, "Count", out var count) || count <= 0)
                 return;
             _stackSystem.SetCount(entityUid, count);
         }
@@ -2790,6 +2861,54 @@ namespace Content.Server.Shuttles.Save
             };
         }
 
+        private static bool TryGetPropertyValue(ComponentData componentData, string key, out object? value)
+        {
+            if (componentData.Properties.TryGetValue(key, out value))
+                return true;
+
+            foreach (var (candidateKey, candidateValue) in componentData.Properties)
+            {
+                if (!string.Equals(candidateKey, key, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                value = candidateValue;
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+
+        private static bool TryGetIntProperty(ComponentData componentData, string key, out int value)
+        {
+            value = 0;
+
+            if (!TryGetPropertyValue(componentData, key, out var rawValue) || rawValue == null)
+                return false;
+
+            switch (rawValue)
+            {
+                case int intValue:
+                    value = intValue;
+                    return true;
+                case long longValue when longValue is >= int.MinValue and <= int.MaxValue:
+                    value = (int) longValue;
+                    return true;
+                case double doubleValue when double.IsFinite(doubleValue)
+                                              && doubleValue >= int.MinValue
+                                              && doubleValue <= int.MaxValue:
+                    value = (int) Math.Round(doubleValue);
+                    return true;
+                case float floatValue when float.IsFinite(floatValue)
+                                            && floatValue >= int.MinValue
+                                            && floatValue <= int.MaxValue:
+                    value = (int) MathF.Round(floatValue);
+                    return true;
+                default:
+                    return int.TryParse(rawValue.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out value);
+            }
+        }
+
         private void RestoreSolutionComponent(EntityUid entityUid, ComponentData componentData)
         {
             try
@@ -3000,9 +3119,16 @@ namespace Content.Server.Shuttles.Save
                 string? customName = null;
                 if (meta != null)
                 {
+                    var baseName = meta.EntityName;
+                    if (_entityManager.TryGetComponent<NameModifierComponent>(uid, out var nameModifier)
+                        && !string.IsNullOrWhiteSpace(nameModifier.BaseName))
+                    {
+                        baseName = nameModifier.BaseName;
+                    }
+
                     var protoName = meta.EntityPrototype?.Name;
-                    if (!string.IsNullOrEmpty(meta.EntityName) && meta.EntityName != protoName)
-                        customName = meta.EntityName;
+                    if (!string.IsNullOrEmpty(baseName) && baseName != protoName)
+                        customName = baseName;
                 }
 
                 var entityData = new EntityData
@@ -3011,6 +3137,7 @@ namespace Content.Server.Shuttles.Save
                     Prototype = prototype,
                     Position = new Vector2((float)Math.Round(position.X, 3), (float)Math.Round(position.Y, 3)),
                     Rotation = (float)Math.Round(rotation.Theta, 3),
+                    Anchored = transform.Anchored,
                     Components = components,
                     ParentContainerEntity = parentContainer,
                     ContainerSlot = containerSlot,
@@ -3111,34 +3238,104 @@ namespace Content.Server.Shuttles.Save
         }
 
         /// <summary>
-        /// Re-anchors a freshly-spawned room/apartment entity. Room saves filter to
-        /// anchored-only entities and intentionally skip the TransformComponent during
-        /// serialization, which previously caused everything to load unanchored. This
-        /// call is silent on failure (some prototypes are not anchorable, e.g. NPCs
-        /// captured as anchored quirks). Should not be called for contained entities.
+        /// Applies the serialized top-level anchored state for a room entity.
+        /// Room loads intentionally skip TransformComponent round-tripping, so the
+        /// load path restores the anchored flag explicitly after spawn.
         /// </summary>
-        private void TryReAnchorRoomEntity(EntityUid uid)
+        private void RestoreRoomAnchorState(EntityUid uid, bool shouldBeAnchored)
         {
             if (!_entityManager.EntityExists(uid))
                 return;
             if (!_entityManager.TryGetComponent<TransformComponent>(uid, out var xform))
-                return;
-            if (xform.Anchored)
                 return;
             if (xform.GridUid == null)
                 return;
 
             try
             {
-                _transform.AnchorEntity((uid, xform));
+                if (shouldBeAnchored)
+                {
+                    if (!xform.Anchored)
+                        _transform.AnchorEntity((uid, xform));
+                    return;
+                }
+
+                if (xform.Anchored)
+                    _transform.Unanchor(uid, xform);
             }
             catch (Exception ex)
             {
-                _sawmill.Debug($"Could not re-anchor room entity {uid}: {ex.Message}");
+                _sawmill.Debug($"Could not restore room anchor state for entity {uid}: {ex.Message}");
             }
         }
 
-        private EntityUid? SpawnEntityWithComponents(EntityData entityData, EntityCoordinates coordinates, bool clearDefaultsForContainers = true)
+        private string? SerializeDecalsInBounds(EntityUid gridId, Box2 bounds)
+        {
+            if (!_entityManager.TryGetComponent<DecalGridComponent>(gridId, out var decalComponent))
+                return null;
+
+            var decals = _decalSystem.GetDecalsIntersecting(gridId, bounds, decalComponent);
+            if (decals.Count == 0)
+                return null;
+
+            var chunkCollection = new Dictionary<Vector2i, DecalChunk>();
+            foreach (var (decalId, decal) in decals)
+            {
+                var chunkIndices = SharedDecalSystem.GetChunkIndices(decal.Coordinates);
+                if (!chunkCollection.TryGetValue(chunkIndices, out var chunk))
+                {
+                    chunk = new DecalChunk();
+                    chunkCollection[chunkIndices] = chunk;
+                }
+
+                chunk.Decals[decalId] = decal;
+            }
+
+            var collection = new DecalGridChunkCollection(chunkCollection)
+            {
+                NextDecalId = decalComponent.ChunkCollection.NextDecalId
+            };
+
+            return SerializeDecalData(collection);
+        }
+
+        private DecalGridChunkCollection? DeserializeDecalData(string? decalData)
+        {
+            if (string.IsNullOrWhiteSpace(decalData))
+                return null;
+
+            try
+            {
+                using var textReader = new System.IO.StringReader(decalData);
+                var documents = DataNodeParser.ParseYamlStream(textReader).ToArray();
+
+                if (documents.Length == 1 && documents[0].Root is MappingDataNode mapping)
+                    return (DecalGridChunkCollection?) _serializationManager.Read(typeof(DecalGridChunkCollection), mapping, null, false, true);
+
+                _sawmill.Warning($"Failed to deserialize decal data: expected one YAML document, got {documents.Length}");
+                return null;
+            }
+            catch (Exception robustEx)
+            {
+                try
+                {
+                    return _deserializer.Deserialize<DecalGridChunkCollection>(decalData);
+                }
+                catch (Exception yamlEx)
+                {
+                    _sawmill.Warning($"Failed to deserialize decal data using both YAML paths: {robustEx.Message}; {yamlEx.Message}");
+                    return null;
+                }
+            }
+        }
+
+        private string SerializeDecalData(DecalGridChunkCollection collection)
+        {
+            var node = _serializationManager.WriteValue(collection, notNullableOverride: true);
+            return node.ToString();
+        }
+
+        private EntityUid? SpawnEntityWithComponents(EntityData entityData, EntityCoordinates coordinates, bool clearDefaultsForContainers = true, HashSet<string>? containerSlotsToClear = null)
         {
             try
             {
@@ -3167,6 +3364,12 @@ namespace Content.Server.Shuttles.Save
                     foreach (var container in containerManager.Containers.Values)
                     {
                         var containerId = container.ID;
+
+                        // Only clear slots the save data will refill. Preserving untouched
+                        // prototype defaults avoids breaking entities with internal startup
+                        // parts that the room/ship save format does not round-trip.
+                        if (containerSlotsToClear != null && !containerSlotsToClear.Contains(containerId))
+                            continue;
 
                         if (accessReaderOnOwner != null && accessReaderOnOwner.ContainerAccessProvider == containerId)
                             continue;
@@ -3214,6 +3417,27 @@ namespace Content.Server.Shuttles.Save
                 _sawmill.Error($"Failed to spawn entity with components {entityData.Prototype}: {ex.Message}");
                 return null;
             }
+        }
+
+        private static Dictionary<string, HashSet<string>> BuildSavedContainerSlotMap(IEnumerable<EntityData> entities)
+        {
+            var result = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
+
+            foreach (var entity in entities)
+            {
+                if (string.IsNullOrEmpty(entity.ParentContainerEntity) || string.IsNullOrEmpty(entity.ContainerSlot))
+                    continue;
+
+                if (!result.TryGetValue(entity.ParentContainerEntity, out var slots))
+                {
+                    slots = new HashSet<string>(StringComparer.Ordinal);
+                    result[entity.ParentContainerEntity] = slots;
+                }
+
+                slots.Add(entity.ContainerSlot);
+            }
+
+            return result;
         }
 
         private bool InsertIntoContainer(EntityUid entityToInsert, EntityUid containerEntity, string containerSlot)

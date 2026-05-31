@@ -4,12 +4,22 @@ namespace Content.Server._NF.Security.Components;
 public sealed partial class DisableCdetOnAlertLevelComponent : Component
 {
     [DataField]
+    public HashSet<string> EnabledAlertLevels =
+    [
+        "green",
+        "blue",
+        "yellow",
+        "white",
+    ];
+
+    [DataField]
     public HashSet<string> DisabledAlertLevels =
     [
         "red",
-        "delta",
         "violet",
         "gamma",
+        "delta",
+        "epsilon",
         "omicron",
     ];
 

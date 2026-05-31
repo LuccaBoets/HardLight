@@ -12,6 +12,17 @@ namespace Content.Server.Atmos.EntitySystems;
 
 public partial class AtmosphereSystem
 {
+    private Vector2i GetAtmosTilePosition(Entity<TransformComponent?> ent)
+    {
+        if (!Resolve(ent, ref ent.Comp) || ent.Comp == null)
+            return Vector2i.Zero;
+
+        if (ent.Comp.GridUid is { } gridUid && TryComp<MapGridComponent>(gridUid, out var mapGrid))
+            return _map.CoordinatesToTile(gridUid, mapGrid, ent.Comp.Coordinates);
+
+        return _transformSystem.GetWorldPosition(ent.Comp).Floored();
+    }
+
     public GasMixture? GetContainingMixture(Entity<TransformComponent?> ent, bool ignoreExposed = false, bool excite = false)
     {
         if (!Resolve(ent, ref ent.Comp))
@@ -43,7 +54,7 @@ public partial class AtmosphereSystem
             // And ideally some fast way to get the innermost airtight container.
         }
 
-        var position = _transformSystem.GetGridTilePositionOrDefault((ent, ent.Comp));
+        var position = GetAtmosTilePosition((ent, ent.Comp));
         return GetTileMixture(grid, map, position, excite);
     }
 
@@ -151,7 +162,7 @@ public partial class AtmosphereSystem
         if (!Resolve(entity.Owner, ref entity.Comp))
             return null;
 
-        var indices = _transformSystem.GetGridTilePositionOrDefault(entity);
+        var indices = GetAtmosTilePosition(entity);
         return GetTileMixture(entity.Comp.GridUid, entity.Comp.MapUid, indices, excite);
     }
 

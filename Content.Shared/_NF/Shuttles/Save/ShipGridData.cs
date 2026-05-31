@@ -116,6 +116,9 @@ namespace Content.Shared.Shuttles.Save
         [DataField("rotation")]
         public float Rotation { get; set; } = 0.0f;
 
+        [DataField("anchored")]
+        public bool Anchored { get; set; } = true;
+
         [DataField("components")]
         public List<ComponentData> Components { get; set; } = new();
 

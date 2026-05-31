@@ -9,6 +9,9 @@ using Content.Shared.Mind;
 using Content.Shared.Mind.Components;
 using Content.Shared.Shuttles.Save;
 using Content.Shared.Timing;
+using Content.Shared.Decals;
+using Content.Server.Decals;
+using static Content.Shared.Decals.DecalGridComponent;
 using Robust.Server.Player;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
@@ -37,6 +40,7 @@ public sealed class RoomGridSpawnerSystem : EntitySystem
     [Dependency] private readonly MindSystem _mind = default!;
     [Dependency] private readonly ITileDefinitionManager _tileDefManager = default!;
     [Dependency] private readonly AppearanceSystem _appearance = default!;
+    [Dependency] private readonly DecalSystem _decal = default!;
 
     private readonly Dictionary<NetUserId, PendingRoomLoad> _pendingLoads = new();
     private readonly Dictionary<NetUserId, ActiveRoomSession> _activeSessions = new();
@@ -399,6 +403,11 @@ public sealed class RoomGridSpawnerSystem : EntitySystem
         if (respawnConsole)
             Del(consoleUid);
 
+        foreach (var (decalId, _) in _decal.GetDecalsIntersecting(gridUid, bounds).ToList())
+        {
+            _decal.RemoveDecal(gridUid, decalId);
+        }
+
         var minX = (int)MathF.Floor(bounds.Left);
         var maxX = (int)MathF.Ceiling(bounds.Right) - 1;
         var minY = (int)MathF.Floor(bounds.Bottom);
@@ -426,7 +435,7 @@ public sealed class RoomGridSpawnerSystem : EntitySystem
         return consoleUid;
     }
 
-    private static ShipGridData FilterShipGridDataToBounds(ShipGridData source, Box2 bounds)
+    private ShipGridData FilterShipGridDataToBounds(ShipGridData source, Box2 bounds)
     {
         var filtered = new ShipGridData
         {
@@ -442,7 +451,7 @@ public sealed class RoomGridSpawnerSystem : EntitySystem
         {
             GridId = grid.GridId,
             AtmosphereData = null,
-            DecalData = null
+            DecalData = FilterDecalDataToBounds(grid.DecalData, bounds)
         };
 
         foreach (var tile in grid.Tiles)
@@ -494,7 +503,7 @@ public sealed class RoomGridSpawnerSystem : EntitySystem
     // room marker's tile / position / rotation, so the same data can be loaded into any apartment.
     // Tiles use pure integer arithmetic (exact for 90° marker rotations) to avoid the
     // banker's-rounding collisions that occur when rotating tile centers around a half-integer anchor.
-    private static void NormalizeRoomDataToAnchor(ShipGridData data, Vector2i anchorTile, Vector2 anchorPosition, Angle anchorRotation)
+    private void NormalizeRoomDataToAnchor(ShipGridData data, Vector2i anchorTile, Vector2 anchorPosition, Angle anchorRotation)
     {
         if (data.Grids.Count == 0)
             return;
@@ -520,12 +529,24 @@ public sealed class RoomGridSpawnerSystem : EntitySystem
             entity.Rotation = MathF.Round(entity.Rotation - anchorTheta, 3);
         }
 
+        grid.DecalData = TransformDecalData(
+            grid.DecalData,
+            decal =>
+            {
+                var relativePosition = Vector2.Transform(decal.Coordinates - anchorPosition, inverseRotation);
+                return decal
+                    .WithCoordinates(new Vector2(
+                        MathF.Round(relativePosition.X, 3),
+                        MathF.Round(relativePosition.Y, 3)))
+                    .WithRotation(decal.Angle - anchorRotation);
+            });
+
         data.Metadata.RoomRelative = true;
         data.Metadata.RoomAnchorPosition = anchorPosition;
         data.Metadata.RoomAnchorRotation = anchorTheta;
     }
 
-    private static void DenormalizeRoomDataToAnchor(ShipGridData data, Vector2i anchorTile, Vector2 anchorPosition, Angle anchorRotation)
+    private void DenormalizeRoomDataToAnchor(ShipGridData data, Vector2i anchorTile, Vector2 anchorPosition, Angle anchorRotation)
     {
         if (!data.Metadata.RoomRelative || data.Grids.Count == 0)
             return;
@@ -550,6 +571,28 @@ public sealed class RoomGridSpawnerSystem : EntitySystem
                 MathF.Round(absolutePosition.Y, 3));
             entity.Rotation = MathF.Round(entity.Rotation + anchorTheta, 3);
         }
+
+        grid.DecalData = TransformDecalData(
+            grid.DecalData,
+            decal =>
+            {
+                var absolutePosition = Vector2.Transform(decal.Coordinates, forwardRotation) + anchorPosition;
+                return decal
+                    .WithCoordinates(new Vector2(
+                        MathF.Round(absolutePosition.X, 3),
+                        MathF.Round(absolutePosition.Y, 3)))
+                    .WithRotation(decal.Angle + anchorRotation);
+            });
+    }
+
+    private string? FilterDecalDataToBounds(string? decalData, Box2 bounds)
+    {
+        return TransformDecalData(decalData, decal => decal, decal => bounds.Contains(decal.Coordinates));
+    }
+
+    private string? TransformDecalData(string? decalData, Func<Decal, Decal> transform, Func<Decal, bool>? predicate = null)
+    {
+        return _shipSerialization.TransformSerializedDecalData(decalData, transform, predicate);
     }
 
     private static string BuildCharacterKey(NetUserId userId, string characterName)
