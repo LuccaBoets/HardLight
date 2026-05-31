@@ -46,6 +46,8 @@
 
 using System.Linq;
 using System.Numerics;
+using Content.Server._Mono.Projectiles.TargetGuided;
+using Content.Server._Mono.Projectiles.TargetSeeking;
 using Content.Server.Cargo.Systems;
 using Content.Server.Power.EntitySystems;
 using Content.Server.Weapons.Ranged.Components;
@@ -418,6 +420,18 @@ public sealed partial class GunSystem : SharedGunSystem
         }
 
         ShootProjectile(uid, mapDirection, gunVelocity, gunUid, user, gun.ProjectileSpeedModified);
+
+        if (TryComp<TargetSeekingComponent>(uid, out var targetSeeking))
+        {
+            targetSeeking.InheritedVelocity = gunVelocity;
+            targetSeeking.InheritedVelocityInitialized = true;
+        }
+
+        if (TryComp<TargetGuidedComponent>(uid, out var targetGuided))
+        {
+            targetGuided.InheritedVelocity = gunVelocity;
+            targetGuided.InheritedVelocityInitialized = true;
+        }
     }
 
     /// <summary>

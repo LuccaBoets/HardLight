@@ -5,6 +5,7 @@ using Robust.Client.GameObjects;
 using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Prototypes;
+using System.Numerics;
 
 namespace Content.Client._Goobstation.Research.UI;
 
@@ -12,6 +13,11 @@ namespace Content.Client._Goobstation.Research.UI;
 public sealed partial class FancyResearchConsoleItem : LayoutContainer
 {
     [Dependency] private readonly IPrototypeManager _prototype = default!;
+
+    private static readonly Vector2 BaseCardSize = new(64f, 64f);
+    private static readonly Vector2 BaseIconSize = new(56f, 56f);
+    private static readonly Vector2 BaseEntityScale = new(1.75f, 1.75f);
+    private static readonly Vector2 BaseTextureScale = new(2f, 2f);
 
     // Public fields
     public TechnologyPrototype Prototype;
@@ -27,6 +33,7 @@ public sealed partial class FancyResearchConsoleItem : LayoutContainer
     public Color BorderColor = DefaultBorderColor;
     public Color HoveredColor = DefaultHoveredColor;
     public Color SelectedColor = DefaultHoveredColor;
+    public float Zoom { get; private set; } = 1f;
 
     // Selection state
     private bool _isSelected = false;
@@ -106,6 +113,26 @@ public sealed partial class FancyResearchConsoleItem : LayoutContainer
 
         Panel.PanelOverride = roundedStyle;
         UpdateColor();
+        SetZoom(1f);
+    }
+
+    public void SetZoom(float zoom)
+    {
+        Zoom = zoom;
+
+        var cardSize = BaseCardSize * zoom;
+        var iconSize = BaseIconSize * zoom;
+
+        SetSize = cardSize;
+        MinSize = cardSize;
+        CardContainer.SetSize = cardSize;
+        CardContainer.MinSize = cardSize;
+
+        ResearchDisplay.SetSize = iconSize;
+        ResearchDisplay.Scale = BaseEntityScale * zoom;
+
+        ResearchIconTexture.SetSize = iconSize;
+        ResearchIconTexture.TextureScale = BaseTextureScale * zoom;
     }
 
     private void UpdateColor()

@@ -470,7 +470,9 @@ public sealed partial class ResearchesContainerPanel : LayoutContainer
     private UIBox2 GetTechRect(FancyResearchConsoleItem tech)
     {
         var position = new Vector2(tech.PixelPosition.X, tech.PixelPosition.Y);
-        var size = new Vector2(tech.PixelWidth, tech.PixelHeight);
+        var width = tech.PixelWidth;
+        var height = tech.PixelHeight;
+        var size = new Vector2(width, height);
 
         var padding = 6f;
         return new UIBox2(

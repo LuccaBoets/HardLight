@@ -140,21 +140,32 @@ public sealed class TargetSeekingSystem : EntitySystem
         var query = EntityQueryEnumerator<TargetSeekingComponent, PhysicsComponent, TransformComponent>();
         while (query.MoveNext(out var uid, out var seekingComp, out var body, out var xform))
         {
+            var heading = _transform.GetWorldRotation(xform).ToWorldVec();
+
+            if (!seekingComp.InheritedVelocityInitialized)
+            {
+                seekingComp.InheritedVelocity = body.LinearVelocity - heading * seekingComp.LaunchSpeed;
+                seekingComp.InheritedVelocityInitialized = true;
+            }
+
+            var relativeVelocity = body.LinearVelocity - seekingComp.InheritedVelocity;
             var acceleration = seekingComp.Acceleration * frameTime;
+
             // Initialize launch speed.
             if (seekingComp.Launched == false)
             {
-                acceleration += seekingComp.LaunchSpeed;
+                relativeVelocity += heading * seekingComp.LaunchSpeed;
                 seekingComp.Launched = true;
             }
 
             // Apply acceleration in the direction the projectile is facing
-            _physics.SetLinearVelocity(uid, body.LinearVelocity + _transform.GetWorldRotation(xform).ToWorldVec() * acceleration, body: body);
+            relativeVelocity += heading * acceleration;
 
-            var velLen = body.LinearVelocity.Length();
-            // cut off velocity above max
-            if (velLen > seekingComp.MaxSpeed)
-                _physics.SetLinearVelocity(uid, body.LinearVelocity * (seekingComp.MaxSpeed / velLen), body: body);
+            var relativeSpeed = relativeVelocity.Length();
+            if (relativeSpeed > seekingComp.MaxSpeed)
+                relativeVelocity *= seekingComp.MaxSpeed / relativeSpeed;
+
+            _physics.SetLinearVelocity(uid, seekingComp.InheritedVelocity + relativeVelocity, body: body);
 
             // Skip seeking behavior if disabled (e.g., after entering an enemy grid)
             if (seekingComp.SeekingDisabled)

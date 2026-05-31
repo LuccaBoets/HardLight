@@ -29,13 +29,15 @@ public sealed class ContainerSpawnPointSystem : EntitySystem
         if (args.SpawnResult != null)
             return;
 
-        // DeltaV - Ignore these two desired spawn types
-        if (args.DesiredSpawnPointType is SpawnPointType.Observer or SpawnPointType.LateJoin)
+        // Observer spawns should never claim job or cryo containers.
+        if (args.DesiredSpawnPointType == SpawnPointType.Observer)
             return;
+
+        var hasCustomJobEntity = _proto.TryIndex(args.Job, out var jobProto) && jobProto.JobEntity != null;
 
         // If it's just a spawn pref check if it's for cryo (silly).
         if (args.HumanoidCharacterProfile?.SpawnPriority != SpawnPriorityPreference.Cryosleep &&
-            (!_proto.TryIndex(args.Job, out var jobProto) || jobProto.JobEntity == null))
+            !hasCustomJobEntity)
         {
             return;
         }
@@ -46,6 +48,9 @@ public sealed class ContainerSpawnPointSystem : EntitySystem
         while (query.MoveNext(out var uid, out var spawnPoint, out var container, out var xform))
         {
             if (args.Station != null && _station.GetOwningStation(uid, xform) != args.Station)
+                continue;
+
+            if (hasCustomJobEntity && (spawnPoint.Job == null || spawnPoint.Job != args.Job))
                 continue;
 
             // If it's unset, then we allow it to be used for both roundstart and midround joins

@@ -67,6 +67,17 @@ public sealed partial class TargetSeekingComponent : Component
     public bool Launched = false;
 
     /// <summary>
+    /// Map-frame launch velocity inherited from the firing platform.
+    /// Guidance adjusts speed relative to this base vector.
+    /// </summary>
+    public System.Numerics.Vector2 InheritedVelocity;
+
+    /// <summary>
+    /// Whether <see cref="InheritedVelocity"/> has been initialized.
+    /// </summary>
+    public bool InheritedVelocityInitialized;
+
+    /// <summary>
     /// The amount of time in seconds left the missile starts searching for targets. // Mono
     /// </summary>
     [DataField]
