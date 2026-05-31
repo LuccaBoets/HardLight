@@ -178,12 +178,15 @@
     preserveExistingChannels: true
     intrinsicChannels:
     - Common
+    - Faction
   - type: IntrinsicRadioTransmitter
     intrinsicChannels:
     - Common
+    - Faction
   - type: ActiveRadio
     intrinsicChannels:
     - Common
+    - Faction
   - type: AccessReader
     access: [["Security"], ["Command"], ["Research"], ["Mercenary"]]
   - type: Inventory

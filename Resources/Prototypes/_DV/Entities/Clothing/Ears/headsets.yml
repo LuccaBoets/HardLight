@@ -8,9 +8,11 @@
   - type: ActiveRadio
     intrinsicChannels:
     - Common
+    - Faction
   - type: EncryptionKeyHolder
     intrinsicChannels:
     - Common
+    - Faction
   # HardLight end
   - type: Sprite
     sprite: _DV/Clothing/Ears/Headsets/prisoner.rsi

@@ -21,6 +21,7 @@
     - Supply
     - Service
     - Common
+    - Faction
   - type: EncryptionKeyHolder
     intrinsicChannels:
     - Future
@@ -37,6 +38,7 @@
     - Supply
     - Service
     - Common
+    - Faction
   # HardLight end
   - type: Sprite
     sprite: Goobstation/Clothing/Ears/Headsets/chronolegioneer.rsi

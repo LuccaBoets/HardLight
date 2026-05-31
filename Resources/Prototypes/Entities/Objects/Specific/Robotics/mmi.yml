@@ -28,6 +28,7 @@
     - Binary
     - Trinary # Hardlight
     - Common
+    - Faction
   - type: NameIdentifier
     group: MMI
   - type: DoAfter
@@ -117,6 +118,7 @@
       channels:
       - Binary
       - Common
+    - Faction
     - type: NameIdentifier
       group: PositronicBrain
     - type: DoAfter

@@ -25,11 +25,13 @@
     intrinsicChannels:
     - Service
     - Common
+    - Faction
     - RadioShow
   - type: EncryptionKeyHolder
     intrinsicChannels:
     - Service
     - Common
+    - Faction
     - RadioShow
   - type: Sprite
     sprite: _Goobstation/Clothing/Ears/Headsets/radiohost.rsi

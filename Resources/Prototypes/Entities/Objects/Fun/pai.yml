@@ -57,6 +57,7 @@
   - type: ActiveRadio
     channels:
     - Common
+    - Faction
   - type: DoAfter
   - type: Actions
   - type: Store

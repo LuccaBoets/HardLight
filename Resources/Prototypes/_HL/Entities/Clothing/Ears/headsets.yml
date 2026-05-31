@@ -9,10 +9,12 @@
     intrinsicChannels:
     #- Cartel
     - Common
+    - Faction
   - type: EncryptionKeyHolder
     intrinsicChannels:
     #- Cartel
     - Common
+    - Faction
   # HardLight end
   - type: Sprite
     sprite: _HL/Clothing/Ears/Headsets/cartel.rsi
@@ -111,10 +113,12 @@
   - type: ActiveRadio
     intrinsicChannels:
     - Common
+    - Faction
     #- InterdynePharma
     - Medical
   - type: EncryptionKeyHolder
     intrinsicChannels:
     - Common
+    - Faction
     #- InterdynePharma
     - Medical

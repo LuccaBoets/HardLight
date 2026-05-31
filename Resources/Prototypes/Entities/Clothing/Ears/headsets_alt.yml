@@ -84,12 +84,14 @@
     - ColSec
     - Security
     - Common
+    - Faction
   - type: EncryptionKeyHolder
     intrinsicChannels:
     - Command
     - ColSec
     - Security
     - Common
+    - Faction
   # HardLight end
   - type: Sprite
     sprite: Clothing/Ears/Headsets/security.rsi

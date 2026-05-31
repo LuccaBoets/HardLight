@@ -9,10 +9,12 @@
   - type: ActiveRadio
     intrinsicChannels:
     - Common
+    - Faction
     - Freelance
   - type: EncryptionKeyHolder
     intrinsicChannels:
     - Common
+    - Faction
     - Freelance
   # HardLight end
 
@@ -31,11 +33,13 @@
     - ColSec
     - Security
     - Common
+    - Faction
   - type: EncryptionKeyHolder
     intrinsicChannels:
     - ColSec
     - Security
     - Common
+    - Faction
   # HardLight end
 
 - type: entity

@@ -35,6 +35,7 @@
     - Security
     - Science
     - Common
+    - Faction
   - type: IntrinsicRadioTransmitter
     intrinsicChannels:
     - Binary
@@ -43,6 +44,7 @@
     - Security
     - Science
     - Common
+    - Faction
   - type: ActiveRadio
     intrinsicChannels:
     - Binary
@@ -51,6 +53,7 @@
     - Security
     - Science
     - Common
+    - Faction
   # HardLight end
   - type: BorgChassis
     maxModules: 7

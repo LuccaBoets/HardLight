@@ -128,10 +128,12 @@
   - type: IntrinsicRadioTransmitter
     channels:
     - Common
+    - Faction
     - Traffic
   - type: ActiveRadio
     channels:
     - Common
+    - Faction
     - Traffic
   # VRS: 'Remnants' radio channel + CollectiveMind system not yet ported;
   # falls back to common-channel only.

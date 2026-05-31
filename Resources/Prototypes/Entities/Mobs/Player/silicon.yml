@@ -11,6 +11,7 @@
     - Trinary # Hardlight
     - ColSec
     - Common
+    - Faction
     - Command
     - Engineering
     - Freelance
@@ -28,6 +29,7 @@
     - Trinary # Hardlight
     - ColSec
     - Common
+    - Faction
     - Command
     - Engineering
     - Freelance
@@ -103,6 +105,7 @@
     - Binary
     - Trinary # Hardlight
     - Common
+    - Faction
   - type: ActionGrant
     actions:
     - ActionAIViewLaws

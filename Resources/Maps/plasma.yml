@@ -24073,6 +24073,7 @@ entities:
     - type: RadioSpeaker
       channels:
       - Common
+      - Faction
     - type: Speech
       suffixSpeechVerbs:
         chat-speech-verb-suffix-exclamation-strong: DefaultExclamationStrong

@@ -141,6 +141,7 @@
     - Science
     - Service
     - Common
+    - Faction
   - type: IntrinsicRadioTransmitter
     intrinsicChannels:
     - Binary
@@ -148,6 +149,7 @@
     - Science
     - Service
     - Common
+    - Faction
   - type: ActiveRadio
     intrinsicChannels:
     - Binary
@@ -155,6 +157,7 @@
     - Science
     - Service
     - Common
+    - Faction
   # HardLight end
   - type: SpriteStateToggle
     spriteLayer: movement

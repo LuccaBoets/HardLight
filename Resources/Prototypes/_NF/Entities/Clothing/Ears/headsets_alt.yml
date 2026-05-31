@@ -30,12 +30,14 @@
     - ColSec
     - Security
     - Common
+    - Faction
   - type: EncryptionKeyHolder
     intrinsicChannels:
     - Command
     - ColSec
     - Security
     - Common
+    - Faction
   # HardLight end
   - type: Sprite
     sprite: _NF/Clothing/Ears/Headsets/nfsd_h_brown.rsi
@@ -78,6 +80,7 @@
     - Supply
     - Service
     - Common
+    - Faction
   - type: EncryptionKeyHolder
     intrinsicChannels:
     - Command
@@ -89,6 +92,7 @@
     - Supply
     - Service
     - Common
+    - Faction
   # HardLight end
   - type: Sprite
     sprite: _NF/Clothing/Ears/Headsets/nfsd_h_brown.rsi

@@ -22,6 +22,7 @@
   - type: ActiveRadio
     channels:
     - Common
+    - Faction
   - type: HealthExaminable
     examinableTypes:
     - Blunt
@@ -456,4 +457,5 @@
   - type: ActiveRadio
     channels:
     - Common
+    - Faction
     - Supply

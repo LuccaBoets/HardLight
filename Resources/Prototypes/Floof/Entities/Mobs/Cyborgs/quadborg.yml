@@ -70,18 +70,21 @@
     - Trinary # Hardlight
     - Science
     - Common
+    - Faction
   - type: IntrinsicRadioTransmitter
     intrinsicChannels:
     - Binary
     - Trinary # Hardlight
     - Science
     - Common
+    - Faction
   - type: ActiveRadio
     intrinsicChannels:
     - Binary
     - Trinary # Hardlight
     - Science
     - Common
+    - Faction
   # HardLight end
   - type: BorgChassis
     maxModules: 5
@@ -161,6 +164,7 @@
     - Security
     - Science
     - Common
+    - Faction
   - type: IntrinsicRadioTransmitter
     intrinsicChannels:
     - Binary
@@ -169,6 +173,7 @@
     - Security
     - Science
     - Common
+    - Faction
   - type: ActiveRadio
     intrinsicChannels:
     - Binary
@@ -177,6 +182,7 @@
     - Security
     - Science
     - Common
+    - Faction
   # HardLight end
   - type: BorgChassis
     maxModules: 5
@@ -235,18 +241,21 @@
     - Trinary # Hardlight
     - Syndicate
     - Common
+    - Faction
   - type: IntrinsicRadioTransmitter
     intrinsicChannels:
     - Binary
     - Trinary # Hardlight
     - Syndicate
     - Common
+    - Faction
   - type: ActiveRadio
     intrinsicChannels:
     - Binary
     - Trinary # Hardlight
     - Syndicate
     - Common
+    - Faction
   # HardLight end
   - type: NpcFactionMember
     factions:
@@ -483,6 +492,7 @@
     - Supply
     - Service
     - Common
+    - Faction
   - type: IntrinsicRadioTransmitter
     intrinsicChannels:
     - Binary
@@ -497,6 +507,7 @@
     - Supply
     - Service
     - Common
+    - Faction
   - type: ActiveRadio
     intrinsicChannels:
     - Binary
@@ -511,6 +522,7 @@
     - Supply
     - Service
     - Common
+    - Faction
   # HardLight end
   - type: BorgChassis
     maxModules: 12 #HL
@@ -583,6 +595,7 @@
     - Science
     - Supply
     - Common
+    - Faction
   - type: IntrinsicRadioTransmitter
     intrinsicChannels:
     - Binary
@@ -590,6 +603,7 @@
     - Science
     - Supply
     - Common
+    - Faction
   - type: ActiveRadio
     intrinsicChannels:
     - Binary
@@ -597,6 +611,7 @@
     - Science
     - Supply
     - Common
+    - Faction
   # HardLight end
   - type: BorgChassis
     maxModules: 7
@@ -655,6 +670,7 @@
     - Science
     - Service
     - Common
+    - Faction
   - type: IntrinsicRadioTransmitter
     intrinsicChannels:
     - Binary
@@ -662,6 +678,7 @@
     - Science
     - Service
     - Common
+    - Faction
   - type: ActiveRadio
     intrinsicChannels:
     - Binary
@@ -669,6 +686,7 @@
     - Science
     - Service
     - Common
+    - Faction
   # HardLight end
   - type: BorgChassis
     maxModules: 8
@@ -731,6 +749,7 @@
     - Engineering
     - Science
     - Common
+    - Faction
   - type: IntrinsicRadioTransmitter
     intrinsicChannels:
     - Binary
@@ -738,6 +757,7 @@
     - Engineering
     - Science
     - Common
+    - Faction
   - type: ActiveRadio
     intrinsicChannels:
     - Binary
@@ -745,6 +765,7 @@
     - Engineering
     - Science
     - Common
+    - Faction
   # HardLight end
   - type: BorgChassis
     maxModules: 8
@@ -808,6 +829,7 @@
     - Medical
     - Science
     - Common
+    - Faction
   - type: IntrinsicRadioTransmitter
     intrinsicChannels:
     - Binary
@@ -815,6 +837,7 @@
     - Medical
     - Science
     - Common
+    - Faction
   - type: ActiveRadio
     intrinsicChannels:
     - Binary
@@ -822,6 +845,7 @@
     - Medical
     - Science
     - Common
+    - Faction
   - type: SurgerySpeedModifier #shitmed
     speedModifier: 1.75
   # HardLight end

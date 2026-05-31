@@ -75,11 +75,13 @@
   - type: IntrinsicRadioTransmitter
     channels:
     - Common
+    - Faction
     - Nfsd
     - Traffic
   - type: ActiveRadio
     channels:
     - Common
+    - Faction
     - Nfsd
     - Traffic
   # VRS: CollectiveMindComponent is a Triad/Starlight feature not present in VRS yet; commented out.
@@ -124,11 +126,13 @@
   - type: IntrinsicRadioTransmitter
     channels:
     - Common
+    - Faction
     - Freelance
     - Traffic
   - type: ActiveRadio
     channels:
     - Common
+    - Faction
     - Freelance
     - Traffic
   # VRS: CollectiveMindComponent is a Triad/Starlight feature not present in VRS yet; commented out.

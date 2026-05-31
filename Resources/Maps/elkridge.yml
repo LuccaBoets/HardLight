@@ -66467,6 +66467,7 @@ entities:
       channels:
       - Supply
       - Common
+      - Faction
 - proto: ClothingMaskBreath
   entities:
   - uid: 7655

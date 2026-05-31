@@ -128,6 +128,7 @@
     - Trinary # Hardlight
     - Science
     - Common
+    - Faction
   - type: IntrinsicRadioReceiver
   - type: IntrinsicRadioTransmitter
     intrinsicChannels:
@@ -135,12 +136,14 @@
     - Trinary # Hardlight
     - Science
     - Common
+    - Faction
   - type: ActiveRadio
     intrinsicChannels:
     - Binary
     - Trinary # Hardlight
     - Science
     - Common
+    - Faction
   # HardLight end
   - type: PowerCellSlot
     cellSlotId: cell_slot

@@ -39,6 +39,7 @@
     - Binary
     - Trinary
     - Common
+    - Faction
     - Science
   - type: ActiveRadio
     channels:
@@ -46,6 +47,7 @@
     - Binary
     - Trinary
     - Common
+    - Faction
     - Science
   - type: BorgChassis
     maxModules: 4
@@ -126,6 +128,7 @@
     - Binary
     - Trinary
     - Common
+    - Faction
     - Science
   - type: ActiveRadio
     channels:
@@ -133,6 +136,7 @@
     - Binary
     - Trinary
     - Common
+    - Faction
     - Science
   - type: BorgChassis
     maxModules: 4
@@ -213,6 +217,7 @@
     - Binary
     - Trinary
     - Common
+    - Faction
     - Science
   - type: ActiveRadio
     channels:
@@ -220,6 +225,7 @@
     - Binary
     - Trinary
     - Common
+    - Faction
     - Science
   - type: BorgChassis
     maxModules: 4

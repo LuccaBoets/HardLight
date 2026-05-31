@@ -33,6 +33,7 @@
     - Medical
     - Science
     - Common
+    - Faction
   - type: IntrinsicRadioTransmitter
     intrinsicChannels:
     - Binary
@@ -40,6 +41,7 @@
     - Medical
     - Science
     - Common
+    - Faction
   - type: ActiveRadio
     intrinsicChannels:
     - Binary
@@ -47,6 +49,7 @@
     - Medical
     - Science
     - Common
+    - Faction
   - type: SurgerySpeedModifier #shitmed
     speedModifier: 1.75
   # HardLight end

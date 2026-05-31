@@ -7131,6 +7131,7 @@ entities:
       - Medical
       - Science
       - Common
+      - Faction
 - proto: ClothingNeckLGBTPin
   entities:
   - uid: 1077
