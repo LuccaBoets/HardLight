@@ -118,7 +118,6 @@
       channels:
       - Binary
       - Common
-    - Faction
     - type: NameIdentifier
       group: PositronicBrain
     - type: DoAfter
