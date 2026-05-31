@@ -9,6 +9,7 @@ using Robust.Shared.Audio.Systems;
 using Content.Shared.Examine;
 using Content.Server.Explosion.Components;
 using Content.Shared.Explosion.Components;
+using Content.Shared.Explosion.Components.OnTrigger;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Maths;
 
@@ -76,6 +77,10 @@ public partial class ShipShieldsSystem
             // world explosion side-effects when the projectile entity is deleted.
             RemCompDeferred<ExplosiveComponent>(args.Deflected);
         }
+
+        // Deflected payloads should never run trigger chains after interception.
+        RemCompDeferred<ExplodeOnTriggerComponent>(args.Deflected);
+        RemCompDeferred<TriggerOnCollideComponent>(args.Deflected);
 
         component.Damage += (float)args.Projectile.Damage.GetTotal();
         args.Projectile.ProjectileSpent = true;

@@ -11,9 +11,14 @@ using Content.Shared.Interaction;
 using Content.Shared.Mech;
 using Content.Shared.Mech.Components;
 using Content.Shared.Mech.EntitySystems;
+using Content.Shared.Light;
+using Content.Shared.Light.Components;
+using Content.Shared.Light.EntitySystems;
 using Content.Shared.Movement.Events;
+using Content.Shared.Movement.Systems;
 using Content.Shared.Popups;
 using Content.Shared.Shuttles.BUIStates;
+using Content.Shared.Toggleable;
 using Content.Shared.Tools.Components;
 using Content.Shared.Verbs;
 using Content.Shared.Wires;
@@ -43,6 +48,10 @@ public sealed partial class MechSystem : SharedMechSystem
     [Dependency] private readonly UserInterfaceSystem _ui = default!;
     [Dependency] private readonly EntityWhitelistSystem _whitelistSystem = default!;
     [Dependency] private readonly SharedToolSystem _toolSystem = default!;
+    [Dependency] private readonly MovementSpeedModifierSystem _movementSpeed = default!;
+    [Dependency] private readonly UnpoweredFlashlightSystem _unpoweredFlashlight = default!;
+
+    private const float UnpoweredMovementModifier = 0.1f;
 
     /// <inheritdoc/>
     public override void Initialize()
@@ -63,6 +72,9 @@ public sealed partial class MechSystem : SharedMechSystem
         SubscribeLocalEvent<MechComponent, MechEquipmentRemoveMessage>(OnRemoveEquipmentMessage);
 
         SubscribeLocalEvent<MechComponent, UpdateCanMoveEvent>(OnMechCanMoveEvent);
+        SubscribeLocalEvent<MechComponent, RefreshMovementSpeedModifiersEvent>(OnRefreshMovementSpeedModifiers);
+        SubscribeLocalEvent<MechComponent, ToggleActionEvent>(OnLightToggleAction);
+        SubscribeLocalEvent<MechComponent, LightToggleEvent>(OnLightToggled);
 
 
         SubscribeLocalEvent<MechPilotComponent, ToolUserAttemptUseEvent>(OnToolUseAttempt);
@@ -80,8 +92,44 @@ public sealed partial class MechSystem : SharedMechSystem
 
     private void OnMechCanMoveEvent(EntityUid uid, MechComponent component, UpdateCanMoveEvent args)
     {
-        if (component.Broken || component.Integrity <= 0 || component.Energy <= 0)
+        if (component.Broken || component.Integrity <= 0)
             args.Cancel();
+    }
+
+    private void OnRefreshMovementSpeedModifiers(EntityUid uid, MechComponent component, ref RefreshMovementSpeedModifiersEvent args)
+    {
+        if (component.Energy <= 0)
+            args.ModifySpeed(UnpoweredMovementModifier);
+    }
+
+    private void OnLightToggleAction(EntityUid uid, MechComponent component, ToggleActionEvent args)
+    {
+        if (component.Energy > 0)
+            return;
+
+        if (TryComp<UnpoweredFlashlightComponent>(uid, out var flashlight) && flashlight.LightOn)
+            _unpoweredFlashlight.SetLight((uid, flashlight), false, args.Performer, quiet: true);
+
+        // Block toggling mech headlights while there is no power.
+        args.Handled = true;
+    }
+
+    private void OnLightToggled(EntityUid uid, MechComponent component, LightToggleEvent args)
+    {
+        if (!args.IsOn || component.Energy > 0)
+            return;
+
+        if (TryComp<UnpoweredFlashlightComponent>(uid, out var flashlight))
+            _unpoweredFlashlight.SetLight((uid, flashlight), false, quiet: true);
+    }
+
+    private void SyncPowerState(EntityUid uid, MechComponent component)
+    {
+        if (component.Energy <= 0 && TryComp<UnpoweredFlashlightComponent>(uid, out var flashlight) && flashlight.LightOn)
+            _unpoweredFlashlight.SetLight((uid, flashlight), false, quiet: true);
+
+        _actionBlocker.UpdateCanMove(uid);
+        _movementSpeed.RefreshMovementSpeedModifiers(uid);
     }
 
     private void OnInteractUsing(EntityUid uid, MechComponent component, InteractUsingEvent args)
@@ -117,7 +165,7 @@ public sealed partial class MechSystem : SharedMechSystem
         component.MaxEnergy = battery.MaxCharge;
 
         Dirty(uid, component);
-        _actionBlocker.UpdateCanMove(uid);
+        SyncPowerState(uid, component);
     }
 
     private void OnRemoveBattery(EntityUid uid, MechComponent component, RemoveBatteryEvent args)
@@ -126,7 +174,7 @@ public sealed partial class MechSystem : SharedMechSystem
             return;
 
         RemoveBattery(uid, component);
-        _actionBlocker.UpdateCanMove(uid);
+        SyncPowerState(uid, component);
 
         args.Handled = true;
     }
@@ -145,7 +193,7 @@ public sealed partial class MechSystem : SharedMechSystem
         component.Integrity = component.MaxIntegrity;
         component.Energy = component.MaxEnergy;
 
-        _actionBlocker.UpdateCanMove(uid);
+        SyncPowerState(uid, component);
         Dirty(uid, component);
     }
 
@@ -379,7 +427,7 @@ public sealed partial class MechSystem : SharedMechSystem
             component.Energy = batteryComp.CurrentCharge;
             Dirty(uid, component);
         }
-        _actionBlocker.UpdateCanMove(uid);
+        SyncPowerState(uid, component);
         return true;
     }
 
@@ -395,7 +443,7 @@ public sealed partial class MechSystem : SharedMechSystem
         component.Energy = battery.CurrentCharge;
         component.MaxEnergy = battery.MaxCharge;
 
-        _actionBlocker.UpdateCanMove(uid);
+        SyncPowerState(uid, component);
 
         Dirty(uid, component);
         UpdateUserInterface(uid, component);
@@ -410,7 +458,7 @@ public sealed partial class MechSystem : SharedMechSystem
         component.Energy = 0;
         component.MaxEnergy = 0;
 
-        _actionBlocker.UpdateCanMove(uid);
+        SyncPowerState(uid, component);
 
         Dirty(uid, component);
         UpdateUserInterface(uid, component);

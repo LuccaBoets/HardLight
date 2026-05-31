@@ -4,6 +4,7 @@ using Content.Server.Power.EntitySystems;
 using Content.Shared.Mech.Components;
 using Content.Shared.Mech.Equipment.Components;
 using Content.Shared.Throwing;
+using Content.Shared.Weapons.Ranged.Events;
 using Content.Shared.Weapons.Ranged.Systems;
 using Robust.Shared.Random;
 
@@ -17,9 +18,20 @@ public sealed class MechGunSystem : EntitySystem
     {
         base.Initialize();
         SubscribeLocalEvent<MechEquipmentComponent, GunShotEvent>(MechGunShot);
+        SubscribeLocalEvent<MechEquipmentComponent, OnEmptyGunShotEvent>(MechEmptyGunShot);
     }
 
     private void MechGunShot(EntityUid uid, MechEquipmentComponent component, ref GunShotEvent args)
+    {
+        TryChargeGunBattery(uid, component);
+    }
+
+    private void MechEmptyGunShot(EntityUid uid, MechEquipmentComponent component, ref OnEmptyGunShotEvent args)
+    {
+        TryChargeGunBattery(uid, component);
+    }
+
+    private void TryChargeGunBattery(EntityUid uid, MechEquipmentComponent component)
     {
         if (!component.EquipmentOwner.HasValue)
             return;

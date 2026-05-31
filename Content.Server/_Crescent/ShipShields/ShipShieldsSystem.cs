@@ -219,13 +219,15 @@ public sealed partial class ShipShieldsSystem : EntitySystem
         // step, gets QueueDel'd, and damages the emitter -- which players see as "shields don't
         // work" / "guns don't shoot through our shield".
         //
-        // HardLight: Also pass through if Weapon is null. This happens on the very first physics
-        // step after a projectile spawns before the gun system has had a chance to set the Weapon
-        // field. Without this guard, projectiles fired from inside another ship's shield (or from
-        // a ship whose own shield geometry overlaps its hull) are immediately consumed because the
-        // null-weapon check falls through to the deflect path.
-        if (projectile.Weapon == null
-            || (_transformSystem.GetGrid(projectile.Weapon.Value) == component.Shielded))
+        // Pass through projectiles fired by the same grid we are shielding. Use Weapon first,
+        // then Shooter as fallback for projectiles that don't carry a weapon reference.
+        var firingGrid = projectile.Weapon is { } weaponUid
+            ? _transformSystem.GetGrid(weaponUid)
+            : projectile.Shooter is { } shooterUid
+                ? _transformSystem.GetGrid(shooterUid)
+                : null;
+
+        if (firingGrid == component.Shielded)
         {
             args.Cancelled = true;
             return;
@@ -253,6 +255,10 @@ public sealed partial class ShipShieldsSystem : EntitySystem
             var ev = new ShieldDeflectedEvent(args.OtherEntity, projectile);
             RaiseLocalEvent(emitterSource, ref ev);
         }
+
+        // Shield absorbed this projectile. Cancel physics collision so trigger-on-collide payloads
+        // do not execute world effects at the shield location.
+        args.Cancelled = true;
     }
 
     /// <summary>
