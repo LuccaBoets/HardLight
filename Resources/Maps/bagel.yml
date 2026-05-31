@@ -78079,6 +78079,7 @@ entities:
     - type: ActiveRadio
       channels:
       - Faction
+      - Supply
       - Common
   - uid: 9576
     components:
@@ -78088,6 +78089,7 @@ entities:
     - type: ActiveRadio
       channels:
       - Faction
+      - Supply
       - Common
   - uid: 9577
     components:
@@ -78098,6 +78100,7 @@ entities:
       channels:
       - Supply
       - Common
+      - Faction
 - proto: ClothingMaskBlushingClown
   entities:
   - uid: 9578
