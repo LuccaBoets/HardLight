@@ -218,12 +218,6 @@ public sealed class StationPaySystem : EntitySystem
 
     private bool PayoutFor(EntityUid uid, int secondsWorked)
     {
-        if (!_scheduledPayouts.ContainsKey(uid))
-        {
-            //Log.Debug($"[stationpay] Attemped payout for {uid}, but no scheduled payout was found");
-            return false;
-        }
-
         if (!GetJobForEntity(uid, out var jobId))
         {
             //Log.Debug($"[stationpay] Attemped payout for {uid}, but no valid job found");
