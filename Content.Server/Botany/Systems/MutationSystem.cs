@@ -14,6 +14,7 @@ public sealed class MutationSystem : EntitySystem
     private RandomPlantMutationListPrototype _randomMutations = default!;
 
     private static readonly ProtoId<RandomPlantMutationListPrototype> RandomPlantMutationsId = "RandomPlantMutations";
+    private const int MaxRandomMutationPasses = 16;
 
     public override void Initialize()
     {
@@ -27,12 +28,18 @@ public sealed class MutationSystem : EntitySystem
     /// <param name="severity"></param>
     public void CheckRandomMutations(EntityUid plantHolder, ref SeedData seed, float severity)
     {
-        foreach (var mutation in _randomMutations.mutations)
+        for (var pass = 0; pass < MaxRandomMutationPasses; pass++)
         {
-            if (Random(Math.Min(mutation.BaseOdds * severity, 1.0f)))
+            var restartMutationPass = false;
+
+            foreach (var mutation in _randomMutations.mutations)
             {
+                if (!Random(Math.Min(mutation.BaseOdds * severity, 1.0f)))
+                    continue;
+
                 var category = PlantMutationCategories.GetCategory(mutation.Name);
                 var previousGrowthStages = seed.GrowthStages;
+                var previousSubtypeName = seed.Name;
 
                 if (category != null)
                 {
@@ -60,6 +67,13 @@ public sealed class MutationSystem : EntitySystem
                     if (mutation.Persists)
                         seed.Mutations.Add(mutation);
 
+                    if (category == PlantMutationCategory.Subtypes && seed.Name != previousSubtypeName)
+                    {
+                        seed.MutationCategoryStates.RemoveAll(state => state.Category == PlantMutationCategory.Subtypes);
+                        restartMutationPass = true;
+                        break;
+                    }
+
                     continue;
                 }
 
@@ -67,7 +81,12 @@ public sealed class MutationSystem : EntitySystem
                 if (mutation.Persists && !seed.Mutations.Any(m => m.Name == mutation.Name))
                     seed.Mutations.Add(mutation);
             }
+
+            if (!restartMutationPass)
+                return;
         }
+
+        Log.Warning($"Random mutation subtype chain hit the safety cap for {plantHolder} while evaluating seed {seed.Name}.");
     }
 
     /// <summary>
