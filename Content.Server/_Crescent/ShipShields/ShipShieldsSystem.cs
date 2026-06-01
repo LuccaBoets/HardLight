@@ -58,8 +58,9 @@ public sealed partial class ShipShieldsSystem : EntitySystem
             if (emitter.Accumulator < EmitterUpdateRate)
                 continue;
 
-            if (CalculateLoadDamage(emitter) >= emitter.MaxDraw)
-                emitter.Recharging = true;
+            // MaxDraw caps the emitter's requested additional power load, but it should not
+            // collapse the shield by itself. Keep the shield up until it actually overloads or
+            // loses power.
             if (!power.Powered)
                 emitter.Recharging = true;
 
