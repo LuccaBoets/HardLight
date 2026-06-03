@@ -69,6 +69,7 @@ using Content.Shared.Clothing.Components;
 using Content.Shared.Clothing.EntitySystems;
 using Content.Server.Clothing.Systems;
 using Content.Server.Paint;
+using static Content.Shared.Paper.PaperComponent;
 
 namespace Content.Server.Shuttles.Save
 {

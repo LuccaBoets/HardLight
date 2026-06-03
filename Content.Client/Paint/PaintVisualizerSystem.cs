@@ -6,6 +6,7 @@ using Content.Shared.Hands;
 using Content.Shared.Paint;
 using Robust.Client.Graphics;
 using Robust.Shared.GameStates;
+using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
 namespace Content.Client.Paint
@@ -40,13 +41,7 @@ namespace Content.Client.Paint
         {
             ApplyPaintToSprite(uid, component, args.Sprite);
         }
-
-        private void OnAfterAutoHandleState(EntityUid uid, PaintedComponent component, ref AfterAutoHandleStateEvent args)
-        {
-            if (!TryComp(uid, out SpriteComponent? sprite))
-                return;
-
-            ApplyPaintToSprite(uid, component, sprite);
+            ApplyPaintToSprite(uid, component, args.Sprite);
         }
 
         private void ApplyPaintToSprite(EntityUid uid, PaintedComponent component, SpriteComponent? sprite)
