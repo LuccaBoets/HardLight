@@ -6,7 +6,6 @@ using Content.Shared.Hands;
 using Content.Shared.Paint;
 using Robust.Client.Graphics;
 using Robust.Shared.GameStates;
-using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
 namespace Content.Client.Paint
