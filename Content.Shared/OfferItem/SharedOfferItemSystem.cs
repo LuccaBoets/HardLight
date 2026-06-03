@@ -25,12 +25,8 @@ public abstract partial class SharedOfferItemSystem : EntitySystem
 
     private void SetInReceiveMode(EntityUid uid, OfferItemComponent component, AfterInteractUsingEvent args)
     {
-        SanitizeState(component);
-
         if (!TryComp<OfferItemComponent>(args.User, out var offerItem))
             return;
-
-        SanitizeState(offerItem);
 
         if (args.User == uid || component.IsInReceiveMode ||
             (offerItem.IsInReceiveMode && offerItem.Target != uid))
@@ -67,6 +63,11 @@ public abstract partial class SharedOfferItemSystem : EntitySystem
             return;
 
         UnOffer(uid, component);
+    }
+
+    private void OnGetState(Entity<OfferItemComponent> ent, ref ComponentGetState args)
+    {
+        SanitizeState(ent.Comp);
     }
 
     private void SanitizeState(OfferItemComponent component)
