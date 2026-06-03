@@ -56,11 +56,7 @@ public abstract partial class SharedOfferItemSystem : EntitySystem
             ("user", Identity.Entity(component.Target.Value, EntityManager)),
             ("item", Identity.Entity(offerItem.Item.Value, EntityManager))), component.Target.Value, uid);
     }
-    
-    private void OnGetState(Entity<OfferItemComponent> ent, ref ComponentGetState args)
-    {
-        SanitizeState(ent.Comp);
-    }
+
     private void OnMove(EntityUid uid, OfferItemComponent component, MoveEvent args)
     {
         SanitizeState(component);
@@ -89,7 +85,7 @@ public abstract partial class SharedOfferItemSystem : EntitySystem
     {
         return EntityManager.EntityExists(uid) && TryComp<MetaDataComponent>(uid, out _);
     }
-    
+
     private void OnReferencedEntityShutdown(EntityUid uid, MetaDataComponent component, ComponentShutdown args)
     {
         var query = EntityQueryEnumerator<OfferItemComponent>();
