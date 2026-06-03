@@ -301,7 +301,7 @@ namespace Content.Server.Zombies
             }
             _humanoidAppearance.SetSkinColor(target, zombiecomp.BeforeZombifiedSkinColor, false);
             RemComp<BloodSolutionModifierComponent>(target);
-            _bloodstream.ChangeBloodReagent(target, zombiecomp.BeforeZombifiedBloodReagent);
+            _bloodstream.ChangeBloodReagent(target, zombiecomp.BeforeZombifiedBloodReagent, storeOriginalBloodReagent: false);
             _language.RestoreCache((target, EnsureComp<LanguageCacheComponent>(target))); // Starlight: UnZombiby fix
             return true;
         }

@@ -3,6 +3,7 @@ using Content.Shared.IdentityManagement;
 using Content.Shared.Hands.Components;
 using Robust.Shared.Player;
 using Content.Shared.Hands.EntitySystems;
+using Robust.Shared.GameStates;
 
 namespace Content.Shared.OfferItem;
 
@@ -14,8 +15,10 @@ public abstract partial class SharedOfferItemSystem : EntitySystem
     public override void Initialize()
     {
         SubscribeLocalEvent<OfferItemComponent, AfterInteractUsingEvent>(SetInReceiveMode);
+        SubscribeLocalEvent<OfferItemComponent, ComponentGetState>(OnGetState);
         SubscribeLocalEvent<OfferItemComponent, MoveEvent>(OnMove);
         SubscribeLocalEvent<OfferItemComponent, AcceptOfferAlertEvent>(OnAcceptOfferAlert);
+        SubscribeLocalEvent<MetaDataComponent, ComponentShutdown>(OnReferencedEntityShutdown);
 
         InitializeInteractions();
     }
@@ -52,12 +55,61 @@ public abstract partial class SharedOfferItemSystem : EntitySystem
 
     private void OnMove(EntityUid uid, OfferItemComponent component, MoveEvent args)
     {
+        SanitizeState(component);
+
         if (component.Target == null ||
-            args.NewPosition.InRange(EntityManager, _transform,
+            _transform.InRange(args.NewPosition,
                 Transform(component.Target.Value).Coordinates, component.MaxOfferDistance))
             return;
 
         UnOffer(uid, component);
+    }
+
+    private void OnGetState(Entity<OfferItemComponent> ent, ref ComponentGetState args)
+    {
+        SanitizeState(ent.Comp);
+    }
+
+    private void SanitizeState(OfferItemComponent component)
+    {
+        if (component.Item != null && !IsValidNetworkReference(component.Item.Value))
+            component.Item = null;
+
+        if (component.Target != null && !IsValidNetworkReference(component.Target.Value))
+        {
+            component.Target = null;
+            component.IsInReceiveMode = false;
+        }
+    }
+
+    private bool IsValidNetworkReference(EntityUid uid)
+    {
+        return EntityManager.EntityExists(uid) && TryComp<MetaDataComponent>(uid, out _);
+    }
+
+    private void OnReferencedEntityShutdown(EntityUid uid, MetaDataComponent component, ComponentShutdown args)
+    {
+        var query = EntityQueryEnumerator<OfferItemComponent>();
+        while (query.MoveNext(out var offerUid, out var offerComp))
+        {
+            var changed = false;
+
+            if (offerComp.Item == uid)
+            {
+                offerComp.Item = null;
+                changed = true;
+            }
+
+            if (offerComp.Target == uid)
+            {
+                offerComp.Target = null;
+                offerComp.IsInReceiveMode = false;
+                changed = true;
+            }
+
+            if (changed)
+                Dirty(offerUid, offerComp);
+        }
     }
 
     /// <summary>

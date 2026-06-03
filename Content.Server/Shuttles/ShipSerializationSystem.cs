@@ -68,6 +68,7 @@ using Content.Shared.Tag;
 using Content.Shared.Clothing.Components;
 using Content.Shared.Clothing.EntitySystems;
 using Content.Server.Clothing.Systems;
+using Content.Server.Paint;
 
 namespace Content.Server.Shuttles.Save
 {
@@ -97,6 +98,8 @@ namespace Content.Server.Shuttles.Save
         [Dependency] private readonly TagSystem _tagSystem = default!;
         [Dependency] private readonly ChameleonClothingSystem _chameleonSystem = default!;
         [Dependency] private readonly ToggleableClothingSystem _toggleableClothingSystem = default!;
+        [Dependency] private readonly PaintSystem _paintSystem = default!;
+        [Dependency] private readonly PaperSystem _paperSystem = default!;
         // Note: For EntityDeserializer we use IoCManager.Instance directly to avoid extra injected fields.
 
         private ISawmill _sawmill = default!;
@@ -2375,6 +2378,8 @@ namespace Content.Server.Shuttles.Save
         private void RestorePaintedComponent(EntityUid uid, ComponentData componentData)
         {
             var comp = EnsureComp<PaintedComponent>(uid);
+            EnsureComp<AppearanceComponent>(uid);
+
             if (componentData.Properties.TryGetValue("Color", out var colorObj) && colorObj is string hex)
                 comp.Color = Color.FromHex(hex);
             if (componentData.Properties.TryGetValue("Enabled", out var enabledObj)
@@ -2382,8 +2387,9 @@ namespace Content.Server.Shuttles.Save
                 comp.Enabled = enabled;
             if (componentData.Properties.TryGetValue("ShaderName", out var shaderObj) && shaderObj is string shader)
                 comp.ShaderName = shader;
+
             Dirty(uid, comp);
-            _appearance.SetData(uid, PaintVisuals.Painted, comp.Enabled);
+            _paintSystem.UpdateAppearance(uid, comp);
         }
 
         private ComponentData? SerializeLabelComponent(LabelComponent comp)
@@ -2435,16 +2441,21 @@ namespace Content.Server.Shuttles.Save
         private void RestorePaperComponent(EntityUid uid, ComponentData componentData)
         {
             var comp = EnsureComp<PaperComponent>(uid);
-            if (componentData.Properties.TryGetValue("Content", out var contentObj))
-                comp.Content = contentObj?.ToString() ?? string.Empty;
+            var appearance = EnsureComp<AppearanceComponent>(uid);
+
+            var content = componentData.Properties.TryGetValue("Content", out var contentObj)
+                ? contentObj?.ToString() ?? string.Empty
+                : string.Empty;
+
             if (componentData.Properties.TryGetValue("StampState", out var stateObj))
                 comp.StampState = stateObj?.ToString();
             if (componentData.Properties.TryGetValue("EditingDisabled", out var disabledObj)
                 && bool.TryParse(disabledObj?.ToString(), out var disabled))
                 comp.EditingDisabled = disabled;
+
+            comp.StampedBy = new List<StampDisplayInfo>();
             if (componentData.Properties.TryGetValue("Stamps", out var stampsObj) && stampsObj is List<object> stampsList)
             {
-                comp.StampedBy = new List<StampDisplayInfo>();
                 foreach (var item in stampsList)
                 {
                     var dict = CoerceToDictStringObj(item);
@@ -2464,7 +2475,9 @@ namespace Content.Server.Shuttles.Save
                     comp.StampedBy.Add(info);
                 }
             }
-            Dirty(uid, comp);
+
+            _paperSystem.SetContent((uid, comp), content);
+            _appearance.SetData(uid, PaperVisuals.Stamp, comp.StampState ?? string.Empty, appearance);
         }
 
         private ComponentData? SerializeRandomSpriteComponent(RandomSpriteComponent comp)

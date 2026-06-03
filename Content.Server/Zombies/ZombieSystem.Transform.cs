@@ -217,8 +217,7 @@ public sealed partial class ZombieSystem
         // ClearExisting=true before we can configure it and wipes the bloodstream.
         if (TryComp<BloodstreamComponent>(target, out var zombieBloodstream))
         {
-            _bloodstream.ChangeBloodReagent(target, zombiecomp.NewBloodReagent, zombieBloodstream);
-            _bloodstream.ClearOriginalBloodReagent(target, zombieBloodstream);
+            _bloodstream.ChangeBloodReagent(target, zombiecomp.NewBloodReagent, zombieBloodstream, storeOriginalBloodReagent: false);
         }
 
         RemComp<BloodSolutionModifierComponent>(target);

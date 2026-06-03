@@ -83,7 +83,7 @@ public sealed class SpawnCharacterOverrideRuleSystem : EntitySystem
         }
 
         if (didOverrideEntity)
-            _traits.ApplyProfileTraits(currentMob, args.Profile, args.Player.Name, addTraitGear: false);
+            _traits.ApplyProfileTraits(currentMob, args.Profile, args.Player.Name, addTraitGear: false, ignoreEntityRestrictions: true);
     }
 
     private static bool IsMatch(string name, string match)

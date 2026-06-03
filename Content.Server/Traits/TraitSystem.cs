@@ -134,7 +134,7 @@ public sealed class TraitSystem : EntitySystem
     /// This is intended for non-standard spawn paths like admin spawning or cloning
     /// that already have a validated profile and just need its trait components replayed.
     /// </summary>
-    public void ApplyProfileTraits(EntityUid uid, HumanoidCharacterProfile profile, string? playerName = null, bool addTraitGear = true)
+    public void ApplyProfileTraits(EntityUid uid, HumanoidCharacterProfile profile, string? playerName = null, bool addTraitGear = true, bool ignoreEntityRestrictions = false)
     {
         var sortedTraits = new List<TraitPrototype>();
         foreach (var traitId in profile.TraitPreferences)
@@ -153,18 +153,20 @@ public sealed class TraitSystem : EntitySystem
                 continue;
             }
 
-            AddTrait(uid, traitPrototype, addTraitGear);
+            AddTrait(uid, traitPrototype, addTraitGear, ignoreEntityRestrictions);
         }
     }
 
     /// <summary>
     ///     Adds a single Trait Prototype to an Entity.
     /// </summary>
-    public void AddTrait(EntityUid uid, TraitPrototype traitPrototype, bool addTraitGear = true) // HardLight: Added bool addTraitGear
+    public void AddTrait(EntityUid uid, TraitPrototype traitPrototype, bool addTraitGear = true, bool ignoreEntityRestrictions = false) // HardLight: Added bool addTraitGear
     {
-        // Check whitelist/blacklist
-        if (_whitelistSystem.IsWhitelistFail(traitPrototype.Whitelist, uid) ||
-            _whitelistSystem.IsBlacklistPass(traitPrototype.Blacklist, uid))
+        // Character-override bodies can intentionally differ from the validated profile body.
+        // In that case we need to preserve the selected traits instead of re-filtering them.
+        if (!ignoreEntityRestrictions &&
+            (_whitelistSystem.IsWhitelistFail(traitPrototype.Whitelist, uid) ||
+             _whitelistSystem.IsBlacklistPass(traitPrototype.Blacklist, uid)))
             return;
 
         // Add all components required by the prototype

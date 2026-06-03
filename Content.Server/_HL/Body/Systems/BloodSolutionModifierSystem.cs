@@ -39,10 +39,7 @@ public sealed class BloodSolutionModifierSystem : EntitySystem
         }
 
         if (!string.IsNullOrWhiteSpace(ent.Comp.BloodReagent))
-        {
-            _bloodstream.ChangeBloodReagent(ent.Owner, ent.Comp.BloodReagent, bloodstream);
-            _bloodstream.ClearOriginalBloodReagent(ent.Owner, bloodstream);
-        }
+            _bloodstream.ChangeBloodReagent(ent.Owner, ent.Comp.BloodReagent, bloodstream, storeOriginalBloodReagent: false);
 
         if (ent.Comp.ClearExisting)
             _solution.RemoveAllSolution(bloodSolutionEntity);

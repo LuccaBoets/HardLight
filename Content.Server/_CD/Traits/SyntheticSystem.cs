@@ -31,6 +31,6 @@ public sealed class SyntheticSystem : EntitySystem // HardLight: Synth<Synthetic
         }
 
         // Give them synthetic blood. Ion storm notif is handled in that system, // HardLight: synth<synthetic
-        _bloodstream.ChangeBloodReagent(uid, SyntheticBloodReagent); // DeltaV - make strings static readonly, // HardLight: Synth<Synthetic
+        _bloodstream.ChangeBloodReagent(uid, SyntheticBloodReagent, storeOriginalBloodReagent: false); // DeltaV - make strings static readonly, // HardLight: Synth<Synthetic
     }
 }

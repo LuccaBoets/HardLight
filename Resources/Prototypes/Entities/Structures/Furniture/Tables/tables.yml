@@ -330,13 +330,13 @@
         - !type:DoActsBehavior
           acts: [ "Destruction" ]
         - !type:PlaySoundBehavior
-          sound: /Audio//Weapons/pierce.ogg
+          sound: /Audio/Weapons/pierce.ogg
     - trigger:
         !type:DamageTrigger
         damage: 15
       behaviors:
       - !type:PlaySoundBehavior
-        sound: /Audio//Weapons/pierce.ogg
+        sound: /Audio/Weapons/pierce.ogg
       - !type:SpawnEntitiesBehavior
         spawn:
           MaterialCardboard:

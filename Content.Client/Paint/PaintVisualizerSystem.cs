@@ -5,6 +5,7 @@ using Content.Shared.Clothing;
 using Content.Shared.Hands;
 using Content.Shared.Paint;
 using Robust.Client.Graphics;
+using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
 
 namespace Content.Client.Paint
@@ -29,6 +30,7 @@ namespace Content.Client.Paint
         {
             base.Initialize();
 
+            SubscribeLocalEvent<PaintedComponent, AfterAutoHandleStateEvent>(OnAfterAutoHandleState);
             SubscribeLocalEvent<PaintedComponent, HeldVisualsUpdatedEvent>(OnHeldVisualsUpdated);
             SubscribeLocalEvent<PaintedComponent, ComponentShutdown>(OnShutdown);
             SubscribeLocalEvent<PaintedComponent, EquipmentVisualsUpdatedEvent>(OnEquipmentVisualsUpdated);
@@ -36,28 +38,44 @@ namespace Content.Client.Paint
 
         protected override void OnAppearanceChange(EntityUid uid, PaintedComponent component, ref AppearanceChangeEvent args)
         {
-            // ShaderPrototype sadly in Robust.Client, cannot move to shared component.
-            Shader = _protoMan.Index<ShaderPrototype>(component.ShaderName).Instance();
+            ApplyPaintToSprite(uid, component, args.Sprite);
+        }
 
-            if (args.Sprite == null)
+        private void OnAfterAutoHandleState(EntityUid uid, PaintedComponent component, ref AfterAutoHandleStateEvent args)
+        {
+            if (!TryComp(uid, out SpriteComponent? sprite))
                 return;
 
-            if (!_appearance.TryGetData<bool>(uid, PaintVisuals.Painted, out bool isPainted))
+            ApplyPaintToSprite(uid, component, sprite);
+        }
+
+        private void ApplyPaintToSprite(EntityUid uid, PaintedComponent component, SpriteComponent? sprite)
+        {
+            if (sprite == null)
                 return;
 
-            var sprite = args.Sprite;
-
+            if (!_appearance.TryGetData<bool>(uid, PaintVisuals.Painted, out var isPainted) || !isPainted)
+                return;
 
             foreach (var spriteLayer in sprite.AllLayers)
             {
                 if (spriteLayer is not Layer layer)
                     continue;
 
-                if (layer.Shader == null) // If shader isn't null we dont want to replace the original shader.
-                {
-                    layer.Shader = Shader;
-                    layer.Color = component.Color;
-                }
+                var paintShaderPrototype = GetPaintShaderPrototype(component.ShaderName, layer);
+                var canApplyPaint = layer.Shader == null
+                    || layer.ShaderPrototype == component.ShaderName
+                    || layer.ShaderPrototype == paintShaderPrototype
+                    || layer.ShaderPrototype == DisplacedStencilDrawShader
+                    || layer.ShaderPrototype == DisplacedGreyscaleShader;
+
+                if (!canApplyPaint)
+                    continue;
+
+                // ShaderPrototype sadly in Robust.Client, cannot move to shared component.
+                Shader = _protoMan.Index<ShaderPrototype>(paintShaderPrototype).Instance();
+                layer.Shader = Shader;
+                layer.Color = component.Color;
             }
         }
 
