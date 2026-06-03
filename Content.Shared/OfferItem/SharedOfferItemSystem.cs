@@ -15,7 +15,7 @@ public abstract partial class SharedOfferItemSystem : EntitySystem
     public override void Initialize()
     {
         SubscribeLocalEvent<OfferItemComponent, AfterInteractUsingEvent>(SetInReceiveMode);
-        SubscribeLocalEvent<OfferItemComponent, ComponentGetState>(OnGetState);
+        //SubscribeLocalEvent<OfferItemComponent, ComponentGetState>(OnGetState);
         SubscribeLocalEvent<OfferItemComponent, MoveEvent>(OnMove);
         SubscribeLocalEvent<OfferItemComponent, AcceptOfferAlertEvent>(OnAcceptOfferAlert);
         SubscribeLocalEvent<MetaDataComponent, ComponentShutdown>(OnReferencedEntityShutdown);
@@ -65,10 +65,10 @@ public abstract partial class SharedOfferItemSystem : EntitySystem
         UnOffer(uid, component);
     }
 
-    private void OnGetState(Entity<OfferItemComponent> ent, ref ComponentGetState args)
-    {
-        SanitizeState(ent.Comp);
-    }
+    //private void OnGetState(Entity<OfferItemComponent> ent, ref ComponentGetState args)
+    //{
+    //    SanitizeState(ent.Comp);
+    //}
 
     private void SanitizeState(OfferItemComponent component)
     {
