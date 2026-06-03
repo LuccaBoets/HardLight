@@ -41,9 +41,13 @@ namespace Content.Client.Paint
         {
             ApplyPaintToSprite(uid, component, args.Sprite);
         }
-            ApplyPaintToSprite(uid, component, args.Sprite);
-        }
+        private void OnAfterAutoHandleState(EntityUid uid, PaintedComponent component, ref AfterAutoHandleStateEvent args)
+        {
+            if (!TryComp(uid, out SpriteComponent? sprite))
+                return;
 
+            ApplyPaintToSprite(uid, component, sprite);
+        }
         private void ApplyPaintToSprite(EntityUid uid, PaintedComponent component, SpriteComponent? sprite)
         {
             if (sprite == null)
