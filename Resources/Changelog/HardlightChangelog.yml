@@ -4518,3 +4518,11 @@ Entries:
       message: AI Remote Devices now incorporates shuntable borgs
   id: 478
   time: '2026-06-07T05:23:06.0000000+00:00'
+- author: Drekk
+  changes:
+    - type: Fix
+      message: Fixed Changelog missing some changes!
+    - type: Fix
+      message: Fixed Changelog not showing in Discord
+  id: 479
+  time: '2026-06-09T10:40:08.0000000+00:00'
