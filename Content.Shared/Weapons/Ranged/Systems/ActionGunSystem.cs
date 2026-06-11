@@ -30,7 +30,7 @@ public sealed class ActionGunSystem : EntitySystem
         if (ent.Comp.Gun != null)
             _transform.SetParent(ent.Comp.Gun.Value, ent);
 
-        Log.Info($"ActionGun MapInit: entity={ent.Owner} actionProto={ent.Comp.Action} actionEntity={ent.Comp.ActionEntity} gunProto={ent.Comp.GunProto} spawnedGun={ent.Comp.Gun}");
+        //Log.Info($"ActionGun MapInit: entity={ent.Owner} actionProto={ent.Comp.Action} actionEntity={ent.Comp.ActionEntity} gunProto={ent.Comp.GunProto} spawnedGun={ent.Comp.Gun}");
     }
 
     private void OnShutdown(Entity<ActionGunComponent> ent, ref ComponentShutdown args)
