@@ -4682,3 +4682,11 @@ Entries:
       message: Updated texture for rambler
   id: 498
   time: '2026-06-12T22:15:45.0000000+00:00'
+- author: re-silvered
+  changes:
+    - type: Tweak
+      message: >-
+        Some round-specific items are now cleaned up and deleted automatically
+        after getting to ColComm
+  id: 499
+  time: '2026-06-12T22:16:07.0000000+00:00'
