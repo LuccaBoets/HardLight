@@ -3,7 +3,11 @@
 
 # For the PDA Ringer screen
 
-comp-ringer-vibration-popup = Your PDA vibrates
+# Hardlight start
+comp-ringer-vibration-popup-self = Your PDA vibrates
+comp-ringer-vibration-popup-other-owner = {$owner}'s PDA vibrates
+comp-ringer-vibration-popup-other-unknown = A nearby PDA rings
+# Hardlight end
 
 comp-ringer-ui-menu-title = Ringtone
 

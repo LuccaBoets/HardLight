@@ -210,12 +210,37 @@ public abstract class SharedRingerSystem : EntitySystem
 
         UpdateRingerUi(ent);
 
-        _popup.PopupPredicted(Loc.GetString("comp-ringer-vibration-popup"),
-            ent,
-            ent.Owner,
-            Filter.Pvs(ent, 0.05f),
-            false,
-            PopupType.Medium);
+        // Hardlight start - differentiate ringer popup text recipients.
+        EntityUid? recipient = null;
+        string? ownerName = null;
+
+        if (TryComp<PdaComponent>(ent.Owner, out var pda))
+        {
+            recipient = pda.PdaOwner;
+            ownerName = pda.OwnerName;
+        }
+
+        var selfMessage = Loc.GetString("comp-ringer-vibration-popup-self");
+        var othersMessage = ownerName != null
+            ? Loc.GetString("comp-ringer-vibration-popup-other-owner", ("owner", ownerName))
+            : Loc.GetString("comp-ringer-vibration-popup-other-unknown"); // Fallback if no owner.
+
+        if (recipient != null)
+        {
+            _popup.PopupEntity(selfMessage, ent.Owner, recipient.Value, PopupType.Medium);
+
+            _popup.PopupEntity(
+                othersMessage,
+                ent.Owner,
+                Filter.PvsExcept(recipient.Value, entityManager: EntityManager),
+                true,
+                PopupType.Small);
+        }
+        else
+        {
+            _popup.PopupPredicted(selfMessage, othersMessage, ent.Owner, recipient, PopupType.Medium);
+        }
+        // Hardlight end
 
         DirtyFields(ent.AsNullable(),
             null,
