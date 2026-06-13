@@ -235,3 +235,8 @@
   - !type:AiInteractWireAction
   - !type:AccessWireAction
 
+- type: wireLayout
+  id: SizeManipulator
+  dummyWires: 0
+  wires:
+  - !type:SizeManipulatorSafetyWireAction

@@ -105,7 +105,7 @@ namespace Content.Server.SizeAttribute
         }
 
         // HardLight start
-        private void Scale(
+        public void Scale(
             EntityUid uid,
             float scale,
             float density,

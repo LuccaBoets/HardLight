@@ -74,3 +74,8 @@
 
 - type: consentToggle
   id: NoClone
+
+- type: consentToggle
+  id: SizeManipulation
+  name: Size Manipulation
+  description: "Size Gun GOOO BRRRR"
