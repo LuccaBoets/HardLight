@@ -4744,3 +4744,9 @@ Entries:
       message: QuadBorg IDs now have their respective job icons
   id: 507
   time: '2026-06-15T23:26:05.0000000+00:00'
+- author: Iisazel
+  changes:
+    - type: Tweak
+      message: Argocyte blades are no longer the strongest weapon in the game
+  id: 508
+  time: '2026-06-15T23:30:26.0000000+00:00'
