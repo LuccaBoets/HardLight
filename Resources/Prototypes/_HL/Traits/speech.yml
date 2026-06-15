@@ -165,6 +165,15 @@
     speechSounds: UnisexResomi
 
 - type: trait
+  id: ScandinavianAccent
+  name: hl-trait-scandinavian-name
+  description: hl-trait-scandinavian-desc
+  category: SpeechTraits
+  cost: 1
+  components:
+  - type: ScandinavianAccent
+
+- type: trait
   id: HLVoiceWawa
   name: hl-trait-voice-wawa-name
   description: hl-trait-voice-wawa-desc

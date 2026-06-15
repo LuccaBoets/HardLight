@@ -44,6 +44,10 @@ hl-trait-voice-wawa-desc = Through one way or another, you sound like an adorabl
 hl-trait-horny-name = Horny
 hl-trait-horny-desc = Your moods have a tendency to be erotic, and drive you to act accordingly.
 
+
+hl-trait-scandinavian-name = Scandinavian accent
+hl-trait-scandinavian-desc = You have to assemble the sentence yourself.
+
 lead-footed-name = Lead-footed
 lead-footed-text = Somehow able to stay standing during the rigors of FTL.
 inoculated-name = Inoculated
