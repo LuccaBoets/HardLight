@@ -2,11 +2,14 @@
 using System.Numerics;
 using Content.Server._Common.Consent;
 using Content.Server.SizeAttribute;
+using Content.Server.Sprite;
 using Content.Shared._Common.Consent;
 using Content.Shared.Body.Components;
 using Content.Shared.Humanoid;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Popups;
+using Content.Shared.Silicons.Borgs.Components;
+using Content.Shared.Sprite;
 using Content.Shared.Weapons.Ranged.Components;
 using Robust.Server.GameObjects;
 using Robust.Shared.Log;
@@ -26,6 +29,7 @@ public sealed class SizeManipulationSystem : EntitySystem
     [Dependency] private readonly AppearanceSystem _appearance = default!;
     [Dependency] private readonly SizeAttributeSystem _sizeAttribute = default!;
     [Dependency] private readonly SharedPhysicsSystem _physics = default!;
+    [Dependency] private readonly ScaleVisualsSystem _scaleVisuals = default!; // HardLight
 
     private static readonly ProtoId<ConsentTogglePrototype> SizeManipulationConsent = "SizeManipulation";
 
@@ -35,38 +39,6 @@ public sealed class SizeManipulationSystem : EntitySystem
         //SubscribeLocalEvent<SizeAffectedComponent, GetSizeModifierEvent>(OnGetSizeModifier);
         //SubscribeLocalEvent<SizeAffectedComponent, ComponentStartup>(OnComponentStartup);
     }
-
-    /// <summary>
-    /// When a SizeAffectedComponent is added or initialized (e.g., on client connect),
-    /// trigger a size recalculation to ensure visual state is correct
-    /// </summary>
-    //private void OnComponentStartup(EntityUid uid, SizeAffectedComponent component, ComponentStartup args)
-    //{
-    //    // Only recalculate if the entity has a non-default scale
-    //    if (Math.Abs(component.ScaleMultiplier - 1.0f) > 0.01f)
-    //    {
-    //        //var recalcEvent = new RequestSizeRecalcEvent();
-    //        //RaiseLocalEvent(uid, ref recalcEvent);
-    //    }
-    //}
-
-    ///// <summary>
-    ///// Contributes the size gun's modifier when collecting all size modifiers
-    ///// </summary>
-    //private void OnGetSizeModifier(EntityUid uid, SizeAffectedComponent component)
-    //{
-    //    // Only contribute if the scale has been changed from default
-    //    if (Math.Abs(component.ScaleMultiplier - 1.0f) > 0.01f)
-    //    {
-    //        //component.ScaleMultiplier
-    //        //args.Modifiers.Add(new SizeModifier
-    //        //{
-    //        //    Source = "SizeGun",
-    //        //    Scale = component.ScaleMultiplier,
-    //        //    Priority = 10 // Medium priority - applied after base but before temporary effects
-    //        //});
-    //    }
-    //}
 
     /// <summary>
     /// Applies a size change to the target entity
@@ -124,16 +96,18 @@ public sealed class SizeManipulationSystem : EntitySystem
             }
         }
 
+        // Hardlight Start
+
         // Fix floating point problem
         newScale = MathF.Round(newScale, 2);
 
         // Update the component's scale multiplier
+        float oldScale = sizeComp.ScaleMultiplier;
         sizeComp.ScaleMultiplier = newScale;
         Dirty(target, sizeComp);
 
         // Set Scale
-        var appearanceComponent = _entityManager.EnsureComponent<AppearanceComponent>(target);
-        _appearance.SetData(target, HumanoidVisuals.Scale, new Vector2(newScale, newScale), appearanceComponent);
+        _scaleVisuals.SetSpriteScale(target, new Vector2(newScale, newScale));
 
         if (_entityManager.TryGetComponent(target, out FixturesComponent? manager))
         {
@@ -145,14 +119,11 @@ public sealed class SizeManipulationSystem : EntitySystem
                 switch (fixture.Shape)
                 {
                     case PhysShapeCircle circle:
-                        Logger.Debug($"circle.Radius:  {circle.Radius} for {ToPrettyString(target)}");
 
-                        var radius = newScale * 0.35f;
-                        //if (isBorg)
-                        //{
-                        //    if (borgFixtureRadius is { } overrideRadius && overrideRadius > 0f)
-                        //        radius = overrideRadius * newScale;
-                        //}
+                        // undo the scaling factor to get entities original radius
+                        var originalRadius = circle.Radius / oldScale;
+                        // Calc new radius of the entity
+                        var radius = MathF.Round(originalRadius * newScale, 4);
 
                         // Set Radius
                         _physics.SetPositionRadius(target, id, fixture, circle, circle.Position * newScale, radius, manager);
@@ -169,8 +140,9 @@ public sealed class SizeManipulationSystem : EntitySystem
             }
         }
 
-        Logger.Debug($"SizeManipulation: Set scale multiplier to {newScale} for {ToPrettyString(target)}");
+        // Hardlight End
 
+        Logger.Debug($"SizeManipulation: Set scale multiplier to {newScale} for {ToPrettyString(target)}");
 
         var message = mode == SizeManipulatorMode.Grow
             ? Loc.GetString("size-manipulator-target-grow")
