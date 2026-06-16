@@ -1824,6 +1824,7 @@
       Warden: 1
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50
       children:
       - id: MobArgocyteSlurva
       - id: MobArgocyteBarrier
@@ -1855,6 +1856,7 @@
     duration: 60
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50
       children:
       - id: MobTick
 
@@ -1916,6 +1918,7 @@
       Warden: 1
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50
       children:
       - id: MobCarp
       - id: MobCarpMagic
@@ -1944,6 +1947,7 @@
       Warden: 1
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50
       children:
       - id: MobBearSpace
       - id: MobKangarooSpace
@@ -1970,6 +1974,7 @@
       Warden: 1
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50
       children:
       - id: ReagentSlimeBeer
       - id: ReagentSlimePax
@@ -2023,6 +2028,7 @@
       Warden: 1
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50
       children:
       - id: XenoEggSpawner
       - id: MobXenoPraetorianNPC
@@ -2069,6 +2075,7 @@
       Warden: 1
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50
       children:
       - id: MobRogueSiliconScrap
       - id: MobRogueSiliconScrapThreads
@@ -2110,6 +2117,7 @@
       Warden: 1
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50
       children:
       - id: SpawnMobSyndicateNavalCaptain
       - id: SpawnMobSyndicateNavalEngineer
@@ -2145,6 +2153,7 @@
       Warden: 1
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50
       children:
       - id: SpawnMobDinosaurSmall
       - id: SpawnMobDinosaurMedium
@@ -2170,6 +2179,7 @@
       Warden: 1
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50
       children:
       - id: SpawnMobAberrantFleshExpeditions
       - id: SpawnMobAberrantFleshNewbornExpeditions
@@ -2194,6 +2204,7 @@
       Warden: 1
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50
       children:
       - id: SpawnMobExplorerT1
       - id: SpawnMobExplorerT2
@@ -2219,6 +2230,7 @@
       Warden: 1
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50
       children:
       - id: SpawnMobMercenaryT1
       - id: SpawnMobMercenaryT2
@@ -2244,6 +2256,7 @@
       Warden: 1
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50
       children:
       - id: MobZTaken
       - id: MobZVasophage
@@ -2272,6 +2285,7 @@
       Warden: 1
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50
       children:
       - id: SpawnMobPunkT1
       - id: SpawnMobPunkT2
@@ -2301,6 +2315,7 @@
       Warden: 1
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50
       children:
       - id: SpawnMobBloodCultistZealotMelee
       - id: SpawnMobBloodCultLeech
@@ -2331,6 +2346,7 @@
       HeadOfSecurity: 1
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50
       children:
       - id: BlueRainLizard
       - id: HostileBlueRainLizard
@@ -2363,6 +2379,7 @@
     duration: 60
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50
       children:
       - id: MobEmotionalSupportScurret
 
@@ -2382,6 +2399,7 @@
     duration: 60
   - type: VentHordeRule
     table: !type:GroupSelector
+      rolls: 5, 10, 15, 20, 25, 30, 50, 100
       children:
       - id: MobAngryBeeTimed
 
