@@ -4848,3 +4848,9 @@ Entries:
       message: AI Eye no longer moves around while piloting a ship as an AI Core
   id: 519
   time: '2026-06-16T08:22:42.0000000+00:00'
+- author: Typheus
+  changes:
+    - type: Fix
+      message: Fixed the AI Eye disappearing after returning from expedition
+  id: 520
+  time: '2026-06-16T08:25:26.0000000+00:00'
