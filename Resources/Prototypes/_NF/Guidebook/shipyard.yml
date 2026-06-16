@@ -61,6 +61,7 @@
   - ShipyardSkipper
   - ShipyardSpirit
   - ShipyardStasis
+  - ShipyardStronghold
   - ShipyardSurveyor
   - ShipyardTide
   - ShipyardVagabond
@@ -345,6 +346,11 @@
   id: ShipyardStasis
   name: guide-entry-shipyard-stasis
   text: "/ServerInfo/_NF/Guidebook/Shipyard/Stasis.xml"
+
+- type: guideEntry
+  id: ShipyardStronghold
+  name: guide-entry-shipyard-stronghold
+  text: "/ServerInfo/_NF/Guidebook/Shipyard/Stronghold.xml"
 
 - type: guideEntry
   id: ShipyardSurveyor

@@ -79,6 +79,7 @@ guide-entry-shipyard-izakaya = Izakaya
 guide-entry-shipyard-kestrel = Kestrel
 guide-entry-shipyard-kilderkin = Kilderkin
 guide-entry-shipyard-lantern = Lantern
+guide-entry-shipyard-stronghold = Stronghold
 guide-entry-shipyard-legman = Legman
 guide-entry-shipyard-liquidator = Liquidator
 guide-entry-shipyard-loader = Loader
