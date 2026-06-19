@@ -8,10 +8,8 @@
   },
   "states": [
     {
-      "name": "icon"
-    },
-	{
-      "name": "folded"
+      "name": "icon",
+      "directions": 1
     },
     {
       "name": "equipped-BACKPACK",
