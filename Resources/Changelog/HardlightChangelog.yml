@@ -4928,3 +4928,12 @@ Entries:
         shouldn't.
   id: 529
   time: '2026-06-19T09:44:43.0000000+00:00'
+- author: re-silvered
+  changes:
+    - type: Add
+      message: >-
+        Added: Audible Ping for when you receive chat highlights! (You can
+        toggle it on/off in Accessibility settings or adjust the volume in Audio
+        settings.)
+  id: 530
+  time: '2026-06-19T09:45:38.0000000+00:00'
