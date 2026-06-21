@@ -1,8 +1,11 @@
 using Content.Client._Common.Consent;
+using Content.Client.Examine;
 using Content.Shared._Common.CCVar;
 using Content.Shared._Common.Consent;
+using Content.Shared.Examine;
 using Content.Shared.StatusIcon;
 using Content.Shared.StatusIcon.Components;
+using Robust.Client.Player;
 using Robust.Shared.Configuration;
 using Robust.Shared.Prototypes;
 
@@ -13,6 +16,8 @@ public sealed class ShowNonconIconsSystem : EntitySystem
     [Dependency] private readonly IClientConsentManager _consentManager = default!;
     [Dependency] private readonly IPrototypeManager _prototype = default!;
     [Dependency] private readonly IConfigurationManager _cfg = default!;
+    [Dependency] private readonly IPlayerManager _player = default!;
+    [Dependency] private readonly ExamineSystem _examine = default!;
 
     private static readonly ProtoId<ConsentTogglePrototype> NonconConsentToggle = "NonconIcon";
     private static readonly ProtoId<ConsentTogglePrototype> NonconAggressorToggle = "NonconAggressor";
@@ -58,6 +63,9 @@ public sealed class ShowNonconIconsSystem : EntitySystem
             return;
         }
 
+        if (!CanShowToLocalViewer(ent.Owner))
+            return;
+
         // Pick marker icon based on the TARGET's selected role(s):
         //   Aggressor only  -> red    (default) / amber       (colorblind)
         //   Victim only     -> blue   (default) / teal-green  (colorblind)
@@ -80,5 +88,25 @@ public sealed class ShowNonconIconsSystem : EntitySystem
 
         if (_prototype.TryIndex<SecurityIconPrototype>(iconId, out var iconPrototype))
             ev.StatusIcons.Add(iconPrototype);
+    }
+
+    private bool CanShowToLocalViewer(EntityUid target)
+    {
+        if (_player.LocalEntity is not { } viewer)
+            return false;
+
+        // Match the normal status icon behavior: always show our own icons to us.
+        if (viewer == target)
+            return true;
+
+        var attempt = new ExamineAttemptEvent(viewer);
+        RaiseLocalEvent(target, attempt);
+        if (attempt.Cancelled)
+            return false;
+
+        if (!_examine.IsOccluded(viewer))
+            return true;
+
+        return _examine.InRangeUnOccluded(viewer, target, 0f, entity => entity == viewer || entity == target);
     }
 }

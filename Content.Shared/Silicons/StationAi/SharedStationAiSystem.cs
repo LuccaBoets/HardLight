@@ -376,6 +376,40 @@ public abstract partial class SharedStationAiSystem : EntitySystem
         }
     }
 
+    //Hardlight: Used to detect AI piloting shuttle and handle Eye accordingly.
+    /// <summary>
+    /// Used to switch AI Eye control for piloting a shuttle in order to avoid the eye flying around while controlling the shuttle.
+    /// </summary>
+    /// <param name="entity">The AI Core attempting to pilot the craft.</param>
+    /// <param name="currentlyPiloting">Whether or not the core is currently piloting</param>
+    public void SwitchPilotingMode(Entity<StationAiCoreComponent?> entity, bool currentlyPiloting)
+    {
+        if (entity.Comp?.Remote == null || entity.Comp.Remote == !currentlyPiloting)
+            return;
+
+        var ent = new Entity<StationAiCoreComponent>(entity.Owner, entity.Comp);
+
+        ent.Comp.Remote = !currentlyPiloting;
+
+        EntityCoordinates? coords = ent.Comp.RemoteEntity != null ? Transform(ent.Comp.RemoteEntity.Value).Coordinates : null;
+
+        // Attach new eye
+        ClearEye(ent);
+
+        if (currentlyPiloting)
+            return;
+
+        if (SetupEye(ent, coords))
+            AttachEye(ent);
+
+        // Adjust user FoV
+        var user = GetInsertedAI(ent);
+
+        if (TryComp<EyeComponent>(user, out var eye))
+            _eye.SetDrawFov(user.Value, currentlyPiloting);
+    }
+    //Hardlight end
+
     public void SwitchRemoteEntityMode(Entity<StationAiCoreComponent?> entity, bool isRemote)
     {
         if (entity.Comp?.Remote == null || entity.Comp.Remote == isRemote)
@@ -399,6 +433,56 @@ public abstract partial class SharedStationAiSystem : EntitySystem
         if (TryComp<EyeComponent>(user, out var eye))
             _eye.SetDrawFov(user.Value, !isRemote);
     }
+
+    //Hardlight: Fixes to prevent players losing control of AI after FTL jumps
+    /// <summary>
+    /// Repairs the AI Eye if something has happened to remove or break it.
+    /// </summary>
+    /// <param name="entity">The AI Core to have its eye repaired</param>
+    public void RepairAiEye(EntityUid entity)
+    {
+        bool isRemote = true;
+
+        if (!TryComp<StationAiCoreComponent>(entity, out var comp))
+            return;
+
+        var ent = new Entity<StationAiCoreComponent>(entity, comp);
+
+        ent.Comp.Remote = isRemote;
+
+        EntityCoordinates? coords = null;
+
+        // Attach new eye
+        ClearEye(ent);
+
+        if (SetupEye(ent, coords))
+            AttachEye(ent);
+
+        // Adjust user FoV
+        var user = GetInsertedAI(ent);
+
+        if (TryComp<EyeComponent>(user, out var eye))
+            _eye.SetDrawFov(user.Value, !isRemote);
+    }
+
+    /// <summary>
+    /// Recenters eye on the core
+    /// </summary>
+    /// <param name="ent"></param>
+    public void RecenterAiEye(Entity<StationAiCoreComponent> ent)
+    {
+        if (!TryComp<TransformComponent>(ent, out var coreTransComp))
+            return;
+
+        if (ent.Comp?.RemoteEntity == null)
+            return;
+
+        if (!TryComp<TransformComponent>(ent.Comp.RemoteEntity, out var eyeTransComp))
+            return;
+
+        _xforms.DropNextTo((EntityUid)ent.Comp.RemoteEntity, (EntityUid)ent);
+    }
+    //Hardlight end
 
     protected bool SetupEye(Entity<StationAiCoreComponent> ent, EntityCoordinates? coords = null)
     {
