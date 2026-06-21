@@ -5108,3 +5108,9 @@ Entries:
         compared to humans.
   id: 551
   time: '2026-06-21T07:05:04.0000000+00:00'
+- author: 2DSiggy
+  changes:
+    - type: Add
+      message: Vinyls can now be stored in bluespace bookshelves.
+  id: 552
+  time: '2026-06-21T07:07:11.0000000+00:00'
