@@ -1,22 +1,19 @@
 
+using System.Linq;
 using System.Numerics;
 using Content.Server._Common.Consent;
-using Content.Server.SizeAttribute;
 using Content.Server.Sprite;
 using Content.Shared._Common.Consent;
 using Content.Shared.Body.Components;
-using Content.Shared.Humanoid;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Popups;
-using Content.Shared.Silicons.Borgs.Components;
-using Content.Shared.Sprite;
 using Content.Shared.Weapons.Ranged.Components;
-using Robust.Server.GameObjects;
-using Robust.Shared.Log;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Collision.Shapes;
+using Robust.Shared.Physics.Dynamics;
 using Robust.Shared.Physics.Systems;
 using Robust.Shared.Prototypes;
+using static Robust.Shared.Prototypes.EntityPrototype;
 
 namespace Content.Server.Body.Systems;
 
@@ -25,19 +22,91 @@ public sealed class SizeManipulationSystem : EntitySystem
 
     [Dependency] private readonly IEntityManager _entityManager = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly ConsentSystem _consent = default!;
-    [Dependency] private readonly AppearanceSystem _appearance = default!;
-    [Dependency] private readonly SizeAttributeSystem _sizeAttribute = default!;
+    [Dependency] private readonly ConsentSystem _consent = default!; 
     [Dependency] private readonly SharedPhysicsSystem _physics = default!;
     [Dependency] private readonly ScaleVisualsSystem _scaleVisuals = default!; // HardLight
+    [Dependency] private readonly IPrototypeManager _prototypeManager = default!; // HardLight
 
     private static readonly ProtoId<ConsentTogglePrototype> SizeManipulationConsent = "SizeManipulation";
 
     public override void Initialize()
     {
         base.Initialize();
-        //SubscribeLocalEvent<SizeAffectedComponent, GetSizeModifierEvent>(OnGetSizeModifier);
-        //SubscribeLocalEvent<SizeAffectedComponent, ComponentStartup>(OnComponentStartup);
+    }
+
+    private static float GetDensity(Fixture fixture, float oldScale, float newScale)
+    {
+        float oldDestinyMultiplier;
+        if (oldScale > 1)
+        {
+            oldDestinyMultiplier = 1.25f;
+        }
+        else
+        {
+            oldDestinyMultiplier = 0.7f;
+        }
+
+        float originalDensity = fixture.Density / oldDestinyMultiplier;
+
+        float newDestinyMultiplier;
+        if (newScale > 1)
+        {
+            newDestinyMultiplier = 1.25f;
+        }
+        else
+        {
+            newDestinyMultiplier = 0.7f;
+        }
+
+        return originalDensity * newDestinyMultiplier;
+    }
+
+    public void ApplyEffects(float scale, float oldScale, SizeAffectedComponent sizeComp, EntityUid target)
+    {
+        var scaleEffects = _prototypeManager.EnumeratePrototypes<SizeManipulationPrototype>().ToList();
+
+        // Get old components
+        List<KeyValuePair<string, ComponentRegistryEntry>>? oldComponents = default;
+        foreach (var scaleEffect in scaleEffects)
+        {
+            if (oldScale > scaleEffect.MinScale && oldScale <= scaleEffect.MaxScale)
+            {
+                oldComponents = scaleEffect.Components.ToList();
+                break;
+            }
+        }
+
+        // Apply new components with copy (override)
+        foreach (var scaleEffect in scaleEffects)
+        {
+            var components = scaleEffect.Components;
+            if (scale > scaleEffect.MinScale && scale <= scaleEffect.MaxScale)
+            {
+                Logger.Debug($"SizeManipulationSystem: size effect: {scaleEffect.ID}, scale range: {scaleEffect.MinScale}-{scaleEffect.MaxScale}");
+
+                foreach (var componentKeyPair in components)
+                {
+                    if (oldComponents != null && oldComponents.Any(x => x.Key == componentKeyPair.Key))
+                    {
+                        oldComponents.RemoveAll(x => x.Key == componentKeyPair.Key);
+                    }
+
+                    var component = componentKeyPair.Value.Component;
+                    CopyComp(component.Owner, target, component);
+                }
+                break;
+            }
+        }
+
+        // Remove any left over old components
+        if (oldComponents != null)
+        {
+            foreach (var oldComponent in oldComponents)
+            {
+                var type = oldComponent.Value.Component.GetType();
+                RemCompDeferred(target, type);
+            }
+        }
     }
 
     /// <summary>
@@ -69,6 +138,8 @@ public sealed class SizeManipulationSystem : EntitySystem
         // If safety is disabled, double the max limit
         var maxScale = safetyDisabled ? sizeComp.MaxScale * 2.0f : sizeComp.MaxScale;
 
+        // Hardlight Start
+
         float newScale;
         var densityMultiplier = 0f;
         if (mode == SizeManipulatorMode.Grow)
@@ -96,13 +167,14 @@ public sealed class SizeManipulationSystem : EntitySystem
             }
         }
 
-        // Hardlight Start
 
         // Fix floating point problem
         newScale = MathF.Round(newScale, 2);
 
-        // Update the component's scale multiplier
         float oldScale = sizeComp.ScaleMultiplier;
+        this.ApplyEffects(newScale, oldScale, sizeComp, target);
+
+        // Update the component's scale multiplier
         sizeComp.ScaleMultiplier = newScale;
         Dirty(target, sizeComp);
 
@@ -120,10 +192,13 @@ public sealed class SizeManipulationSystem : EntitySystem
                 {
                     case PhysShapeCircle circle:
 
-                        // undo the scaling factor to get entities original radius
-                        var originalRadius = circle.Radius / oldScale;
+                        if (sizeComp.BaseRadius == -1f)
+                        {
+                            sizeComp.BaseRadius = circle.Radius;
+                        }
+
                         // Calc new radius of the entity
-                        var radius = MathF.Round(originalRadius * newScale, 4);
+                        var radius = MathF.Round(sizeComp.BaseRadius * newScale, 4);
 
                         // Set Radius
                         _physics.SetPositionRadius(target, id, fixture, circle, circle.Position * newScale, radius, manager);
@@ -135,7 +210,9 @@ public sealed class SizeManipulationSystem : EntitySystem
 
                 if (densityMultiplier > 0f && densityMultiplier != 1f)
                 {
-                    _physics.SetDensity(target, id, fixture, fixture.Density * densityMultiplier);
+                    // TODO: fix, use sizeComp variable
+                    float newDensity = GetDensity(fixture, oldScale, newScale);
+                    _physics.SetDensity(target, id, fixture, newDensity);
                 }
             }
         }

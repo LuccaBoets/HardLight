@@ -1,4 +1,8 @@
+using Content.Shared.EntityEffects;
+using Content.Shared.Random;
+using Content.Shared.Traits;
 using Robust.Shared.GameStates;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 
 namespace Content.Shared.Weapons.Ranged.Components;

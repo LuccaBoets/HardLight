@@ -41,6 +41,12 @@ public sealed partial class SizeAffectedComponent : Component
     public float BaseScale = 1.0f;
 
     /// <summary>
+    /// Base scale of the entity (used for calculations)
+    /// </summary>
+    [DataField]
+    public float BaseRadius = -1f;
+
+    /// <summary>
     /// Stores original fixture densities for mass scaling (fixture id -> original density)
     /// </summary>
     [DataField]

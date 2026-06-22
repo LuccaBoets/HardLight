@@ -1,0 +1,193 @@
+# Size effects, Scale should go to 0.25 to 2.5 (even 5.0), exterme scales should be not meta
+# Scale changes in steps of 0.15, starting from one
+# Minscale < Scale (of the entity) <= max
+
+- type: sizeManipulation
+  id: Normal
+  minScale: 0.84 # Gave wider range
+  maxScale: 1.15 
+
+- type: sizeManipulation
+  id: Big
+  minScale: 1.15
+  maxScale: 1.45
+  components:
+  - type: CritThresholdModifier
+    critThresholdDelta: 25
+  - type: GunAccuracyModifier
+    spreadMultiplier: 1.25
+  - type: MeleeDamageModifier
+    flatBonus: 2
+    damageType: Blunt
+  - type: ThrowStrengthModifier
+    multiplier: 1.35
+  - type: TraitZoomModifier
+    multiplier: 1.15
+  - type: TraitMovementSpeedModifier
+    walkMultiplier: 0.7
+    sprintMultiplier: 0.75
+  - type: TraitCyborgPowerDrawModifier
+    multiplier: 3
+  - type: CrawlUnderObjects
+    sneakSpeedModifier: 0.55
+    squeezeRadiusScale: 0.75
+    unsqueezedRadiusScale: 1.05
+
+- type: sizeManipulation
+  id: VeryBig
+  minScale: 1.45
+  maxScale: 1.75
+  components:
+  - type: CritThresholdModifier
+    critThresholdDelta: 25
+  - type: GunAccuracyModifier
+    spreadMultiplier: 1.25
+  - type: MeleeDamageModifier
+    flatBonus: 2
+    damageType: Blunt
+  - type: ThrowStrengthModifier
+    multiplier: 1.35
+  - type: TraitZoomModifier
+    multiplier: 1.15
+  - type: TraitMovementSpeedModifier
+    walkMultiplier: 0.7
+    sprintMultiplier: 0.75
+  - type: TraitCyborgPowerDrawModifier
+    multiplier: 3
+  - type: CrawlUnderObjects
+    sneakSpeedModifier: 0.55
+    squeezeRadiusScale: 0.65
+    unsqueezedRadiusScale: 1.05
+
+- type: sizeManipulation
+  id: VeryVeryBig
+  minScale: 1.75
+  maxScale: 3.0
+  components:
+  - type: CritThresholdModifier
+    critThresholdDelta: 40
+  - type: GunAccuracyModifier
+    spreadMultiplier: 2
+  - type: MeleeDamageModifier
+    flatBonus: 4
+    damageType: Blunt
+  - type: ThrowStrengthModifier
+    multiplier: 1.50
+  - type: TraitZoomModifier
+    multiplier: 1.30
+  - type: TraitMovementSpeedModifier
+    walkMultiplier: 0.5
+    sprintMultiplier: 0.55
+  - type: TraitCyborgPowerDrawModifier
+    multiplier: 3
+  - type: CrawlUnderObjects
+    sneakSpeedModifier: 0.55
+    squeezeRadiusScale: 0.65
+    unsqueezedRadiusScale: 1.05
+
+- type: sizeManipulation
+  id: Godzilla
+  minScale: 3.0
+  maxScale: 5.0
+  components:
+  - type: CritThresholdModifier
+    critThresholdDelta: 100
+  - type: GunAccuracyModifier
+    spreadMultiplier: 4
+  - type: MeleeDamageModifier
+    flatBonus: 10
+    damageType: Blunt
+  - type: ThrowStrengthModifier
+    multiplier: 2.0
+  - type: TraitZoomModifier
+    multiplier: 1.60
+  - type: TraitMovementSpeedModifier
+    walkMultiplier: 0.35
+    sprintMultiplier: 0.4
+  - type: TraitCyborgPowerDrawModifier
+    multiplier: 3
+  - type: CrawlUnderObjects
+    sneakSpeedModifier: 0.55
+    squeezeRadiusScale: 0.65
+    unsqueezedRadiusScale: 1.05
+
+- type: sizeManipulation
+  id: Small
+  minScale: 0.70
+  maxScale: 0.84
+  components:
+  - type: CritThresholdModifier
+    critThresholdDelta: -15
+  - type: GunAccuracyModifier
+    spreadMultiplier: 2
+  - type: GunUserThrowback
+    strength: 10
+    collisionStunTime: 1
+    impulseMultiplier: 2
+    damageMultiplier: 1
+  - type: MeleeDamageModifier
+    flatBonus: -2
+    damageType: Blunt
+  - type: ThrowStrengthModifier
+    multiplier: 0.8
+  - type: TraitZoomModifier
+    multiplier: 0.9
+  - type: TraitMovementSpeedModifier
+    walkMultiplier: 0.75
+    sprintMultiplier: 0.8
+  - type: TraitCyborgPowerDrawModifier
+    multiplier: 0.75
+
+- type: sizeManipulation
+  id: Tiny
+  minScale: 0.4
+  maxScale: 0.7
+  components:
+  - type: CritThresholdModifier
+    critThresholdDelta: -30
+  - type: GunAccuracyModifier
+    spreadMultiplier: 3
+  - type: GunUserThrowback
+    strength: 25
+    collisionStunTime: 2
+    impulseMultiplier: 5
+    damageMultiplier: 2
+  - type: MeleeDamageModifier
+    flatBonus: -3.5
+    damageType: Blunt
+  - type: ThrowStrengthModifier
+    multiplier: 0.6
+  - type: TraitZoomModifier
+    multiplier: 0.8
+  - type: TraitMovementSpeedModifier
+    walkMultiplier: 0.5
+    sprintMultiplier: 0.55
+  - type: TraitCyborgPowerDrawModifier
+    multiplier: 0.5
+
+- type: sizeManipulation
+  id: VeryTiny
+  minScale: 0.25
+  maxScale: 0.4
+  components:
+  - type: CritThresholdModifier
+    critThresholdDelta: -70
+  - type: GunAccuracyModifier
+    spreadMultiplier: 6
+  - type: GunUserThrowback
+    strength: 50
+    collisionStunTime: 4
+    impulseMultiplier: 5
+    damageMultiplier: 2
+  - type: MeleeDamageModifier
+    flatBonus: -3.5
+    damageType: Blunt
+  - type: ThrowStrengthModifier
+    multiplier: 0.3
+  - type: TraitZoomModifier
+    multiplier: 0.6
+  - type: TraitMovementSpeedModifier
+    walkMultiplier: 0.35
+    sprintMultiplier: 0.4
+  - type: TraitCyborgPowerDrawModifier
+    multiplier: 0.3
