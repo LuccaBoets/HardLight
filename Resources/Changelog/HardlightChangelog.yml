@@ -5135,3 +5135,9 @@ Entries:
         mentioned as something they should be receiving in the guidebook.
   id: 554
   time: '2026-06-21T08:41:03.0000000+00:00'
+- author: DrekkCuga
+  changes:
+    - type: Fix
+      message: Fixed some Pipes and Fire Locks on Amber
+  id: 555
+  time: '2026-06-22T04:38:44.0000000+00:00'
