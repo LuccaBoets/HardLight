@@ -1,0 +1,269 @@
+#Bluespace safe XXX
+#Bluespace Locker Y
+#Bluespace suit storage - Y
+#Bluespace minilocker = syndicate trunk XXX
+#blue freezer = regular trunk XXX yyy
+#Bluespace box
+- type: entity
+  id: BaseBluespaceStorage
+  parent: BaseStructureDynamic
+  name: bluespace storage object
+  abstract: true
+  description: A storage unit, utilising bluespace technology to expand itself on the inside and protect its contents from dockyard workers.
+  components:
+  - type: Sprite
+    sprite: _HL/Structures/Storage/bluespacestash.rsi
+    state: bluespace-stash
+  - type: Transform
+    anchored: true
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.5,-0.5,0.5,0.5"
+        density: 15
+        layer:
+        - WallLayer
+  - type: InteractionOutline
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+  - type: Storage
+    grid:
+    - 0,0,25,20
+    maxItemSize: Ginormous
+    blacklist:
+      tags:
+      - Admin
+      components:
+      - StorageFill
+      - PresetIdCard
+      - IdCard
+      - Access
+      - Store
+      - Cash
+      - Headset
+      - DnaSequenceInjector
+  - type: StaticPrice
+    price: 500000
+  - type: CargoSellBlacklist
+  - type: HLPersistOnShipSave
+
+- type: entity
+  id: BluespaceSafe
+  parent: [ GunSafe, BaseBluespaceStorage ]
+  name: bluespace safe
+  description: A large safe, capable of holding your greatest treasures. Usage of bluespace crystals allows it to protect your posessions from dockyard workers.
+  components:
+  - type: Appearance
+  - type: ContainerContainer
+    containers:
+      paper_label: !type:ContainerSlot
+  - type: EntityStorageVisuals
+    stateBaseClosed: bluespacecase
+    stateDoorOpen: bluespacecase_open
+    stateDoorClosed: bluespacecase_door
+  - type: AccessReader
+  - type: Storage
+    grid:
+    - 0,0,19,14
+  - type: Construction
+    graph: BluespaceSafe
+    node: done
+  - type: StaticPrice
+    price: 750000
+
+- type: entity
+  id: LockerWallBluespaceMini
+  parent: LockerWallBluespace
+  name: mini bluespace wall locker
+  description: Its just like a normal bluespace locker, but cheap and small! Still protects your item from dockyard, though.
+  components:
+  - type: Sprite
+    sprite: _HL/Structures/Closets/Bluespace_wall_lockermini.rsi
+    layers:
+    - state: bluespace
+      map: ["enum.StorageVisualLayers.Base"]
+    - state: icon
+      map: ["enum.StorageVisualLayers.Door"]
+    - state: locked
+      map: ["enum.LockVisualLayers.Lock"]
+      shader: unshaded
+  - type: EntityStorageVisuals
+    stateBaseClosed: icon
+    stateBaseOpen: bluespace
+    stateDoorOpen: bluespace_open
+    stateDoorClosed: icon
+  - type: StaticPrice
+    price: 210000
+  - type: CargoSellBlacklist
+  - type: Storage
+    maxItemSize: Huge
+    grid:
+    - 0,0,13,5
+    blacklist:
+      tags:
+      - Admin
+      components:
+      - StorageFill
+      - PresetIdCard
+      - IdCard
+      - Access
+      - Store
+      - Cash
+      - Headset
+      - DnaSequenceInjector
+  - type: Construction
+    graph: LockerWallBluespaceMini
+    node: done
+  - type: HLPersistOnShipSave
+  - type: ShipyardSellCondition # Frontier: Teleport to shipyard console on sale
+    preserveOnSale: true
+
+- type: entity
+  id: ShelfWallFreezerBluespace
+  parent: [ ShelfBaseReinforced, BaseBluespaceStorage]
+  name: bluespace wall freezer
+  description: A convenient place to store perishables. Dockyard workers will not touch its contents.
+  suffix: Frontier, White
+  components:
+  - type: ExplosionResistance
+    damageCoefficient: 0.50
+  - type: AntiRottingContainer
+  - type: Sprite
+    sprite: _HL/Structures/Storage/bluespacewall_fridge.rsi
+    layers:
+    - state: base
+      map: ["enum.StorageVisualLayers.Base"]
+    - state: food-0
+      map: ["enum.StorageFillLayers.Fill"]
+    - state: closed
+      map: ["enum.StorageVisualLayers.Door"]
+    - state: locked
+      map: ["enum.LockVisualLayers.Lock"]
+      shader: unshaded
+  - type: StorageFillVisualizer
+    maxFillLevels: 10
+    fillBaseName: food
+  - type: Construction
+    graph: WallFreezerBluespace
+    node: ShelfWallFreezerBluespace
+  - type: Storage
+    grid:
+    - 0,0,11,3
+    maxItemSize: Normal
+  - type: DisableToolUse
+    anchoring: true
+  - type: StaticPrice
+    price: 120000
+  - type: Physics
+    bodyType: Static
+
+- type: entity
+  id: BluespaceTabletop
+  parent: BaseBluespaceStorage
+  name: tabletop bluespace storage unit
+  description: Seemingly small crate, perfectly fitting on tables and counters. Bluespace lining prevents dockyard workers from touching its contents.
+  components:
+  - type: Sprite
+    sprite: _HL/Structures/Storage/bluespacestash.rsi
+    state: bluespace-unit
+  - type: Appearance
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.10,-0.10,0.10,0.10"
+        density: 500
+        mask:
+        - TabletopMachineMask
+  - type: Storage
+    grid:
+    - 0,0,5,5
+  - type: Construction
+    graph: BluespaceTabletop
+    node: done
+  - type: StaticPrice
+    price: 90000
+  - type: Physics
+    bodyType: Static
+
+- type: entity
+  id: BookshelfBluespace
+  parent: BaseStructure
+  name: bluespace bookshelf
+  description: Mostly filled with books, but here they are protected from dockyard workers.
+  components:
+  - type: Sprite
+    sprite: _HL/Structures/Furniture/bluespacebookshelf.rsi
+    snapCardinals: true
+    layers:
+      - state: base
+      - state: book-0
+      - map: ["enum.StorageFillLayers.Fill"]
+  - type: Appearance
+  - type: StorageFillVisualizer
+    maxFillLevels: 21
+    fillBaseName: book
+  - type: Damageable
+    damageModifierSet: Metallic
+    damageContainer: StructuralInorganic
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 30
+      behaviors:
+      - !type:PlaySoundBehavior
+        sound:
+          collection: WoodDestroyHeavy
+      - !type:SpawnEntitiesBehavior
+        spawn:
+          SheetPlasteel:
+            min: 2
+            max: 3
+      - !type:DoActsBehavior
+        acts: ["Destruction"]
+  - type: Tag
+    tags:
+    - Structure
+  - type: Transform
+    anchored: true
+    noRot: true
+  - type: Physics
+    bodyType: Static
+  - type: Anchorable
+  - type: Pullable
+  - type: Occluder
+  - type: Storage
+    grid:
+    - 0,0,15,3
+    maxItemSize: Normal
+    whitelist:
+      tags:
+        - Document
+        - Folder
+        - Write
+        - Book
+        - Spellbook
+        - VinylSleeveFit
+        - VinylSleeve
+  - type: StaticPrice
+    price: 100000
+  - type: CargoSellBlacklist
+  - type: HLPersistOnShipSave
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+  - type: InteractionOutline
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+  - type: Construction
+    graph: BookshelfBluespace
+    node: bookshelfBluespace
+  - type: BlockWeather

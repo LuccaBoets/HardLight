@@ -1,0 +1,68 @@
+- type: entity
+  id: PortalShadekin
+  name: dark portal
+  description: The portal to the dark...
+  parent: BasePortal
+  placement:
+    mode: SnapgridCenter
+  components:
+    - type: Portal
+      arrivalSound: /Audio/Items/hiss.ogg
+      departureSound: /Audio/Items/hiss.ogg
+      canTeleportToOtherMaps: true
+      randomTeleport: false
+    - type: DarkPortal
+    - type: Sprite
+      noRot: true
+      sprite: _Starlight/Structures/Specific/Anomalies/dark.rsi
+      layers:
+        - state: portal
+          map: ["enum.AnomalyVisualLayers.Base"]
+    - type: PointLight
+      radius: 3
+      energy: 1
+      color: "#793a80dd"
+    - type: DarkLight
+    - type: Shadegen
+    - type: AmbientSound
+      range: 5
+      volume: -5
+      sound:
+        path: /Audio/Ambience/Objects/gravity_gen_hum.ogg
+
+- type: entity
+  id: PortalShadekinHub
+  parent: BasePortal
+  name: dark hub
+  description: This portal is used by shadekins to go nearly anywhere in the universe!
+  placement:
+    mode: SnapgridCenter
+  components:
+    - type: DarkHub
+    - type: Sprite
+      noRot: true
+      sprite: _Starlight/Structures/Specific/Anomalies/dark.rsi
+      layers:
+        - state: hub_portal
+    - type: PointLight
+      color: "#793a80dd"
+      radius: 3
+      energy: 1
+    - type: AmbientSound
+      range: 5
+      volume: -5
+      sound:
+        path: /Audio/Ambience/Objects/gravity_gen_hum.ogg
+    - type: Portal
+      arrivalSound: /Audio/Items/hiss.ogg
+      departureSound: /Audio/Items/hiss.ogg
+      canTeleportToOtherMaps: true
+      randomTeleport: false
+    - type: WarpPoint
+      location: The Dark
+      blacklist:
+        tags:
+          - GhostOnlyWarp
+    - type: DarkLight
+    - type: Dispellable
+      disabled: true

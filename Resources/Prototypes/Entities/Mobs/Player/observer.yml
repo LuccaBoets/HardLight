@@ -58,6 +58,7 @@
   - type: ShowElectrocutionHUD
   - type: IntrinsicRadioReceiver
   - type: ShowNullSpace # Starlight
+  - type: DarkLight # Starlight
   - type: LanguageSpeaker # Starlight
   - type: UniversalLanguageSpeaker # Starlight
   - type: ActiveRadio

@@ -10,3 +10,144 @@
   canBuildInImpassable: true
   conditions:
     - !type:WallmountCondition
+    
+- type: construction
+  id: LockerWallBluespaceMini
+  graph: LockerWallBluespaceMini
+  startNode: start
+  targetNode: done
+  category: construction-category-storage
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canRotate: true
+  canBuildInImpassable: true
+  conditions:
+    - !type:WallmountCondition
+   
+- type: construction
+  id: BluespaceSafe
+  graph: BluespaceSafe
+  startNode: start
+  targetNode: done
+  category: construction-category-storage
+  objectType: Structure
+    
+- type: construction
+  id: ShelfWallFreezerBluespace
+  graph: WallFreezerBluespace
+  startNode: start
+  targetNode: ShelfWallFreezerBluespace
+  category: construction-category-storage
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: true
+  conditions:
+    - !type:WallmountCondition
+
+#weapon racks
+- type: construction
+  id: GunRackBluespaceConstruction
+  graph: WeaponRackBluespaceConstructionGraph
+  startNode: start
+  targetNode: GunRackBluespaceNode
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: GunRackBluespaceWallmountedConstruction
+  graph: WeaponRackBluespaceConstructionGraph
+  startNode: start
+  targetNode: GunRackBluespaceWallmountedNode
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: true
+  canRotate: true
+  conditions:
+    - !type:WallmountCondition
+
+- type: construction
+  id: MeleeRackBluespaceConstruction
+  graph: WeaponRackBluespaceConstructionGraph
+  startNode: start
+  targetNode: MeleeRackBluespaceNode
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  conditions:
+    - !type:TileNotBlocked
+
+- type: construction
+  id: MeleeRackBluespaceWallmountedConstruction
+  graph: WeaponRackBluespaceConstructionGraph
+  startNode: start
+  targetNode: MeleeRackBluespaceWallmountedNode
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: true
+  canRotate: true
+  conditions:
+    - !type:WallmountCondition
+
+- type: construction
+  id: PistolRackBluespaceConstruction
+  graph: WeaponRackBluespaceConstructionGraph
+  startNode: start
+  targetNode: PistolRackBluespaceNode
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+
+- type: construction
+  id: PistolRackBluespaceWallmountedConstruction
+  graph: WeaponRackBluespaceConstructionGraph
+  startNode: start
+  targetNode: PistolRackBluespaceWallmountedNode
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: true
+  canRotate: true
+  conditions:
+    - !type:WallmountCondition
+    
+- type: construction
+  id: SuitStorageBluespace
+  graph: SuitLockerBluespace
+  startNode: start
+  targetNode: SuitStorageBluespace
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  conditions:
+    - !type:TileNotBlocked
+    
+- type: construction
+  id: BookshelfBluespace
+  graph: BookshelfBluespace
+  startNode: start
+  targetNode: bookshelfBluespace
+  category: construction-category-furniture
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+  conditions:
+    - !type:TileNotBlocked
+    
+- type: construction
+  id: BluespaceTabletop
+  graph: BluespaceTabletop
+  startNode: start
+  targetNode: done
+  category: construction-category-storage
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false

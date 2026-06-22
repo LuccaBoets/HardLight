@@ -110,7 +110,3 @@ reagent-desc-black-blood = Corrupted blood, blackened by unknown chemicals. An o
 
 reagent-effect-guidebook-change-blood-reagent = Changes blood reagent to {$reagent}
 reagent-effect-guidebook-restore-blood-reagent = Restores blood to its original type
-
-## Insemination
-reagent-effect-guidebook-inseminate = Fertilizes the eggs of reproductive organs
-

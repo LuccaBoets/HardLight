@@ -21,7 +21,8 @@
   special:
     - !type:AddComponentSpecial
       components:
-        - type: NullPhase
+        - type: Brighteye
+        - type: NullSpace
         - type: MailDisabled
         - type: SpecialSectorStationRecord
           recordGeneration: NoRecord

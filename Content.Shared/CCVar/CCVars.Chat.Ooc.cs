@@ -24,4 +24,16 @@ public sealed partial class CCVars
 
     public static readonly CVarDef<bool> ShowOocPatronColor =
         CVarDef.Create("ooc.show_ooc_patron_color", true, CVar.ARCHIVE | CVar.REPLICATED | CVar.CLIENT);
+
+    /// <summary>
+    ///     Whether OOC slow mode is enabled, restricting how often players can send OOC messages.
+    /// </summary>
+    public static readonly CVarDef<bool> OocSlowModeEnabled =
+        CVarDef.Create("ooc.slow_mode_enabled", false, CVar.NOTIFY | CVar.SERVER);
+
+    /// <summary>
+    ///     The minimum number of seconds a player must wait between OOC messages when slow mode is active.
+    /// </summary>
+    public static readonly CVarDef<float> OocSlowModeInterval =
+        CVarDef.Create("ooc.slow_mode_interval", 60f, CVar.SERVER);
 }

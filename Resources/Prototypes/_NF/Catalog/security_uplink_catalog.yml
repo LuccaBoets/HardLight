@@ -430,10 +430,42 @@
   id: UplinkSecurityBluespaceFlasher
   name: bluespace flasher
   description: A bluespace crystal set to a proximity trigger, useful for making an area off limits to Shadekin.
-  productEntity: BluespaceFlasher
+  productEntity: BluespaceFlasherFlatpack
   icon: { sprite: _HL/Objects/Weapons/bflash.rsi, state: off }
   cost:
     FrontierUplinkCoin: 4
+  categories:
+    - UplinkSecurityUtility
+  conditions:
+    - !type:StoreWhitelistCondition
+      whitelist:
+        tags:
+          - SecurityUplink
+
+- type: listing
+  id: UplinkSecurityClothingNullHarness
+  name: null harness
+  description: A security harness reinforced with bluespace crystals. Prevents the wearer from entering NullSpace. Cannot be removed by the wearer themselves.
+  productEntity: ClothingNullHarness
+  icon: { sprite: _HL/Clothing/Back/nullharness.rsi, state: icon }
+  cost:
+    FrontierUplinkCoin: 1
+  categories:
+    - UplinkSecurityUtility
+  conditions:
+    - !type:StoreWhitelistCondition
+      whitelist:
+        tags:
+          - SecurityUplink
+
+- type: listing
+  id: UplinkSecurityGrenadeDePhase
+  name: dephasing grenade
+  description: Causes localized instability in bluespace, dephasing things into real space if they are near enough to it.
+  productEntity: GrenadeDePhase
+  icon: { sprite: Objects/Weapons/Grenades/stingergrenade.rsi, state: icon }
+  cost:
+    FrontierUplinkCoin: 1
   categories:
     - UplinkSecurityUtility
   conditions:

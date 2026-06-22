@@ -5,6 +5,7 @@ using Content.Server.Ghost;
 using Content.Server.Mind;
 using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
+using Content.Server.Radio.Components; //Hardlight
 using Content.Server.Roles;
 using Content.Server.Spawners.Components;
 using Content.Server.Spawners.EntitySystems;
@@ -55,6 +56,7 @@ public sealed class StationAiSystem : SharedStationAiSystem
     [Dependency] private readonly IPrototypeManager _proto = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
     [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
+    [Dependency] private readonly MetaDataSystem _metaDataSystem = default!; //Hardlight
 
     private readonly HashSet<Entity<StationAiCoreComponent>> _stationAiCores = new();
 
@@ -82,9 +84,19 @@ public sealed class StationAiSystem : SharedStationAiSystem
         SubscribeLocalEvent<StationAiCoreComponent, DoAfterAttemptEvent<IntellicardDoAfterEvent>>(OnDoAfterAttempt);
         SubscribeLocalEvent<StationAiCoreComponent, RejuvenateEvent>(OnRejuvenate);
 
+        SubscribeLocalEvent<StationAiHeldComponent, ComponentInit>(OnAiHeldInitialized);//Hardlight
+
         SubscribeLocalEvent<ExpandICChatRecipientsEvent>(OnExpandICChatRecipients);
         SubscribeLocalEvent<StationAiTurretComponent, AmmoShotEvent>(OnAmmoShot);
     }
+
+    //Hardlight: Used for checks and comms removal after initialization
+    private void OnAiHeldInitialized(Entity<StationAiHeldComponent> ent, ref ComponentInit args)
+    {
+        if (!AiOnStationGrid(ent))
+            RemoveHighSecurityChannels(ent);
+    }
+    //Hardlight end
 
     private void AfterConstructionChangeEntity(Entity<StationAiCoreComponent> ent, ref AfterConstructionChangeEntityEvent args)
     {
@@ -102,6 +114,12 @@ public sealed class StationAiSystem : SharedStationAiSystem
             var aiBrain = Spawn(_stationAiBrain, Transform(ent.Owner).Coordinates);
             _roles.MindAddJobRole(mindId, mind, false, _stationAiJob);
             _mind.TransferTo(mindId, aiBrain);
+
+            //Hardlight: If the mind has a character name, replace the AI name with the character name
+            //Otherwise it would just say positronic brain in chat
+            if (mind?.CharacterName != null)
+                _metaDataSystem.SetEntityName(aiBrain, mind.CharacterName);
+            //Hardlight end
 
             if (!TryComp<StationAiHolderComponent>(ent, out var targetHolder) ||
                 !_slots.TryInsert(ent, targetHolder.Slot, aiBrain, null))
@@ -141,6 +159,51 @@ public sealed class StationAiSystem : SharedStationAiSystem
         UpdateDamagedAccent(ent);
     }
 
+    //Hardlight: Functions added to deal with off-station AI security
+    /// <summary>
+    /// Checks to see if the AI's brain is on the main station
+    /// </summary>
+    /// <param name="ent"></param>
+    /// <returns></returns>
+    private bool AiOnStationGrid(Entity<StationAiHeldComponent> ent)
+    {
+        
+        if (!TryComp<TransformComponent>(ent, out var transComp))
+            return false;
+
+        var owningStation = _station.GetOwningStation(ent);
+
+        if (owningStation == null)
+            return false;
+
+        if (!TryPrototype(owningStation.Value, out var stationProtoType))
+            return false;
+
+        if (stationProtoType.ID != "StandardNanotrasenStation")
+            return false;
+
+        return true;
+    }
+
+    /// <summary>
+    /// Removes Command and Security from the AI brain's comms components
+    /// </summary>
+    /// <param name="ent"></param>
+    private void RemoveHighSecurityChannels(Entity<StationAiHeldComponent> ent)
+    {
+        if (!TryComp<ActiveRadioComponent>(ent, out var radioComp))
+            return;
+
+        radioComp.Channels.Remove("Command");
+        radioComp.Channels.Remove("Security");
+
+        if (!TryComp<IntrinsicRadioTransmitterComponent>(ent, out var transComp))
+            return;
+
+        transComp.Channels.Remove("Command");
+        transComp.Channels.Remove("Security");
+    }
+    //Hardlight end
     protected override void OnAiRemove(Entity<StationAiCoreComponent> ent, ref EntRemovedFromContainerMessage args)
     {
         base.OnAiRemove(ent, ref args);

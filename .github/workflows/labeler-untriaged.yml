@@ -12,7 +12,7 @@ on:
     types: [opened]
 
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
   issues: write
 
@@ -20,8 +20,15 @@ jobs:
   add_label:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions-ecosystem/action-add-labels@v1
-      if: join(github.event.issue.labels) == ''
-      with:
-        labels: "S: Untriaged"
-        github_token: "${{ secrets.GITHUB_TOKEN }}"
+    - name: Add untriaged label
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ISSUE_NUMBER: ${{ github.event.issue.number || github.event.pull_request.number }}
+        REPO: ${{ github.repository }}
+      run: |
+        label_count=$(gh api "repos/$REPO/issues/$ISSUE_NUMBER/labels" --jq 'length')
+
+        if [ "$label_count" -eq 0 ]; then
+          gh api --method POST "repos/$REPO/issues/$ISSUE_NUMBER/labels" \
+            --field labels[]="S: Untriaged"
+        fi

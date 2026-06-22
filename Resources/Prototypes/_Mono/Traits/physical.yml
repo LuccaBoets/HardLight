@@ -118,7 +118,7 @@
   name: trait-bionic-legs-name
   description: trait-bionic-legs-desc
   category: Physical
-  cost: 6 # Hardlight, change from 2 to 4
+  cost: 4 # Hardlight, change from 2 to 4
   components:
   - type: BionicLegs
 

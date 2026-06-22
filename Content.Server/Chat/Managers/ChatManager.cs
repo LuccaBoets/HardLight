@@ -17,6 +17,7 @@ using Robust.Shared.Configuration;
 using Robust.Shared.Network;
 using Robust.Shared.Player;
 using Robust.Shared.Replays;
+using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 
 namespace Content.Server.Chat.Managers;
@@ -45,6 +46,7 @@ internal sealed partial class ChatManager : IChatManager
     [Dependency] private readonly IEntityManager _entityManager = default!;
     [Dependency] private readonly PlayerRateLimitManager _rateLimitManager = default!;
     [Dependency] private readonly ISharedPlayerManager _player = default!;
+    [Dependency] private readonly IGameTiming _gameTiming = default!;
 
     /// <summary>
     /// The maximum length a player-sent message can be sent
@@ -55,6 +57,11 @@ internal sealed partial class ChatManager : IChatManager
     private bool _adminOocEnabled = true;
 
     private readonly Dictionary<NetUserId, ChatUser> _players = new();
+
+    /// <summary>
+    /// Tracks the last time each player sent an OOC message, for slow mode enforcement.
+    /// </summary>
+    private readonly Dictionary<NetUserId, TimeSpan> _lastOocMessage = new();
 
     public void Initialize()
     {
@@ -248,6 +255,20 @@ internal sealed partial class ChatManager : IChatManager
         else if (!_oocEnabled)
         {
             return;
+        }
+
+        // Slow mode: non-admins must wait between OOC messages.
+        if (!_adminManager.IsAdmin(player) && _configurationManager.GetCVar(CCVars.OocSlowModeEnabled))
+        {
+            var interval = TimeSpan.FromSeconds(_configurationManager.GetCVar(CCVars.OocSlowModeInterval));
+            var now = _gameTiming.RealTime;
+            if (_lastOocMessage.TryGetValue(player.UserId, out var lastTime) && now - lastTime < interval)
+            {
+                var remaining = (int)(interval - (now - lastTime)).TotalSeconds;
+                DispatchServerMessage(player, Loc.GetString("chat-manager-ooc-slow-mode-wait", ("seconds", remaining)));
+                return;
+            }
+            _lastOocMessage[player.UserId] = now;
         }
 
         Color? colorOverride = null;

@@ -32,6 +32,11 @@ using Content.Shared.DeviceNetwork.Components;
 using Content.Shared.Tag; // Frontier
 using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
+using Robust.Shared.Configuration; // Hardlight
+using Content.Shared.CCVar; // Hardlight
+using Content.Server.Discord; // Hardlight
+using System.Collections.Generic; // Hardlight
+using System.Text; // Hardlight
 
 namespace Content.Server.Fax;
 
@@ -52,6 +57,12 @@ public sealed class FaxSystem : EntitySystem
     [Dependency] private readonly UserInterfaceSystem _userInterface = default!;
     [Dependency] private readonly ISharedAdminLogManager _adminLogger = default!;
     [Dependency] private readonly MetaDataSystem _metaData = default!;
+    [Dependency] private readonly IConfigurationManager _config = default!; // Hardlight
+    [Dependency] private readonly DiscordWebhook _discord = default!; // Hardlight
+    [Dependency] private readonly ILogManager _log = default!; // Hardlight
+    private ISawmill _sawmill = default!; // Hardlight
+    private WebhookData? _faxWebhookData; // Hardlight
+
     [Dependency] private readonly FaxecuteSystem _faxecute = default!;
     [Dependency] private readonly EmagSystem _emag = default!;
     [Dependency] private readonly TagSystem _tag = default!; // Frontier
@@ -85,6 +96,9 @@ public sealed class FaxSystem : EntitySystem
         SubscribeLocalEvent<FaxMachineComponent, FaxSendMessage>(OnSendButtonPressed);
         SubscribeLocalEvent<FaxMachineComponent, FaxRefreshMessage>(OnRefreshButtonPressed);
         SubscribeLocalEvent<FaxMachineComponent, FaxDestinationMessage>(OnDestinationSelected);
+
+        Subs.CVar(_config, CCVars.DiscordFaxWebhook, OnFaxWebhookChanged, true); // Hardlight
+        _sawmill = _log.GetSawmill("FAX");
     }
 
     public override void Update(float frameTime)
@@ -648,8 +662,10 @@ public sealed class FaxSystem : EntitySystem
         _appearanceSystem.SetData(uid, FaxMachineVisuals.VisualState, FaxMachineVisualState.Printing);
 
         if (component.NotifyAdmins)
+        {
             NotifyAdmins(faxName);
-
+            SendFaxDiscordWebhook(uid, component, printout, fromAddress); // Hardlight
+        }
         component.PrintingQueue.Enqueue(printout);
     }
 
@@ -695,6 +711,73 @@ public sealed class FaxSystem : EntitySystem
 
         _adminLogger.Add(LogType.Action, LogImpact.Low, $"\"{component.FaxName}\" {ToPrettyString(uid):tool} printed {ToPrettyString(printed):subject}: {printout.Content}");
     }
+
+    // Hardlight start
+    private async void SendFaxDiscordWebhook(EntityUid uid, FaxMachineComponent component, FaxPrintout printout, string? fromAddress)
+    {
+        if (_faxWebhookData is not { } webhookData)
+            return;
+
+        var senderName = printout.SenderFaxName ?? Loc.GetString("fax-machine-popup-source-unknown");
+        var fromInfo = string.IsNullOrWhiteSpace(fromAddress) ? string.Empty : $" ({fromAddress})";
+        var faxContent = printout.Content;
+
+        if (faxContent.Length > 3500)
+        {
+            faxContent = faxContent[..3500] + "…";
+        }
+
+        var description = new StringBuilder()
+            .AppendLine($"**From:** {senderName}{fromInfo}")
+            .AppendLine($"**To:** {component.FaxName}")
+            .AppendLine()
+            .AppendLine(faxContent)
+            .ToString();
+
+        var payload = new WebhookPayload
+        {
+            Username = component.FaxName,
+            Embeds = new List<WebhookEmbed>
+            {
+                new()
+                {
+                    Title = "Fax Received",
+                    Description = description,
+                    Color = 0x154530,
+                },
+            },
+        };
+
+        try
+        {
+            var request = await _discord.CreateMessage(webhookData.ToIdentifier(), payload);
+            if (!request.IsSuccessStatusCode)
+            {
+                var content = await request.Content.ReadAsStringAsync();
+                _sawmill.Error($"Error sending fax webhook message. Status code: {request.StatusCode}\nResponse: {content}");
+            }
+        }
+        catch (Exception e)
+        {
+            _sawmill.Error($"Error sending fax webhook message:\n{e}");
+        }
+    }
+
+    private async void OnFaxWebhookChanged(string url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            _faxWebhookData = null;
+            return;
+        }
+
+        _faxWebhookData = await _discord.GetWebhook(url);
+        if (_faxWebhookData is null)
+        {
+            _sawmill.Warning("Unable to retrieve Discord webhook data for fax notifications.");
+        }
+    }
+    // Hardlight end
 
     private void NotifyAdmins(string faxName)
     {

@@ -228,38 +228,45 @@
       guides:
       - Security
     # - Antagonists # Frontier: guidebook entry removed
-    
+
 - type: entity
   name: bluespace flasher
-  parent: [BaseMachine, BaseC2ContrabandUnredeemable] # Frontier: BaseSecurityContraband<BaseC2ContrabandUnredeemable
+  parent: [ BaseMachine, BaseC2ContrabandUnredeemable ] # Frontier: BaseSecurityContraband<BaseC2ContrabandUnredeemable
   id: BluespaceFlasher
-  description: A bluespace crystal set to a proximity trigger, useful for making an area as off limits to Shadekin. 
+  description: A bluespace crystal set to a proximity trigger, useful for making
+    an area as off limits to Shadekin.
   components:
     - type: EmitSoundOnTrigger
       sound:
         path: /Audio/Effects/Lightning/lightningbolt.ogg
-    - type: SpawnOnTrigger 
+    - type: SpawnOnTrigger
       proto: EffectFlashBluespace
-    - type: GlobalPvs
-    - type: BluespaceFlasherVisuals
-      radius: 12.5
     - type: BluespacePulseOnTrigger
-      radius: 12
+      radius: 6.2
+      dome: EnergyDomeNullspace
+    - type: TriggerOnProximity
+      enabled: true
+      cooldown: 5
+      triggerSpeed: 0
+      shape: !type:PhysShapeCircle
+        radius: 6.2
+      whitelist:
+        components:
+          - NullSpace
     - type: Sprite
       sprite: _HL/Objects/Weapons/bflash.rsi
       layers:
         - state: "off"
-          map: ["enum.ProximityTriggerVisualLayers.Base"]
+          map: [ "enum.ProximityTriggerVisualLayers.Base" ]
     - type: Fixtures
       fixtures:
         fix1:
-          shape:
-            !type:PhysShapeAabb
+          shape: !type:PhysShapeAabb
             bounds: "-0.15,-0.3,0.15,0.3"
           mask:
-          - MachineMask
+            - MachineMask
           layer:
-          - MachineLayer
+            - MachineLayer
           density: 380
     - type: Appearance
     - type: AnimationPlayer
@@ -268,3 +275,7 @@
       radius: 0
       softness: 0
       enabled: true
+    - type: NullSpaceBlocker
+      unphaseOnCollide: false
+    - type: Climbable
+      disabled: true

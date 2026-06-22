@@ -100,7 +100,7 @@
 
 - type: entity
   name: document case
-  parent: WeaponCaseShortExplosives
+  parent: [WeaponCaseShortExplosives, ContentsExplosionResistanceBase]
   id: WeaponCaseShortDocuments
   description: A reinforced casing for storing important documents.
   suffix: Short
@@ -121,6 +121,8 @@
       - Document
       - Paper
       - CoordinatesDisk
+      - Folder #HardLight
+      - CassetteTape #HardLight
 
 - type: entity
   name: weapon case

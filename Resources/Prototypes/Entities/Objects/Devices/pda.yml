@@ -1637,3 +1637,70 @@
   - type: Tag #  Ignore Chameleon tags
     tags:
     - DoorBumpOpener
+
+# HardLight
+- type: entity
+  parent: DetectivePDA
+  id: SecurityQuadborgPDA
+  name: security quadborg PDA
+  description: State Laws? Borg Laws or SOP?
+  components:
+  - type: Pda
+    id: SecurityQuadborgIDCard
+  - type: Appearance
+    appearanceDataInit:
+     enum.PdaVisuals.PdaType:
+       !type:String
+       pda-security
+  - type: PdaBorderColor
+    borderColor: "#A32D26"
+
+# HardLight
+- type: entity
+  parent: SalvagePDA
+  id: SalvageQuadborgPDA
+  name: salvage quadborg PDA
+  description: Smells like scrap.
+  components:
+  - type: Pda
+    id: SalvageQuadborgIDCard
+
+# HardLight
+- type: entity
+  parent: EngineerPDA
+  id: EngineerQuadborgPDA
+  name: engineer quadborg PDA
+  description: Reeks of welding fuel.
+  components:
+  - type: Pda
+    id: EngineeringQuadborgIDCard
+
+# HardLight
+- type: entity
+  parent: MedicalPDA
+  id: MedicalQuadborgPDA
+  name: medical quadborg PDA
+  description: Extra shiny and sterile.
+  components:
+  - type: Pda
+    id: MedicalQuadborgIDCard
+
+# HardLight
+- type: entity
+  parent: ServiceWorkerPDA
+  id: ServiceQuadborgPDA
+  name: service quadborg PDA
+  description: Why isn't it gray?
+  components:
+  - type: Pda
+    id: ServiceQuadborgIDCard
+
+# HardLight
+- type: entity
+  parent: PassengerPDA
+  id: CyborgPDA
+  name: cyborg PDA
+  description: State laws.
+  components:
+  - type: Pda
+    id: CyborgIDCard

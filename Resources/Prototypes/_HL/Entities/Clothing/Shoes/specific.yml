@@ -30,7 +30,7 @@
       walkModifier: 1.5  # fast, but slower than speed boots. It is exchanged for having ability to DRIP
       sprintModifier: 1.5
     - type: PowerCellDraw
-      drawRate: 40 # Hardlight 30>40, you have to turn off micro reactor and antique cell at somepoint
+      drawRate: 90      # Hardlight 30>40, you have to turn off micro reactor and antique cell at somepoint
     - type: ToggleCellDraw
     - type: ItemSlots
       slots:

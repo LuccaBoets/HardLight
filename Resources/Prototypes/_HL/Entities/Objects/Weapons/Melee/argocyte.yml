@@ -257,7 +257,7 @@
     wideAnimationRotation: -135
     soundHit:
       path: /Audio/Weapons/bladeslice.ogg
-    attackRate: 1.5
+    attackRate: 1
     angle: 100
     damage:
       types:

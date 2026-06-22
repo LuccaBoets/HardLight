@@ -22,6 +22,13 @@ public sealed partial class CCVars
     public static readonly CVarDef<string> DiscordAHelpWebhook =
         CVarDef.Create("discord.ahelp_webhook", string.Empty, CVar.SERVERONLY | CVar.CONFIDENTIAL);
 
+    // Hardlight
+    /// <summary>
+    ///     URL of the Discord webhook which will relay all faxes received on the Centcom fax machine.
+    /// </summary>
+    public static readonly CVarDef<string> DiscordFaxWebhook =
+        CVarDef.Create("discord.fax_webhook", string.Empty, CVar.SERVERONLY | CVar.CONFIDENTIAL);
+
     /// <summary>
     ///     The server icon to use in the Discord ahelp embed footer.
     ///     Valid values are specified at https://discord.com/developers/docs/resources/channel#embed-object-embed-footer-structure.

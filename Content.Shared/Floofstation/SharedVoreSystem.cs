@@ -1,4 +1,5 @@
 using Content.Shared._Common.Consent;
+using Content.Shared._Starlight.NullSpace;
 using Content.Shared.Damage;
 using Content.Shared.Verbs;
 using Robust.Shared.Network;
@@ -26,7 +27,30 @@ public abstract class SharedVoreSystem : EntitySystem
     private void AddVerbs(EntityUid uid, VoreComponent component, GetVerbsEvent<InnateVerb> args)
     {
         DevourVerb(uid, component, args);
+        PhaseNomVerb(uid, component, args);
         VoreVerb(uid, component, args);
+    }
+
+    private void PhaseNomVerb(EntityUid uid, VoreComponent component, GetVerbsEvent<InnateVerb> args)
+    {
+        if (!HasComp<NullSpaceComponent>(uid)
+            || HasComp<NullSpaceComponent>(args.Target)
+            || args.User == args.Target
+            || !HasComp<VoreComponent>(args.Target)
+            || !_consent.HasConsent(args.Target, "Vore")
+            || !_consent.HasConsent(args.User, "Vore")
+            || HasComp<VoredComponent>(args.User))
+            return;
+
+        InnateVerb verbDevour = new()
+        {
+            Act = () => TryDevour(uid, args.Target, component),
+            Text = Loc.GetString("vore-devour"),
+            Category = VerbCategory.Vore,
+            Icon = new SpriteSpecifier.Rsi(new ResPath("Interface/Actions/devour.rsi"), "icon-on"),
+            Priority = -1
+        };
+        args.Verbs.Add(verbDevour);
     }
 
     private void DevourVerb(EntityUid uid, VoreComponent component, GetVerbsEvent<InnateVerb> args)

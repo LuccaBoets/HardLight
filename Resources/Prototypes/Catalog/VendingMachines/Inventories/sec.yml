@@ -34,11 +34,12 @@
     FoodBoxDonut: 2
     SecurityStimpack: 4 # _CD
     TrackingImplanter: 5
-    ClothingEyesGlassesNullSpace: 4
-    BluespaceFlasher: 4
+    # Nullspace
+    ClothingEyesGlassesNullSpace: 2
+    BluespaceFlasherFlatpack: 4
     ClothingNullHarness: 4
-    NullspaceLocator: 2
-    BluespaceFlash: 1
+    NullspaceLocator: 4
+    GrenadeDePhase: 4
   contrabandInventory:
     PinkFluffyHandcuffs: 1 # pretty funny
 

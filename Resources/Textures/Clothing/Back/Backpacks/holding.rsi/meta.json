@@ -82,6 +82,9 @@
     {
       "name": "holding-broken"
     },
+	{
+      "name": "folded"
+    },
     {
       "name": "inhand-left",
       "directions": 4,

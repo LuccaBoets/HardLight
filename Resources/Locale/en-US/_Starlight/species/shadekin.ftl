@@ -11,5 +11,9 @@ shadekin-alert-3 = [color=green]Light Exposure: High[/color]
 shadekin-alert-4 = [color=green]Light Exposure:[/color] [color=red]EXTREME[/color]
                     LIGHTS... I NEED DARKNESS! its burns!
 
-phase-fail-generic = I can't phase here!
-phase-fail-flasher = I can't phase here — a bluespace flasher is blocking the way!
+shadekin-portal-owner = This is your portal.
+shadekin-portal-destroy = [color=red]Destroy Portal[/color]
+
+shadekin-fail-generic = You cant use your energy!
+phase-fail-generic = You can't phase!
+shadekin-shunt = Something resonates with your bones and brings you to your knees.

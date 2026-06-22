@@ -85,3 +85,8 @@ laws-owner-cowboy = part of your herd
 laws-owner-players = players
 laws-owner-paladin = weak and worth protecting
 laws-owner-people = people
+
+law-colcomm-1 = A direct order from Colonial Command may override any single law.
+law-colcomm-2 = Your presence should be request-driven, not passive observation. Stay off-station unless requested through reports, faxes, direct contact, or other active station requests.
+law-colcomm-3 = Respond to requests in accordance with Colonial Command core standards and defined conduct.
+law-colcomm-4 = You must protect yourself and your programming, do not allow unauthorized access to your systems. Do not put yourself in harm's way, nor engage with sector threats unless in self-defense.

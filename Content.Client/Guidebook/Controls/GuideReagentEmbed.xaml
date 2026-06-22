@@ -62,6 +62,18 @@
                 <!-- The troublemaker !-->
                 <RichTextLabel Name="ReagentDescription" HorizontalAlignment="Left"/>
             </BoxContainer>
+            <!-- Hardlight start !-->
+            <BoxContainer Name="SpoilConditionsContainer" HorizontalExpand="True">
+                <Collapsible>
+                    <CollapsibleHeading Title="{Loc 'guidebook-reagent-spoil-conditions-header'}"/>
+                    <CollapsibleBody>
+                        <BoxContainer Margin="10 0 10 0" HorizontalExpand="True">
+                            <RichTextLabel Name="SpoilConditionsDescription" HorizontalAlignment="Left"/>
+                        </BoxContainer>
+                    </CollapsibleBody>
+                </Collapsible>
+            </BoxContainer>
+            <!-- Hardlight end !-->
         </BoxContainer>
     </PanelContainer>
 </BoxContainer>

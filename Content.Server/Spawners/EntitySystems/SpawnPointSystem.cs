@@ -1,8 +1,8 @@
 using Content.Server.GameTicking;
-using Content.Server.Gateway.Components; // HardLight
 using Content.Server.Spawners.Components;
 using Content.Server.Station.Components;
 using Content.Server.Station.Systems;
+using Content.Shared.Gateway.Components;
 using Content.Shared.Maps;
 using Content.Shared.Physics;
 using Robust.Shared.Map;

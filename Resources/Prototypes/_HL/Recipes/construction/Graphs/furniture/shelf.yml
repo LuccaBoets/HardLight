@@ -10,7 +10,7 @@
         amount: 30
         doAfter: 5
       - material: Bluespace
-        amount: 25
+        amount: 15
         doAfter: 1
   - node: done
     entity: LockerWallBluespace
@@ -28,6 +28,218 @@
         amount: 30
       - !type:SpawnPrototype
         prototype: MaterialBluespace
-        amount: 25
+        amount: 15
+      - !type:EmptyAllContainers
+      - !type:DeleteEntity
+      
+- type: constructionGraph
+  id: LockerWallBluespaceMini
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      steps:
+      - material: Steel
+        amount: 30
+        doAfter: 5
+      - material: Bluespace
+        amount: 10
+        doAfter: 1
+  - node: done
+    entity: LockerWallBluespaceMini
+    edges:
+    - to: start
+      steps:
+      - tool: Screwing
+        doAfter: 5
+      conditions:
+      - !type:StorageWelded
+        welded: false
+      completed:
+      - !type:SpawnPrototype
+        prototype: SheetPlasteel
+        amount: 30
+      - !type:SpawnPrototype
+        prototype: MaterialBluespace
+        amount: 10
+      - !type:EmptyAllContainers
+      - !type:DeleteEntity
+
+- type: constructionGraph
+  id: WallFreezerBluespace
+  start: start
+  graph:
+  - node: start
+    edges:
+# White wall freezer
+    - to: ShelfWallFreezerBluespace
+      completed:
+        - !type:SnapToGrid
+      steps:
+      - material: Steel
+        amount: 5
+      - material: Glass
+        amount: 1
+        doAfter: 1
+      - material: Glass
+        amount: 1
+        doAfter: 1
+      - material: Cable
+        amount: 2
+        doAfter: 5
+      - material: Bluespace
+        amount: 15
+        doAfter: 1
+      - tag: FreezerElectronics
+        name: construction-graph-tag-freezer-electronics-circuit-board
+        icon:
+          sprite: Objects/Misc/module.rsi
+          state: door_electronics
+# White wall freezer deconstructs
+  - node: ShelfWallFreezerBluespace
+    entity: ShelfWallFreezerBluespace
+    edges:
+    - to: start
+      steps:
+      - tool: Screwing
+        doAfter: 5
+      conditions:
+      - !type:StorageWelded
+        welded: false
+      - !type:Locked
+        locked: false
+      completed:
+      - !type:SpawnPrototype
+        prototype: SheetSteel1
+        amount: 5
+      - !type:SpawnPrototype
+        prototype: CableApcStack1
+        amount: 2
+      - !type:SpawnPrototype
+        prototype: SheetGlass1
+        amount: 2
+      - !type:SpawnPrototype
+        prototype: MaterialBluespace1
+        amount: 15
+      - !type:SpawnPrototype
+        prototype: FreezerElectronics
+        amount: 1
+      - !type:EmptyAllContainers
+      - !type:DeleteEntity
+      
+- type: constructionGraph
+  id: BluespaceSafe
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      steps:
+      - material: Steel
+        amount: 10
+      - material: Cable
+        amount: 5
+        doAfter: 5
+      - material: Plasteel
+        amount: 10
+        doAfter: 10
+      - material: Bluespace
+        amount: 20
+        doAfter: 1
+  - node: done
+    entity: BluespaceSafe
+    edges:
+    - to: start
+      steps:
+      - tool: Screwing
+        doAfter: 5
+      conditions:
+      - !type:StorageWelded
+        welded: false
+      - !type:Locked
+        locked: false
+      completed:
+      - !type:SpawnPrototype
+        prototype: SheetSteel1
+        amount: 10
+      - !type:SpawnPrototype
+        prototype: CableApcStack1
+        amount: 5
+      - !type:SpawnPrototype
+        prototype: SheetPlasteel1
+        amount: 10
+      - !type:SpawnPrototype
+        prototype: MaterialBluespace
+        amount: 20
+      - !type:EmptyAllContainers
+      - !type:DeleteEntity
+      
+- type: constructionGraph
+  id: BookshelfBluespace
+  start: start
+  graph:
+    - node: start
+      actions:
+        - !type:DestroyEntity {}
+      edges:
+        - to: bookshelfBluespace
+          completed:
+            - !type:SnapToGrid { }
+          steps:
+            - material: Plasteel
+              amount: 5
+              doAfter: 10
+            - material: Bluespace
+              amount: 2
+              doAfter: 1
+    - node: bookshelfBluespace
+      entity: BookshelfBluespace
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: SheetPlasteel1
+              amount: 5
+            - !type:SpawnPrototype
+              prototype: MaterialBluespace
+              amount: 2
+          steps:
+            - tool: Prying
+              doAfter: 4
+              
+- type: constructionGraph
+  id: BluespaceTabletop
+  start: start
+  graph:
+  - node: start
+    edges:
+    - to: done
+      steps:
+      - material: Plasteel
+        amount: 5
+        doAfter: 5
+      - material: Bluespace
+        amount: 3
+        doAfter: 1
+  - node: done
+    entity: BluespaceTabletop
+    edges:
+    - to: start
+      steps:
+      - tool: Screwing
+        doAfter: 5
+      conditions:
+      - !type:StorageWelded
+        welded: false
+      - !type:Locked
+        locked: false
+      completed:
+      - !type:SpawnPrototype
+        prototype: SheetPlasteel1
+        amount: 5
+      - !type:SpawnPrototype
+        prototype: MaterialBluespace
+        amount: 3
       - !type:EmptyAllContainers
       - !type:DeleteEntity

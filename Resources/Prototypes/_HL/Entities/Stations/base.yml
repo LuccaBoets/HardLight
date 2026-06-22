@@ -161,6 +161,13 @@
         Mime: [ 2, 2 ]
         Musician: [ 2, 2 ]
 
+
+- type: entity
+  id: BaseStationTheDark
+  abstract: true
+  components:
+    - type: StationTheDark
+
 - type: entity
   id: BaseStationEvacuation
   abstract: true

@@ -52,12 +52,14 @@
   # TODO: AddAccentClothingComponent should use an inventory relay event.
   # Also ZombieComponent overwrites the old replacement accent, because you can only have one at a time.
   - RussianAccent
+  - ScandinavianAccent # Hardlight
   - ScrambledAccent
   - SkeletonAccent
   - SlurredAccent
   - SouthernAccent
   - SpanishAccent
   - StutteringAccent
+  - EmotePitch # HardLight
   # Frontier start
   - GoblinAccent
   - ScottishAccent

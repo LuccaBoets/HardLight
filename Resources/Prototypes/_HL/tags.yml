@@ -363,9 +363,12 @@
 
 - type: Tag
   id: Cartridge25x59HE
-  
+
 - type: Tag
   id: DinoFang
+
+- type: Tag
+  id: VinylSleeve
 
 # Forged Rifle Mag
 - type: Tag
@@ -382,3 +385,7 @@
 
 - type: Tag
   id: CCSabre
+
+# HL: Mark Laser Weapons for bounties
+- type: Tag
+  id: LaserWeapon

@@ -70,6 +70,8 @@ public sealed class ShipSaveNullSpaceTest
     [TestCase("BluespaceFlasher",             TestName = "BluespaceFlasherStripped")]
     [TestCase("ClothingNullHarness",          TestName = "NullHarnessStripped")]
     [TestCase("ClothingNullSpaceTeleporter",  TestName = "NullSpaceTeleporterStripped")]
+    [TestCase("GrenadeDePhase",               TestName = "GrenadeDePhaseStripped")]
+    [TestCase("BluespaceFlasherFlatpack",     TestName = "BluespaceFlasherFlatpackStripped")]
     public void NullSpaceItemRemovedFromShipSave(string protoId)
     {
         var root = BuildSaveWithProto(protoId);

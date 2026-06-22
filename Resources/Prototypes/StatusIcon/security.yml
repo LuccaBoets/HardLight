@@ -51,6 +51,7 @@
     sprite: /Textures/Interface/Misc/job_icons.rsi
     state: MindShield
 
+# Hardlight start - ooc noncon preference icons
 - type: securityIcon
   id: NonconIcon
   priority: 2
@@ -143,3 +144,4 @@
   icon:
     sprite: /Textures/Interface/Misc/noncon.rsi
     state: noncon_cb_either
+# Hardlight end

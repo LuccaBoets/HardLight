@@ -12,6 +12,7 @@
   - type: Accentless
     removes:
     - type: GoblinAccent # Frontier
+    - type: ScandinavianAccent # Hardlight
     - type: LizardAccent
     - type: MothAccent
     - type: OwOAccent # HL: lets felionoids opt out of cat-flavored speech

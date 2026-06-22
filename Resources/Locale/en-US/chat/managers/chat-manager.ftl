@@ -57,6 +57,7 @@ chat-manager-admin-channel-name = ADMIN
 
 chat-manager-rate-limited = You are sending messages too quickly!
 chat-manager-rate-limit-admin-announcement = Rate limit warning: { $player }
+chat-manager-ooc-slow-mode-wait = OOC slow mode is active. Please wait {$seconds} more second(s) before sending another OOC message.
 
 ## Speech verbs for chat
 

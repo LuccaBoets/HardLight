@@ -91,24 +91,24 @@
 - type: startingGear
   id: MedicalQuadBorgGear
   equipment:
-    id: MedicalPDA
+    id: MedicalQuadborgPDA
 
 - type: startingGear
   id: ServiceQuadBorgGear
   equipment:
-    id: ServiceWorkerPDA
+    id: ServiceQuadborgPDA
 
 - type: startingGear
   id: SalvageQuadBorgGear
   equipment:
-    id: SalvagePDA
+    id: SalvageQuadborgPDA
 
 - type: startingGear
   id: SecurityQuadBorgGear
   equipment:
-    id: SecurityPDA
+    id: SecurityQuadborgPDA
 
 - type: startingGear
   id: EngineeringQuadBorgGear
   equipment:
-    id: EngineerPDA
+    id: EngineerQuadborgPDA

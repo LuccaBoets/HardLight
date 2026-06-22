@@ -38,5 +38,11 @@ namespace Content.Shared.Climbing.Components
         /// </summary>
         [DataField("finishClimbSound")]
         public SoundSpecifier? FinishClimbSound = null;
+
+        /// <summary>
+        /// HL - Disable it... why? mono put in BaseMachine and anything with TriggerOnProximity proceed to suck your soul.
+        /// </summary>
+        [DataField]
+        public bool Disabled = false;
     }
 }

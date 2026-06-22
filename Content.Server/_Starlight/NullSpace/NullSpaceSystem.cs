@@ -1,9 +1,7 @@
 using Content.Shared.Eye;
-using Content.Shared.Body.Components;
 using Robust.Server.GameObjects;
 using Content.Server.Atmos.Components;
-using Content.Server.Temperature.Components;
-using Content.Shared.Movement.Components;
+using Content.Shared.Temperature.Components;
 using Content.Shared.Stealth;
 using Content.Shared.Stealth.Components;
 using System.Linq;
@@ -13,197 +11,137 @@ using Content.Shared._Starlight.NullSpace;
 using Content.Shared.Movement.Pulling.Systems;
 using Content.Shared.Movement.Pulling.Components;
 using Content.Server.Atmos.EntitySystems;
-using Content.Shared.Carrying; // HL: Moved the Carrying Component to Shared for client-side verb drawing
-using Content.Server.Carrying;
-using Content.Server.Body.Systems;
-using Content.Server.Hands.Systems;
-using Content.Shared.Stunnable;
+using Content.Shared.Inventory.VirtualItem;
 using Content.Shared.Hands.Components;
-using Content.Shared.Inventory;
+using Content.Shared.Hands.EntitySystems;
+using Content.Shared.Interaction.Components;
+using Content.Shared.Hands;
+using Content.Shared.Shuttles.Components;
+using Content.Shared.Stunnable;
+using Content.Shared.Movement.Components;
+using Content.Shared.Body.Components;
+using Content.Server.Body.Systems;
+using Content.Shared.Timing;
 using Content.Shared.Maps;
-using Content.Shared.Physics;
-using Robust.Shared.Player;
-using Robust.Shared.Audio;
-using Robust.Shared.Audio.Systems;
-using Content.Shared._Starlight;
-using Content.Shared.Actions;
-using Robust.Server.Containers;
-using Robust.Shared.Containers;
 using Robust.Shared.Map;
-using Robust.Shared.Map.Components;
 using Robust.Shared.Random;
-using Content.Shared.Clothing.Components;
+using Robust.Shared.Map.Components;
+using Content.Shared.Physics;
+using Content.Shared.Actions;
 
 namespace Content.Server._Starlight.NullSpace;
 
-public sealed class EtherealSystem : SharedEtherealSystem
+public sealed partial class NullSpaceSystem : SharedNullSpaceSystem
 {
-    private sealed class HiddenEquipmentState
-    {
-        public Dictionary<string, EntityUid> HiddenSlots = new();
-        public Dictionary<string, EntityUid> HiddenHands = new();
-        public string? HiddenActiveHand;
-    }
-
-    private static readonly SoundPathSpecifier NullSpaceCutoffSound = new("/Audio/_HL/Effects/ma cutoff.ogg");
-
-    // Components that null phase adds and removes; types already present before entry are preserved on exit.
-    private static readonly Type[] NullPhaseComponents =
-    [
-        typeof(StealthComponent),
-        typeof(PressureImmunityComponent),
-        typeof(MovementIgnoreGravityComponent),
-    ];
-
-    [Dependency] private readonly VisibilitySystem _visibilitySystem = default!;
     [Dependency] private readonly SharedStealthSystem _stealth = default!;
     [Dependency] private readonly EyeSystem _eye = default!;
     [Dependency] private readonly NpcFactionSystem _factions = default!;
     [Dependency] private readonly PullingSystem _pulling = default!;
-    [Dependency] private readonly EntityLookupSystem _lookup = default!;
-    [Dependency] private readonly SharedStunSystem _stun = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly SharedActionsSystem _actionsSystem = default!;
+    [Dependency] private readonly SharedVirtualItemSystem _virtualItem = default!;
+    [Dependency] private readonly SharedHandsSystem _hands = default!;
+    [Dependency] private readonly NullSpacePhaseSystem _phaseSystem = default!;
+    [Dependency] private readonly VisibilitySystem _visibility = default!;
     [Dependency] private readonly InternalsSystem _internals = default!;
-    [Dependency] private readonly InventorySystem _inventory = default!;
-    [Dependency] private readonly HandsSystem _hands = default!;
-    [Dependency] private readonly ContainerSystem _container = default!;
-    [Dependency] private readonly TransformSystem _transform = default!;
-    [Dependency] private readonly CarryingSystem _carrying = default!;
+    [Dependency] private readonly UseDelaySystem _usedelay = default!;
     [Dependency] private readonly TurfSystem _turf = default!;
     [Dependency] private readonly SharedMapSystem _mapSystem = default!;
     [Dependency] private readonly IMapManager _mapManager = default!;
     [Dependency] private readonly IRobustRandom _random = default!;
-
-    private const string HiddenEquipmentContainerId = "nullspace-hidden-equipment";
-    private readonly Dictionary<EntityUid, HiddenEquipmentState> _hiddenEquipment = new();
+    [Dependency] private readonly TransformSystem _transform = default!;
+    [Dependency] private readonly SharedActionsSystem _actionsSystem = default!;
 
     public override void Initialize()
     {
         base.Initialize();
+        SubscribeLocalEvent<NullSpaceComponent, MapInitEvent>(OnStartup);
+        SubscribeLocalEvent<NullSpaceComponent, ComponentShutdown>(OnShutdown);
+        SubscribeLocalEvent<NullSpaceComponent, ComponentRemove>(OnRemove);
         SubscribeLocalEvent<NullSpaceComponent, AtmosExposedGetAirEvent>(OnExpose);
-        SubscribeLocalEvent<BluespacePulseActionEvent>(OnBluespacePulse);
+        SubscribeLocalEvent<NullSpaceComponent, VirtualItemDeletedEvent>(OnVirtualItemDeleted);
+        SubscribeLocalEvent<NullSpaceComponent, NullSpaceShuntEvent>(NullSpaceShunt);
+        SubscribeLocalEvent<NullSpaceComponent, GetVisMaskEvent>(OnGetVisMask);
     }
 
-    public override void Update(float frameTime)
-    {
-        base.Update(frameTime);
-        var query = EntityQueryEnumerator<NullSpaceComponent, KnockedDownComponent>();
-        while (query.MoveNext(out var uid, out _, out _))
-            RemCompDeferred<NullSpaceComponent>(uid);
-    }
+    private void OnGetVisMask(Entity<NullSpaceComponent> uid, ref GetVisMaskEvent args) =>
+        args.VisibilityMask |= (int)VisibilityFlags.NullSpace;
 
-    public override void OnStartup(EntityUid uid, NullSpaceComponent component, MapInitEvent args)
+    public void OnStartup(EntityUid uid, NullSpaceComponent component, MapInitEvent args)
     {
-        base.OnStartup(uid, component, args);
-
         var visibility = EnsureComp<VisibilityComponent>(uid);
-        _visibilitySystem.RemoveLayer((uid, visibility), (int)VisibilityFlags.Normal, false);
-        _visibilitySystem.AddLayer((uid, visibility), (int)VisibilityFlags.NullSpace, false);
-        _visibilitySystem.RefreshVisibility(uid, visibility);
+        _visibility.RemoveLayer((uid, visibility), (int)VisibilityFlags.Normal, false);
+        _visibility.AddLayer((uid, visibility), (int)VisibilityFlags.NullSpace, false);
+        _visibility.RefreshVisibility(uid, visibility);
 
-        if (TryComp<EyeComponent>(uid, out var eye))
-            _eye.SetVisibilityMask(uid, eye.VisibilityMask | (int)(VisibilityFlags.NullSpace), eye);
-
-        if (TryComp<TemperatureComponent>(uid, out var temp))
-            temp.AtmosTemperatureTransferEfficiency = 0;
-
-        foreach (var type in NullPhaseComponents)
-            if (EntityManager.HasComponent(uid, type))
-                component.PreExistingComponents.Add(type);
+        _eye.RefreshVisibilityMask(uid);
 
         var stealth = EnsureComp<StealthComponent>(uid);
         _stealth.SetVisibility(uid, 0.8f, stealth);
 
         SuppressFactions(uid, component, true);
 
+        RemComp<KnockedDownComponent>(uid);
+
         EnsureComp<PressureImmunityComponent>(uid);
+        EnsureComp<FTLSmashImmuneComponent>(uid);
+        EnsureComp<TemperatureImmunityComponent>(uid);
         EnsureComp<MovementIgnoreGravityComponent>(uid);
+
+        if (TryComp<InternalsComponent>(uid, out var internals))
+            _internals.DisconnectTank((uid, internals), forced: true);
+
+        if (TryComp<HandsComponent>(uid, out var handsComponent))
+        {
+            foreach (var hand in _hands.EnumerateHands(uid, handsComponent))
+            {
+                if (hand.HeldEntity.HasValue)
+                {
+                    if (HasComp<UnremoveableComponent>(hand.HeldEntity))
+                        continue;
+
+                    if (TryComp<VirtualItemComponent>(hand.HeldEntity, out var vcomp))
+                        if (HasComp<NullSpacePulledComponent>(vcomp.BlockingEntity) && TryComp<PullableComponent>(vcomp.BlockingEntity, out var pulling) && pulling.BeingPulled)
+                        {
+                            RemComp<NullSpacePulledComponent>(vcomp.BlockingEntity);
+                            // safety check just to make sure you dont pull something out of nullspace by phasing in
+                            if (!HasComp<NullSpaceComponent>(vcomp.BlockingEntity)) _phaseSystem.Phase(vcomp.BlockingEntity);
+                            continue;
+                        }
+
+                    _hands.DoDrop(uid, hand, true, handsComponent);
+                }
+
+                if (_virtualItem.TrySpawnVirtualItemInHand(uid, uid, out var virtItem))
+                    EnsureComp<UnremoveableComponent>(virtItem.Value);
+            }
+        }
 
         if (TryComp<PullableComponent>(uid, out var pullable) && pullable.BeingPulled)
         {
-            _pulling.TryStopPull(uid, pullable);
-        }
-
-        if (TryComp<PullerComponent>(uid, out var pullerComp)
-            && TryComp<PullableComponent>(pullerComp.Pulling, out var subjectPulling))
-        {
-            _pulling.TryStopPull(pullerComp.Pulling.Value, subjectPulling);
-        }
-
-        DisconnectInternals(uid);
-        HideEquipment(uid, component);
-
-        if (TryComp<CarryingComponent>(uid, out var carrying)
-            && !HasComp<PressureImmunityComponent>(carrying.Carried))
-        {
-            EnsureComp<PressureImmunityComponent>(carrying.Carried);
-            EnsureComp<NullCarryPressureImmunityComponent>(carrying.Carried);
+            // if thing pulling is in nullspace, you're coming along with them.
+            if (!HasComp<NullSpaceComponent>(pullable.Puller!.Value))
+                _pulling.TryStopPull(uid, pullable);
         }
     }
 
-    public override void OnShutdown(EntityUid uid, NullSpaceComponent component, ComponentShutdown args)
+    public void OnShutdown(EntityUid uid, NullSpaceComponent component, ComponentShutdown args)
     {
-        if (TryComp<NullPhaseComponent>(uid, out var phaseComp))
-        {
-            if (phaseComp.VoluntaryExit)
-                phaseComp.VoluntaryExit = false;
-            else
-            {
-                _actionsSystem.SetIfBiggerCooldown(phaseComp.PhaseAction, TimeSpan.FromSeconds(phaseComp.ForcedEjectionPenalty));
-                TrySlideToFreeTile(uid);
-            }
-        }
-        else
-        {
-            TrySlideToFreeTile(uid);
-        }
-
-        base.OnShutdown(uid, component, args);
-
         if (TryComp<VisibilityComponent>(uid, out var visibility))
         {
-            _visibilitySystem.AddLayer((uid, visibility), (int)VisibilityFlags.Normal, false);
-            _visibilitySystem.RemoveLayer((uid, visibility), (int)VisibilityFlags.NullSpace, false);
-            _visibilitySystem.RefreshVisibility(uid, visibility);
+            _visibility.RemoveLayer((uid, visibility), (int)VisibilityFlags.NullSpace, false);
+            _visibility.AddLayer((uid, visibility), (int)VisibilityFlags.Normal, false);
+            _visibility.RefreshVisibility(uid, visibility);
         }
-
-        if (TryComp<EyeComponent>(uid, out var eye))
-        {
-            var mask = (int)VisibilityFlags.Normal;
-            if (HasComp<ShowNullSpaceComponent>(uid))
-                mask |= (int)VisibilityFlags.NullSpace;
-            _eye.SetVisibilityMask(uid, mask, eye);
-        }
-
-        if (TryComp<TemperatureComponent>(uid, out var temp))
-            temp.AtmosTemperatureTransferEfficiency = 0.1f;
 
         SuppressFactions(uid, component, false);
 
-        foreach (var type in NullPhaseComponents)
-            if (!component.PreExistingComponents.Contains(type))
-                EntityManager.RemoveComponent(uid, type);
+        RemComp<StealthComponent>(uid);
+        RemComp<PressureImmunityComponent>(uid);
+        RemComp<FTLSmashImmuneComponent>(uid);
+        RemComp<TemperatureImmunityComponent>(uid);
 
-        if (TryComp<PullableComponent>(uid, out var pullable) && pullable.BeingPulled)
-        {
-            _pulling.TryStopPull(uid, pullable);
-        }
+        _virtualItem.DeleteInHandsMatching(uid, uid);
 
-        if (TryComp<PullerComponent>(uid, out var pullerComp)
-            && TryComp<PullableComponent>(pullerComp.Pulling, out var subjectPulling))
-        {
-            _pulling.TryStopPull(pullerComp.Pulling.Value, subjectPulling);
-        }
-
-        RestoreEquipment(uid, component);
-
-        if (TryComp<CarryingComponent>(uid, out var carrying)
-            && HasComp<NullCarryPressureImmunityComponent>(carrying.Carried))
-        {
-            RemComp<NullCarryPressureImmunityComponent>(carrying.Carried);
-            RemComp<PressureImmunityComponent>(carrying.Carried);
-        }
+        TrySlideToFreeTile(uid);
     }
 
     private static readonly Vector2i[] AdjacentOffsets =
@@ -264,6 +202,53 @@ public sealed class EtherealSystem : SharedEtherealSystem
         return buffer;
     }
 
+    public void OnRemove(EntityUid uid, NullSpaceComponent component, ComponentRemove args)
+    {
+        _eye.RefreshVisibilityMask(uid);
+
+        RemComp<MovementIgnoreGravityComponent>(uid);
+    }
+
+    private void OnVirtualItemDeleted(EntityUid uid, NullSpaceComponent component, VirtualItemDeletedEvent args)
+    {
+        if (TryComp<HandsComponent>(uid, out var handsComponent))
+        {
+            foreach (var hand in _hands.EnumerateHands(uid, handsComponent))
+            {
+                if (hand.HeldEntity.HasValue)
+                {
+                    if (HasComp<UnremoveableComponent>(hand.HeldEntity))
+                        continue;
+
+                    if (TryComp<VirtualItemComponent>(hand.HeldEntity, out var vcomp))
+                    {
+                        // safety check just to make sure you dont pull something into nullspace by phasing out.
+                        if (HasComp<NullSpaceComponent>(vcomp.BlockingEntity)) _phaseSystem.Phase(vcomp.BlockingEntity);
+                        continue;
+                    }
+
+                    _hands.DoDrop(uid, hand, true, handsComponent);
+                }
+
+                if (_virtualItem.TrySpawnVirtualItemInHand(uid, uid, out var virtItem))
+                    EnsureComp<UnremoveableComponent>(virtItem.Value);
+            }
+        }
+    }
+
+    private void NullSpaceShunt(EntityUid uid, NullSpaceComponent component, NullSpaceShuntEvent args)
+    {
+        if (TryComp<NullPhaseComponent>(uid, out var nullphase) && nullphase.ShuntCooldown is not null)
+        {
+            _usedelay.SetLength(uid, nullphase.ShuntCooldown.Value, "nullphase-delay");
+            _actionsSystem.SetCooldown(nullphase.PhaseAction, nullphase.ShuntCooldown.Value);
+            _usedelay.TryResetDelay(uid, id: "nullphase-delay");
+        }
+
+        SpawnAtPosition(_shadekinShadow, Transform(uid).Coordinates);
+        RemComp(uid, component);
+    }
+
     public void SuppressFactions(EntityUid uid, NullSpaceComponent component, bool set)
     {
         if (set)
@@ -292,156 +277,5 @@ public sealed class EtherealSystem : SharedEtherealSystem
 
         args.Gas = null;
         args.Handled = true;
-    }
-
-    private void OnBluespacePulse(BluespacePulseActionEvent args)
-    {
-        var radius = args.Radius;
-        var stunTime = System.TimeSpan.FromSeconds(args.StunSeconds);
-
-        var origin = args.Source;
-        foreach (var ent in _lookup.GetEntitiesInRange(origin, radius))
-        {
-            if (!HasComp<NullSpaceComponent>(ent))
-                continue;
-
-            if (HasComp<ShadekinComponent>(ent))
-                _audio.PlayPvs(NullSpaceCutoffSound, ent);
-            RemComp<NullSpaceComponent>(ent);
-            _stun.TryParalyze(ent, stunTime, true);
-        }
-
-        args.Handled = true;
-    }
-
-    private void DisconnectInternals(EntityUid uid)
-    {
-        if (!TryComp<InternalsComponent>(uid, out var internals))
-            return;
-
-        _internals.DisconnectTank((uid, internals), forced: true);
-    }
-
-    private void HideEquipment(EntityUid uid, NullSpaceComponent component)
-    {
-        if (_hiddenEquipment.ContainsKey(uid))
-            return;
-
-        var state = new HiddenEquipmentState();
-        var hiddenContainer = _container.EnsureContainer<Container>(uid, HiddenEquipmentContainerId);
-
-        if (TryComp<CarryingComponent>(uid, out var carrying))
-            _carrying.DropCarried(uid, carrying.Carried);
-
-        if (TryComp<HandsComponent>(uid, out var hands))
-            state.HiddenActiveHand = hands.ActiveHand?.Name;
-
-        if (TryComp<InventoryComponent>(uid, out var inventory))
-        {
-            foreach (var slot in inventory.Slots)
-            {
-                if (!_inventory.TryGetSlotContainer(uid, slot.Name, out var slotContainer, out _, inventory)
-                    || slotContainer.ContainedEntity is not { } equipped)
-                    continue;
-
-                if (HasComp<NullPhaseComponent>(equipped))
-                    continue;
-
-                // Retract any attached clothing piece (e.g. hardsuit helmet) before hiding the item
-                // so it ends up nested inside the item's own container rather than getting lost.
-                if (TryComp<ToggleableClothingComponent>(equipped, out var toggleable)
-                    && toggleable.Container != null
-                    && toggleable.Container.ContainedEntity == null
-                    && toggleable.ClothingUid != null)
-                {
-                    _inventory.TryUnequip(uid, toggleable.Slot, force: true, inventory: inventory);
-                }
-
-                if (!_container.Insert(equipped, hiddenContainer))
-                    continue;
-
-                state.HiddenSlots[slot.Name] = equipped;
-            }
-        }
-
-        if (!TryComp<HandsComponent>(uid, out hands))
-            return;
-
-        foreach (var hand in _hands.EnumerateHands(uid, hands).ToArray())
-        {
-            if (hand.HeldEntity is not { } held)
-                continue;
-
-            if (_container.Insert(held, hiddenContainer))
-                state.HiddenHands[hand.Name] = held;
-        }
-
-        _hiddenEquipment[uid] = state;
-    }
-
-    private void RestoreEquipment(EntityUid uid, NullSpaceComponent component)
-    {
-        if (!_hiddenEquipment.TryGetValue(uid, out var state))
-            return;
-
-        if (!_container.TryGetContainer(uid, HiddenEquipmentContainerId, out var hiddenContainer))
-            return;
-
-        if (TryComp<InventoryComponent>(uid, out var inventory))
-        {
-            foreach (var (slot, item) in state.HiddenSlots.ToArray())
-            {
-                if (TerminatingOrDeleted(item))
-                {
-                    state.HiddenSlots.Remove(slot);
-                    continue;
-                }
-
-                if (_inventory.TryEquip(uid, item, slot, silent: true, force: true, inventory: inventory))
-                {
-                    state.HiddenSlots.Remove(slot);
-                    continue;
-                }
-
-                DropHiddenItem(uid, item, hiddenContainer);
-                state.HiddenSlots.Remove(slot);
-            }
-        }
-
-        if (TryComp<HandsComponent>(uid, out var hands))
-        {
-            foreach (var (handName, item) in state.HiddenHands.ToArray())
-            {
-                if (TerminatingOrDeleted(item))
-                {
-                    state.HiddenHands.Remove(handName);
-                    continue;
-                }
-
-                var restored = _hands.TryGetHand(uid, handName, out var hand, hands)
-                    && _hands.TryPickup(uid, item, hand, checkActionBlocker: false, handsComp: hands);
-
-                restored |= _hands.TryPickupAnyHand(uid, item, checkActionBlocker: false, handsComp: hands);
-
-                if (!restored)
-                    DropHiddenItem(uid, item, hiddenContainer);
-
-                state.HiddenHands.Remove(handName);
-            }
-
-            if (state.HiddenActiveHand != null)
-                _hands.TrySetActiveHand(uid, state.HiddenActiveHand, hands);
-        }
-
-        _hiddenEquipment.Remove(uid);
-    }
-
-    private void DropHiddenItem(EntityUid uid, EntityUid item, BaseContainer hiddenContainer)
-    {
-        if (!_container.Remove(item, hiddenContainer))
-            return;
-
-        _transform.AttachToGridOrMap(item);
-        _transform.SetCoordinates(item, Transform(uid).Coordinates);
     }
 }

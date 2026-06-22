@@ -12,10 +12,20 @@ on:
     branches:
       - 'stable'
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
   add_label:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions-ecosystem/action-add-labels@v1
-      with:
-        labels: "Branch: Stable"
+    - name: Add stable branch label
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        REPO: ${{ github.repository }}
+      run: |
+        gh api --method POST "repos/$REPO/issues/$PR_NUMBER/labels" \
+          --field labels[]="Branch: Stable"

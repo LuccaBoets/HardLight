@@ -28,11 +28,18 @@
     - !type:OverallPlaytimeRequirement
       time: 43200 # 12 hrs # Frontier: 10<12 hrs
   # canBeAntag: false
-  accessGroups:
-  - AllAccess
-  access:
-  - CentralCommand
+  # accessGroups:
+  # - AllAccess
+  # access:
+  # - CentralCommand
   icon: JobIconBorg
   supervisors: job-supervisors-rd
   jobEntity: PlayerBorgBattery
   applyTraits: false
+  startingGear: BorgGear #HardLight
+
+# HardLight
+- type: startingGear
+  id: BorgGear
+  equipment:
+    id: CyborgPDA

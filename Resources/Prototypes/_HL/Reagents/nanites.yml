@@ -7,6 +7,7 @@
   flavor: metallic
   color: "#79b5b4"
   recognizable: true
+  generateBloodData: false
   worksOnTheDead: false
   metabolisms:
     Medicine:
@@ -56,7 +57,10 @@
   flavor: metallic
   color: "#8afffd"
   recognizable: true
-  spoilsInto: InertNanites
+  generateBloodData: false
+  spoilConditions:
+    spoilsInto: InertNanites
+    bloodstreamPreserve: true
   worksOnTheDead: true
   metabolisms:
     Medicine:

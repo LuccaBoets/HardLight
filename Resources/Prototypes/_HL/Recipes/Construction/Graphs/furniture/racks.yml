@@ -1,0 +1,219 @@
+- type: constructionGraph
+  id: WeaponRackBluespaceConstructionGraph
+  start: start
+  graph:
+  - node: start
+    actions:
+      - !type:SpawnPrototype
+        prototype: PartRodMetal1
+        amount: 5
+      - !type:SpawnPrototype
+        prototype: SheetSteel1
+        amount: 10
+      - !type:SpawnPrototype
+        prototype: CableApcStack1
+        amount: 2
+      - !type:SpawnPrototype
+        prototype: MaterialBluespace1
+        amount: 5
+      - !type:DeleteEntity {}
+
+    edges:
+      - to: GunRackBluespaceNode
+        completed:
+          - !type:SnapToGrid {}
+        steps:
+          - material: MetalRod
+            amount: 5
+            doAfter: 2
+          - material: Steel
+            amount: 10
+            doAfter: 2
+          - material: Cable
+            amount: 2
+            doAfter: 1
+          - material: Bluespace
+            amount: 5
+            doAfter: 1
+
+      - to: GunRackBluespaceWallmountedNode
+        completed:
+          - !type:SnapToGrid {}
+        steps:
+          - material: MetalRod
+            amount: 5
+            doAfter: 2
+          - material: Steel
+            amount: 10
+            doAfter: 2
+          - material: Cable
+            amount: 2
+            doAfter: 1
+          - material: Bluespace
+            amount: 5
+            doAfter: 1
+
+      - to: MeleeRackBluespaceNode
+        completed:
+          - !type:SnapToGrid {}
+        steps:
+          - material: MetalRod
+            amount: 5
+            doAfter: 2
+          - material: Steel
+            amount: 10
+            doAfter: 2
+          - material: Cable
+            amount: 2
+            doAfter: 1
+          - material: Bluespace
+            amount: 5
+            doAfter: 1
+
+      - to: MeleeRackBluespaceWallmountedNode
+        completed:
+          - !type:SnapToGrid {}
+        steps:
+          - material: MetalRod
+            amount: 5
+            doAfter: 2
+          - material: Steel
+            amount: 10
+            doAfter: 2
+          - material: Cable
+            amount: 2
+            doAfter: 1
+          - material: Bluespace
+            amount: 5
+            doAfter: 1
+
+      - to: PistolRackBluespaceNode
+        completed:
+          - !type:SnapToGrid {}
+        steps:
+          - material: MetalRod
+            amount: 4
+            doAfter: 2
+          - material: Steel
+            amount: 6
+            doAfter: 2
+          - material: Cable
+            amount: 2
+            doAfter: 1
+          - material: Bluespace
+            amount: 5
+            doAfter: 1
+
+      - to: PistolRackBluespaceWallmountedNode
+        completed:
+          - !type:SnapToGrid {}
+        steps:
+          - material: MetalRod
+            amount: 4
+            doAfter: 2
+          - material: Steel
+            amount: 6
+            doAfter: 2
+          - material: Cable
+            amount: 2
+            doAfter: 1
+          - material: Bluespace
+            amount: 5
+            doAfter: 1
+
+  - node: GunRackBluespaceNode
+    entity: StructureGunRackBluespace
+    edges:
+      - to: start
+        steps:
+          - tool: Screwing
+            doAfter: 5
+
+  - node: GunRackBluespaceWallmountedNode
+    entity: StructureGunRackBluespaceWallmounted
+    edges:
+      - to: start
+        steps:
+          - tool: Screwing
+            doAfter: 5
+
+  - node: MeleeRackBluespaceNode
+    entity: StructureMeleeWeaponRackBluespace
+    edges:
+      - to: start
+        steps:
+          - tool: Screwing
+            doAfter: 5
+
+  - node: MeleeRackBluespaceWallmountedNode
+    entity: StructureMeleeWeaponRackBluespaceWallmounted
+    edges:
+      - to: start
+        steps:
+          - tool: Screwing
+            doAfter: 5
+
+  - node: PistolRackBluespaceNode
+    entity: StructurePistolRackBluespace
+    edges:
+      - to: start
+        steps:
+          - tool: Screwing
+            doAfter: 5
+
+  - node: PistolRackBluespaceWallmountedNode
+    entity: StructurePistolRackBluespaceWallmounted
+    edges:
+      - to: start
+        steps:
+          - tool: Screwing
+            doAfter: 5
+            
+- type: constructionGraph
+  id: SuitLockerBluespace
+  start: start
+  graph:
+    - node: start
+      actions:
+        - !type:DeleteEntity {}
+      edges:
+        - to: SuitStorageBluespace
+          steps:
+            - material: Plasteel
+              amount: 2
+              doAfter: 2
+            - material: MetalRod
+              amount: 2
+              doAfter: 2
+            - material: Cable
+              amount: 2
+              doAfter: 2
+            - material: Bluespace
+              amount: 5
+              doAfter: 1
+    - node: SuitStorageBluespace
+      entity: StructureStorageUnitBluespace
+      edges:
+        - to: start
+          completed:
+          - !type:EmptyAllContainers
+          - !type:SpawnPrototype
+            prototype: SheetPlasteel1
+            amount: 2
+          - !type:SpawnPrototype
+            prototype: PartRodMetal1
+            amount: 2
+          - !type:SpawnPrototype
+            prototype: CableApcStack1
+            amount: 2
+          - !type:SpawnPrototype
+            prototype: MaterialBluespace1
+            amount: 5
+          steps:
+            - tool: Screwing
+              doAfter: 2
+          conditions:
+          - !type:StorageWelded
+            welded: false
+          - !type:Locked
+            locked: false

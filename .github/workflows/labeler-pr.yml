@@ -10,7 +10,7 @@ on:
 
 jobs:
   labeler:
-    if: github.actor != 'PJBot' && github.actor != 'FrontierATC' # Frontier
+    if: github.actor != 'PJBot' && github.actor != 'xemeraldwingx-dot' # Hardlight
     permissions:
       contents: read
       pull-requests: write

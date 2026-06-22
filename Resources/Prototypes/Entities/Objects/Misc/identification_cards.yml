@@ -931,3 +931,57 @@
     interfaces:
       enum.AgentIDCardUiKey.Key:
         type: AgentIDCardBoundUserInterface
+
+# HardLight
+- type: entity
+  parent: SecurityIDCard
+  id: SecurityQuadborgIDCard
+  name: security quadborg ID card
+  components:
+  - type: PresetIdCard
+    job: SecurityQuadBorg
+
+# HardLight
+- type: entity
+  parent: SalvageIDCard
+  id: SalvageQuadborgIDCard
+  name: salvage quadborg ID card
+  components:
+  - type: PresetIdCard
+    job: SalvageQuadBorg
+
+# HardLight
+- type: entity
+  parent: EngineeringIDCard
+  id: EngineeringQuadborgIDCard
+  name: engineer Quadborg ID card
+  components:
+  - type: PresetIdCard
+    job: EngineeringQuadBorg
+
+# HardLight
+- type: entity
+  parent: MedicalIDCard
+  id: MedicalQuadborgIDCard
+  name: medical quadborg ID card
+  components:
+  - type: PresetIdCard
+    job: MedicalQuadBorg
+
+# HardLight
+- type: entity
+  parent: ServiceWorkerIDCard
+  id: ServiceQuadborgIDCard
+  name: service quadborg ID card
+  components:
+  - type: PresetIdCard
+    job: ServiceQuadBorg
+
+# HardLight
+- type: entity
+  parent: PassengerIDCard
+  id: CyborgIDCard
+  name: cyborg ID card
+  components:
+  - type: PresetIdCard
+    job: Borg

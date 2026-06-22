@@ -7,21 +7,23 @@
     "y": 32
   },
   "states": [
-    {
-      "name": "icon",
-      "directions": 1
-    },
-    {
-      "name": "equipped-BACKPACK",
-      "directions": 4
-    },
-    {
-      "name": "inhand-left",
-      "directions": 4
-    },
-    {
-      "name": "inhand-right",
-      "directions": 4
-    }
+        {
+            "name": "icon"
+        },
+        {
+            "name": "folded"
+        },
+        {
+            "name": "equipped-BACKPACK",
+            "directions": 4
+        },
+        {
+            "name": "inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "inhand-right",
+            "directions": 4
+        }
   ]
 }

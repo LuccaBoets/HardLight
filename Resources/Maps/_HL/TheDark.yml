@@ -145,6 +145,10 @@ entities:
       dampingModifier: 0.25
     - type: ImplicitRoof
     - type: GridPathfinding
+    - type: CleanupImmune
+    - type: WorldLoader
+      disabled: False
+    - type: PreventPilot
     - type: Gravity
       gravityShakeSound: !type:SoundPathSpecifier
         path: /Audio/Effects/alert.ogg

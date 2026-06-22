@@ -54,7 +54,7 @@ namespace Content.Server.Abilities.Psionics
 
         private void OnDispelled(EntityUid uid, DispellableComponent component, DispelledEvent args)
         {
-            if (args.Handled)
+            if (args.Handled || component.Disabled)
                 return;
 
             QueueDel(uid);

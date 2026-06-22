@@ -12,6 +12,9 @@
       "directions": 1
     },
     {
+      "name": "folded"
+    },
+    {
       "name": "equipped-BACKPACK",
       "directions": 4
     },

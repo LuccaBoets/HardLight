@@ -134,8 +134,8 @@
   - type: ToggleClothing
     action: ActionToggleSpeedBoots
   - type: ClothingSpeedModifier
-    walkModifier: 1.7 # DeltaV
-    sprintModifier: 1.7 # DeltaV
+    walkModifier: 3 # DeltaV
+    sprintModifier: 3 # DeltaV
   - type: Appearance
   - type: GenericVisualizer
     visuals:
@@ -146,7 +146,7 @@
   - type: StaticPrice
     price: 500
   - type: PowerCellDraw
-    drawRate: 40 # Hardlight 30>40, you have to turn off micro reactor and antique cell at somepoint
+    drawRate: 120 # Hardlight 30>40, you have to turn off micro reactor and antique cell at somepoint
   - type: ToggleCellDraw
   - type: ItemSlots
     slots:
@@ -160,6 +160,8 @@
   name: Toggle Speed Boots
   description: Toggles the speed boots on and off.
   components:
+  - type: UseDelay
+    delay: 20.0
   - type: InstantAction
     itemIconStyle: BigItem
     event: !type:ToggleActionEvent

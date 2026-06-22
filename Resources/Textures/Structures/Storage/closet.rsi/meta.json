@@ -533,6 +533,18 @@
         {
             "name": "shotguncase_open"
         },
+		{
+            "name": "bluespace"
+        },
+		{
+            "name": "bluespacecase"
+        },
+        {
+            "name": "bluespacecase_door"
+        },
+        {
+            "name": "bluespacecase_open"
+        },
         {
             "name": "sparking",
             "delays": [

@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Server.Body.Components;
 using Content.Server.Mobs.Components;
 using Content.Shared._HL.Chemistry.Components;
 using Content.Shared.Chemistry.Components;
@@ -63,7 +64,8 @@ public sealed class ReagentSpoilageSystem : EntitySystem
         foreach (var reagentQuantity in solution.Contents.ToArray())
         {
             var reagentProto = _prototype.Index<ReagentPrototype>(reagentQuantity.Reagent.Prototype);
-            if (reagentProto.SpoilsInto is not { } spoiled)
+            var spoiled = reagentProto.SpoilConditions?.SpoilsInto;
+            if (spoiled is not { })
             {
                 continue;
             }
@@ -77,9 +79,9 @@ public sealed class ReagentSpoilageSystem : EntitySystem
                 continue;
             }
 
-            if (reagentProto.SpoilTime > TimeSpan.Zero)
+            if (reagentProto.SpoilConditions?.SpoilTime > TimeSpan.Zero)
             {
-                _pendingSpoilage[key] = _timing.CurTime + reagentProto.SpoilTime;
+                _pendingSpoilage[key] = _timing.CurTime + reagentProto.SpoilConditions!.SpoilTime;
                 continue;
             }
 
@@ -118,7 +120,8 @@ public sealed class ReagentSpoilageSystem : EntitySystem
         }
 
         var reagentProto = _prototype.Index<ReagentPrototype>(key.Reagent.Prototype);
-        if (reagentProto.SpoilsInto is not { } spoiled || IsValidSpoilageContext(key.Owner, reagentProto))
+        var spoiled = reagentProto.SpoilConditions?.SpoilsInto;
+        if (spoiled is not { } || IsValidSpoilageContext(key.Owner, reagentProto))
         {
             _pendingSpoilage.Remove(key);
             return;
@@ -136,6 +139,15 @@ public sealed class ReagentSpoilageSystem : EntitySystem
         if (HasComp<HLSynthComponent>(owner))
             return true;
 
-        return proto.PreservedBySpoilageContainers && HasComp<PreservesSpoilageComponent>(owner);
+        if ((proto.SpoilConditions?.PreservedBySpoilageContainers ?? true) && HasComp<PreservesSpoilageComponent>(owner))
+            return true;
+
+        if (proto.SpoilConditions == null)
+            return false;
+
+        if (TryComp<BloodstreamComponent>(owner, out var bloodstream))
+            return !proto.SpoilConditions.ShouldSpoil(true, bloodstream.BloodReagent);
+
+        return !proto.SpoilConditions.ShouldSpoil(false, null);
     }
 }

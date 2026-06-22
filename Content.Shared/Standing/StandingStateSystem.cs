@@ -155,7 +155,7 @@ public sealed class StandingStateSystem : EntitySystem
         var entityDistances = new Dictionary<EntityUid, float>();
 
         foreach (var entity in _lookup.GetEntitiesIntersecting(uid)) // Floof - changed to GetEntitiesIntersecting to avoid climbing through walls
-            if (HasComp<ClimbableComponent>(entity))
+            if (TryComp<ClimbableComponent>(entity, out var climb) && !climb.Disabled)
                 entityDistances[entity] = (Transform(uid).Coordinates.Position - Transform(entity).Coordinates.Position).LengthSquared();
 
         if (entityDistances.Count > 0)

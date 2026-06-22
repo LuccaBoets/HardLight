@@ -6,6 +6,7 @@
   flavor: metallic
   color: "#3f1b66cc" # HardLight: 00b8f5<3f1b66cc
   recognizable: true
+  generateBloodData: false # Hardlight
   physicalDesc: reagent-physical-desc-reflective
   metabolisms:
     Drink:

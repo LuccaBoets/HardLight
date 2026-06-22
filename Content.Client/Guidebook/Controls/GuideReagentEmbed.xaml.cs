@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Content.Client.Chemistry.EntitySystems;
@@ -230,7 +231,73 @@ public sealed partial class GuideReagentEmbed : BoxContainer, IDocumentTag, ISea
         }
 
         ReagentDescription.SetMessage(description);
+
+        // Hardlight start
+        if (reagent.SpoilConditions != null)
+        {
+            SpoilConditionsDescription.SetMarkup(GetSpoilConditionsGuidebookText(reagent));
+            SpoilConditionsContainer.Visible = true;
+        }
+        else
+        {
+            SpoilConditionsContainer.Visible = false;
+        }
     }
+
+    private string GetSpoilConditionsGuidebookText(ReagentPrototype reagent)
+    {
+        var bloodOnly = reagent.SpoilConditions?.BloodstreamPreserve ?? false;
+        var spoilsInto = "none";
+
+        if (reagent.SpoilConditions?.SpoilsInto is { } spoilId)
+        {
+            if (_prototype.TryIndex<ReagentPrototype>(spoilId, out var spoilProto))
+            {
+                spoilsInto = spoilProto.LocalizedName;
+            }
+            else
+            {
+                spoilsInto = spoilId.ToString();
+            }
+        }
+
+        var preserved = reagent.SpoilConditions?.PreservedBySpoilageContainers ?? true;
+
+        string allowed;
+        if (reagent.SpoilConditions?.AllowedBloodTypes != null &&
+            reagent.SpoilConditions.AllowedBloodTypes.Count > 0)
+        {
+            allowed = string.Join(", ", reagent.SpoilConditions.AllowedBloodTypes);
+        }
+        else
+        {
+            allowed = "none";
+        }
+        if (reagent.SpoilConditions?.AllowedBloodTypes != null && reagent.SpoilConditions.AllowedBloodTypes.Count > 0)
+        {
+            allowed = string.Join(", ", reagent.SpoilConditions.AllowedBloodTypes);
+        }
+
+        var spoilTimeStr = "Instant";
+        if (reagent.SpoilConditions != null && reagent.SpoilConditions.SpoilTime > TimeSpan.Zero)
+        {
+            var ts = reagent.SpoilConditions.SpoilTime;
+            if (ts.TotalSeconds < 60)
+                spoilTimeStr = $"{(int)ts.TotalSeconds}s";
+            else if (ts.TotalMinutes < 60)
+                spoilTimeStr = $"{(int)ts.TotalMinutes}m {ts.Seconds}s";
+            else
+                spoilTimeStr = $"{(int)ts.TotalHours}h {ts.Minutes}m";
+        }
+
+        return Loc.GetString("reagent-effect-guidebook-spoil-conditions",
+            ("bloodstreamPreserve", bloodOnly),
+            ("spoilsInto", spoilsInto),
+            ("preservedBySpoilageContainers", preserved),
+            ("allowedBloodTypes", allowed),
+            ("spoilTime", spoilTimeStr));
+    }
+    // Hardlight end
 
     private void GenerateSources(ReagentPrototype reagent)
     {
