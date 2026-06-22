@@ -6,6 +6,7 @@
   - type: Organ
   - type: Food
   #    quality: Nasty # Frontier
+  - type: PreservesSpoilage
   - type: Sprite
     sprite: Mobs/Species/Human/organs.rsi
   - type: StaticPrice

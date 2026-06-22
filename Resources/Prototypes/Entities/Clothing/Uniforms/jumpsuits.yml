@@ -1367,3 +1367,15 @@
     sprite: Clothing/Uniforms/Jumpsuit/familiar_garbs.rsi
   - type: Clothing
     sprite: Clothing/Uniforms/Jumpsuit/familiar_garbs.rsi
+
+
+- type: entity 
+  parent: ClothingUniformBase
+  id: ClothingUniformJumpsuitCybersunFormal
+  name: Cybersun Corporate Officewear
+  description: A set of clean formal dresswear emblazoned in the colors of Cybersun R&D.
+  components: 
+  - type: Sprite
+    sprite: _HL/Clothing/Uniforms/cybersunformalsuit.rsi
+  - type: Clothing
+    sprite: _HL/Clothing/Uniforms/cybersunformalsuit.rsi

@@ -174,6 +174,9 @@ public sealed partial class ShuttleConsoleSystem
         if (consoleUid == null)
             return;
 
+        if (!ent.Comp.CanFTL) // Hardlight
+            return;
+
         var shuttleUid = _xformQuery.GetComponent(consoleUid.Value).GridUid;
 
         if (!TryComp(shuttleUid, out ShuttleComponent? shuttleComp))

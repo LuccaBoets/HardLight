@@ -1,0 +1,8 @@
+- type: entity
+  parent: ComputerShuttle
+  id: ComputerShuttleNoFTL
+  name: faulty shuttle console
+  description: Used to pilot a shuttle. The FTL chip has been ripped out...
+  components:
+  - type: ShuttleConsole
+    canFTL: False

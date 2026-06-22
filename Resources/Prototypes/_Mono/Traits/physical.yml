@@ -185,6 +185,9 @@
       productionLength: 2
       entityProduced: MaterialWebSilk1
       hungerCost: 4
+    - type: Tag # Hardlight
+      tags:
+        - SpiderCraft
 
 - type: trait
   id: Feeble

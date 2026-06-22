@@ -56,6 +56,22 @@
       eggLayDelay: 5
 
 - type: trait
+  id: PrizeballLayer
+  name: hl-trait-Prizeballlayer
+  description: hl-trait-Prizeballlayer-desc
+  category: Lewd
+  components:
+    - type: PrizeballLaying
+      eggSpawn:
+      - id: PrizeBall
+      productionMult: 0.2
+      flavorFreq: 6
+      maxPballs: 24
+      pballSlowThreshold: 10
+      pballSlowMult: 0.5
+      pballLayDelay: 5
+
+- type: trait
   id: Brainwasher
   name: hl-trait-Brainwasher-name
   description: hl-trait-Brainwasher-desc

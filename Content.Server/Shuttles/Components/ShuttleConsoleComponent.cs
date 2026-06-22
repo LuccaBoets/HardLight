@@ -50,5 +50,8 @@ namespace Content.Server.Shuttles.Components
         [ViewVariables(VVAccess.ReadWrite), DataField("expeditionCooldownEnd", customTypeSerializer: typeof(TimeOffsetSerializer))]
         [AutoPausedField]
         public TimeSpan ExpeditionCooldownEnd = TimeSpan.Zero;
+
+        [DataField] // Hardlight
+        public bool CanFTL = true;
     }
 }

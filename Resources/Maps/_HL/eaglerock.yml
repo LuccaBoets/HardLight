@@ -109596,8 +109596,6 @@ entities:
       pos: 48.5,-16.5
       parent: 2
     - type: DeviceNetwork
-      configurators:
-      - invalid
       deviceLists:
       - 9059
     - type: AtmosPipeLayers
@@ -113308,8 +113306,6 @@ entities:
       pos: 48.5,-2.5
       parent: 2
     - type: DeviceNetwork
-      configurators:
-      - invalid
       deviceLists:
       - 63
     - type: AtmosPipeLayers
@@ -113323,8 +113319,6 @@ entities:
       pos: 36.5,-15.5
       parent: 2
     - type: DeviceNetwork
-      configurators:
-      - invalid
       deviceLists:
       - 9059
     - type: AtmosPipeLayers
@@ -113365,8 +113359,6 @@ entities:
       pos: 44.5,-16.5
       parent: 2
     - type: DeviceNetwork
-      configurators:
-      - invalid
       deviceLists:
       - 9059
     - type: AtmosPipeLayers
@@ -113380,8 +113372,6 @@ entities:
       pos: 44.5,-2.5
       parent: 2
     - type: DeviceNetwork
-      configurators:
-      - invalid
       deviceLists:
       - 63
     - type: AtmosPipeLayers
@@ -117090,8 +117080,6 @@ entities:
       pos: 36.5,-14.5
       parent: 2
     - type: DeviceNetwork
-      configurators:
-      - invalid
       deviceLists:
       - 9059
     - type: AtmosPipeLayers

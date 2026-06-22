@@ -30,3 +30,17 @@
         conditions:
         - !type:ReagentThreshold
           min: 50
+
+- type: reagent
+  id: PrizeballJuice
+  name: reagent-name-prizeball-juice
+  desc: reagent-desc-prizeball-juice
+  physicalDesc: reagent-physical-desc-vibrant
+  group: Toxins
+  flavor: highscore
+  color: "#872420"
+  metabolisms:
+    Poison:
+      metabolismRate: 1          
+      effects:
+      - !type:Redeem

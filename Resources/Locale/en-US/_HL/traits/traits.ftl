@@ -72,6 +72,9 @@ hl-trait-egglayer-desc = You produce and lay eggs (10 cum per egg)
 hl-trait-egglayer-infertile-name = Egg Layer (very infertile)
 hl-trait-egglayer-infertile-desc = You produce eggs very slowly and seldomly (50 cum per egg)
 
+hl-trait-Prizeballlayer = Gashaponsition
+hl-trait-Prizeballlayer-desc = You produce and dispense Prizeballs (50 Tickets per Prizeball)
+
 hl-trait-Brainwasher-name = Brainwasher
 hl-trait-Brainwasher-desc = Through natural or artificial means, you have the ability to brainwash peoples.
 

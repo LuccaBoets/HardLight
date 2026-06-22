@@ -6,6 +6,7 @@
   - type: Sprite
     sprite: _HL/Mobs/Species/Synth/organs.rsi
   - type: Organ
+  - type: PreservesSpoilage
   - type: Extractable
     grindableSolutionName: organ
   - type: SolutionContainerManager

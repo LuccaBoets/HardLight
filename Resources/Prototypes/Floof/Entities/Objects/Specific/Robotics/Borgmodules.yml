@@ -25,6 +25,13 @@
     - BorgStunbaton
     - BorgFlash
     # - BorgZipties
+  - type: DroppableBorgModule
+    moduleId: Stun
+    items:
+    - id: Handcuffs
+      whitelist:
+        tags:
+        - Handcuffs
 
 - type: entity
   id: BorgModuleKill
@@ -58,6 +65,7 @@
     items:
     - ForensicScanner
     - SecurityWhistle
+    - BoxFolderBlue
 
 - type: entity
   id: BorgModuleadvancedmeasures

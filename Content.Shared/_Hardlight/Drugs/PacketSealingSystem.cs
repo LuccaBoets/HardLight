@@ -27,7 +27,7 @@ public sealed class PacketSealingSystem : EntitySystem
     public override void Initialize()
     {
         base.Initialize();
-        
+
         SubscribeLocalEvent<PacketSealingComponent, ActivateInWorldEvent>(OnActivated);
         SubscribeLocalEvent<PacketSealingComponent, GetVerbsEvent<AlternativeVerb>>(OnGetAltVerbs);
     }
@@ -53,7 +53,7 @@ public sealed class PacketSealingSystem : EntitySystem
             return;
 
         var user = args.User;
-        
+
         args.Verbs.Add(new AlternativeVerb()
         {
             Text = "Seal Packet",
@@ -129,7 +129,7 @@ public sealed class PacketSealingSystem : EntitySystem
         // Mark as sealed to prevent further sealing attempts
         ent.Comp.State = PacketState.Sealed;
         Dirty(ent.Owner, ent.Comp);
-        
+
         args.Handled = true;
     }
 
@@ -139,9 +139,10 @@ public sealed class PacketSealingSystem : EntitySystem
         return reagentId switch
         {
             "Bake" => "WrappedBakePackage",
-            "Rust" => "WrappedRustPackage", 
+            "Rust" => "WrappedRustPackage",
             "Grit" => "WrappedGritPackage",
             "Breakout" => "WrappedBreakoutPackage",
+            "Widow" => "WrappedWidowPackage",
             _ => null
         };
     }

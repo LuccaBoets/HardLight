@@ -14,6 +14,7 @@ using Content.Shared.Movement.Systems; // HardLight
 using Content.Shared.Players;
 using Content.Shared.Preferences; // HardLight
 using Content.Shared.Roles;
+using Content.Shared.Tag; // Hardlight
 using Content.Shared.Traits;
 using Content.Shared.Whitelist;
 using Robust.Server.Player;
@@ -41,6 +42,7 @@ public sealed class TraitSystem : EntitySystem
     [Dependency] private readonly SharedHandsSystem _sharedHandsSystem = default!;
     [Dependency] private readonly EntityWhitelistSystem _whitelistSystem = default!;
     [Dependency] private readonly MovementSpeedModifierSystem _movementSpeed = default!; // HardLight
+    [Dependency] private readonly TagSystem _tagSystem = default!; // Hardlight
 
     public override void Initialize()
     {
@@ -170,7 +172,19 @@ public sealed class TraitSystem : EntitySystem
             return;
 
         // Add all components required by the prototype
-        EntityManager.AddComponents(uid, traitPrototype.Components, traitPrototype.ReplaceComponents); // Hardlight: Added ReplaceComponents
+        // Hardlight start - Add ReplaceComponents
+        var components = traitPrototype.Components;
+        var tagEntry = components.FirstOrDefault(kv => kv.Value.Component is TagComponent);
+
+        if (tagEntry.Value is { } tagEntryValue && tagEntryValue.Component is TagComponent tagEntryComp &&
+            EntityManager.TryGetComponent<TagComponent>(uid, out var existingTags))
+        {
+            _tagSystem.AddTags(uid, tagEntryComp.Tags);
+            components = new ComponentRegistry(components.Where(kv => kv.Key != tagEntry.Key).ToDictionary(kv => kv.Key, kv => kv.Value));
+        }
+
+        EntityManager.AddComponents(uid, components, traitPrototype.ReplaceComponents); 
+        // Hardlight end
 
             // Starlight start
             var language = EntityManager.System<LanguageSystem>();

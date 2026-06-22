@@ -8,6 +8,7 @@
   - type: Organ
     species: "Diona"
   - type: Food
+  - type: PreservesSpoilage
   - type: Extractable
     grindableSolutionName: organ
   - type: SolutionContainerManager

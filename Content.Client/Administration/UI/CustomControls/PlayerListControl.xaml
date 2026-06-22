@@ -8,7 +8,8 @@
               PlaceHolder="{Loc player-list-filter}"/>
     <PanelContainer Name="BackgroundPanel"
                     VerticalExpand="True"
-                    HorizontalExpand="True">
+                    HorizontalExpand="True"
+                    Margin="4">
         <controls:ListContainer Name="PlayerListContainer"
                   Access="Public"
                   Toggle="True"

@@ -4618,3 +4618,115 @@ Entries:
       message: 'Breaching Hammer can now be used to pry. '
   id: 491
   time: '2026-06-09T20:19:53.0000000+00:00'
+- author: Fardoche0
+  changes:
+    - type: Fix
+      message: Fixed the options to weave and spin with the Bionic Spinarette trait.
+  id: 492
+  time: '2026-06-12T22:11:18.0000000+00:00'
+- author: Typheus
+  changes:
+    - type: Add
+      message: AI Shunt Receiver
+    - type: Tweak
+      message: AI Remote Devices and Shunt Control now requires AI Shunt Receiver
+  id: 493
+  time: '2026-06-12T22:12:36.0000000+00:00'
+- author: Vonte
+  changes:
+    - type: Fix
+      message: Paramedic windbreaker is now unzippable
+    - type: Fix
+      message: Ion storms now display the correct message to Synthetic trait characters
+    - type: Fix
+      message: >-
+        the security holoprojector barrier now has a blue pointlight to match
+        its new colors
+    - type: Fix
+      message: >-
+        the dynamoxine medpen from the sec vendor will no longer display a large
+        ERROR instead of a sprite inhand
+  id: 494
+  time: '2026-06-12T22:13:02.0000000+00:00'
+- author: re-silvered
+  changes:
+    - type: Add
+      message: >-
+        Added some differentiation to PDA ringers so you you can tell who
+        exactly next to you is receiving all those nanochats~
+  id: 495
+  time: '2026-06-12T22:13:51.0000000+00:00'
+- author: re-silvered
+  changes:
+    - type: Fix
+      message: Fixed a few moth foods not having valid recipes.
+    - type: Fix
+      message: Fixed 2x2 machine frames not having recipes.
+    - type: Fix
+      message: Fixed widow packets not having a recipe.
+  id: 496
+  time: '2026-06-12T22:14:44.0000000+00:00'
+- author: TrylobyteWasTaken
+  changes:
+    - type: Tweak
+      message: >-
+        Open Valve on Dispensers now checks through all containers instead of
+        just the beaker slot.
+    - type: Fix
+      message: Plumbing Filters now work.
+  id: 497
+  time: '2026-06-12T22:15:25.0000000+00:00'
+- author: Iisazel
+  changes:
+    - type: Tweak
+      message: Updated texture for rambler
+  id: 498
+  time: '2026-06-12T22:15:45.0000000+00:00'
+- author: re-silvered
+  changes:
+    - type: Tweak
+      message: >-
+        Some round-specific items are now cleaned up and deleted automatically
+        after getting to ColComm
+  id: 499
+  time: '2026-06-12T22:16:07.0000000+00:00'
+- author: Iisazel
+  changes:
+    - type: Fix
+      message: Active nanites now process properly and do not fill up stomaches
+  id: 500
+  time: '2026-06-12T22:17:50.0000000+00:00'
+- author: MothHours
+  changes: []
+  id: 501
+  time: '2026-06-12T22:18:46.0000000+00:00'
+- author: Illumos
+  changes:
+    - type: Add
+      message: FTL-less shuttle console, for use by mappers.
+  id: 502
+  time: '2026-06-12T22:20:38.0000000+00:00'
+- author: CaptainComedii
+  changes:
+    - type: Add
+      message: Cybersun Corporate Jumpsuit
+    - type: Add
+      message: Cybersun R&D Cloak
+  id: 503
+  time: '2026-06-12T22:21:31.0000000+00:00'
+- author: fenndragon
+  changes:
+    - type: Fix
+      message: Fixed dragon breath
+  id: 504
+  time: '2026-06-12T22:21:49.0000000+00:00'
+- author: re-silvered
+  changes:
+    - type: Tweak
+      message: Adjusted the tintreach's blunt damage from 65 -> 30, a 54% reduction
+    - type: Tweak
+      message: >-
+        Adjusted the tintreach's structural damage from 300 -> 200 when wielded,
+        a 33% reduction
+  id: 505
+  time: '2026-06-12T22:45:42.0000000+00:00'

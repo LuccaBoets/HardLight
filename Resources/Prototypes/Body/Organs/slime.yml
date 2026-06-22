@@ -19,6 +19,7 @@
       isSpecialDigestibleExclusive: false
   - type: Organ
     slotId: core
+  - type: PreservesSpoilage
   - type: Brain
   - type: Metabolizer
     maxReagents: 6

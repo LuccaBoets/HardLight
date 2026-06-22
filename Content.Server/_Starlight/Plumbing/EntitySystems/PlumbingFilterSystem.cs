@@ -1,4 +1,6 @@
 using Content.Server._Starlight.Plumbing.Components;
+using Content.Server._Starlight.Plumbing.Nodes;
+using Content.Shared.NodeContainer;
 using Content.Server.Popups;
 using Content.Server.UserInterface;
 using Content.Shared._Starlight.Plumbing;
@@ -27,6 +29,9 @@ public sealed class PlumbingFilterSystem : EntitySystem
     [Dependency] private readonly PopupSystem _popup = default!;
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!;
+    [Dependency] private readonly SharedSolutionContainerSystem _solutionSystem = default!;
+    [Dependency] private readonly PlumbingPullSystem _pullSystem = default!;
+
 
     public override void Initialize()
     {
@@ -38,6 +43,54 @@ public sealed class PlumbingFilterSystem : EntitySystem
         SubscribeLocalEvent<StarlightPlumbingFilterComponent, PlumbingFilterRemoveReagentMessage>(OnRemoveReagent);
         SubscribeLocalEvent<StarlightPlumbingFilterComponent, PlumbingFilterClearMessage>(OnClear);
         SubscribeLocalEvent<StarlightPlumbingFilterComponent, BoundUIOpenedEvent>(OnUIOpened);
+        SubscribeLocalEvent<StarlightPlumbingFilterComponent, PlumbingDeviceUpdateEvent>(OnDeviceUpdate);
+    }
+
+    private void OnDeviceUpdate(Entity<StarlightPlumbingFilterComponent> ent, ref PlumbingDeviceUpdateEvent args)
+    {
+        // Use the existing PlumbingInlet component on the same entity for inlet names and transfer amount
+        if (!TryComp<PlumbingInletComponent>(ent.Owner, out var inletComp))
+            return;
+
+        if (!_solutionSystem.TryGetSolution(ent.Owner, ent.Comp.FilteredSolutionName, out var filteredEnt, out var filteredSol))
+            return;
+
+        if (!_solutionSystem.TryGetSolution(ent.Owner, ent.Comp.PassthroughSolutionName, out var passthroughEnt, out var passthroughSol))
+            return;
+
+        if (filteredEnt.Value.Comp.Solution.AvailableVolume <= 0 && passthroughEnt.Value.Comp.Solution.AvailableVolume <= 0)
+            return;
+
+        if (!TryComp<NodeContainerComponent>(ent.Owner, out var nodeContainer))
+            return;
+
+        var remaining = inletComp.TransferAmount;
+
+        foreach (var inletName in inletComp.InletNames)
+        {
+            if (remaining <= 0 || filteredEnt.Value.Comp.Solution.AvailableVolume <= 0 && passthroughEnt.Value.Comp.Solution.AvailableVolume <= 0)
+                break;
+
+            if (!nodeContainer.Nodes.TryGetValue(inletName, out var node))
+                continue;
+
+            if (node is not PlumbingNode plumbingNode || plumbingNode.PlumbingNet == null)
+                continue;
+
+            var roundRobinIndex = inletComp.RoundRobinIndices.GetValueOrDefault(inletName, 0);
+            var (pulled, nextIndex) = _pullSystem.PullFromNetworkSplit(
+                ent.Owner,
+                plumbingNode.PlumbingNet,
+                filteredEnt.Value,
+                passthroughEnt.Value,
+                remaining,
+                roundRobinIndex,
+                ent.Comp.Enabled,
+                ent.Comp.FilteredReagents);
+
+            inletComp.RoundRobinIndices[inletName] = nextIndex;
+            remaining -= pulled;
+        }
     }
 
     /// <summary>
