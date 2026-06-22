@@ -127,6 +127,33 @@
   logins:
   - xiv3n
   entity: PlayerBorgQuadxiv3n
+  
+- type: spawnCharacterOverrideRule
+  id: spiderspawn
+  match: Spoder
+  checkProfileName: true
+  checkEntityName: true
+  logins:
+  - Taffel
+  entity: Spoder
+  
+- type: spawnCharacterOverrideRule
+  id: LittleHelperspawn
+  match: Little Helper
+  checkProfileName: true
+  checkEntityName: true
+  logins:
+  - Pinginplum
+  entity: PlayerBorgQuadPinginplum
+
+- type: spawnCharacterOverrideRule
+  id: Thalmyrspawn
+  match: Thalmyr
+  checkProfileName: true
+  checkEntityName: true
+  logins:
+  - Quantistic
+  entity: MobDragonThalmyr
 
 ## Component example
 - type: spawnCharacterOverrideRule
