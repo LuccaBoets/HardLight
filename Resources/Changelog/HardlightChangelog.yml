@@ -5147,3 +5147,9 @@ Entries:
       message: ColCom added the ordinance back to ship weapons.
   id: 556
   time: '2026-06-22T12:05:09.0000000+00:00'
+- author: Shades
+  changes:
+    - type: Fix
+      message: Fixed a collision issue withy the Phase Barrier Cable.
+  id: 557
+  time: '2026-06-23T08:08:18.0000000+00:00'
