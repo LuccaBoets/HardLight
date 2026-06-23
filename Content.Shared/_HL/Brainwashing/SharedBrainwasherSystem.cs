@@ -54,7 +54,7 @@ public abstract class SharedBrainwasherSystem : EntitySystem // HL: Move verbs t
 
         args.Verbs.Add(new Verb
         {
-            Act = () => DoConfigureVerb(args.User, component),
+            Act = () => DoConfigureVerb(uid, args.User, component),
             Text = component.ConfigureText,
             Icon = new SpriteSpecifier.Texture(new ResPath("/Textures/Interface/VerbIcons/sentient.svg.192dpi.png")),
             Priority = 1
@@ -79,7 +79,7 @@ public abstract class SharedBrainwasherSystem : EntitySystem // HL: Move verbs t
         }
     }
 
-    protected virtual void DoConfigureVerb(EntityUid uid, BrainwasherComponent component) { }
+    protected virtual void DoConfigureVerb(EntityUid uid, EntityUid user, BrainwasherComponent component) { }
     protected virtual void DoBrainwashingVerb(EntityUid uid, EntityUid target, BrainwasherComponent component) { }
 }
 

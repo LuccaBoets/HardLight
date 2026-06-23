@@ -129,10 +129,10 @@ public sealed class BrainwasherSystem : SharedBrainwasherSystem
         _audioSystem.PlayPvs(component.ChargingSound, uid, new AudioParams());
     }
 
-    protected override void DoConfigureVerb(EntityUid uid, BrainwasherComponent component)
+    protected override void DoConfigureVerb(EntityUid uid, EntityUid user, BrainwasherComponent component)
     {
         var ui = new BrainwashEditor(_sharedBrainwashedSystem);
-        if (!_playerManager.TryGetSessionByEntity(uid, out var session))
+        if (!_playerManager.TryGetSessionByEntity(user, out var session))
             return;
         _euiManager.OpenEui(ui, session);
         ui.UpdateCompulsions(component, uid);
