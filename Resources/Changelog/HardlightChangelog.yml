@@ -5177,3 +5177,11 @@ Entries:
       message: You can now lay eggs whilst interaction blocked (e.g handcuffed)
   id: 561
   time: '2026-06-23T12:58:08.0000000+00:00'
+- author: re-silvered
+  changes:
+    - type: Fix
+      message: >-
+        Fixed jet injectors pulling their max inject amount all the time, now
+        instead always 5u at a time draw
+  id: 562
+  time: '2026-06-23T12:59:00.0000000+00:00'
