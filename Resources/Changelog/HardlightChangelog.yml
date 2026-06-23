@@ -5185,3 +5185,13 @@ Entries:
         instead always 5u at a time draw
   id: 562
   time: '2026-06-23T12:59:00.0000000+00:00'
+- author: Typheus
+  changes:
+    - type: Add
+      message: Freelance Borg
+    - type: Add
+      message: Freelance Borg Role
+    - type: Tweak
+      message: Exosuit Fabricator speciality borg printing restricted to Research
+  id: 563
+  time: '2026-06-23T13:01:02.0000000+00:00'
