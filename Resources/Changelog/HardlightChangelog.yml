@@ -5231,3 +5231,9 @@ Entries:
       message: Fixed Smile the slime not being able to be taken over via ghost role
   id: 568
   time: '2026-06-24T05:05:00.0000000+00:00'
+- author: DrekkCuga
+  changes:
+    - type: Fix
+      message: Fixed some ships throwing errors or crashing the server when spawned.
+  id: 569
+  time: '2026-06-24T05:07:39.0000000+00:00'
