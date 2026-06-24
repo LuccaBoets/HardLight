@@ -5237,3 +5237,9 @@ Entries:
       message: Fixed some ships throwing errors or crashing the server when spawned.
   id: 569
   time: '2026-06-24T05:07:39.0000000+00:00'
+- author: DrekkCuga
+  changes:
+    - type: Tweak
+      message: Updated ship prices so they cost more to buy than sell.
+  id: 570
+  time: '2026-06-24T05:08:16.0000000+00:00'
