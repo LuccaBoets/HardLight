@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: ID Apollo
   description: A medium, high-performance armoured medevac and search and rescue shuttle, with an armoury and frontal boarding ramp. Manufactured by Interdyne for the civilian market.
-  price: 116250 # ~93000$ on mapinit + 25% markup
+  price: 129500 # HL: Rebalancing ship prices
   category: Medium
   group: Medical
   shuttlePath: /Maps/_HL/Shuttles/apollo.yml

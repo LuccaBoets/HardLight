@@ -13,7 +13,7 @@
   parent: BaseVesselAntag
   name: 'ID Aesculapian'
   description: "A medium, syndicate-spec armoured medevac, SAR & boarding shuttle, with an armoury and frontal boarding ramp. Manufactured by Interdyne."
-  price: 125000
+  price: 132000 # HL: Rebalancing ship prices
   category: Medium
   group: Syndicate
   shuttlePath: /Maps/_HL/Shuttles/Syndicate/aesculapian.yml

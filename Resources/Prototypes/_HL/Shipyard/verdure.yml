@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: JDB Verdure
   description: An old torpedo bomber repurposed into the ultimate Botany vessel.  There's little you can't do with plants on the Verdure.
-  price: 60000
+  price: 63500 # HL: Rebalancing ship prices
   category: Medium
   group: Shipyard
   shuttlePath: /Maps/_HL/Shuttles/verdure.yml

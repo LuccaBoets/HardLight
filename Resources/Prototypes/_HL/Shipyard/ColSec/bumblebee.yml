@@ -12,7 +12,7 @@
   id: Bumblebee
   name: AI Bumble Bee
   description: A sector security vessel designed for rapid deployment of high-explosive payloads.
-  price: 60000  # ~57k appraisal value. Charon alone is 40k.
+  price: 72500  # HL: Rebalancing ship prices to 5% more than sell price (or using the MinPriceMarkup field)
   category: Small
   group: Security
   access: Security

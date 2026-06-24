@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: NC Parcel
   description: A reliable shuttle for delivering mail and packages.
-  price: 18000
+  price: 25500 # HL: Rebalancing ship prices
   category: Small
   group: Sr
   access: Mail

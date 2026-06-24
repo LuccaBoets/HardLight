@@ -12,7 +12,7 @@
   id: Deterrence
   name: AI Deterrence
   description: A carrier designed to carry Mosquito-frame craft and other light vessels as well as provide heavy fire support.
-  price: 200000 # ~185k + markup
+  price: 3244000 # HL: Rebalancing ship prices
   category: Large
   group: Security
   access: Security

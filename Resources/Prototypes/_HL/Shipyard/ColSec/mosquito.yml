@@ -12,7 +12,7 @@
   id: Mosquito
   name: AI Mosquito
   description: A sector security vessel designed for boarding parties.
-  price: 14000  # ~4k + post init appraisal
+  price: 31500  # HL: Rebalancing ship prices to 5% more than sell price (or using the MinPriceMarkup field)
   category: Small
   group: Security
   access: Security

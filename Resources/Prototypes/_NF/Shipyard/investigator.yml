@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: NR Investigator
   description: A medium research shuttle designed for xenoarcheological studies.
-  price: 47500
+  price: 60500 # HL: Rebalancing ship prices to 5% more than sell price (or using the MinPriceMarkup field)
   category: Medium
   group: Shipyard
   shuttlePath: /Maps/_NF/Shuttles/investigator.yml

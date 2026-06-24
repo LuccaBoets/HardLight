@@ -13,7 +13,7 @@
   parent: BaseVesselAntag
   name: Menace
   description: 'Mail is no longer an option: you either receive it or you die.'
-  price: 21000
+  price: 28500 # HL: Rebalancing ship prices to 5% more than sell price (or using the MinPriceMarkup field)
   category: Small
   group: BlackMarket
   shuttlePath: /Maps/_NF/Shuttles/BlackMarket/menace.yml

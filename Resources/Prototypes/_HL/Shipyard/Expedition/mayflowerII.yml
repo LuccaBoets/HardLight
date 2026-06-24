@@ -7,7 +7,7 @@
   parent: BaseVessel
   name: SESWC Mayflower Mk. II
   description: Designed and produced by SESWC. Heavily Upgraded from the Mayflower MKI. This expedition capable bounty hunter's ship offers two armories, a small medical treatment bay, an expand cargo bay, two confinment cells, captain's quaters and crew quarters with additional lattice protection.
-  price: 117000 # 89838 on mapinit 30 percent mark up
+  price: 130000 # HL: Rebalancing ship prices to 5% more than sell price (or using the MinPriceMarkup field)
   category: Medium
   group: Expedition
   shuttlePath: /Maps/_HL/Shuttles/Expedition/mayflowerII.yml

@@ -13,7 +13,7 @@
   name: NSF Heimdall
   parent: BaseVessel
   description: A small detective runabout for intelligence gathering and forensic work.
-  price: 49000
+  price: 65000 # HL: Rebalancing ship prices to 5% more than sell price (or using the MinPriceMarkup field)
   category: Small
   group: Security
   access: Detective

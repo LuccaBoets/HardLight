@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: UW Akupara
   description: A medium full-feature botanical research biodome equipped to help a botanist fully interact with their plants in almost any way conceivable.
-  price: 56500
+  price: 67500 # HL: Rebalancing ship prices to 5% more than sell price (or using the MinPriceMarkup field)
   category: Medium
   group: Medical
   shuttlePath: /Maps/_NF/Shuttles/akupara.yml
