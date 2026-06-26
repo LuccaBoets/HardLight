@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: AVL Nest
   description: A small Avalonian vessel designed by the Illuminate to serve as a home for a small pack of two to three Avali. Comes complete with an efficient thermo-electric generator, cooktop, and a spacious bedroom.
-  price: 15000 # 10% markup
+  price: 23500 # HL: Rebalancing ship prices
   category: Small
   group: Shipyard
   shuttlePath: /Maps/_HL/Shuttles/Avali/AvaliNest.yml

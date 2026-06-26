@@ -491,6 +491,11 @@ public enum LogType
     /// </summary>
     AtmosDirectionChanged = 204,
 
+    /// <summary>
+    /// Silicon law changes.
+    /// </summary>
+    SiliconLaw = 105,
+
     Consent = 12489, // Floofstation - random high number to avoid conflict when upstream adds new log types
     /// <summary>
     /// A player has posted a bounty contract.

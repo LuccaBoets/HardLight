@@ -1,11 +1,15 @@
 using System.Linq;
 using System.Numerics;
+using Content.Client.Administration.Managers;
 using Content.Client.Examine;
 using Content.Client.Strip;
 using Content.Client.Stylesheets;
 using Content.Client.UserInterface.Controls;
 using Content.Client.UserInterface.Systems.Hands.Controls;
 using Content.Client.Verbs.UI;
+using Content.Shared.CCVar;
+using Content.Shared.Clothing.Components;
+using Content.Shared.Contraband;
 using Content.Shared.Cuffs;
 using Content.Shared.Cuffs.Components;
 using Content.Shared.Ensnaring.Components;
@@ -20,8 +24,11 @@ using Robust.Client.GameObjects;
 using Robust.Client.Player;
 using Robust.Client.UserInterface;
 using Robust.Client.UserInterface.Controls;
+using Robust.Shared.Configuration;
 using Robust.Shared.Input;
 using Robust.Shared.Map;
+using Robust.Shared.Prototypes;
+using Robust.Shared.Utility;
 using static Content.Client.Inventory.ClientInventorySystem;
 using static Robust.Client.UserInterface.Control;
 using Content.Shared._EE.Strip.Components; // EE
@@ -33,11 +40,28 @@ namespace Content.Client.Inventory
     {
         [Dependency] private readonly IPlayerManager _player = default!;
         [Dependency] private readonly IUserInterfaceManager _ui = default!;
+        [Dependency] private readonly IClientAdminManager _admin = default!;
+        [Dependency] private readonly IPrototypeManager _proto = default!;
+        [Dependency] private readonly IConfigurationManager _cvar = default!;
 
         private readonly ExamineSystem _examine;
         private readonly InventorySystem _inv;
         private readonly SharedCuffableSystem _cuffable;
         private readonly StrippableSystem _strippable;
+        private readonly ContrabandSystem _contraband;
+
+        // Is the BUI in admin view? If in admin view, has custom UI elements to help admins see things
+        // (E.g contraband status icon, is the item chameleon etc...)
+        private bool _isAdminView;
+
+        #region Admin overlay vars
+
+        private readonly ResPath _chameleonClothingTexturePath = new("/Textures/Interface/Default/Slots/camo.png");
+        private readonly ResPath _contrabandTexturePath = new("/Textures/Interface/Default/Slots/contra.png");
+
+        private readonly Color _chameleonColor = new(147, 112, 219);
+
+        #endregion
 
         [ViewVariables]
         private const int ButtonSeparation = 4;
@@ -51,14 +75,29 @@ namespace Content.Client.Inventory
         [ViewVariables]
         private readonly EntityUid _virtualHiddenEntity;
 
+        /// <summary>
+        /// The current amount of added hand buttons.
+        /// </summary>
+        [ViewVariables]
+        private int _handCount;
+
+        /// <summary>
+        /// The current shape of the inventory, needed to calculate the window size.
+        /// </summary>
+        [ViewVariables]
+        private Vector2i _inventoryDimensions;
+
         public StrippableBoundUserInterface(EntityUid owner, Enum uiKey) : base(owner, uiKey)
         {
             _examine = EntMan.System<ExamineSystem>();
             _inv = EntMan.System<InventorySystem>();
             _cuffable = EntMan.System<SharedCuffableSystem>();
             _strippable = EntMan.System<StrippableSystem>();
+            _contraband = EntMan.System<ContrabandSystem>();
 
             _virtualHiddenEntity = EntMan.SpawnEntity(HiddenPocketEntityId, MapCoordinates.Nullspace);
+
+            _isAdminView = _cvar.GetCVar(CCVars.AdminStripMenuOverlayDefault);
         }
 
         protected override void Open()
@@ -94,6 +133,8 @@ namespace Content.Client.Inventory
                 return;
 
             _strippingMenu.ClearButtons();
+            _handCount = 0;
+            _inventoryDimensions = Vector2i.Zero;
 
             if (EntMan.TryGetComponent<InventoryComponent>(Owner, out var inv))
             {
@@ -138,12 +179,31 @@ namespace Content.Client.Inventory
                 var button = new Button()
                 {
                     Text = Loc.GetString("strippable-bound-user-interface-stripping-menu-ensnare-button"),
-                    StyleClasses = { StyleBase.ButtonOpenRight }
                 };
 
                 button.OnPressed += (_) => SendPredictedMessage(new StrippingEnsnareButtonPressed());
 
-                _strippingMenu.SnareContainer.AddChild(button);
+                _strippingMenu.ButtonContainer.AddChild(button);
+            }
+
+            if (_admin.IsAdmin())
+            {
+                var adminButton = new Button()
+                {
+                    Text = Loc.GetString("strippable-bound-user-interface-stripping-menu-admin-button"),
+                    ToggleMode = true,
+                    Pressed = _isAdminView,
+                    ToolTip = Loc.GetString("strippable-bound-user-interface-stripping-menu-admin-button-tooltip")
+                };
+
+                adminButton.OnToggled += args =>
+                {
+                    _isAdminView = !_isAdminView;
+                    args.Button.Pressed = _isAdminView;
+                    UpdateMenu();
+                };
+
+                _strippingMenu.ButtonContainer.AddChild(adminButton);
             }
 
             // TODO fix layout container measuring (its broken atm).
@@ -153,9 +213,14 @@ namespace Content.Client.Inventory
             // TODO allow windows to resize based on content's desired size
 
             // for now: shit-code
-            // this breaks for drones (too many hands, lots of empty vertical space), and looks shit for monkeys and the like.
-            // but the window is realizable, so eh.
-            _strippingMenu.SetSize = new Vector2(220, snare?.IsEnsnared == true ? 550 : 530);
+            // calculate the window size manually
+            // +20 horizontally and vertically from the ContentsContainer margin
+            // +16 vertically from the BoxContainer margin
+            // +27 vertically from the window header
+            var horizontalMenuSize = Math.Max(200, Math.Max(_handCount, _inventoryDimensions.X + 1) * (SlotControl.DefaultButtonSize + ButtonSeparation) + 20);
+            var verticalMenuSize = Math.Max(200, (_inventoryDimensions.Y + (_handCount > 0 ? 2 : 1)) * (SlotControl.DefaultButtonSize + ButtonSeparation) + 53);
+            verticalMenuSize += 25 * _strippingMenu.ButtonContainer.Children.Count();
+            _strippingMenu.SetSize = new Vector2(horizontalMenuSize, verticalMenuSize);
         }
 
         private void AddHandButton(Hand hand)
@@ -175,6 +240,9 @@ namespace Content.Client.Inventory
             UpdateEntityIcon(button, EntMan.HasComponent<StripMenuHiddenComponent>(hand.HeldEntity) ? _virtualHiddenEntity : hand.HeldEntity);
             // End Goobstation
             _strippingMenu!.HandsContainer.AddChild(button);
+
+            LayoutContainer.SetPosition(button, new Vector2i(_handCount, 0) * (SlotControl.DefaultButtonSize + ButtonSeparation));
+            _handCount++;
         }
 
         private void SlotPressed(GUIBoundKeyEventArgs ev, SlotControl slot)
@@ -228,6 +296,10 @@ namespace Content.Client.Inventory
             UpdateEntityIcon(button, entity);
 
             LayoutContainer.SetPosition(button, slotDef.StrippingWindowPos * (SlotControl.DefaultButtonSize + ButtonSeparation));
+            if (slotDef.StrippingWindowPos.X > _inventoryDimensions.X)
+                _inventoryDimensions = new Vector2i(slotDef.StrippingWindowPos.X, _inventoryDimensions.Y);
+            if (slotDef.StrippingWindowPos.Y > _inventoryDimensions.Y)
+                _inventoryDimensions = new Vector2i(_inventoryDimensions.X, slotDef.StrippingWindowPos.Y);
         }
 
         private void UpdateEntityIcon(SlotControl button, EntityUid? entity)
@@ -251,6 +323,16 @@ namespace Content.Client.Inventory
                 return;
 
             button.SetEntity(viewEnt);
+
+            if (_admin.IsAdmin() && _isAdminView && EntMan.HasComponent<ChameleonClothingComponent>(entity))
+            {
+                button.AddAdminOverlay(_chameleonClothingTexturePath, _chameleonColor);
+            }
+
+            if (_admin.IsAdmin() && _isAdminView && _contraband.IsContraband(entity.Value, Owner, out var contraProtoId))
+            {
+                button.AddAdminOverlay(_contrabandTexturePath, _proto.Index(contraProtoId).Color);
+            }
         }
     }
 }

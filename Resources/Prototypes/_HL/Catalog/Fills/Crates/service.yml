@@ -72,3 +72,16 @@
         amount: 1
       - id: VinylDiskNulbTimeout
         amount: 1
+
+- type: entity
+  id: CrateVinylsTKJazz
+  name: vinyls crate "Tim Kulig - Jazz"
+  parent: CrateGenericSteel
+  description: A crate containing ten vinyls. The artist tag on the side says "Tim Kulig".
+  components:
+  - type: StorageFill
+    contents:
+      - id: VinylSleeveJazz
+        amount: 1
+      - id: VinylSleeveJazzAlt
+        amount: 1

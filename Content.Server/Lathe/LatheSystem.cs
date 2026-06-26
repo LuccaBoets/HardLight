@@ -37,7 +37,9 @@ using Robust.Shared.Timing;
 using Content.Shared.Cargo.Components; // Frontier
 using Content.Server._NF.Contraband.Systems; // Frontier
 using Robust.Shared.Containers;
-using Content.Shared._NF.Lathe; // Frontier
+using Content.Shared._NF.Lathe;
+using Content.Server.Access.Systems; //Hardlight
+using Content.Shared.Access; // Frontier
 
 namespace Content.Server.Lathe
 {
@@ -62,6 +64,8 @@ namespace Content.Server.Lathe
         [Dependency] private readonly TransformSystem _transform = default!;
         [Dependency] private readonly RadioSystem _radio = default!;
         [Dependency] private readonly ContrabandTurnInSystem _contraband = default!; // Frontier
+        [Dependency] private readonly IdCardSystem _idCardSystem = default!; //Hardlight
+        [Dependency] private readonly AccessSystem _accessSystem = default!; //Hardlight
 
         /// <summary>
         /// Per-tick cache
@@ -85,7 +89,7 @@ namespace Content.Server.Lathe
             SubscribeLocalEvent<LatheComponent, LatheMoveRequestMessage>(OnLatheMoveRequestMessage); // Frontier
             SubscribeLocalEvent<LatheComponent, LatheAbortFabricationMessage>(OnLatheAbortFabricationMessage); // Frontier
 
-            SubscribeLocalEvent<LatheComponent, BeforeActivatableUIOpenEvent>((u, c, _) => UpdateUserInterfaceState(u, c));
+            SubscribeLocalEvent<LatheComponent, BeforeActivatableUIOpenEvent>((u, c, e) => UpdateUserInterfaceState(u, c, e)); //Hardlight _ > e
             SubscribeLocalEvent<LatheComponent, MaterialAmountChangedEvent>(OnMaterialAmountChanged);
             SubscribeLocalEvent<TechnologyDatabaseComponent, LatheGetRecipesEvent>(OnGetRecipes);
             SubscribeLocalEvent<EmagLatheRecipesComponent, LatheGetRecipesEvent>(GetEmagLatheRecipes);
@@ -307,16 +311,44 @@ namespace Content.Server.Lathe
             }
         }
 
-        public void UpdateUserInterfaceState(EntityUid uid, LatheComponent? component = null)
+        //Hardlight: Event parameter added to retrieve User
+        public void UpdateUserInterfaceState(EntityUid uid, LatheComponent? component = null, BeforeActivatableUIOpenEvent? ev = null)
         {
             if (!Resolve(uid, ref component))
                 return;
 
+            //Hardlight: Retrieves access tags for potential restricted recipe packs
+            IEnumerable<ProtoId<AccessLevelPrototype>> accessTags = default!;
+
+            if (ev != null)
+            {
+                accessTags = _accessSystem.TryGetTags(ev.User)!;
+            }
+            //Hardlight end
+
             var producing = component.CurrentRecipe ?? component.Queue.FirstOrDefault()?.Recipe; // Frontier: add ?.Recipe
 
-            var state = new LatheUpdateState(GetAvailableRecipes(uid, component), component.Queue, producing);
+            var state = new LatheUpdateState(GetAvailableRecipesWithEntityAccess(uid, component, false, accessTags), component.Queue, producing); //Hardlight: To avoid potentially breaking recipe loading on map load
             _uiSys.SetUiState(uid, LatheUiKey.Key, state);
         }
+
+        //Hardlight: For use with lathe recipes that have access level restrictions
+        /// <summary>
+        /// Gets available recipes while providing user access levels
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="component"></param>
+        /// <param name="getUnavailable"></param>
+        /// <param name="accessTags"></param>
+        /// <returns></returns>
+        public List<ProtoId<LatheRecipePrototype>> GetAvailableRecipesWithEntityAccess(EntityUid uid, LatheComponent component, bool getUnavailable = false, IEnumerable<ProtoId<AccessLevelPrototype>> accessTags = default!)
+        {
+            var ev = new LatheGetRecipesEvent((uid, component), getUnavailable);
+            AddRecipesFromPacksWithAccess(ev.Recipes, component.StaticPacks, accessTags); //Hardlight: Added access tags parameters
+            RaiseLocalEvent(uid, ev);
+            return ev.Recipes.ToList();
+        }
+        //Hardlight end
 
         /// <summary>
         /// Adds every unlocked recipe from each pack to the recipes list.

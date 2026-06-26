@@ -131,6 +131,7 @@ public abstract class SharedInjectorSystem : EntitySystem
 
         Toggle(entity, args.User);
         args.Handled = true;
+        args.ApplyDelay = false;
     }
 
     /// <summary>
@@ -239,7 +240,7 @@ public abstract class SharedInjectorSystem : EntitySystem
         else
         {
             // Modes with no transfer amounts (e.g. jet injectors) should always use
-            // runtime fallback volume in GetTransferAmount, not a stale persisted value.
+            // runtime fallback volume, not a stale persisted value.
             injector.Comp.CurrentTransferAmount = null;
         }
 

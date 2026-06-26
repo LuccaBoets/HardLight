@@ -46,37 +46,56 @@
 
 - type: entity
   abstract: true
-  id: BaseVinylSleeve
+  id: BaseVinylSleeveEmpty # Hardlight change BaseVinylSleeve -> BaseVinylSleeveEmpty
   name: vinyl sleeve
   description: A vinyl sleeve, perfect for storing your vinyls.
   parent: BaseItem
   components:
   - type: Sprite
     sprite: _Goobstation/Objects/Misc/RadioStation/vinylsleeves.rsi
-  - type: EntityTableContainerFill
-    containers:
-      vinyl: !type:NestedSelector
-        tableId: RandomVinylDisk
   - type: ContainerContainer
     containers:
-      vinyl: !type:ContainerSlot
+      vinyl: !type:ContainerSlot &vinyl_container # Hardlight added anchor
         showEnts: false
         occludes: true
         ent: null
+      # Hardlight start - Add containers for new slots
+      vinyl_2: *vinyl_container
+      vinyl_3: *vinyl_container
+      vinyl_4: *vinyl_container
+      vinyl_5: *vinyl_container
+      # Hardlight end
   - type: StaticPrice
     price: 10
   - type: ItemSlots
     slots:
-      vinyl:
-        name: vinyl
+      vinyl: &vinyl_slot # Hardlight added anchor, kept first slot with same name for compatibility.
         insertSound: /Audio/_Goobstation/RadioStation/vinyl/vinylEject.ogg
         ejectSound: /Audio/_Goobstation/RadioStation/vinyl/vinylInsert.ogg
         whitelist:
           tags:
           - VinylSleeveFit
+      # Hardlight start - Added multiple slots to allow for EPs
+      vinyl_2: *vinyl_slot
+      vinyl_3: *vinyl_slot
+      vinyl_4: *vinyl_slot
+      vinyl_5: *vinyl_slot
+      # Hardlight end
   - type: Tag
     tags:
     - VinylSleeve
+
+# Hardlight start - Added a new base class to replace the changed one, with the regular prefill.
+- type: entity
+  abstract: true
+  id: BaseVinylSleeve
+  parent: BaseVinylSleeveEmpty
+  components:
+  - type: EntityTableContainerFill
+    containers:
+      vinyl: !type:NestedSelector
+        tableId: RandomVinylDisk
+# Hardlight end
 
 # Vinyls
 

@@ -14,7 +14,7 @@
   id: Herzyn
   name: C.C.S Herzyn
   description: A sector combat vessel meant to dish out heavy hits and tank them in turn.
-  price: 250000  # ~220k appraisal value. Boosting to 250K for a reasonable markup.
+  price: 373500  # HL: Rebalancing ship prices to 5% more than sell price (or using the MinPriceMarkup field)
   category: Large
   group: Security
   access: Security

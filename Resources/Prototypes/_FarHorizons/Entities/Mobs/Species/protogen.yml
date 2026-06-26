@@ -181,12 +181,14 @@
   - type: Speech
     speechVerb: Robotic
     speechSounds: Borg
+    # Starlight start: protogen recreated audio
     allowedEmotes: ['Chirp', 'Squish', 'Purr', 'Growl', 'Trill', 'Scree', 'Call', 'Squawk', 'Bark', 'Snarl', 'Whine', 'Howl', 'Yip', 'Mew', 'Meow','Thump', "Marr", "Wurble", 'Chitter', 'Squeak', 'Click', 'Beep', 'Ping', 'Buzz', 'Buzz-Two', 'Chime', 'Honk']
-  - type: Vocal
+    # Starlight end
+  - type: Vocal # Starlight: protogen recreated audio
     sounds:
-      Male: MaleProtogen
-      Female: FemaleProtogen
-      Unsexed: MaleProtogen
+      Male: ProtoHumanMSounds
+      Female: ProtoHumanFSounds
+      Unsexed: ProtoHumanMSounds
   - type: UniversalHealModifier
     modifier: 0.5
 
@@ -276,6 +278,11 @@
         pitch: 1.33
         volume: -5
         variation: 0.05
+  - type: Vocal # Starlight: protogen recreated audio
+    sounds:
+      Male: ProtoVulpMSounds
+      Female: ProtoVulpFSounds
+      Unsexed: ProtoVulpMSounds
   - type: Tag
     tags:
       - CanPilot
@@ -344,6 +351,11 @@
         color: "#7a8bf2"
       Burn:
         sprite: Mobs/Effects/burn_damage.rsi
+  - type: Vocal # Starlight: protogen recreated audio
+    sounds:
+      Male: ProtoVoxMSounds
+      Female: ProtoVoxFSounds
+      Unsexed: ProtoVoxMSounds
   - type: Bloodstream
     bloodReagent: AmmoniaBlood
   - type: Sprite # Need to redefine the whole order to draw the tail over their gas tank
@@ -906,12 +918,14 @@
     - type: Speech
       speechVerb: Robotic
       speechSounds: Borg
+      # Starlight start: protogen recreated audio
       allowedEmotes: ['Chirp', 'Squish', 'Purr', 'Growl', 'Trill', 'Scree', 'Call', 'Squawk', 'Bark', 'Snarl', 'Whine', 'Howl', 'Yip', 'Mew', 'Meow','Thump', "Marr", "Wurble", 'Chitter', 'Squeak', 'Click', 'Beep', 'Ping', 'Buzz', 'Buzz-Two', 'Chime', 'Honk']
-    - type: Vocal
+      # Starlight end
+    - type: Vocal # Starlight: protogen recreated audio
       sounds:
-        Male: MaleProtogen
-        Female: FemaleProtogen
-        Unsexed: MaleProtogen
+        Male: ProtoShadekinMSounds
+        Female: ProtoShadekinFSounds
+        Unsexed: ProtoShadekinMSounds
     - type: MeleeWeapon
       soundHit:
         collection: AlienClaw
@@ -1127,11 +1141,11 @@
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: ProtoResomi
-  - type: Vocal # Bring resomi sounds to proto-resomi
+  - type: Vocal # Starlight: protogen recreated audio
     sounds:
-      Male: UnisexProtoResomi
-      Unsexed: UnisexProtoResomi
-      Female: UnisexProtoResomi
+      Male: ProtoResomiMSounds
+      Female: ProtoResomiFSounds
+      Unsexed: ProtoResomiMSounds
   - type: HumanoidAppearance
     species: ProtoResomi
     hideLayersOnEquip:
@@ -1511,6 +1525,11 @@
       301: 0.9
       295: 0.8
       285: 0.7
+  - type: Vocal # Starlight: protogen recreated audio
+    sounds:
+      Male: ProtoReptilianMSounds
+      Female: ProtoReptilianFSounds
+      Unsexed: ProtoReptilianMSounds
   - type: Inventory
     speciesId: reptilian
     templateId: protogen
@@ -1657,6 +1676,11 @@
       289: 0.9
       275: 0.8
       250: 0.7
+  - type: Vocal # Starlight: protogen recreated audio
+    sounds:
+      Male: ProtoMothMSounds
+      Female: ProtoMothFSounds
+      Unsexed: ProtoMothMSounds
   - type: Sprite
     noRot: true
     drawdepth: Mobs
@@ -1880,6 +1904,11 @@
           32:
             sprite: Mobs/Species/Human/displacement.rsi
             state: jumpsuit-female
+  - type: Vocal # Starlight: protogen recreated audio
+    sounds:
+      Male: ProtoHumanMSounds
+      Female: ProtoHumanFSounds
+      Unsexed: ProtoHumanMSounds
   - type: Wagging
   - type: Tag
     tags:
@@ -1960,6 +1989,11 @@
     damage:
       types:
         Slash: 3
+  - type: Vocal # Starlight: protogen recreated audio
+    sounds:
+      Male: ProtoFelionoidMSounds
+      Female: ProtoFelionoidFSounds
+      Unsexed: ProtoFelionoidMSounds
   - type: Tag
     tags:
     - CanPilot
@@ -2258,6 +2292,11 @@
     actionPrototype: DionaGibAction
     allowedStates:
     - Dead
+  - type: Vocal # Starlight: protogen recreated audio
+    sounds:
+      Male: ProtoDionaMSounds
+      Female: ProtoDionaFSounds
+      Unsexed: ProtoDionaMSounds
   - type: Inventory
     templateId: protodionae
     femaleDisplacements:
@@ -2451,11 +2490,11 @@
       shiveringHeatRegulation: 2000
       normalBodyTemperature: 261
       thermalRegulationTemperatureThreshold: 1
-    - type: Vocal # Bring avali sounds to proto-avali
+    - type: Vocal # Starlight: protogen recreated audio
       sounds:
-        Male: MaleProtoAvali
-        Female: FemaleProtoAvali
-        Unsexed: MaleProtoAvali
+        Male: ProtoAvaliMSounds
+        Female: ProtoAvaliFSounds
+        Unsexed: ProtoAvaliMSounds
     - type: Stasis
       enterStasisAction: ActionStasisEnter
       exitStasisAction: ActionStasisExit
@@ -2564,6 +2603,11 @@
         color: "#162581"
       Burn:
         sprite: Mobs/Effects/burn_damage.rsi
+  - type: Vocal # Starlight: protogen recreated audio
+    sounds:
+      Male: ProtoArachnidMSounds
+      Female: ProtoArachnidFSounds
+      Unsexed: ProtoArachnidMSounds
   - type: Sprite
     layers:
       - map: [ "enum.HumanoidVisualLayers.TailBehind" ]  # HL Modification

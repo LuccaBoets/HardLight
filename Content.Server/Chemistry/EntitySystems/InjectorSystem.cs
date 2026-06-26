@@ -179,12 +179,12 @@ public sealed class InjectorSystem : SharedInjectorSystem
         if (isDraw)
         {
             // additional delay is based on actual volume left to draw in syringe when smaller than transfer amount
-            amountToInject = FixedPoint2.Min(GetTransferAmount(injector, solution.MaxVolume), (solution.MaxVolume - solution.Volume));
+            amountToInject = FixedPoint2.Min(GetDrawTransferAmount(injector), (solution.MaxVolume - solution.Volume));
         }
         else
         {
             // additional delay is based on actual volume left to inject in syringe when smaller than transfer amount
-            amountToInject = FixedPoint2.Min(GetTransferAmount(injector, solution.Volume), solution.Volume);
+            amountToInject = FixedPoint2.Min(GetInjectTransferAmount(injector, solution.Volume), solution.Volume);
         }
 
         // Injections take 0.5 seconds longer per 5u of possible space/content
@@ -235,7 +235,7 @@ public sealed class InjectorSystem : SharedInjectorSystem
             else
             {
                 AdminLogger.Add(LogType.ForceFeed,
-                    $"{EntityManager.ToPrettyString(user):user} is attempting to draw {GetTransferAmount(injector, injector.Comp.TransferAmount).ToString()} units from {EntityManager.ToPrettyString(target):target}");
+                    $"{EntityManager.ToPrettyString(user):user} is attempting to draw {GetDrawTransferAmount(injector).ToString()} units from {EntityManager.ToPrettyString(target):target}");
             }
         }
         else
@@ -251,7 +251,7 @@ public sealed class InjectorSystem : SharedInjectorSystem
             else
             {
                 AdminLogger.Add(LogType.ForceFeed,
-                    $"{EntityManager.ToPrettyString(user):user} is attempting to draw {GetTransferAmount(injector, injector.Comp.TransferAmount).ToString()} units from themselves.");
+                    $"{EntityManager.ToPrettyString(user):user} is attempting to draw {GetDrawTransferAmount(injector).ToString()} units from themselves.");
             }
         }
 
@@ -279,7 +279,7 @@ public sealed class InjectorSystem : SharedInjectorSystem
             return false;
         }
 
-        var realTransferAmount = FixedPoint2.Min(GetTransferAmount(injector, chemSolution.Volume), chemSolution.AvailableVolume);
+        var realTransferAmount = FixedPoint2.Min(GetInjectTransferAmount(injector, chemSolution.Volume), chemSolution.AvailableVolume);
         if (realTransferAmount <= 0)
         {
             Popup.PopupEntity(
@@ -319,7 +319,7 @@ public sealed class InjectorSystem : SharedInjectorSystem
 
         // Get transfer amount. May be smaller than _transferAmount if not enough room
         var realTransferAmount =
-            FixedPoint2.Min(GetTransferAmount(injector, solution.Volume), targetSolution.Comp.Solution.AvailableVolume);
+            FixedPoint2.Min(GetInjectTransferAmount(injector, solution.Volume), targetSolution.Comp.Solution.AvailableVolume);
 
         if (realTransferAmount <= 0)
         {
@@ -447,7 +447,7 @@ public sealed class InjectorSystem : SharedInjectorSystem
         // End Frontier: reagent whitelist fixes
 
         // Get transfer amount. May be smaller than _transferAmount if not enough room, also make sure there's room in the injector
-        var realTransferAmount = FixedPoint2.Min(GetTransferAmount(injector, applicableTargetSolution.Volume), applicableTargetSolution.Volume,
+        var realTransferAmount = FixedPoint2.Min(GetDrawTransferAmount(injector), applicableTargetSolution.Volume,
             solution.AvailableVolume);
 
         if (realTransferAmount <= 0)
@@ -538,10 +538,24 @@ public sealed class InjectorSystem : SharedInjectorSystem
             : InjectorBehavior.Inject;
     }
 
-    private FixedPoint2 GetTransferAmount(Entity<InjectorComponent> injector, FixedPoint2 fallbackVolume)
+    private FixedPoint2 GetInjectTransferAmount(Entity<InjectorComponent> injector, FixedPoint2 fallbackVolume)
     {
+        if (TryGetActiveMode(injector, out var mode) && mode.Behavior == InjectorBehavior.Dynamic)
+            return fallbackVolume;
+
         if (injector.Comp.ActiveModeProtoId != null)
             return injector.Comp.CurrentTransferAmount ?? fallbackVolume;
+
+        return injector.Comp.TransferAmount;
+    }
+
+    private FixedPoint2 GetDrawTransferAmount(Entity<InjectorComponent> injector)
+    {
+        if (TryGetActiveMode(injector, out var mode) && mode.Behavior == InjectorBehavior.Dynamic)
+            return injector.Comp.CurrentTransferAmount ?? FixedPoint2.New(5);
+
+        if (injector.Comp.ActiveModeProtoId != null)
+            return injector.Comp.CurrentTransferAmount ?? injector.Comp.TransferAmount;
 
         return injector.Comp.TransferAmount;
     }

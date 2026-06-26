@@ -1,68 +1,79 @@
+## Behavior bases
 - type: injectorMode
-  id: InjectorModeBase
+  id: BaseInjectorMode
   abstract: true
-  transferAmounts: [1, 5, 10, 15]
   mobTime: 5
   delayPerVolume: 0.1
+  transferAmounts: [1, 5, 10, 15]
+
+- type: injectorMode
+  id: BaseInjectorInjectMode
+  parent: BaseInjectorMode
+  abstract: true
+  name: injector-mode-inject-name
+  behavior: Inject
   popupUserAttempt: injector-component-injecting-user
   popupTargetAttempt: injector-component-injecting-target
 
 - type: injectorMode
-  id: InjectorModeInject
-  parent: InjectorModeBase
-  name: injector-mode-inject-name
-  behavior: Inject
-
-- type: injectorMode
-  id: InjectorModeDraw
-  parent: InjectorModeBase
+  id: BaseInjectorDrawMode
+  parent: BaseInjectorMode
+  abstract: true
   name: injector-mode-draw-name
   behavior: Draw
   popupUserAttempt: injector-component-drawing-user
   popupTargetAttempt: injector-component-drawing-target
 
 - type: injectorMode
+  id: BaseInjectorDynamicMode
+  parent: BaseInjectorMode
   abstract: true
+  name: injector-mode-dynamic-name
+  behavior: Dynamic
+  popupUserAttempt: injector-component-injecting-user
+  popupTargetAttempt: injector-component-injecting-target
+
+## Syringes
+- type: injectorMode
+  id: InjectorModeInject
+  parent: BaseInjectorInjectMode
+
+- type: injectorMode
+  id: InjectorModeDraw
+  parent: BaseInjectorDrawMode
+
+- type: injectorMode
   id: BaseBluespaceSyringeMode
+  abstract: true
   mobTime: 2.5
   delayPerVolume: 0.03
   transferAmounts: [5, 10, 15, 75, 150]
 
 - type: injectorMode
-  parent: [ BaseBluespaceSyringeMode, InjectorModeInject ]
   id: BluespaceSyringeInjectMode
-  name: injector-mode-inject-name
-  behavior: Inject
+  parent: [BaseBluespaceSyringeMode, BaseInjectorInjectMode]
 
 - type: injectorMode
-  parent: [ BaseBluespaceSyringeMode, InjectorModeDraw ]
   id: BluespaceSyringeDrawMode
-  name: injector-mode-draw-name
-  behavior: Draw
+  parent: [BaseBluespaceSyringeMode, BaseInjectorDrawMode]
+
+## Jet injectors
+- type: injectorMode
+  id: BaseJetInjectorMode
+  parent: BaseInjectorDynamicMode
+  abstract: true
+  transferAmounts: [] # No selectable amounts; always injects full reservoir. Draws use the runtime 5u fallback.
+  injectSound:
+    path: /Audio/Items/Medical/jet_injector.ogg
 
 - type: injectorMode
   id: InjectorModeDynamicInject
-  parent: InjectorModeBase
-  name: injector-mode-dynamic-name
-  behavior: Dynamic
-  transferAmounts: [] # No selectable amounts; always injects full reservoir
-  injectSound:
-    path: /Audio/Items/Medical/jet_injector.ogg
+  parent: BaseJetInjectorMode
 
 - type: injectorMode
   id: InjectorModeDynamicInjectAdvanced
-  parent: InjectorModeBase
-  name: injector-mode-dynamic-name
-  behavior: Dynamic
-  transferAmounts: [] # No selectable amounts; always injects full reservoir
-  injectSound:
-    path: /Audio/Items/Medical/jet_injector.ogg
+  parent: BaseJetInjectorMode
 
 - type: injectorMode
   id: InjectorModeDynamicInjectInterdyne
-  parent: InjectorModeBase
-  name: injector-mode-dynamic-name
-  behavior: Dynamic
-  transferAmounts: [] # No selectable amounts; always injects full reservoir
-  injectSound:
-    path: /Audio/Items/Medical/jet_injector.ogg
+  parent: BaseJetInjectorMode

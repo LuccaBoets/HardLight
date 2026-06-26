@@ -373,3 +373,157 @@
   - type: Vinyl
     song:
       path: /Audio/_HL/RadioStation/music/muzaproduction-into-darkness.ogg
+
+- type: entity
+  name: "vinyl disk: Boardwalk In Rio"
+  id: VinylDiskTKBoardwalkInRio
+  parent: BaseVinylDisk
+  components:
+  - type: Sprite
+    state: yellow-vinyl-disk
+  - type: Vinyl
+    song:
+      path: /Audio/_HL/RadioStation/music/timkulig/jazz/boardwalkinrio.ogg
+
+- type: entity
+  name: "vinyl disk: Catch A Cab"
+  id: VinylDiskTKCatchACab
+  parent: BaseVinylDisk
+  components:
+  - type: Sprite
+    state: white-vinyl-disk
+  - type: Vinyl
+    song:
+      path: /Audio/_HL/RadioStation/music/timkulig/jazz/catchacab.ogg
+
+- type: entity
+  name: "vinyl disk: Congestion"
+  id: VinylDiskTKCongestion
+  parent: BaseVinylDisk
+  components:
+  - type: Sprite
+    state: cyan-vinyl-disk
+  - type: Vinyl
+    song:
+      path: /Audio/_HL/RadioStation/music/timkulig/jazz/congestion.ogg
+
+- type: entity
+  name: "vinyl disk: Cool Cat Boogie"
+  id: VinylDiskTKCoolCatBoogie
+  parent: BaseVinylDisk
+  components:
+  - type: Sprite
+    state: purple-vinyl-disk
+  - type: Vinyl
+    song:
+      path: /Audio/_HL/RadioStation/music/timkulig/jazz/coolcatboogie.ogg
+
+- type: entity
+  name: "vinyl disk: C Thee Major"
+  id: VinylDiskTKCTheeMajor
+  parent: BaseVinylDisk
+  components:
+  - type: Sprite
+    state: pink-vinyl-disk
+  - type: Vinyl
+    song:
+      path: /Audio/_HL/RadioStation/music/timkulig/jazz/ctheemajor.ogg
+
+- type: entity
+  name: "vinyl disk: Danny The Dog"
+  id: VinylDiskTKDannyTheDog
+  parent: BaseVinylDisk
+  components:
+  - type: Sprite
+    state: orange-vinyl-disk
+  - type: Vinyl
+    song:
+      path: /Audio/_HL/RadioStation/music/timkulig/jazz/dannythedog.ogg
+
+- type: entity
+  name: "vinyl disk: Marimba Marinade"
+  id: VinylDiskTKMarimbaMarinade
+  parent: BaseVinylDisk
+  components:
+  - type: Sprite
+    state: green-vinyl-disk
+  - type: Vinyl
+    song:
+      path: /Audio/_HL/RadioStation/music/timkulig/jazz/marimbamarinade.ogg
+
+- type: entity
+  name: "vinyl disk: Red & Blue Lights"
+  id: VinylDiskTKRedAndBlueLights
+  parent: BaseVinylDisk
+  components:
+  - type: Sprite
+    state: blue-vinyl-disk
+  - type: Vinyl
+    song:
+      path: /Audio/_HL/RadioStation/music/timkulig/jazz/redandbluelights.ogg
+
+- type: entity
+  name: "vinyl disk: Saturday Night Solo"
+  id: VinylDiskTKSaturdayNightSolo
+  parent: BaseVinylDisk
+  components:
+  - type: Sprite
+    state: glossy-vinyl-disk
+  - type: Vinyl
+    song:
+      path: /Audio/_HL/RadioStation/music/timkulig/jazz/saturdaynightsolo.ogg
+
+- type: entity
+  name: "vinyl disk: Trying To Vibe"
+  id: VinylDiskTKTryingToVibe
+  parent: BaseVinylDisk
+  components:
+  - type: Sprite
+    state: darkblue-vinyl-disk
+  - type: Vinyl
+    song:
+      path: /Audio/_HL/RadioStation/music/timkulig/jazz/tryingtovibe.ogg
+
+# Sleeves
+- type: entity
+  name: jazzy vinyl sleeve
+  suffix: A
+  description: A sleeve for storing only the jazziest of records.
+  id: VinylSleeveJazz
+  parent: BaseVinylSleeveEmpty
+  components:
+  - type: Sprite
+    sprite: _HL/Objects/Misc/RadioStation/vinylsleeves.rsi
+    state: jazz-vinyl-sleeve
+  - type: ContainerFill
+    containers:
+      vinyl:
+      - VinylDiskTKDannyTheDog
+      vinyl_2:
+      - VinylDiskTKMarimbaMarinade
+      vinyl_3:
+      - VinylDiskTKRedAndBlueLights
+      vinyl_4:
+      - VinylDiskTKSaturdayNightSolo
+      vinyl_5:
+      - VinylDiskTKTryingToVibe
+
+- type: entity
+  id: VinylSleeveJazzAlt
+  parent: VinylSleeveJazz
+  suffix: B
+  components:
+  - type: Sprite
+    state: jazz-alt-vinyl-sleeve
+  - type: ContainerFill
+    containers:
+      vinyl:
+      - VinylDiskTKBoardwalkInRio
+      vinyl_2:
+      - VinylDiskTKCatchACab
+      vinyl_3:
+      - VinylDiskTKCongestion
+      vinyl_4:
+      - VinylDiskTKCoolCatBoogie
+      vinyl_5:
+      - VinylDiskTKCTheeMajor

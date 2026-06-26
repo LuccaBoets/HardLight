@@ -5147,3 +5147,105 @@ Entries:
       message: ColCom added the ordinance back to ship weapons.
   id: 556
   time: '2026-06-22T12:05:09.0000000+00:00'
+- author: Shades
+  changes:
+    - type: Fix
+      message: Fixed a collision issue withy the Phase Barrier Cable.
+  id: 557
+  time: '2026-06-23T08:08:18.0000000+00:00'
+- author: re-silvered
+  changes:
+    - type: Fix
+      message: Fixed Neuralyzers not saving added compulsions
+  id: 558
+  time: '2026-06-23T12:46:51.0000000+00:00'
+- author: Illumos
+  changes:
+    - type: Fix
+      message: Psychologists are now allowed to bring other shoes to work
+  id: 559
+  time: '2026-06-23T12:47:05.0000000+00:00'
+- author: Khaomi
+  changes:
+    - type: Add
+      message: Missing localizations
+  id: 560
+  time: '2026-06-23T12:57:38.0000000+00:00'
+- author: re-silvered
+  changes:
+    - type: Tweak
+      message: You can now lay eggs whilst interaction blocked (e.g handcuffed)
+  id: 561
+  time: '2026-06-23T12:58:08.0000000+00:00'
+- author: re-silvered
+  changes:
+    - type: Fix
+      message: >-
+        Fixed jet injectors pulling their max inject amount all the time, now
+        instead always 5u at a time draw
+  id: 562
+  time: '2026-06-23T12:59:00.0000000+00:00'
+- author: Typheus
+  changes:
+    - type: Add
+      message: Freelance Borg
+    - type: Add
+      message: Freelance Borg Role
+    - type: Tweak
+      message: Exosuit Fabricator speciality borg printing restricted to Research
+  id: 563
+  time: '2026-06-23T13:01:02.0000000+00:00'
+- author: Khaomi
+  changes:
+    - type: Remove
+      message: Removed Lone Digger by Caravan Palace from Jukebox for copyright reason
+  id: 564
+  time: '2026-06-23T22:21:15.0000000+00:00'
+- author: re-silvered
+  changes:
+    - type: Fix
+      message: Fixed church bells putting blank messages in chat
+  id: 565
+  time: '2026-06-24T04:36:50.0000000+00:00'
+- author: ATRAC
+  changes:
+    - type: Tweak
+      message: LRSI is now the Lumi Reind Stellar Initiative~
+  id: 566
+  time: '2026-06-24T05:02:31.0000000+00:00'
+- author: re-silvered
+  changes:
+    - type: Add
+      message: >-
+        Added robotic versions of nearly every emote in game for Protogens to
+        use.
+    - type: Add
+      message: Diona, Vox and Vulpkanins now have unique sneeze sounds.
+  id: 567
+  time: '2026-06-24T05:04:18.0000000+00:00'
+- author: re-silvered
+  changes:
+    - type: Tweak
+      message: Reenabled hostile and friendly slime mob ghostroles
+    - type: Fix
+      message: Fixed Smile the slime not being able to be taken over via ghost role
+  id: 568
+  time: '2026-06-24T05:05:00.0000000+00:00'
+- author: DrekkCuga
+  changes:
+    - type: Fix
+      message: Fixed some ships throwing errors or crashing the server when spawned.
+  id: 569
+  time: '2026-06-24T05:07:39.0000000+00:00'
+- author: DrekkCuga
+  changes:
+    - type: Tweak
+      message: Updated ship prices so they cost more to buy than sell.
+  id: 570
+  time: '2026-06-24T05:08:16.0000000+00:00'
+- author: re-silvered
+  changes:
+    - type: Add
+      message: Added spectral locators to the backpack items loadout options
+  id: 571
+  time: '2026-06-24T05:14:23.0000000+00:00'

@@ -12,7 +12,7 @@
   id: Syringe
   name: AI Syringe
   description: A medical configuration of the Mosquito boarding vessel
-  price: 18000  # ~3k + post init appraisal
+  price: 24000  # HL: Rebalancing ship prices to 5% more than sell price (or using the MinPriceMarkup field)
   category: Small
   group: Security
   access: Security

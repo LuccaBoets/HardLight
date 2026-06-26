@@ -7,13 +7,13 @@
 # Discord: erhardsteinhauer
 
 # Shuttle Notes:
-# 
+#
 - type: vessel
   id: Chisel
   parent: BaseVessel
   name: ICR Chisel
   description: "Standard small-size vessel, originally meant to aid in ship scrapping, now modified to function as a multipurpose salvage/mining/cargo-hauling shuttle."
-  price: 35000 # ~31550$ on mapinit + 3155$ from 10% markup 
+  price: 47500 # HL: Rebalancing ship prices to 5% more than sell price (or using the MinPriceMarkup field)
   category: Small
   group: Shipyard
   shuttlePath: /Maps/_NF/Shuttles/chisel.yml

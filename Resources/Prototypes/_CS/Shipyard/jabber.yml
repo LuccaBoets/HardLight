@@ -10,7 +10,7 @@
   id: Jabber
   name: LRSI Jabber
   description: A cargo shuttle focusing on speed and comfort.
-  price: 21750
+  price: 28500 # HL: Rebalancing ship prices to 5% more than sell price (or using the MinPriceMarkup field)
   category: Small
   group: Shipyard
 

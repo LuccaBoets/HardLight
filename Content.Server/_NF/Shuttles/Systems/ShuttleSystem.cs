@@ -58,7 +58,7 @@ public sealed partial class ShuttleSystem
 
         // Persist the requested damping so TileFriction applies the selected mode every tick.
         shuttleComponent.DampingModifier = linearDampeningStrength;
-        Dirty(transform.GridUid.Value, shuttleComponent);
+        //Dirty(transform.GridUid.Value, shuttleComponent); HL: Don't need to dirty non-networked components
 
         _console.RefreshShuttleConsoles(transform.GridUid.Value);
         return true;

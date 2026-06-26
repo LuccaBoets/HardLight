@@ -32,6 +32,7 @@
   - type: InstantAction
     icon: { sprite: Objects/Consumable/Food/egg.rsi, state: icon }
     useDelay: 5
+    checkCanInteract: false
     event: !type:LewdEggLayingActionEvent
 
 - type: entity
@@ -43,6 +44,7 @@
   - type: InstantAction
     icon: { sprite: _NF/Objects/Fun/prizeticket.rsi, state: prizeball }
     useDelay: 5
+    checkCanInteract: false
     event: !type:PrizeballLayingActionEvent
 
 

@@ -1074,7 +1074,9 @@
     # Posters
   - ContractorNFPosterCorporate
   - ContractorNFPosterContraband
-  # Hardlight start - BunnysuitBoxChemist
+  # Hardlight start
+  - ContractorSpectralLocator
+  - BunnysuitBoxChemist
   - BunnysuitBoxGenetics
   - BunnysuitBoxPsychologist
   - BunnysuitBoxHeadOfPersonnel

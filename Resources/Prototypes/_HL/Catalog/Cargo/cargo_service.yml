@@ -37,3 +37,14 @@
   cost: 6750
   category: cargoproduct-category-name-service
   group: market
+
+
+- type: cargoProduct
+  id: VinylsTKJazz
+  icon:
+    sprite: _HL/Objects/Misc/RadioStation/vinylsleeves.rsi
+    state: jazz-vinyl-sleeve
+  product: CrateVinylsTKJazz
+  cost: 6250
+  category: cargoproduct-category-name-service
+  group: market

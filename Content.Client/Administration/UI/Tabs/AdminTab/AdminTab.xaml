@@ -20,10 +20,8 @@
             <BoxContainer Orientation="Vertical" SeparationOverride="6" Margin="6">
                 <Label Text="{Loc admin-tools-section-quick-desc}" StyleClasses="LabelSubText" />
                 <GridContainer Columns="4" HorizontalExpand="True">
-                    <cc:UICommandButton Command="kick" Text="{Loc admin-player-actions-window-title}" WindowType="{x:Type at:PlayerActionsWindow}" />
                     <cc:CommandButton Command="banpanel" Text="{Loc admin-player-actions-window-ban}" />
                     <cc:CommandButton Command="aghost" Text="{Loc admin-player-actions-window-admin-ghost}" />
-                    <cc:UICommandButton Command="tpto" Text="{Loc admin-player-actions-window-teleport}" WindowType="{x:Type at:TeleportWindow}" />
                     <cc:CommandButton Command="permissions" Text="{Loc admin-player-actions-window-permissions}" />
                     <cc:CommandButton Command="announceui" Text="{Loc admin-player-actions-window-announce}" />
                     <cc:UICommandButton Command="callshuttle" Text="{Loc admin-player-actions-window-shuttle}" WindowType="{x:Type at:AdminShuttleWindow}" />
@@ -66,7 +64,7 @@
                 </Collapsible>
 
                 <Collapsible>
-                    <CollapsibleHeading Title="{Loc admin-menu-adminbus-tab}" />
+                    <CollapsibleHeading Title="{Loc admin-menu-world-tab}" />
                     <CollapsibleBody Margin="16 4 0 8">
                         <BoxContainer Orientation="Vertical" SeparationOverride="6">
                             <Label Text="{Loc admin-menu-world-desc}" StyleClasses="LabelSubText" />
@@ -79,7 +77,7 @@
                     <CollapsibleHeading Title="{Loc admin-menu-atmos-tab}" />
                     <CollapsibleBody Margin="16 4 0 8">
                         <BoxContainer Orientation="Vertical" SeparationOverride="6">
-                            <Label Text="{Loc admin-menu-world-desc}" StyleClasses="LabelSubText" />
+                            <Label Text="{Loc admin-menu-atmos-desc}" StyleClasses="LabelSubText" />
                             <atmos:AtmosTab />
                         </BoxContainer>
                     </CollapsibleBody>
@@ -335,7 +333,7 @@
 
         <!-- ===== Objects ===== -->
         <BoxContainer Orientation="Vertical" SeparationOverride="6" Margin="6" HorizontalExpand="True" VerticalExpand="True">
-            <Label Text="{Loc admin-menu-world-desc}" StyleClasses="LabelSubText" />
+            <Label Text="{Loc admin-menu-objects-desc}" StyleClasses="LabelSubText" />
             <objects:ObjectsTab Name="ObjectsTabControl" Access="Public" VerticalExpand="True" />
         </BoxContainer>
 

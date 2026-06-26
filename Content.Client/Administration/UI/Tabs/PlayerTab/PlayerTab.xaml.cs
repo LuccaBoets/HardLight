@@ -31,6 +31,7 @@ public sealed partial class PlayerTab : Control
     private Header _headerClicked = Header.Username;
     private bool _ascending = true;
     private bool _showDisconnected;
+    private bool _playerlistButtonStyle;
 
     private AdminPlayerTabColorOption _playerTabColorSetting;
     private AdminPlayerTabRoleTypeOption _playerTabRoleSetting;
@@ -51,7 +52,7 @@ public sealed partial class PlayerTab : Control
         _config.OnValueChanged(CCVars.AdminPlayerTabRoleSetting, RoleSettingChanged, true);
         _config.OnValueChanged(CCVars.AdminPlayerTabColorSetting, ColorSettingChanged, true);
         _config.OnValueChanged(CCVars.AdminPlayerTabSymbolSetting, SymbolSettingChanged, true);
-
+        _config.OnValueChanged(CCVars.AdminPlayerlistButtonStyling, PlayerListButtonStylingChanged, true);
 
         OverlayButton.OnPressed += OverlayButtonPressed;
         ShowDisconnectedButton.OnPressed += ShowDisconnectedPressed;
@@ -141,6 +142,12 @@ public sealed partial class PlayerTab : Control
         RefreshPlayerList(_adminSystem.PlayerList);
     }
 
+    private void PlayerListButtonStylingChanged(bool button)
+    {
+        ListHeader.Margin = button ? new Thickness(15, 0) : new Thickness(0);
+        _playerlistButtonStyle = button;
+    }
+
     private void RefreshPlayerList(IReadOnlyList<PlayerInfo> players)
     {
         _players = players;
@@ -171,6 +178,9 @@ public sealed partial class PlayerTab : Control
             _playerTabSymbolSetting);
         button.AddChild(entry);
         button.ToolTip = $"{player.Username}, {player.CharacterName}, {player.IdentityName}, {player.StartingJob}";
+
+        if (!_playerlistButtonStyle)
+            button.StyleClasses.Clear();
     }
 
     /// <summary>
@@ -236,7 +246,9 @@ public sealed partial class PlayerTab : Control
             Header.Username => Compare(x.Username, y.Username),
             Header.Character => Compare(x.CharacterName, y.CharacterName),
             Header.Job => Compare(x.StartingJob, y.StartingJob),
-            Header.RoleType => y.SortWeight - x.SortWeight,
+            Header.RoleType => y.SortWeight != x.SortWeight
+                ? y.SortWeight - x.SortWeight
+                : string.Compare(x.RoleProto?.Id ?? "", y.RoleProto?.Id ?? "", StringComparison.Ordinal),
             Header.Playtime => TimeSpan.Compare(x.OverallPlaytime ?? default, y.OverallPlaytime ?? default),
             Header.Balance => x.Balance.CompareTo(y.Balance), // Frontier
             _ => 1

@@ -13,7 +13,7 @@
   parent: BaseVessel
   name: NC Mail Pod
   description: A cramped yet reliable shuttle for delivering packages.
-  price: 15000
+  price: 20500 # HL: Rebalancing ship prices
   category: Micro
   group: Sr
   access: Mail

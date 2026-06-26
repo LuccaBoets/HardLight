@@ -6,11 +6,11 @@ meta:
   forkVersion: ""
   time: 02/11/2026 00:07:42
   entityCount: 1935
-maps:
-- 1934
+maps: []
 grids:
 - 1
-orphans: []
+orphans:
+- 1
 nullspace: []
 tilemap:
   4: Space
@@ -38,7 +38,6 @@ entities:
       name: grid
     - type: Transform
       pos: -0.53125,-0.703125
-      parent: 1934
     - type: MapGrid
       chunks:
         0,0:
@@ -1155,16 +1154,6 @@ entities:
       id: Deterrence
     - type: IFF
       color: '#FFFFFFFF'
-  - uid: 1934
-    components:
-    - type: MetaData
-      name: Map Entity
-    - type: Transform
-    - type: Map
-      mapPaused: True
-    - type: GridTree
-    - type: Broadphase
-    - type: OccluderTree
 - proto: AirAlarm
   entities:
   - uid: 534

@@ -50,6 +50,7 @@ public sealed class LewdEggLayingSystem : SharedLewdEggLayingSystem // HL: We've
             BlockDuplicate = true,
             BreakOnDamage = true,
             CancelDuplicate = true,
+            RequireCanInteract = false,
         };
 
         _popup.PopupEntity(Loc.GetString("action-popup-lay-egg-inside-start", ("entity", Identity.Entity(user.Owner, EntityManager)), ("target", Identity.Entity(target, EntityManager))), user);
@@ -78,6 +79,7 @@ public sealed class LewdEggLayingSystem : SharedLewdEggLayingSystem // HL: We've
             BlockDuplicate = true,
             BreakOnDamage = true,
             CancelDuplicate = true,
+            RequireCanInteract = false,
         };
 
         _popup.PopupEntity(Loc.GetString("action-popup-lay-egg-user-start"), user, user);

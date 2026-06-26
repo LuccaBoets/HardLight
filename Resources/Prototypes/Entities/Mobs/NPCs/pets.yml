@@ -952,6 +952,7 @@
     flavorKind: station-event-random-sentience-flavor-slime
   - type: MobPrice
     price: 3000 # it is a truly valuable creature
+  - type: GhostTakeoverAvailable
   - type: GhostRole
     name: ghost-role-information-smile-name
     description: ghost-role-information-smile-description
