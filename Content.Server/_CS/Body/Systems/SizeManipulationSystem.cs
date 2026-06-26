@@ -5,8 +5,11 @@ using Content.Server._Common.Consent;
 using Content.Server.Sprite;
 using Content.Shared._Common.Consent;
 using Content.Shared.Body.Components;
+using Content.Shared.Humanoid;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Popups;
+using Content.Shared.Silicons.Borgs.Components;
+using Content.Shared.Sprite;
 using Content.Shared.Weapons.Ranged.Components;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Collision.Shapes;
@@ -26,6 +29,7 @@ public sealed class SizeManipulationSystem : EntitySystem
     [Dependency] private readonly SharedPhysicsSystem _physics = default!;
     [Dependency] private readonly ScaleVisualsSystem _scaleVisuals = default!; // HardLight
     [Dependency] private readonly IPrototypeManager _prototypeManager = default!; // HardLight
+    [Dependency] private readonly SharedAppearanceSystem _appearance = default!;
 
     private static readonly ProtoId<ConsentTogglePrototype> SizeManipulationConsent = "SizeManipulation";
 
@@ -176,10 +180,18 @@ public sealed class SizeManipulationSystem : EntitySystem
 
         // Update the component's scale multiplier
         sizeComp.ScaleMultiplier = newScale;
-        Dirty(target, sizeComp);
 
         // Set Scale
-        _scaleVisuals.SetSpriteScale(target, new Vector2(newScale, newScale));
+        var isHuman = _entityManager.HasComponent<HumanoidAppearanceComponent>(target);
+        if (isHuman)
+        {
+            var appearanceComponent = _entityManager.EnsureComponent<AppearanceComponent>(target);
+            _appearance.SetData(target, HumanoidVisuals.Scale, new Vector2(newScale, newScale), appearanceComponent);
+        }
+        else
+        {
+            _scaleVisuals.SetSpriteScale(target, new Vector2(newScale, newScale));
+        }
 
         if (_entityManager.TryGetComponent(target, out FixturesComponent? manager))
         {
@@ -194,7 +206,8 @@ public sealed class SizeManipulationSystem : EntitySystem
 
                         if (sizeComp.BaseRadius == -1f)
                         {
-                            sizeComp.BaseRadius = circle.Radius;
+                            sizeComp.BaseRadius = circle.Radius / sizeComp.ScaleMultiplier;
+                            sizeComp.BaseScale = sizeComp.ScaleMultiplier;
                         }
 
                         // Calc new radius of the entity

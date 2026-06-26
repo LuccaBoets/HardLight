@@ -84,4 +84,4 @@
 - type: consentToggle
   id: SizeManipulation
   name: Size Manipulation
-  description: "Size Gun GOOO BRRRR"
+  description: "Allow the Size Gun to shrink or grow you on hit."

@@ -1,13 +1,14 @@
 using System.Numerics;
+using Content.Server.Sprite; // HardLight
+using Content.Shared._NF.SizeAttribute;
+using Content.Shared.Body.Components;
+using Content.Shared.Humanoid;
+using Content.Shared.Nyanotrasen.Item.PseudoItem;
+using Content.Shared.Silicons.Borgs.Components; // HardLight
 using Robust.Server.GameObjects;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Collision.Shapes;
 using Robust.Shared.Physics.Systems;
-using Content.Server.Sprite; // HardLight
-using Content.Shared._NF.SizeAttribute;
-using Content.Shared.Nyanotrasen.Item.PseudoItem;
-using Content.Shared.Humanoid;
-using Content.Shared.Silicons.Borgs.Components; // HardLight
 
 namespace Content.Server.SizeAttribute
 {
@@ -115,6 +116,9 @@ namespace Content.Server.SizeAttribute
         {
             if (scale <= 0f)
                 return;
+
+            var sizeComp = EnsureComp<SizeAffectedComponent>(uid);
+            sizeComp.ScaleMultiplier = MathF.Round(scale, 4);
 
             var isBorg = _entityManager.HasComponent<BorgChassisComponent>(uid);
 
