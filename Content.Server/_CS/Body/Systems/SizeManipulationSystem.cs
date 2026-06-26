@@ -5,11 +5,10 @@ using Content.Server._Common.Consent;
 using Content.Server.Sprite;
 using Content.Shared._Common.Consent;
 using Content.Shared.Body.Components;
+using Content.Shared.Body.Prototype;
 using Content.Shared.Humanoid;
 using Content.Shared.Mobs.Components;
 using Content.Shared.Popups;
-using Content.Shared.Silicons.Borgs.Components;
-using Content.Shared.Sprite;
 using Content.Shared.Weapons.Ranged.Components;
 using Robust.Shared.Physics;
 using Robust.Shared.Physics.Collision.Shapes;
@@ -65,8 +64,10 @@ public sealed class SizeManipulationSystem : EntitySystem
         return originalDensity * newDestinyMultiplier;
     }
 
+    // Add the components to the target when certain scale ranges are hit.
     public void ApplyEffects(float scale, float oldScale, SizeAffectedComponent sizeComp, EntityUid target)
     {
+        // Get the different scale range and the corresponding components
         var scaleEffects = _prototypeManager.EnumeratePrototypes<SizeManipulationPrototype>().ToList();
 
         // Get old components
@@ -95,6 +96,8 @@ public sealed class SizeManipulationSystem : EntitySystem
                         oldComponents.RemoveAll(x => x.Key == componentKeyPair.Key);
                     }
 
+                    // Copy the components to the target + override any existing components
+                    // May override other same components from an other source
                     var component = componentKeyPair.Value.Component;
                     CopyComp(component.Owner, target, component);
                 }
@@ -102,7 +105,7 @@ public sealed class SizeManipulationSystem : EntitySystem
             }
         }
 
-        // Remove any left over old components
+        // Remove any components that arent needed anymore
         if (oldComponents != null)
         {
             foreach (var oldComponent in oldComponents)
@@ -143,7 +146,6 @@ public sealed class SizeManipulationSystem : EntitySystem
         var maxScale = safetyDisabled ? sizeComp.MaxScale * 2.0f : sizeComp.MaxScale;
 
         // Hardlight Start
-
         float newScale;
         var densityMultiplier = 0f;
         if (mode == SizeManipulatorMode.Grow)
@@ -171,7 +173,6 @@ public sealed class SizeManipulationSystem : EntitySystem
             }
         }
 
-
         // Fix floating point problem
         newScale = MathF.Round(newScale, 2);
 
@@ -185,14 +186,17 @@ public sealed class SizeManipulationSystem : EntitySystem
         var isHuman = _entityManager.HasComponent<HumanoidAppearanceComponent>(target);
         if (isHuman)
         {
+            // If target is a human use the HumanoidVisuals.Scale enum
             var appearanceComponent = _entityManager.EnsureComponent<AppearanceComponent>(target);
             _appearance.SetData(target, HumanoidVisuals.Scale, new Vector2(newScale, newScale), appearanceComponent);
         }
         else
         {
+            // If target is a nonhuman use the Scale visuals system (uses the ScaleVisuals.Scale)
             _scaleVisuals.SetSpriteScale(target, new Vector2(newScale, newScale));
         }
 
+        // applies the radius and destiny
         if (_entityManager.TryGetComponent(target, out FixturesComponent? manager))
         {
             foreach (var (id, fixture) in manager.Fixtures)
@@ -203,7 +207,7 @@ public sealed class SizeManipulationSystem : EntitySystem
                 switch (fixture.Shape)
                 {
                     case PhysShapeCircle circle:
-
+                        // Sets starting BaseRadius, BaseScale
                         if (sizeComp.BaseRadius == -1f)
                         {
                             sizeComp.BaseRadius = circle.Radius / sizeComp.ScaleMultiplier;
@@ -223,7 +227,7 @@ public sealed class SizeManipulationSystem : EntitySystem
 
                 if (densityMultiplier > 0f && densityMultiplier != 1f)
                 {
-                    // TODO: fix, use sizeComp variable
+                    // TODO:  use the SizeAffectedComponent.OriginalFixtureDensities
                     float newDensity = GetDensity(fixture, oldScale, newScale);
                     _physics.SetDensity(target, id, fixture, newDensity);
                 }

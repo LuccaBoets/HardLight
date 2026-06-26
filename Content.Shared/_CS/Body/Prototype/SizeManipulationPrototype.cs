@@ -1,25 +1,28 @@
-using Content.Shared.EntityEffects;
-using Content.Shared.Random;
-using Content.Shared.Traits;
-using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
-using Robust.Shared.Serialization;
 
-namespace Content.Server.Body.Systems;
+namespace Content.Shared.Body.Prototype;
 
 /// <summary>
 /// Describes the effect a certain size can have on an entity.
 /// </summary>
-[Prototype]
+[Prototype("sizeManipulation")]
 public sealed partial class SizeManipulationPrototype : IPrototype
 {
     [ViewVariables]
     [IdDataField]
     public string ID { get; private set; } = default!;
 
+    /// <summary>
+    /// Lower scale range for the effects to be applied
+    /// If the scael is between MinScale and MaxScale the Components get applied
+    /// </summary>
     [DataField]
     public float MinScale = 1f - 0.15f;
 
+    /// <summary>
+    /// Upper scale range for the effects to be applied
+    /// If the scael is between MinScale and MaxScale the Components get applied
+    /// </summary>
     [DataField]
     public float MaxScale = 1f + 0.15f;
 
