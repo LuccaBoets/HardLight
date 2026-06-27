@@ -5249,3 +5249,11 @@ Entries:
       message: Added spectral locators to the backpack items loadout options
   id: 571
   time: '2026-06-24T05:14:23.0000000+00:00'
+- author: re-silvered
+  changes:
+    - type: Fix
+      message: >-
+        You can now have multiple instances of passive damage / passive
+        regeneration
+  id: 572
+  time: '2026-06-27T07:54:23.0000000+00:00'
