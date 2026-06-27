@@ -167,7 +167,7 @@
 
 - type: sizeManipulation
   id: VeryTiny
-  minScale: 0.25
+  minScale: 0.24
   maxScale: 0.4
   components:
   - type: CritThresholdModifier
