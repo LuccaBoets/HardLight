@@ -1033,7 +1033,7 @@
   - ContractorDrinkFlask
   - ContractorDrinkVacuumFlask
   - ContractorFlashlightLantern
-  - ContractorCardBoxBlack
+  - ContractorPlayingCardDeckBoxBlack
   - ContractorWristwatch
   - ContractorWristwatchGold
   - ContractorSilverRing
@@ -1204,7 +1204,7 @@
   - ContractorDrinkFlask
   - ContractorDrinkVacuumFlask
   - ContractorFlashlightLantern
-  - ContractorCardBoxBlack
+  - ContractorPlayingCardDeckBoxBlack
   - ContractorWristwatch
   - ContractorWristwatchGold
   - ContractorSilverRing

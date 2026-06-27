@@ -11493,7 +11493,7 @@ entities:
     - type: Transform
       pos: 11.5,-54.5
       parent: 1
-- proto: CardBoxBlack
+- proto: PlayingCardDeckBoxBlack
   entities:
   - uid: 1752
     components:

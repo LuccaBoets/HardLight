@@ -44542,7 +44542,7 @@ entities:
       rot: 1.5707963267948966 rad
       pos: 17.5,49.5
       parent: 2
-- proto: CardBoxBlack
+- proto: PlayingCardDeckBoxBlack
   entities:
   - uid: 6953
     components:

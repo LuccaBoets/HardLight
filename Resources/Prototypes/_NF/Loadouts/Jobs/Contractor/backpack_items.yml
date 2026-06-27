@@ -291,14 +291,14 @@
     - SoapNT
 
 - type: loadout
-  id: ContractorCardBoxBlack
+  id: ContractorPlayingCardDeckBoxBlack
   effects:
   - !type:GroupLoadoutEffect
     proto: ContractorT2
   price: 2000
   storage:
     back:
-    - CardBoxBlack
+    - PlayingCardDeckBoxBlack
 
 #T3 for lols
 - type: loadout
