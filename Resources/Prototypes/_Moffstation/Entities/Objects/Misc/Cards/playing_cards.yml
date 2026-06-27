@@ -82,6 +82,33 @@
   id: NanotrasenCards
   sprite: _Moffstation/Objects/Misc/Cards/card_nanotrasen.rsi
 
+# Colonial Command cards
+- type: entity
+  parent: BasePlayingCardDeckBox
+  id: PlayingCardDeckBoxColonialCommand
+  name: box of playing cards
+  suffix: colonialCommand
+  components:
+  - type: Sprite
+    sprite: _Moffstation/Objects/Misc/Cards/card_colonialcommand.rsi
+  - type: ContainerFill
+    containers:
+      storagebase:
+      - PlayingCardDeckColonialCommand
+
+- type: entity
+  parent: BasePlayingCardDeck
+  id: PlayingCardDeckColonialCommand
+  name: deck of cards
+  suffix: colonialCommand
+  components:
+  - type: PlayingCardDeck
+    prototype: ColonialCommandCards
+
+- type: playingCardDeck
+  parent: BasePlayingCardDeck
+  id: ColonialCommandCards
+  sprite: _Moffstation/Objects/Misc/Cards/card_colonialcommand.rsi
 
 # Base definitions
 - type: playingCardDeck
