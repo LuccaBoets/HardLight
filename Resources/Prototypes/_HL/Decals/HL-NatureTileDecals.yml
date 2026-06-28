@@ -186,3 +186,12 @@
   sprite:
     sprite: /Textures/Objects/Tiles/tile.rsi
     state: floor-astroasteroid
+
+# --- Basalt variants ---
+- type: decal
+  id: TileBasalt
+  tags: ["rock", "station", "markings"]
+  snapCardinals: false
+  defaultSnap: false
+  sprite: /Textures/Tiles/Planet/basalt.png
+

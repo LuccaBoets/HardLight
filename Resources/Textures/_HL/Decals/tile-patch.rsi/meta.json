@@ -39,6 +39,9 @@
         },
         {
             "name": "permafrost"
+        },
+        {
+            "name": "floor-basalt"
         }
     ]
 }

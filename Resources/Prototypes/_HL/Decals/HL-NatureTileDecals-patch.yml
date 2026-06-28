@@ -67,3 +67,13 @@
   sprite:
     sprite: /Textures/_HL/Decals/tile-patch.rsi
     state: floor-astroasteroid
+
+# --- Basalt variants ---
+- type: decal
+  id: TileBasalt-patch
+  tags: ["rock", "station", "markings"]
+  snapCardinals: false
+  defaultSnap: false
+  sprite:
+    sprite: /Textures/_HL/Decals/tile-patch.rsi
+    state: floor-basalt
