@@ -1,0 +1,19 @@
+- type: construction
+  id: TreeDeco
+  graph: NatureEnvironmentGraph
+  startNode: start
+  targetNode: TreeDeco
+  category: construction-category-decorations
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false
+
+- type: construction
+  id: LargeTreeDeco
+  graph: NatureEnvironmentGraph
+  startNode: start
+  targetNode: LargeTreeDeco
+  category: construction-category-decorations
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: false

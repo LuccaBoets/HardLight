@@ -1,0 +1,51 @@
+- type: constructionGraph
+  id: NatureEnvironmentGraph
+  start: start
+  graph:
+
+    # ---------- Start node ----------
+    - node: start
+      actions:
+        - !type:DestroyEntity {}
+      edges:
+        # -- Trees (grid-snap; collidable) --
+        - to: TreeDeco
+          completed:
+            - !type:SnapToGrid {}
+          steps:
+            - material: WoodPlank
+              amount: 1
+              doAfter: 1
+        - to: LargeTreeDeco
+          completed:
+            - !type:SnapToGrid {}
+          steps:
+            - material: WoodPlank
+              amount: 1
+              doAfter: 1
+
+    # ---------- Deconstruct nodes ----------
+
+    - node: TreeDeco
+      entity: TreeDeco
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: MaterialWoodPlank1
+              amount: 1
+          steps:
+            - tool: Prying
+              doAfter: 1
+
+    - node: LargeTreeDeco
+      entity: LargeTreeDeco
+      edges:
+        - to: start
+          completed:
+            - !type:SpawnPrototype
+              prototype: MaterialWoodPlank1
+              amount: 1
+          steps:
+            - tool: Prying
+              doAfter: 1
