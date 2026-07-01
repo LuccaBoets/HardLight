@@ -1,0 +1,300 @@
+- type: entity
+  parent: BaseItemHarmless
+  id: TripleTriadBase
+  abstract: true
+  components:
+    - type: ItemToggle
+      predictable: false
+    - type: Appearance
+    - type: GenericVisualizer
+      visuals:
+        enum.ToggleVisuals.Toggled:
+         red:
+            True: { visible: true }
+            False: { visible: false }
+         blue:
+            True: { visible: false }
+            False: { visible: true }
+
+# Common
+
+- type: entity
+  id: TripleTriad3123
+  parent: TripleTriadBase
+  name: C - Space Carp
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Space Carp is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: three
+      offset: 0, 0.25
+    - state: one
+      offset: 0.21875, 0
+    - state: two
+      offset: 0, -0.25
+    - state: three
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad3222
+  parent: TripleTriadBase
+  name: C - Killer Tomato
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Killer Tomato is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: three
+      offset: 0, 0.25
+    - state: two
+      offset: 0.21875, 0
+    - state: two
+      offset: 0, -0.25
+    - state: two
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad1414
+  parent: TripleTriadBase
+  name: C - Mothroach
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Mothroach is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: four
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: four
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad2322
+  parent: TripleTriadBase
+  name: C - Librarian
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Librarian is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: two
+      offset: 0, 0.25
+    - state: three
+      offset: 0.21875, 0
+    - state: two
+      offset: 0, -0.25
+    - state: two
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad3143
+  parent: TripleTriadBase
+  name: C - Adventure Books
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Adventure Books is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: three
+      offset: 0, 0.25
+    - state: one
+      offset: 0.21875, 0
+    - state: four
+      offset: 0, -0.25
+    - state: three
+      offset: -0.21875, 0
+
+# Rare
+
+- type: entity
+  id: TripleTriad2561
+  parent: TripleTriadBase
+  name: R - Brass Meteor
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Brass Meteor is captured within the crystal in detail.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: two
+      offset: 0, 0.25
+    - state: five
+      offset: 0.21875, 0
+    - state: six
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriadA535
+  parent: TripleTriadBase
+  name: R - Maid
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Maid is captured within the crystal in detail.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: a
+      offset: 0, 0.25
+    - state: five
+      offset: 0.21875, 0
+    - state: three
+      offset: 0, -0.25
+    - state: five
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad4434
+  parent: TripleTriadBase
+  name: R - Nook-CIV
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Nook-CIV is captured within the crystal in detail.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: four
+      offset: 0, 0.25
+    - state: four
+      offset: 0.21875, 0
+    - state: three
+      offset: 0, -0.25
+    - state: four
+      offset: -0.21875, 0
+
+# Ultra Rare (Prize Gatcha)
+
+- type: entity
+  id: TripleTriad5545
+  parent: TripleTriadBase
+  name: UR - The Concordia
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of The Concordia is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: five
+      offset: 0, 0.25
+    - state: five
+      offset: 0.21875, 0
+    - state: four
+      offset: 0, -0.25
+    - state: five
+      offset: -0.21875, 0
+
+# Ultra Rare (Loot Booster Packs)
+
+- type: entity
+  id: TripleTriad6731
+  parent: TripleTriadBase
+  name: UR - Anomalous Geode
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Anomalous Geode is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: six
+      offset: 0, 0.25
+    - state: seven
+      offset: 0.21875, 0
+    - state: three
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriadAAAA
+  parent: TripleTriadBase
+  name: UR - Nuke
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Nuke is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: a
+      offset: 0, 0.25
+    - state: a
+      offset: 0.21875, 0
+    - state: a
+      offset: 0, -0.25
+    - state: a
+      offset: -0.21875, 0
