@@ -1,0 +1,53 @@
+# BASE
+- type: entity
+  parent: BaseItem
+  id: BaseBoosterPack
+  name: Booster Pack
+  description: Booster boxes? Here?
+  abstract: true
+#  categories: [ HideSpawnMenu ]
+  suffix: NPC Loot
+  components:
+  - type: Sprite
+    sprite: _EstacaoPirata/Objects/Misc/cards.rsi
+    state: black_box
+  - type: Item
+    size: Normal
+
+## Starter Pack
+- type: entity
+  parent: BaseBoosterPack
+  id: StarterPack
+  name: Starter Pack
+  components:
+  - type: StaticPrice
+    price: 200
+  - type: SpawnItemsOnUse
+    items:
+      - id: TripleTriad3123
+      - id: TripleTriad3222
+      - id: TripleTriad1414
+      - id: TripleTriad2561
+      - id: TripleTriad5545
+      #   prob: 0.9
+    sound:
+      path: /Audio/Items/jumpsuit_equip.ogg
+
+
+## Booster Pack
+- type: entity
+  parent: BaseBoosterPack
+  id: FunVendBoosterPack
+  name: FunVend Booster Pack
+  components:
+  - type: StaticPrice
+    price: 500
+  - type: SpawnItemsOnUse
+    items:
+      - id: TripleTriad2322
+      - id: TripleTriad3143
+      - id: TripleTriad4434
+      #   prob: 0.9
+    sound:
+      path: /Audio/Items/jumpsuit_equip.ogg
+
