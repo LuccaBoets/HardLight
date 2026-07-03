@@ -3,6 +3,11 @@
   id: TripleTriadBase
   abstract: true
   components:
+    - type: Item
+      size: Small
+    - type: Tag
+      tags:
+      - TripleTriadCard
     - type: ItemToggle
       predictable: false
     - type: Appearance

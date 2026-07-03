@@ -9,8 +9,8 @@
   suffix: NPC Loot
   components:
   - type: Sprite
-    sprite: _EstacaoPirata/Objects/Misc/cards.rsi
-    state: black_box
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    state: boosters_pack
   - type: Item
     size: Normal
 

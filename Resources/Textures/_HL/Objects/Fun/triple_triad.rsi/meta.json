@@ -8,12 +8,18 @@
     },
     "states": [
         {
+            "name": "deck_storage_box"
+        },
+        {
+            "name": "boosters_pack"
+        },
+        {
             "name": "normal_background_blue"
         },
         {
             "name": "normal_background_red"
         },
-{
+        {
             "name": "gold_background_blue"
         },
         {

@@ -1,0 +1,26 @@
+- type: entity
+  name: Triple Triad Bag
+  id: TripleTriadBag
+  parent: NFBaseClothingBeltStorageBag # Frontier: BaseStorageItem<NFBaseClothingBeltStorageBag
+  description: 
+  components:
+  - type: Sprite
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    state: deck_storage_box
+  - type: Item
+    storedRotation: -90
+    size: Small
+  - type: Clothing
+    quickEquip: false
+    slots:
+    - belt
+  - type: Storage
+    grid:
+    - 0,0,4,1
+    maxItemSize: Small
+    quickInsert: true
+    areaInsert: true
+    whitelist:
+      tags:
+      - TripleTriadCard
+  - type: Dumpable

@@ -389,3 +389,7 @@
 # HL: Mark Laser Weapons for bounties
 - type: Tag
   id: LaserWeapon
+
+# TripleTriad
+- type: Tag
+  id: TripleTriadCard
