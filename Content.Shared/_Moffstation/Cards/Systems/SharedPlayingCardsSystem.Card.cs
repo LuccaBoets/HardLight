@@ -220,7 +220,7 @@ public abstract partial class SharedPlayingCardsSystem
                 PlacementVerbPriority,
                 () => JoinIntoHandIfHeldOtherwiseDeck(targetCard, usedDeck, TopCardRange, user)),
             // Hand: pick a card from the used hand to combine with the target card.
-            usedHand => verbs.Add(HandPutDown, PlacementVerbPriority, () => OpenPickerUi(usedHand, targetCard, user))
+            usedHand => verbs.Add(HandPutDown, PlacementVerbPriority + 1, () => OpenPickerUi(usedHand, targetCard, user))
         );
 
         // Flip

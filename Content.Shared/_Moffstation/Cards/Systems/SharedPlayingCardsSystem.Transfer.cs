@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using Content.Shared._Moffstation.Cards.Components;
 using Content.Shared._Moffstation.Extensions;
 using Robust.Shared.Map;
@@ -226,18 +226,35 @@ public abstract partial class SharedPlayingCardsSystem
                 }
                 else if (entity.Comp.NumCards == 1)
                 {
-                    // Turn into just a card
-                    var lastCard = Take(entity, .., entityCoordinates, null).Single();
+                    var remainingNetEnt = entity.Comp.Cards[0];
+                    entity.Comp.Cards = new();
 
-                    // If the hand was in a container, leave the last card in its place in the container.
-                    var cardParent = Transform(entity).ParentUid;
-                    if (_container.TryGetContainingContainer(cardParent, entity, out var container))
+                    if (NetEntToCard(remainingNetEnt) is { } lastCard)
                     {
-                        _container.Remove(entity.Owner, container, force: true);
-                        _container.Insert(lastCard.Owner, container);
+                        _container.Remove(lastCard.Owner, entity.Comp.Container, force: true);
+
+                        // If the hand was in a container, leave the last card in its place in the container.
+                        var cardParent = Transform(entity).ParentUid;
+                        if (_container.TryGetContainingContainer(cardParent, entity, out var container))
+                        {
+                            _container.Remove(entity.Owner, container, force: true);
+                            _container.Insert(lastCard.Owner, container);
+                        }
                     }
 
                     PredictedQueueDel(entity);
+                    //// Turn into just a card
+                    //var lastCard = Take(entity, .., entityCoordinates, null).Single();
+
+                    //// If the hand was in a container, leave the last card in its place in the container.
+                    //var cardParent = Transform(entity).ParentUid;
+                    //if (_container.TryGetContainingContainer(cardParent, entity, out var container))
+                    //{
+                    //    _container.Remove(entity.Owner, container, force: true);
+                    //    _container.Insert(lastCard.Owner, container);
+                    //}
+
+                    //PredictedQueueDel(entity);
                 }
             }
         }

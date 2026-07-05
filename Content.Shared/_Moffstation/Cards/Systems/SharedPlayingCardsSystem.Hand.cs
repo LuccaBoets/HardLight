@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Linq;
 using Content.Shared._Moffstation.Cards.Components;
 using Content.Shared._Moffstation.Cards.Events;
@@ -176,7 +177,16 @@ public abstract partial class SharedPlayingCardsSystem
         if (args.Handled || args.Used == args.Target)
             return;
 
-        OpenPickerUi(targetHand, args.Used, args.User);
+        var user = args.User;
+
+        HandlePlayingCardComponents(
+            args.Used,
+            targetHand,
+            usedCard => Add(targetHand, usedCard, user),
+            usedDeck => Transfer(targetHand, usedDeck, 0..1, user),
+            usedHand => Transfer(targetHand, usedHand, 0..1, user)
+        );
+
         args.Handled = true;
     }
 

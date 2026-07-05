@@ -103,7 +103,7 @@ public abstract partial class SharedPlayingCardsSystem
         // Shuffle
         if (targetStack.Comp.NumCards > 1)
         {
-            args.Verbs.Add(PlayingCardStackComponent.Verbs.Shuffle, () => Shuffle(targetStack, user));
+            args.Verbs.Add(PlayingCardStackComponent.Verbs.Shuffle, PlacementVerbPriority + 1, () => Shuffle(targetStack, user));
         }
     }
 

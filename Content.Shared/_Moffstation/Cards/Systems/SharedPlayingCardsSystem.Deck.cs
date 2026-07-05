@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Reflection.Emit;
 using Content.Shared._Moffstation.Cards.Components;
 using Content.Shared._Moffstation.Cards.Events;
 using Content.Shared._Moffstation.Cards.Prototypes;
@@ -28,16 +29,11 @@ public abstract partial class SharedPlayingCardsSystem
         SubscribeLocalEvent<PlayingCardDeckComponent, PlayingCardStackContentsChangedEvent>(DirtyVisuals);
         SubscribeLocalEvent<PlayingCardDeckComponent, ContainedPlayingCardFlippedEvent>(DirtyVisuals);
         SubscribeLocalEvent<PlayingCardDeckComponent, PlayingCardPickedEvent>(OnPlayingCardPicked);
+
         SubscribeLocalEvent<PlayingCardDeckComponent, InteractUsingEvent>(OnInteractUsing);
-        SubscribeLocalEvent<PlayingCardDeckComponent, GetVerbsEvent<InteractionVerb>>(OnGetInteractionVerbs);
+        SubscribeLocalEvent<PlayingCardDeckComponent, ActivateInWorldEvent>(OnGetInteractionVerbs);
         SubscribeLocalEvent<PlayingCardDeckComponent, GetVerbsEvent<UtilityVerb>>(OnGetUtilityVerbsStack);
         SubscribeLocalEvent<PlayingCardDeckComponent, GetVerbsEvent<AlternativeVerb>>(OnGetAlternativeVerbsDeck);
-        SubscribeLocalEvent<PlayingCardDeckComponent, InteractHandEvent>(
-            OnInteractHand,
-            // ReSharper disable once UseCollectionExpression // Whatever internal stuff is needed for this isn't whitelisted for the sandbox.
-            before:
-            new[] { typeof(SharedItemSystem) } // We need to run our logic before the generic "pick up items" logic.
-        );
     }
 
 
@@ -123,19 +119,14 @@ public abstract partial class SharedPlayingCardsSystem
         );
     }
 
-    private void OnGetInteractionVerbs(
-        Entity<PlayingCardDeckComponent> entity,
-        ref GetVerbsEvent<InteractionVerb> args
-    )
+    private void OnGetInteractionVerbs(Entity<PlayingCardDeckComponent> entity, ref ActivateInWorldEvent args)
     {
-        if (!args.CanAccess || !args.CanInteract || args.Hands == null)
+        if (args.Handled || !args.Complex)
             return;
 
-        if (_hands.GetActiveItem(args.User) == null)
-        {
-            var user = args.User;
-            args.Verbs.Add(PlayingCardDeckComponent.Verbs.DrawCard, () => TryDrawToActiveHand(entity, user));
-        }
+        TryDrawToActiveHand(entity, args.User);
+
+        args.Handled = true;
     }
 
     private void OnGetAlternativeVerbsDeck(
