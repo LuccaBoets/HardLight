@@ -40,6 +40,7 @@
     ClothingNullHarness: 4
     NullspaceLocator: 4
     GrenadeDePhase: 4
+    SecurityVendBoosterPack: 2 # HL
   contrabandInventory:
     PinkFluffyHandcuffs: 1 # pretty funny
 

@@ -18,5 +18,5 @@
     BoxFolderMedicalDoctor: 4294967295 # Frontier - infinite
     MedTekCartridge: 3 # Frontier
     PillCanisterPainkillers: 5 # Hardlight
-  # contrabandInventory: # Frontier
+    MedicalVendBoosterPack: 2 # HL
   #   FoodApple: 1 # Frontier

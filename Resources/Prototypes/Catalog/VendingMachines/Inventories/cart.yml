@@ -17,6 +17,7 @@
     EncryptionKeySecurity: 1
     EncryptionKeyService: 3
     PrinterDocFlatpack: 5
+    CommandVendBoosterPack: 2
   contrabandInventory:
     BalloonNT: 2
     LuxuryPen: 1

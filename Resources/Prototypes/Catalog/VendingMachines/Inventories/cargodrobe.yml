@@ -47,6 +47,7 @@
     ClothingHandsLOLogisWarmers: 3
     ClothingUnderSocksLOLogis: 3
     ClothingUniformLOLogisThong: 3
+    CargoVendBoosterPack: 2
   contrabandInventory:
     ClothingHeadHatCargosoftFlipped: 1 # Frontier
     ClothingNeckCloakHerald: 1 # Frontier

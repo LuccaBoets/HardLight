@@ -57,5 +57,6 @@
     ClothingUnderSocksMantisEpi: 3
     ClothingUniformMantisEpiThong: 3
     # End Frontier
+    ScienceVendBoosterPack: 2 # HL
   contrabandInventory:
     ToyFigurineResearchDirector: 1
