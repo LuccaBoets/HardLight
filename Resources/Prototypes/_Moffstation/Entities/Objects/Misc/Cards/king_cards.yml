@@ -1,0 +1,59 @@
+- type: entity
+  parent: BasePlayingCardDeckBox
+  id: KingCardDeckBox
+  name: box of major arcana king cards
+  description: A small carton containing a set of the Major Arcana cards from the cartomantic king deck.
+  suffix: King
+  components:
+  - type: Sprite
+    sprite: _Moffstation/Objects/Misc/Cards/card_king.rsi
+  - type: ContainerFill
+    containers:
+      storagebase:
+      - KingCardDeck
+
+- type: entity
+  parent: BasePlayingCardDeck
+  id: KingCardDeck
+  name: deck of cards
+  suffix: King
+  components:
+  - type: PlayingCardDeck
+    prototype: StandardKingCards
+
+# King Deck Definition
+- type: playingCardDeck
+  id: StandardKingCards
+  sprite: _Moffstation/Objects/Misc/Cards/card_king.rsi
+  commonReverseLayers:
+  - state: singlecard_down
+  cardNameLoc: king-card-name
+  cardDescLoc: king-card-desc
+  cardReverseNameLoc: king-card-name-reverse
+  cardReverseDescLoc: king-card-desc-reverse
+  suitLoc: king-card      # suitLoc is required even if you don't use it.
+  cardValueLoc: king-card-value-name
+  commonObverseLayers:
+  - state: background_gold
+  defaultObverseLayerState: "{card}"
+  cards:
+  - id: "the_king"
+  - id: "num1"
+  - id: "num2"
+  - id: "num3"
+  - id: "num4"
+  - id: "num5"
+  - id: "num6"
+  - id: "num7"
+  - id: "num8"
+  - id: "num9"
+  - id: "num10"
+  - id: "num11"
+  - id: "num12"
+  - id: "num13"
+  - id: "num14"
+  - id: "num15"
+  - id: "num16"
+  - id: "num17"
+  - id: "num18"
+  - id: "num19"

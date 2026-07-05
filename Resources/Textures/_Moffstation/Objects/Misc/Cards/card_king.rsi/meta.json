@@ -1,0 +1,86 @@
+{
+    "version": 1,
+    "copyright": "Cards Sprites were originally from Paradise Station (https://github.com/ParadiseSS13/Paradise) and modified by VictorJob and Huaqas (GitHub). Boxes are from VictorJob.",
+    "license": "CC-BY-SA-3.0",
+    "size": {
+        "x": 32,
+        "y": 32
+    },
+    "states": [
+        {
+            "name": "empty"
+        },
+        {
+            "name": "background_gold"
+        },
+        {
+            "name": "num1"
+        },
+        {
+            "name": "num2"
+        },
+        {
+            "name": "num3"
+        },
+        {
+            "name": "num4"
+        },
+        {
+            "name": "num5"
+        },
+        {
+            "name": "num6"
+        },
+        {
+            "name": "num7"
+        },
+        {
+            "name": "num8"
+        },
+        {
+            "name": "num9"
+        },
+        {
+            "name": "num10"
+        },
+        {
+            "name": "num11"
+        },
+        {
+            "name": "num12"
+        },
+        {
+            "name": "num13"
+        },
+        {
+            "name": "num14"
+        },
+        {
+            "name": "num15"
+        },
+        {
+            "name": "num16"
+        },
+        {
+            "name": "num17"
+        },
+        {
+            "name": "num18"
+        },
+        {
+            "name": "num19"
+        },
+        {
+            "name": "the_king"
+        },
+        {
+            "name": "singlecard_down"
+        },
+        {
+            "name": "box"
+        },
+        {
+            "name": "box_open"
+        }
+    ]
+}
