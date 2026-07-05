@@ -303,3 +303,544 @@
       offset: 0, -0.25
     - state: a
       offset: -0.21875, 0
+
+# Role based cards
+
+# Security
+
+- type: entity
+  id: TripleTriad1161
+  parent: TripleTriadBase
+  name: C - Security Officer
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Security Officer is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: one
+      offset: 0.21875, 0
+    - state: six
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad1233
+  parent: TripleTriadBase
+  name: C - Warden
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Warden is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: two
+      offset: 0.21875, 0
+    - state: three
+      offset: 0, -0.25
+    - state: three
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad6442
+  parent: TripleTriadBase
+  name: R - Head of Security
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Head of Security is captured within the crystal in detail.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: six
+      offset: 0, 0.25
+    - state: four
+      offset: 0.21875, 0
+    - state: four
+      offset: 0, -0.25
+    - state: two
+      offset: -0.21875, 0
+
+# Medical
+
+- type: entity
+  id: TripleTriad2223
+  parent: TripleTriadBase
+  name: C - Medical Doctor
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Medical Doctor is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: two
+      offset: 0, 0.25
+    - state: two
+      offset: 0.21875, 0
+    - state: two
+      offset: 0, -0.25
+    - state: three
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad1324
+  parent: TripleTriadBase
+  name: C - Chemist
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Chemist is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: three
+      offset: 0.21875, 0
+    - state: two
+      offset: 0, -0.25
+    - state: four
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad1256
+  parent: TripleTriadBase
+  name: R - Chief Medical Officer
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Chief Medical Officer is captured within the crystal in detail.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: two
+      offset: 0.21875, 0
+    - state: five
+      offset: 0, -0.25
+    - state: six
+      offset: -0.21875, 0
+
+# Engineering
+
+- type: entity
+  id: TripleTriad4141
+  parent: TripleTriadBase
+  name: C - Station Engineer
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Station Engineer is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: four
+      offset: 0, 0.25
+    - state: one
+      offset: 0.21875, 0
+    - state: four
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad4411
+  parent: TripleTriadBase
+  name: C - Atmospheric Technician
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Atmospheric Technician is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: four
+      offset: 0, 0.25
+    - state: four
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad5612
+  parent: TripleTriadBase
+  name: R - Chief Engineer
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Chief Engineer is captured within the crystal in detail.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: five
+      offset: 0, 0.25
+    - state: six
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: two
+      offset: -0.21875, 0
+
+# Science
+
+- type: entity
+  id: TripleTriad1441
+  parent: TripleTriadBase
+  name: C - Scientist
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Scientist is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: four
+      offset: 0.21875, 0
+    - state: four
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad2611
+  parent: TripleTriadBase
+  name: C - Roboticist
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Roboticist is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: two
+      offset: 0, 0.25
+    - state: six
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad6215
+  parent: TripleTriadBase
+  name: R - Research Director
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Research Director is captured within the crystal in detail.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: six
+      offset: 0, 0.25
+    - state: two
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: five
+      offset: -0.21875, 0
+
+# Cargo
+
+- type: entity
+  id: TripleTriad1361
+  parent: TripleTriadBase
+  name: C - Cargo Technician
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Cargo Technician is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: three
+      offset: 0.21875, 0
+    - state: six
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad5123
+  parent: TripleTriadBase
+  name: C - Salvage Specialist
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Salvage Specialist is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: five
+      offset: 0, 0.25
+    - state: one
+      offset: 0.21875, 0
+    - state: two
+      offset: 0, -0.25
+    - state: three
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad6611
+  parent: TripleTriadBase
+  name: R - Quartermaster
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Quartermaster is captured within the crystal in detail.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: six
+      offset: 0, 0.25
+    - state: six
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+# Service
+
+- type: entity
+  id: TripleTriad1343
+  parent: TripleTriadBase
+  name: C - Chef
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Chef is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: three
+      offset: 0.21875, 0
+    - state: four
+      offset: 0, -0.25
+    - state: three
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad1135
+  parent: TripleTriadBase
+  name: C - Bartender
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Bartender is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: one
+      offset: 0.21875, 0
+    - state: three
+      offset: 0, -0.25
+    - state: five
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad1166
+  parent: TripleTriadBase
+  name: R - Clown
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Clown is captured within the crystal in detail.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: one
+      offset: 0.21875, 0
+    - state: six
+      offset: 0, -0.25
+    - state: six
+      offset: -0.21875, 0
+
+# Command
+
+- type: entity
+  id: TripleTriad3422
+  parent: TripleTriadBase
+  name: C - Head of Personnel
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Head of Personnel is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: three
+      offset: 0, 0.25
+    - state: four
+      offset: 0.21875, 0
+    - state: two
+      offset: 0, -0.25
+    - state: two
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad6121
+  parent: TripleTriadBase
+  name: C - Nanotrasen Representative
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Nanotrasen Representative is captured within the glass.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: six
+      offset: 0, 0.25
+    - state: one
+      offset: 0.21875, 0
+    - state: two
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: TripleTriad5515
+  parent: TripleTriadBase
+  name: R - Captain
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Captain is captured within the crystal in detail.
+  components:
+  - type: Item
+    heldPrefix: tripleTriad
+  - type: Sprite
+    scale: 0.6, 0.6
+    sprite: _HL/Objects/Fun/triple_triad.rsi
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: five
+      offset: 0, 0.25
+    - state: five
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: five
+      offset: -0.21875, 0

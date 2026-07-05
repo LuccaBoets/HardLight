@@ -14,6 +14,27 @@
             "name": "boosters_pack"
         },
         {
+            "name": "cargo_boosters_pack"
+        },
+        {
+            "name": "engineer_boosters_pack"
+        },
+        {
+            "name": "medical_boosters_pack"
+        },
+        {
+            "name": "science_boosters_pack"
+        },
+        {
+            "name": "security_boosters_pack"
+        },
+        {
+            "name": "service_boosters_pack"
+        },
+        {
+            "name": "command_boosters_pack"
+        },
+        {
             "name": "normal_background_blue"
         },
         {

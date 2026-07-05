@@ -29,7 +29,6 @@
       - id: TripleTriad1414
       - id: TripleTriad2561
       - id: TripleTriad5545
-      #   prob: 0.9
     sound:
       path: /Audio/Items/jumpsuit_equip.ogg
 
@@ -45,9 +44,181 @@
   - type: SpawnItemsOnUse
     items:
       - id: TripleTriad2322
+        prob: 0.80
+        orGroup: Card
       - id: TripleTriad3143
+        prob: 0.80
+        orGroup: Card
       - id: TripleTriad4434
-      #   prob: 0.9
+        prob: 0.80
+        orGroup: Card
     sound:
       path: /Audio/Items/jumpsuit_equip.ogg
 
+# Medical
+- type: entity
+  parent: BaseBoosterPack
+  id: MedicalVendBoosterPack
+  name: Medical Booster Pack
+  components:
+  - type: StaticPrice
+    price: 500
+  - type: Sprite
+    state: medical_boosters_pack
+  - type: SpawnItemsOnUse
+    items:
+      - id: TripleTriad2223
+        prob: 0.80
+        orGroup: Card
+      - id: TripleTriad1324
+        prob: 0.80
+        orGroup: Card
+      - id: TripleTriad1256
+        prob: 0.40
+        orGroup: Card
+    sound:
+      path: /Audio/Items/jumpsuit_equip.ogg
+
+# Security
+- type: entity
+  parent: BaseBoosterPack
+  id: SecurityVendBoosterPack
+  name: Security Booster Pack
+  components:
+  - type: StaticPrice
+    price: 500
+  - type: Sprite
+    state: security_boosters_pack
+  - type: SpawnItemsOnUse
+    items:
+      - id: TripleTriad1161
+        prob: 0.80
+        orGroup: Card
+      - id: TripleTriad1233
+        prob: 0.80
+        orGroup: Card
+      - id: TripleTriad2561
+        prob: 0.40
+        orGroup: Card
+    sound:
+      path: /Audio/Items/jumpsuit_equip.ogg
+
+# Engineer
+- type: entity
+  parent: BaseBoosterPack
+  id: EngineerVendBoosterPack
+  name: Engineer Booster Pack
+  components:
+  - type: StaticPrice
+    price: 500
+  - type: Sprite
+    state: engineer_boosters_pack
+  - type: SpawnItemsOnUse
+    items:
+      - id: TripleTriad4141
+        prob: 0.80
+        orGroup: Card
+      - id: TripleTriad4411
+        prob: 0.80
+        orGroup: Card
+      - id: TripleTriad5612
+        prob: 0.40
+        orGroup: Card
+    sound:
+      path: /Audio/Items/jumpsuit_equip.ogg
+
+# Science
+- type: entity
+  parent: BaseBoosterPack
+  id: ScienceVendBoosterPack
+  name: Science Booster Pack
+  components:
+  - type: StaticPrice
+    price: 500
+  - type: Sprite
+    state: science_boosters_pack
+  - type: SpawnItemsOnUse
+    items:
+      - id: TripleTriad1441
+        prob: 0.80
+        orGroup: Card
+      - id: TripleTriad2611
+        prob: 0.80
+        orGroup: Card
+      - id: TripleTriad6215
+        prob: 0.40
+        orGroup: Card
+    sound:
+      path: /Audio/Items/jumpsuit_equip.ogg
+
+# Cargo
+- type: entity
+  parent: BaseBoosterPack
+  id: CargoVendBoosterPack
+  name: Cargo Booster Pack
+  components:
+  - type: StaticPrice
+    price: 500
+  - type: Sprite
+    state: cargo_boosters_pack
+  - type: SpawnItemsOnUse
+    items:
+      - id: TripleTriad1361
+        prob: 0.80
+        orGroup: Card
+      - id: TripleTriad5123
+        prob: 0.80
+        orGroup: Card
+      - id: TripleTriad6611
+        prob: 0.40
+        orGroup: Card
+    sound:
+      path: /Audio/Items/jumpsuit_equip.ogg
+
+# Service
+- type: entity
+  parent: BaseBoosterPack
+  id: ServiceVendBoosterPack
+  name: Service Booster Pack
+  components:
+  - type: StaticPrice
+    price: 500
+  - type: Sprite
+    state: service_boosters_pack
+  - type: SpawnItemsOnUse
+    items:
+      - id: TripleTriad1343
+        prob: 0.80
+        orGroup: Card
+      - id: TripleTriad1135
+        prob: 0.80
+        orGroup: Card
+      - id: TripleTriad1166
+        prob: 0.40
+        orGroup: Card
+    sound:
+      path: /Audio/Items/jumpsuit_equip.ogg
+
+# Command
+- type: entity
+  parent: BaseBoosterPack
+  id: CommandVendBoosterPack
+  name: Command Booster Pack
+  components:
+  - type: StaticPrice
+    price: 500
+  - type: Sprite
+    state: command_boosters_pack
+  - type: SpawnItemsOnUse
+    items:
+      - id: TripleTriad3422
+        prob: 0.80
+        orGroup: Card
+      - id: TripleTriad6121
+        prob: 0.80
+        orGroup: Card
+      - id: TripleTriad5515
+        prob: 0.40
+        orGroup: Card
+    sound:
+      path: /Audio/Items/jumpsuit_equip.ogg
