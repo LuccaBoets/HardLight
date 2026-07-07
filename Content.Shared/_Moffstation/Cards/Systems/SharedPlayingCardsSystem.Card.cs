@@ -317,7 +317,7 @@ public abstract partial class SharedPlayingCardsSystem
         var locArgs = idCardAndSuit.ToArray();
 
         comp.ObverseName = Loc.GetString(data.Card.NameLoc ?? deck.CardNameLoc, locArgs);
-        comp.Description = Loc.GetString(deck.CardDescLoc, locArgs);
+        comp.Description = Loc.GetString(data.Card.CardDescLoc ?? deck.CardDescLoc, locArgs);
         comp.ReverseName = Loc.GetString(deck.CardReverseNameLoc, locArgs);
         comp.ReverseDescription = Loc.GetString(deck.CardReverseDescLoc, locArgs);
 

@@ -131,6 +131,7 @@ public sealed partial class PlayingCardInDeckUnspawnedData : PlayingCardInDeck
         {
             Id = card.Id,
             NameLoc = card.NameLoc,
+            CardDescLoc = card.CardDescLoc,
             ObverseLayers = card.ObverseLayers,
             UseDeckLayers = card.UseDeckLayers,
             UseSuitLayers = card.UseSuitLayers,

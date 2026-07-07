@@ -1,4 +1,4 @@
-﻿using Content.Shared._Moffstation.Cards.Components;
+using Content.Shared._Moffstation.Cards.Components;
 using Content.Shared._Moffstation.Extensions;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
@@ -115,6 +115,10 @@ public sealed partial class PlayingCardDeckPrototypeElementCard : PlayingCardDec
     /// A card-specific override for <see cref="PlayingCardDeckPrototype.CardNameLoc"/>.
     [DataField]
     public LocId? NameLoc;
+
+    /// specific override for <see cref = "PlayingCardDeckPrototype.CardDescLoc" />.
+    [DataField]
+    public LocId? CardDescLoc;
 
     /// Card-specific override for <see cref="PlayingCardDeckPrototype.DefaultObverseLayerState"/>, this allows for more
     /// complicated sprites on specific cards.
