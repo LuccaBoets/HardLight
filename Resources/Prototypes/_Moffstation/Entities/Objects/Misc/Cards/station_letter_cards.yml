@@ -1,0 +1,57 @@
+- type: entity
+  parent: BasePlayingCardDeckBox
+  id: StationLetterCardDeckBox
+  name: box of station letter cards
+  description: A small carton containing a set of cards for playing Station Letter, a game of courting favor with the Captain.
+  suffix: StationLetter
+  components:
+  - type: Sprite
+    sprite: _Moffstation/Objects/Misc/Cards/card_stationletter.rsi
+  - type: ContainerFill
+    containers:
+      storagebase:
+      - StationLetterCardDeck
+
+- type: entity
+  parent: BasePlayingCardDeck
+  id: StationLetterCardDeck
+  name: deck of cards
+  suffix: StationLetter
+  components:
+  - type: PlayingCardDeck
+    prototype: StandardStationLetterCards
+
+# Station Letter Deck Definition
+- type: playingCardDeck
+  id: StandardStationLetterCards
+  sprite: _Moffstation/Objects/Misc/Cards/card_stationletter.rsi
+  commonReverseLayers:
+  - state: singlecard_down
+  cardNameLoc: stationletter-card-name
+  cardDescLoc: stationletter-card-desc
+  cardReverseNameLoc: stationletter-card-name-reverse
+  cardReverseDescLoc: stationletter-card-desc-reverse
+  suitLoc: stationletter-card      # suitLoc is required even if you don't use it.
+  cardValueLoc: stationletter-card-value-name
+  commonObverseLayers:
+  - state: background
+  defaultObverseLayerState: "{card}"
+  cards:
+  - id: "detective"
+    count: 1
+  - id: "warden"
+    count: 5
+  - id: "chaplain"
+    count: 2
+  - id: "head_of_security"
+    count: 2
+  - id: "medical_doctor"
+    count: 2
+  - id: "clown"
+    count: 2
+  - id: "syndicate"
+    count: 1
+  - id: "head_of_personnel"
+    count: 1
+  - id: "captain"
+    count: 1
