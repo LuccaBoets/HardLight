@@ -1,0 +1,332 @@
+﻿# Black cards
+- type: entity
+  parent: BasePlayingCardDeckBox
+  id: CardsAgainstNanotrassenCardDeckBox
+  name: box of cards
+  description: A small carton containing a set of cards.
+  suffix: CardsAgainstNanotrassen
+  components:
+  - type: Sprite
+    sprite: _Moffstation/Objects/Misc/Cards/card_against_nanotrassen.rsi
+  - type: ContainerFill
+    containers:
+      storagebase:
+      - CardsAgainstNanotrassenCardDeck
+
+- type: entity
+  parent: BasePlayingCardDeck
+  id: CardsAgainstNanotrassenCardDeck
+  name: deck of cards against nanotrassen
+  suffix: CardsAgainstNanotrassen
+  components:
+  - type: PlayingCardDeck
+    prototype: StandardCardsAgainstNanotrassenCards
+
+# deck definitions
+- type: playingCardDeck
+  id: StandardCardsAgainstNanotrassenCards
+  sprite: _Moffstation/Objects/Misc/Cards/card_against_nanotrassen.rsi
+  commonObverseLayers:
+  - state: background
+  commonReverseLayers:
+  - state: singlecard_down
+  cardNameLoc: cards-against-nanotrassen-name
+  cardDescLoc: cards-against-nanotrassen-desc
+  cardReverseNameLoc: cards-against-nanotrassen-name-reverse
+  cardReverseDescLoc: cards-against-nanotrassen-desc-reverse
+  suitLoc: cards-against-nanotrassen-suit-name # suitLoc is required even if you don't use it.
+  cardValueLoc: cards-against-nanotrassen-value-name
+  cards:
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-1
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-2
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-3
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-4
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-5
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-6
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-7
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-8
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-9
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-10
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-11
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-12
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-13
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-14
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-15
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-16
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-17
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-18
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-19
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-20
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-21
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-22
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-23
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-24
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-25
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-26
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-27
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-28
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-29
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-30
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-31
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-32
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-33
+    - id: "prompt"
+      cardDescLoc: cards-against-nanotrassen-prompt-34
+
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-1
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-2
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-3
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-4
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-5
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-6
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-7
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-8
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-9
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-10
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-11
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-12
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-13
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-14
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-15
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-16
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-17
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-18
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-19
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-20
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-21
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-22
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-23
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-24
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-25
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-26
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-27
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-28
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-29
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-30
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-31
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-32
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-33
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-34
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-35
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-36
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-37
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-38
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-39
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-40
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-41
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-42
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-43
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-44
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-45
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-46
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-47
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-48
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-49
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-50
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-51
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-52
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-53
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-54
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-55
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-56
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-57
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-58
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-59
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-60
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-61
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-62
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-63
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-64
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-65
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-66
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-67
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-68
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-69
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-70
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-71
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-72
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-73
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-74
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-75
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-76
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-77
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-78
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-79
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-80
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-81
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-82
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-83
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-84
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-85
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-86
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-87
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-88
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-89
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-90
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-91
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-92
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-93
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-94
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-95
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-96
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-97
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-98
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-99
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-100
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-101
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-102
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-103
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-104
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-105
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-106
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-107
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-108
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-109
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-110
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-111
+    - id: "response"
+      cardDescLoc: cards-against-nanotrassen-response-112
