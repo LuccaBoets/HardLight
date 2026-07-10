@@ -1,17 +1,17 @@
 - type: entity
   parent: BaseItemHarmless
-  id: TripleTriadBase
+  id: RatvarBase
   abstract: true
   components:
     - type: Sprite
       scale: 0.6, 0.6
-      sprite: _HL/Objects/Fun/triple_triad.rsi
+      sprite: _HL/Objects/Fun/ratvar.rsi
     - type: Item
       size: Small
-      heldPrefix: tripleTriad
+      heldPrefix: ratvar
     - type: Tag
       tags:
-      - TripleTriadCard
+      - RatvarCard
     - type: ItemToggle
       onAltUse: true
       predictable: false
@@ -30,8 +30,8 @@
 
 - type: entity
   abstract: true
-  id: TripleTriadCommon
-  parent: TripleTriadBase
+  id: RatvarCommon
+  parent: RatvarBase
   components:
   - type: Sprite
     layers:
@@ -41,8 +41,8 @@
       map: ["blue"]
 
 - type: entity
-  id: TripleTriad3123
-  parent: TripleTriadCommon
+  id: Ratvar3123
+  parent: RatvarCommon
   name: C - Space Carp
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Space Carp is captured within the glass.
   components:
@@ -62,8 +62,8 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad3222
-  parent: TripleTriadCommon
+  id: Ratvar3222
+  parent: RatvarCommon
   name: C - Killer Tomato
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Killer Tomato is captured within the glass.
   components:
@@ -83,8 +83,8 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad1414
-  parent: TripleTriadCommon
+  id: Ratvar1414
+  parent: RatvarCommon
   name: C - Mothroach
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Mothroach is captured within the glass.
   components:
@@ -104,8 +104,8 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad2322
-  parent: TripleTriadCommon
+  id: Ratvar2322
+  parent: RatvarCommon
   name: C - Librarian
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Librarian is captured within the glass.
   components:
@@ -125,8 +125,8 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad3143
-  parent: TripleTriadCommon
+  id: Ratvar3143
+  parent: RatvarCommon
   name: C - Adventure Books
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Adventure Books is captured within the glass.
   components:
@@ -149,8 +149,8 @@
 
 - type: entity
   abstract: true
-  id: TripleTriadRare
-  parent: TripleTriadBase
+  id: RatvarRare
+  parent: RatvarBase
   components:
   - type: Sprite
     layers:
@@ -160,8 +160,8 @@
       map: ["blue"]
 
 - type: entity
-  id: TripleTriad2561
-  parent: TripleTriadRare
+  id: Ratvar2561
+  parent: RatvarRare
   name: R - Brass Meteor
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Brass Meteor is captured within the crystal in detail.
   components:
@@ -181,8 +181,8 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriadA535
-  parent: TripleTriadRare
+  id: RatvarA535
+  parent: RatvarRare
   name: R - Maid
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Maid is captured within the crystal in detail.
   components:
@@ -202,8 +202,8 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad4434
-  parent: TripleTriadRare
+  id: Ratvar4434
+  parent: RatvarRare
   name: R - Nook-CIV
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Nook-CIV is captured within the crystal in detail.
   components:
@@ -226,8 +226,8 @@
 
 - type: entity
   abstract: true
-  id: TripleTriadUltraRare
-  parent: TripleTriadBase
+  id: RatvarUltraRare
+  parent: RatvarBase
   components:
   - type: Sprite
     layers:
@@ -237,10 +237,10 @@
       map: ["blue"]
 
 - type: entity
-  id: TripleTriad5545
-  parent: TripleTriadUltraRare
-  name: UR - The Concordia
-  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of The Concordia is captured within the crystal in stunning detail, framed in gold leaf.
+  id: Ratvar5545
+  parent: RatvarUltraRare
+  name: UR - Crescent Capital Ship
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Crescent Capital Ship is captured within the crystal in stunning detail, framed in gold leaf.
   components:
   - type: Sprite
     layers:
@@ -260,8 +260,8 @@
 # Ultra Rare (Loot Booster Packs)
 
 - type: entity
-  id: TripleTriad6731
-  parent: TripleTriadUltraRare
+  id: Ratvar6731
+  parent: RatvarUltraRare
   name: UR - Anomalous Geode
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Anomalous Geode is captured within the crystal in stunning detail, framed in gold leaf.
   components:
@@ -281,8 +281,8 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriadAAAA
-  parent: TripleTriadUltraRare
+  id: RatvarAAAA
+  parent: RatvarUltraRare
   name: UR - Nuke
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Nuke is captured within the crystal in stunning detail, framed in gold leaf.
   components:
@@ -306,8 +306,8 @@
 # Security
 
 - type: entity
-  id: TripleTriad1161
-  parent: TripleTriadCommon
+  id: Ratvar1161
+  parent: RatvarCommon
   name: C - Security Officer
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Security Officer is captured within the glass.
   components:
@@ -327,10 +327,10 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad1233
-  parent: TripleTriadCommon
-  name: C - Warden
-  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Warden is captured within the glass.
+  id: Ratvar1233
+  parent: RatvarCommon
+  name: C - Stun Baton
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Stun Baton is captured within the glass.
   components:
   - type: Sprite
     layers:
@@ -348,8 +348,8 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad6442
-  parent: TripleTriadRare
+  id: Ratvar6442
+  parent: RatvarRare
   name: R - Head of Security
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Head of Security is captured within the crystal in detail.
   components:
@@ -371,8 +371,8 @@
 # Medical
 
 - type: entity
-  id: TripleTriad2223
-  parent: TripleTriadCommon
+  id: Ratvar2223
+  parent: RatvarCommon
   name: C - Medical Doctor
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Medical Doctor is captured within the glass.
   components:
@@ -392,10 +392,10 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad1324
-  parent: TripleTriadCommon
-  name: C - Chemist
-  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Chemist is captured within the glass.
+  id: Ratvar1324
+  parent: RatvarCommon
+  name: C - Bruise Pack
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Bruise Pack is captured within the glass.
   components:
   - type: Sprite
     layers:
@@ -413,8 +413,8 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad1256
-  parent: TripleTriadRare
+  id: Ratvar1256
+  parent: RatvarRare
   name: R - Chief Medical Officer
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Chief Medical Officer is captured within the crystal in detail.
   components:
@@ -436,8 +436,8 @@
 # Engineering
 
 - type: entity
-  id: TripleTriad4141
-  parent: TripleTriadCommon
+  id: Ratvar4141
+  parent: RatvarCommon
   name: C - Station Engineer
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Station Engineer is captured within the glass.
   components:
@@ -457,10 +457,10 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad4411
-  parent: TripleTriadCommon
-  name: C - Atmospheric Technician
-  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Atmospheric Technician is captured within the glass.
+  id: Ratvar4411
+  parent: RatvarCommon
+  name: C - RCD
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of RCD is captured within the glass.
   components:
   - type: Sprite
     layers:
@@ -478,8 +478,8 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad5612
-  parent: TripleTriadRare
+  id: Ratvar5612
+  parent: RatvarRare
   name: R - Chief Engineer
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Chief Engineer is captured within the crystal in detail.
   components:
@@ -501,8 +501,8 @@
 # Science
 
 - type: entity
-  id: TripleTriad1441
-  parent: TripleTriadCommon
+  id: Ratvar1441
+  parent: RatvarCommon
   name: C - Scientist
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Scientist is captured within the glass.
   components:
@@ -522,10 +522,10 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad2611
-  parent: TripleTriadCommon
-  name: C - Roboticist
-  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Roboticist is captured within the glass.
+  id: Ratvar2611
+  parent: RatvarCommon
+  name: C - Artifact
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Artifact is captured within the glass.
   components:
   - type: Sprite
     layers:
@@ -543,8 +543,8 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad6215
-  parent: TripleTriadRare
+  id: Ratvar6215
+  parent: RatvarRare
   name: R - Research Director
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Research Director is captured within the crystal in detail.
   components:
@@ -566,8 +566,8 @@
 # Cargo
 
 - type: entity
-  id: TripleTriad1361
-  parent: TripleTriadCommon
+  id: Ratvar1361
+  parent: RatvarCommon
   name: C - Cargo Technician
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Cargo Technician is captured within the glass.
   components:
@@ -587,10 +587,10 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad5123
-  parent: TripleTriadCommon
-  name: C - Salvage Specialist
-  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Salvage Specialist is captured within the glass.
+  id: Ratvar5123
+  parent: RatvarCommon
+  name: C - Wrench
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Wrench is captured within the glass.
   components:
   - type: Sprite
     layers:
@@ -608,8 +608,8 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad6611
-  parent: TripleTriadRare
+  id: Ratvar6611
+  parent: RatvarRare
   name: R - Quartermaster
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Quartermaster is captured within the crystal in detail.
   components:
@@ -631,8 +631,8 @@
 # Service
 
 - type: entity
-  id: TripleTriad1343
-  parent: TripleTriadCommon
+  id: Ratvar1343
+  parent: RatvarCommon
   name: C - Chef
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Chef is captured within the glass.
   components:
@@ -652,8 +652,8 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad1135
-  parent: TripleTriadCommon
+  id: Ratvar1135
+  parent: RatvarCommon
   name: C - Bartender
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Bartender is captured within the glass.
   components:
@@ -673,10 +673,10 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad1166
-  parent: TripleTriadRare
-  name: R - Clown
-  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Clown is captured within the crystal in detail.
+  id: Ratvar1166
+  parent: RatvarRare
+  name: R - Monkey
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Monkey is captured within the crystal in detail.
   components:
   - type: Sprite
     layers:
@@ -696,8 +696,8 @@
 # Command
 
 - type: entity
-  id: TripleTriad3422
-  parent: TripleTriadCommon
+  id: Ratvar3422
+  parent: RatvarCommon
   name: C - Head of Personnel
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Head of Personnel is captured within the glass.
   components:
@@ -717,8 +717,8 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad6121
-  parent: TripleTriadCommon
+  id: Ratvar6121
+  parent: RatvarCommon
   name: C - Nanotrasen Representative
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Nanotrasen Representative is captured within the glass.
   components:
@@ -738,8 +738,8 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: TripleTriad5515
-  parent: TripleTriadRare
+  id: Ratvar5515
+  parent: RatvarRare
   name: R - Captain
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Captain is captured within the crystal in detail.
   components:

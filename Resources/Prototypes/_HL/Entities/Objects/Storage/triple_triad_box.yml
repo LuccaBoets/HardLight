@@ -1,11 +1,11 @@
 - type: entity
-  name: Triple Triad Bag
-  id: TripleTriadBag
+  name: Ratvar Bag
+  id: RatvarBag
   parent: NFBaseClothingBeltStorageBag # Frontier: BaseStorageItem<NFBaseClothingBeltStorageBag
   description: 
   components:
   - type: Sprite
-    sprite: _HL/Objects/Fun/triple_triad.rsi
+    sprite: _HL/Objects/Fun/ratvar.rsi
     state: deck_storage_box
   - type: Item
     storedRotation: -90
@@ -22,5 +22,5 @@
     areaInsert: true
     whitelist:
       tags:
-      - TripleTriadCard
+      - RatvarCard
   - type: Dumpable
