@@ -1,6 +1,6 @@
-kingsgame-card-name-reverse = king's game card
-kingsgame-card-desc-reverse = A plain wooden card, worn smooth from being shuffled and drawn again and again...
-kingsgame-card-value-name = { $card ->
+king-card-name-reverse = king's game card
+king-card-desc-reverse = A plain golden card, shining into the light
+king-card-value-name = { $card ->
     [the_king] King
     [num1] 1
     [num2] 2
@@ -23,8 +23,8 @@ kingsgame-card-value-name = { $card ->
     [num19] 19
    *[other] {$card}
 }
-kingsgame-card-name = {$card}
-kingsgame-card-desc = { $id ->
+king-card-name = {$card}
+king-card-desc = { $id ->
     [the_king] A crudely drawn crown marks this card, granting its holder the right to issue a single command to any number they choose...
     [num1] The number 1 is carved into this card...
     [num2] The number 2 is carved into this card...
@@ -47,4 +47,4 @@ kingsgame-card-desc = { $id ->
     [num19] The number 19 is carved into this card...
    *[invalid] !!invalid!!
 }
-kingsgame-card = King's Game Card
+king-card = King's Game Card

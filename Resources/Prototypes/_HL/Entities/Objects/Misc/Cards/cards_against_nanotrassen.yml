@@ -7,7 +7,7 @@
   suffix: CardsAgainstNanotrassen
   components:
   - type: Sprite
-    sprite: _Moffstation/Objects/Misc/Cards/card_against_nanotrassen.rsi
+    sprite: _HL/Objects/Misc/Cards/card_against_nanotrassen.rsi
   - type: ContainerFill
     containers:
       storagebase:
@@ -25,7 +25,7 @@
 # deck definitions
 - type: playingCardDeck
   id: StandardCardsAgainstNanotrassenCards
-  sprite: _Moffstation/Objects/Misc/Cards/card_against_nanotrassen.rsi
+  sprite: _HL/Objects/Misc/Cards/card_against_nanotrassen.rsi
   commonObverseLayers:
   - state: background
   commonReverseLayers:

@@ -32,10 +32,10 @@
             "name": "medical_doctor"
         },
         {
-            "name": "warden"
+            "name": "QM"
         },
         {
-            "name": "head_of_security"
+            "name": "security"
         },
         {
             "name": "syndicate"

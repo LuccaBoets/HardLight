@@ -20,6 +20,9 @@
     NunoCardDeckBox: 2
     TarotCardDeckBox: 2
     GoFishCardDeckBox: 2
+    StationLetterCardDeckBox: 2
+    CardsAgainstNanotrassenCardDeckBox: 2
+    KingCardDeckBox: 2
   contrabandInventory:
     Basketball: 1
     # FoodSnackBoritos: 3 # Frontier

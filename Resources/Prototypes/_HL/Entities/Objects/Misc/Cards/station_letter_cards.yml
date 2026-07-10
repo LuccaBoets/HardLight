@@ -6,7 +6,7 @@
   suffix: StationLetter
   components:
   - type: Sprite
-    sprite: _Moffstation/Objects/Misc/Cards/card_stationletter.rsi
+    sprite: _HL/Objects/Misc/Cards/card_stationletter.rsi
   - type: ContainerFill
     containers:
       storagebase:
@@ -24,7 +24,7 @@
 # Station Letter Deck Definition
 - type: playingCardDeck
   id: StandardStationLetterCards
-  sprite: _Moffstation/Objects/Misc/Cards/card_stationletter.rsi
+  sprite: _HL/Objects/Misc/Cards/card_stationletter.rsi
   commonReverseLayers:
   - state: singlecard_down
   cardNameLoc: stationletter-card-name
@@ -37,21 +37,21 @@
   - state: background
   defaultObverseLayerState: "{card}"
   cards:
-  - id: "detective"
-    count: 1
-  - id: "warden"
+  - id: "syndicate" # 0
+    count: 2
+  - id: "detective" # 1
     count: 5
-  - id: "chaplain"
+  - id: "chaplain" # 2
     count: 2
-  - id: "head_of_security"
+  - id: "security" # 3
     count: 2
-  - id: "medical_doctor"
+  - id: "medical_doctor" # 4
     count: 2
-  - id: "clown"
+  - id: "clown" # 5
     count: 2
-  - id: "syndicate"
+  - id: "QM" # 6
     count: 1
-  - id: "head_of_personnel"
+  - id: "head_of_personnel" # 7
     count: 1
-  - id: "captain"
+  - id: "captain" # 8
     count: 1
