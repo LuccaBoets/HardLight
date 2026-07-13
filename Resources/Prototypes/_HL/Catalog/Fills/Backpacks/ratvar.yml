@@ -11,8 +11,26 @@
   - type: Sprite
     sprite: _HL/Objects/Fun/ratvar.rsi
     state: boosters_pack
+  - type: StaticPrice
+    price: 300
   - type: Item
-    size: Normal
+    size: Normal   
+
+- type: entity
+  id: BoosterPackTrash
+  categories: [ HideSpawnMenu ]
+  parent: BaseItem
+  name: wripped booster pack
+  description: Ceremoniously ripped apart and tossed on the floor.
+  components:
+  - type: Sprite
+    sprite: _HL/Objects/Fun/ratvar.rsi
+    layers:
+      - state: booster_pack_trash
+  - type: Tag
+    tags:
+    - Trash
+  - type: SpaceGarbage
 
 ## Starter Pack
 - type: entity
@@ -21,9 +39,10 @@
   name: Starter Pack
   components:
   - type: StaticPrice
-    price: 200
+    price: 250
   - type: SpawnItemsOnUse
     items:
+      - id: BoosterPackTrash
       - id: Ratvar3123
       - id: Ratvar3222
       - id: Ratvar1414
@@ -68,10 +87,9 @@
   id: FunVendBoosterPack
   name: FunVend Booster Pack
   components:
-  - type: StaticPrice
-    price: 500
   - type: SpawnItemsOnUse
     items:
+      - id: BoosterPackTrash
       - id: Ratvar2322
       - id: Ratvar3143
       - id: Ratvar4434
@@ -84,12 +102,11 @@
   id: MedicalVendBoosterPack
   name: Medical Booster Pack
   components:
-  - type: StaticPrice
-    price: 500
   - type: Sprite
     state: medical_boosters_pack
   - type: SpawnItemsOnUse
     items:
+      - id: BoosterPackTrash
       - id: Ratvar2223
       - id: Ratvar1324
       - id: Ratvar1256
@@ -102,12 +119,11 @@
   id: SecurityVendBoosterPack
   name: Security Booster Pack
   components:
-  - type: StaticPrice
-    price: 500
   - type: Sprite
     state: security_boosters_pack
   - type: SpawnItemsOnUse
     items:
+      - id: BoosterPackTrash
       - id: Ratvar1161
       - id: Ratvar1233
       - id: Ratvar2561
@@ -120,12 +136,11 @@
   id: EngineerVendBoosterPack
   name: Engineer Booster Pack
   components:
-  - type: StaticPrice
-    price: 500
   - type: Sprite
     state: engineer_boosters_pack
   - type: SpawnItemsOnUse
     items:
+      - id: BoosterPackTrash
       - id: Ratvar4141
       - id: Ratvar4411
       - id: Ratvar5612
@@ -138,12 +153,11 @@
   id: ScienceVendBoosterPack
   name: Science Booster Pack
   components:
-  - type: StaticPrice
-    price: 500
   - type: Sprite
     state: science_boosters_pack
   - type: SpawnItemsOnUse
     items:
+      - id: BoosterPackTrash
       - id: Ratvar1441
       - id: Ratvar2611
       - id: Ratvar6215
@@ -156,12 +170,11 @@
   id: CargoVendBoosterPack
   name: Cargo Booster Pack
   components:
-  - type: StaticPrice
-    price: 500
   - type: Sprite
     state: cargo_boosters_pack
   - type: SpawnItemsOnUse
     items:
+      - id: BoosterPackTrash
       - id: Ratvar1361
       - id: Ratvar5123
       - id: Ratvar6611
@@ -174,12 +187,11 @@
   id: ServiceVendBoosterPack
   name: Service Booster Pack
   components:
-  - type: StaticPrice
-    price: 500
   - type: Sprite
     state: service_boosters_pack
   - type: SpawnItemsOnUse
     items:
+      - id: BoosterPackTrash
       - id: Ratvar1343
       - id: Ratvar1135
       - id: Ratvar1166
@@ -192,14 +204,47 @@
   id: CommandVendBoosterPack
   name: Command Booster Pack
   components:
-  - type: StaticPrice
-    price: 500
   - type: Sprite
     state: command_boosters_pack
   - type: SpawnItemsOnUse
     items:
+      - id: BoosterPackTrash
       - id: Ratvar3422
       - id: Ratvar6121
       - id: Ratvar5515
+    sound:
+      path: /Audio/Items/jumpsuit_equip.ogg
+
+# Prize
+- type: entity
+  parent: BaseBoosterPack
+  id: PrizeVendBoosterPack
+  name: Prize Booster Pack
+  components:
+  - type: Sprite
+    state: boosters_pack
+  - type: SpawnItemsOnUse
+    items:
+      - id: BoosterPackTrash
+      - id: RareAndPrizeRatvarLoot
+      - id: CommonAndRareRatvarLoot
+      - id: CommonAndRareRatvarLoot
+    sound:
+      path: /Audio/Items/jumpsuit_equip.ogg
+
+# Mystery
+- type: entity
+  parent: BaseBoosterPack
+  id: MysteryVendBoosterPack
+  name: Mystery Booster Pack
+  components:
+  - type: Sprite
+    state: boosters_pack
+  - type: SpawnItemsOnUse
+    items:
+      - id: BoosterPackTrash
+      - id: RareAndMysteryRatvarLoot
+      - id: CommonAndRareRatvarLoot
+      - id: CommonAndRareRatvarLoot
     sound:
       path: /Audio/Items/jumpsuit_equip.ogg

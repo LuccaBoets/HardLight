@@ -1,11 +1,15 @@
 - type: entity
-  parent: BaseItemHarmless
+  parent: [BaseItemHarmless, RecyclableItemPaper]
   id: RatvarBase
   abstract: true
   components:
     - type: Sprite
       scale: 0.6, 0.6
       sprite: _HL/Objects/Fun/ratvar.rsi
+      layers:
+      - state: paper_stamp-generic
+        map: ["enum.PaperVisualLayers.Stamp"]
+        visible: false
     - type: Item
       size: Small
       heldPrefix: ratvar
@@ -25,6 +29,22 @@
          blue:
             True: { visible: false }
             False: { visible: true }
+    - type: Paper
+      destroyOnFax: true
+    - type: PaperVisuals
+      backgroundImagePath: "/Textures/Interface/Paper/paper_background_default.svg.96dpi.png"
+      contentImagePath: "/Textures/Interface/Paper/paper_content_lined.svg.96dpi.png"
+      backgroundModulate: "#cccccc"
+      contentImageModulate: "#cccccc"
+      backgroundPatchMargin: 16.0, 16.0, 16.0, 16.0
+      contentMargin: 16.0, 16.0, 16.0, 16.0
+    - type: ActivatableUI
+      key: enum.PaperUiKey.Key
+      requiresComplex: false
+    - type: UserInterface
+      interfaces:
+        enum.PaperUiKey.Key:
+          type: PaperBoundUserInterface
 
 # Common
 
@@ -39,69 +59,6 @@
       map: ["red"]
     - state: normal_background_blue
       map: ["blue"]
-
-- type: entity
-  id: Ratvar3123
-  parent: RatvarCommon
-  name: C - Space Carp
-  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Space Carp is captured within the glass.
-  components:
-  - type: Sprite
-    layers:
-    - state: normal_background_red
-      map: ["red"]
-    - state: normal_background_blue
-      map: ["blue"]
-    - state: three
-      offset: 0, 0.25
-    - state: one
-      offset: 0.21875, 0
-    - state: two
-      offset: 0, -0.25
-    - state: three
-      offset: -0.21875, 0
-
-- type: entity
-  id: Ratvar3222
-  parent: RatvarCommon
-  name: C - Killer Tomato
-  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Killer Tomato is captured within the glass.
-  components:
-  - type: Sprite
-    layers:
-    - state: normal_background_red
-      map: ["red"]
-    - state: normal_background_blue
-      map: ["blue"]
-    - state: three
-      offset: 0, 0.25
-    - state: two
-      offset: 0.21875, 0
-    - state: two
-      offset: 0, -0.25
-    - state: two
-      offset: -0.21875, 0
-
-- type: entity
-  id: Ratvar1414
-  parent: RatvarCommon
-  name: C - Mothroach
-  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Mothroach is captured within the glass.
-  components:
-  - type: Sprite
-    layers:
-    - state: normal_background_red
-      map: ["red"]
-    - state: normal_background_blue
-      map: ["blue"]
-    - state: one
-      offset: 0, 0.25
-    - state: four
-      offset: 0.21875, 0
-    - state: one
-      offset: 0, -0.25
-    - state: four
-      offset: -0.21875, 0
 
 - type: entity
   id: Ratvar2322
@@ -181,27 +138,6 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: RatvarA535
-  parent: RatvarRare
-  name: R - Maid
-  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Maid is captured within the crystal in detail.
-  components:
-  - type: Sprite
-    layers:
-    - state: gold_background_red
-      map: ["red"]
-    - state: gold_background_blue
-      map: ["blue"]
-    - state: a
-      offset: 0, 0.25
-    - state: five
-      offset: 0.21875, 0
-    - state: three
-      offset: 0, -0.25
-    - state: five
-      offset: -0.21875, 0
-
-- type: entity
   id: Ratvar4434
   parent: RatvarRare
   name: R - Nook-CIV
@@ -237,7 +173,7 @@
       map: ["blue"]
 
 - type: entity
-  id: Ratvar5545
+  id: Ratvar5545_Crescent
   parent: RatvarUltraRare
   name: UR - Crescent Capital Ship
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Crescent Capital Ship is captured within the crystal in stunning detail, framed in gold leaf.
@@ -348,7 +284,7 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: Ratvar6442
+  id: Ratvar6442_HOS
   parent: RatvarRare
   name: R - Head of Security
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Head of Security is captured within the crystal in detail.
@@ -436,7 +372,7 @@
 # Engineering
 
 - type: entity
-  id: Ratvar4141
+  id: Ratvar4141_engi
   parent: RatvarCommon
   name: C - Station Engineer
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Station Engineer is captured within the glass.
@@ -457,7 +393,7 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: Ratvar4411
+  id: Ratvar4411_RCD
   parent: RatvarCommon
   name: C - RCD
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of RCD is captured within the glass.
@@ -478,7 +414,7 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: Ratvar5612
+  id: Ratvar5612_CE
   parent: RatvarRare
   name: R - Chief Engineer
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Chief Engineer is captured within the crystal in detail.
@@ -501,7 +437,7 @@
 # Science
 
 - type: entity
-  id: Ratvar1441
+  id: Ratvar1441_Sci
   parent: RatvarCommon
   name: C - Scientist
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Scientist is captured within the glass.
@@ -522,7 +458,7 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: Ratvar2611
+  id: Ratvar2611_Artifact
   parent: RatvarCommon
   name: C - Artifact
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Artifact is captured within the glass.
@@ -543,7 +479,7 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: Ratvar6215
+  id: Ratvar6215_RD
   parent: RatvarRare
   name: R - Research Director
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Research Director is captured within the crystal in detail.
@@ -587,7 +523,7 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: Ratvar5123
+  id: Ratvar5123_Wrench
   parent: RatvarCommon
   name: C - Wrench
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Wrench is captured within the glass.
@@ -608,7 +544,7 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: Ratvar6611
+  id: Ratvar6611_QM
   parent: RatvarRare
   name: R - Quartermaster
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Quartermaster is captured within the crystal in detail.
@@ -631,7 +567,7 @@
 # Service
 
 - type: entity
-  id: Ratvar1343
+  id: Ratvar1343_Chef
   parent: RatvarCommon
   name: C - Chef
   description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Chef is captured within the glass.
@@ -673,7 +609,7 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: Ratvar1166
+  id: Ratvar1166_Monkey
   parent: RatvarRare
   name: R - Monkey
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Monkey is captured within the crystal in detail.
@@ -738,7 +674,7 @@
       offset: -0.21875, 0
 
 - type: entity
-  id: Ratvar5515
+  id: Ratvar5515_Captain
   parent: RatvarRare
   name: R - Captain
   description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Captain is captured within the crystal in detail.
@@ -756,4 +692,975 @@
     - state: one
       offset: 0, -0.25
     - state: five
+      offset: -0.21875, 0
+
+# Common: General Pool (can appear in any gatcha pull)
+
+- type: entity
+  id: Ratvar3123
+  parent: RatvarCommon
+  name: C - Space Carp
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Space Carp is captured within the glass.
+  components:
+  - type: Sprite
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: three
+      offset: 0, 0.25
+    - state: one
+      offset: 0.21875, 0
+    - state: two
+      offset: 0, -0.25
+    - state: three
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar3222
+  parent: RatvarCommon
+  name: C - Killer Tomato
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Killer Tomato is captured within the glass.
+  components:
+  - type: Sprite
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: three
+      offset: 0, 0.25
+    - state: two
+      offset: 0.21875, 0
+    - state: two
+      offset: 0, -0.25
+    - state: two
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar1414
+  parent: RatvarCommon
+  name: C - Mothroach
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Mothroach is captured within the glass.
+  components:
+  - type: Sprite
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: four
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: four
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar1415
+  parent: RatvarCommon
+  name: C - Station Borg
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Station Borg is captured within the glass.
+  components:
+  - type: Sprite
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: four
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: five
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar1351
+  parent: RatvarCommon
+  name: C - Robotocist
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Robotocist is captured within the glass.
+  components:
+  - type: Sprite
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: three
+      offset: 0.21875, 0
+    - state: five
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar4141
+  parent: RatvarCommon
+  name: C - Warden
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Warden is captured within the glass.
+  components:
+  - type: Sprite
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: four
+      offset: 0, 0.25
+    - state: one
+      offset: 0.21875, 0
+    - state: four
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar4411
+  parent: RatvarCommon
+  name: C - Argenti
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Argenti is captured within the glass.
+  components:
+  - type: Sprite
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: four
+      offset: 0, 0.25
+    - state: four
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar1441
+  parent: RatvarCommon
+  name: C - Baseball Bat
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Baseball Bat is captured within the glass.
+  components:
+  - type: Sprite
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: four
+      offset: 0.21875, 0
+    - state: four
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar2611
+  parent: RatvarCommon
+  name: C - Wirecutters
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Wirecutters is captured within the glass.
+  components:
+  - type: Sprite
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: two
+      offset: 0, 0.25
+    - state: six
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar13A1
+  parent: RatvarCommon
+  name: C - Multitool
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Multitool is captured within the glass.
+  components:
+  - type: Sprite
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: three
+      offset: 0.21875, 0
+    - state: a
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar5123
+  parent: RatvarCommon
+  name: C - Space Adder
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of Space Adder is captured within the glass.
+  components:
+  - type: Sprite
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: five
+      offset: 0, 0.25
+    - state: one
+      offset: 0.21875, 0
+    - state: two
+      offset: 0, -0.25
+    - state: three
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar1343
+  parent: RatvarCommon
+  name: C - SSF Camper
+  description: A brass-and-glass collectable game card, no-one knows where they came from. The image of SSF Camper is captured within the glass.
+  components:
+  - type: Sprite
+    layers:
+    - state: normal_background_red
+      map: ["red"]
+    - state: normal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: three
+      offset: 0.21875, 0
+    - state: four
+      offset: 0, -0.25
+    - state: three
+      offset: -0.21875, 0
+
+# Rare cards
+- type: entity
+  id: Ratvar1626
+  parent: RatvarRare
+  name: R - Chemist
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Chemist is captured within the crystal in detail.
+  components:
+  - type: Sprite
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: six
+      offset: 0.21875, 0
+    - state: two
+      offset: 0, -0.25
+    - state: six
+      offset: -0.21875, 0
+
+- type: entity
+  id: RatvarA535
+  parent: RatvarRare
+  name: R - Maid
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Maid is captured within the crystal in detail.
+  components:
+  - type: Sprite
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: a
+      offset: 0, 0.25
+    - state: five
+      offset: 0.21875, 0
+    - state: three
+      offset: 0, -0.25
+    - state: five
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar5A25
+  parent: RatvarRare
+  name: R - Construct
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Construct is captured within the crystal in detail.
+  components:
+  - type: Sprite
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: five
+      offset: 0, 0.25
+    - state: a
+      offset: 0.21875, 0
+    - state: two
+      offset: 0, -0.25
+    - state: five
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar5612
+  parent: RatvarRare
+  name: R - FSC Surveyor
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of FSC Surveyor is captured within the crystal in detail.
+  components:
+  - type: Sprite
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: five
+      offset: 0, 0.25
+    - state: six
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: two
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar135A
+  parent: RatvarRare
+  name: R - NC Placebo
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of NC Placebo is captured within the crystal in detail.
+  components:
+  - type: Sprite
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: three
+      offset: 0.21875, 0
+    - state: five
+      offset: 0, -0.25
+    - state: a 
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar6215
+  parent: RatvarRare
+  name: R - Chemist
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Chemist is captured within the crystal in detail.
+  components:
+  - type: Sprite
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: six
+      offset: 0, 0.25
+    - state: two
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: five
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar6611
+  parent: RatvarRare
+  name: R - Plant Wizard
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Plant Wizard is captured within the crystal in detail.
+  components:
+  - type: Sprite
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: six
+      offset: 0, 0.25
+    - state: six
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar1166
+  parent: RatvarRare
+  name: R - Xeno
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Xeno is captured within the crystal in detail.
+  components:
+  - type: Sprite
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: one
+      offset: 0.21875, 0
+    - state: six
+      offset: 0, -0.25
+    - state: six
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar5515
+  parent: RatvarRare
+  name: R - Space Bear
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Space Bear is captured within the crystal in detail.
+  components:
+  - type: Sprite
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: five
+      offset: 0, 0.25
+    - state: five
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: five
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar6442
+  parent: RatvarRare
+  name: R - Diamond Drill
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Diamond Drill is captured within the crystal in detail.
+  components:
+  - type: Sprite
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: six
+      offset: 0, 0.25
+    - state: four
+      offset: 0.21875, 0
+    - state: four
+      offset: 0, -0.25
+    - state: two
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar2655
+  parent: RatvarRare
+  name: R - Speed Boots
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Speed Boots is captured within the crystal in detail.
+  components:
+  - type: Sprite
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: two
+      offset: 0, 0.25
+    - state: six
+      offset: 0.21875, 0
+    - state: five
+      offset: 0, -0.25
+    - state: five
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar4426
+  parent: RatvarRare
+  name: R - Atreides SMG
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Atreides SMG is captured within the crystal in detail.
+  components:
+  - type: Sprite
+    layers:
+    - state: gold_background_red
+      map: ["red"]
+    - state: gold_background_blue
+      map: ["blue"]
+    - state: four
+      offset: 0, 0.25
+    - state: four
+      offset: 0.21875, 0
+    - state: two
+      offset: 0, -0.25
+    - state: six
+      offset: -0.21875, 0
+
+# Ultra Rare (Prize Booster Pack)
+- type: entity
+  id: Ratvar6831
+  parent: RatvarUltraRare
+  name: UR - RCD
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of RCD is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: six
+      offset: 0, 0.25
+    - state: a
+      offset: 0.21875, 0
+    - state: three
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar1665
+  parent: RatvarUltraRare
+  name: UR - Atmosian
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Atmosian is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: six
+      offset: 0.21875, 0
+    - state: six
+      offset: 0, -0.25
+    - state: five
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar6464
+  parent: RatvarUltraRare
+  name: UR - Ratvar Plushie
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Ratvar Plushie is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: six
+      offset: 0, 0.25
+    - state: four
+      offset: 0.21875, 0
+    - state: six
+      offset: 0, -0.25
+    - state: four
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar4646
+  parent: RatvarUltraRare
+  name: UR - Clockwork Gear
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Clockwork Gear is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: four
+      offset: 0, 0.25
+    - state: six
+      offset: 0.21875, 0
+    - state: four
+      offset: 0, -0.25
+    - state: six
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar6516
+  parent: RatvarUltraRare
+  name: UR - Wizard
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Wizard is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: six
+      offset: 0, 0.25
+    - state: five
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: six
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar6561
+  parent: RatvarUltraRare
+  name: UR - Xeno Matirarch
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Xeno Matirarch is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: six
+      offset: 0, 0.25
+    - state: five
+      offset: 0.21875, 0
+    - state: six
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar4555
+  parent: RatvarUltraRare
+  name: UR - Snoth
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Snoth is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: four
+      offset: 0, 0.25
+    - state: five
+      offset: 0.21875, 0
+    - state: five
+      offset: 0, -0.25
+    - state: five
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar5545
+  parent: RatvarUltraRare
+  name: UR - Lucky Revolver
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Lucky Revolver is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: five
+      offset: 0, 0.25
+    - state: five
+      offset: 0.21875, 0
+    - state: four
+      offset: 0, -0.25
+    - state: five
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar1276
+  parent: RatvarUltraRare
+  name: UR - Holopick
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Holopick is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: two
+      offset: 0.21875, 0
+    - state: seven
+      offset: 0, -0.25
+    - state: six
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar31A6
+  parent: RatvarUltraRare
+  name: UR - John Clake
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of John Clake is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: three
+      offset: 0, 0.25
+    - state: one
+      offset: 0.21875, 0
+    - state: a
+      offset: 0, -0.25
+    - state: six
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar7136
+  parent: RatvarUltraRare
+  name: UR - Bingus the Cat
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Bingus the Cat is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: seven
+      offset: 0, 0.25
+    - state: one
+      offset: 0.21875, 0
+    - state: three
+      offset: 0, -0.25
+    - state: six
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar6713
+  parent: RatvarUltraRare
+  name: UR - Morticia the Raccoon
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Morticia the Raccoon is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: six
+      offset: 0, 0.25
+    - state: seven
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: three
+      offset: -0.21875, 0
+
+# Ultra Rare (Mystery Booster Packs)
+- type: entity
+  id: Ratvar7262
+  parent: RatvarUltraRare
+  name: UR - Willow the Kangaroo
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Willow the Kangaroo is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: seven
+      offset: 0, 0.25
+    - state: two
+      offset: 0.21875, 0
+    - state: six
+      offset: 0, -0.25
+    - state: two
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar6156
+  parent: RatvarUltraRare
+  name: UR - LMG-6
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of LMG-6 is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: six
+      offset: 0, 0.25
+    - state: one
+      offset: 0.21875, 0
+    - state: five
+      offset: 0, -0.25
+    - state: six
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar4167
+  parent: RatvarUltraRare
+  name: UR - Energy Sword
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Energy Sword is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: four
+      offset: 0, 0.25
+    - state: one
+      offset: 0.21875, 0
+    - state: six
+      offset: 0, -0.25
+    - state: seven
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar1476
+  parent: RatvarUltraRare
+  name: UR - Clown
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Clown is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: four
+      offset: 0.21875, 0
+    - state: seven
+      offset: 0, -0.25
+    - state: six
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar7712
+  parent: RatvarUltraRare
+  name: UR - Mime
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Mime is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: seven
+      offset: 0, 0.25
+    - state: seven
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: two
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar7127
+  parent: RatvarUltraRare
+  name: UR - Ian the Corgi
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Ian the Corgi is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: seven
+      offset: 0, 0.25
+    - state: one
+      offset: 0.21875, 0
+    - state: two
+      offset: 0, -0.25
+    - state: seven
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar3771
+  parent: RatvarUltraRare
+  name: UR - Hamlet the Hamster
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Hamlet the Hamster is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: three
+      offset: 0, 0.25
+    - state: seven
+      offset: 0.21875, 0
+    - state: seven
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar1377
+  parent: RatvarUltraRare
+  name: UR - Shiva the Spider
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Shiva the Spider is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: one
+      offset: 0, 0.25
+    - state: three
+      offset: 0.21875, 0
+    - state: seven
+      offset: 0, -0.25
+    - state: seven
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar7271
+  parent: RatvarUltraRare
+  name: UR - Smile the Slime
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Smile the Slime is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: seven
+      offset: 0, 0.25
+    - state: two
+      offset: 0.21875, 0
+    - state: seven
+      offset: 0, -0.25
+    - state: one
+      offset: -0.21875, 0
+
+- type: entity
+  id: Ratvar7316
+  parent: RatvarUltraRare
+  name: UR - Pun-Pun the Monkey
+  description: A brass-and-crystal collectable game card, no-one knows where they came from. The image of Pun-Pun the Monkey is captured within the crystal in stunning detail, framed in gold leaf.
+  components:
+  - type: Sprite
+    layers:
+    - state: crystal_background_red
+      map: ["red"]
+    - state: crystal_background_blue
+      map: ["blue"]
+    - state: seven
+      offset: 0, 0.25
+    - state: three
+      offset: 0.21875, 0
+    - state: one
+      offset: 0, -0.25
+    - state: six
       offset: -0.21875, 0

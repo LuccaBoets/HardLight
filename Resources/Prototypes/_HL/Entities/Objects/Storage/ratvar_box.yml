@@ -1,0 +1,65 @@
+- type: entity
+  name: Ratvar Bag
+  id: RatvarBag
+  parent: NFBaseClothingBeltStorageBag # Frontier: BaseStorageItem<NFBaseClothingBeltStorageBag
+  description: 
+  components:
+  - type: Sprite
+    sprite: _HL/Objects/Fun/ratvar.rsi
+    layers:
+    - state: deck_storage_box
+      map: [ "closeLayer" ]
+    - state: deck_storage_box_open
+      map: [ "openLayer" ]
+      visible: false
+    - state: bag-fill-1
+      map: [ "bagFill1" ]
+      visible: false
+    - state: bag-fill-2
+      map: [ "bagFill2" ]
+      visible: false
+    - state: bag-fill-3
+      map: [ "bagFill3" ]
+      visible: false
+    - state: bag-fill-4
+      map: [ "bagFill4" ]
+      visible: false
+    - state: bag-fill-5
+      map: [ "bagFill5" ]
+      visible: false
+  - type: Item
+    storedRotation: -90
+    size: Small
+  - type: Clothing
+    quickEquip: false
+    slots: [ belt, pocket ]
+  - type: Storage
+    grid:
+    - 0,0,4,1
+    maxItemSize: Small
+    quickInsert: true
+    areaInsert: true
+    whitelist:
+      tags:
+      - RatvarCard
+  - type: Dumpable
+  - type: ItemCounter
+    count:
+      components: [ Item ]
+    composite: true
+    layerStates:
+    - bagFill1
+    - bagFill2
+    - bagFill3
+    - bagFill4
+    - bagFill5
+  - type: Appearance
+  - type: GenericVisualizer
+    visuals:
+      enum.SharedBagOpenVisuals.BagState:
+        closeLayer:
+          Open: { visible: false }
+          Closed: { visible: true }
+        openLayer:
+          Open: { visible: true }
+          Closed: { visible: false }

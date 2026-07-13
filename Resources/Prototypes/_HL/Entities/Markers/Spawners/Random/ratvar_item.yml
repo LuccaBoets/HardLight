@@ -1,0 +1,135 @@
+# Common
+- type: entity
+  name: general common ratvar pool
+  id: GeneralCommonRatvarPool
+  parent: MarkerBasePlaceFree
+  suffix: "Ratvar"
+  components:
+  - type: RandomSpawner
+    prototypes:
+    - Ratvar3123
+    - Ratvar3222
+    - Ratvar1414
+    - Ratvar1415
+    - Ratvar1351
+    - Ratvar4141
+    - Ratvar4411
+    - Ratvar1441
+    - Ratvar2611
+    - Ratvar13A1
+    - Ratvar5123
+    - Ratvar1343
+    chance: 1
+
+# Rare
+- type: entity
+  name: general rare ratvar pool
+  id: GeneralRareRatvarPool
+  parent: MarkerBasePlaceFree
+  suffix: "Ratvar"
+  components:
+  - type: RandomSpawner
+    prototypes:
+    - Ratvar1626
+    - RatvarA535
+    - Ratvar5A25
+    - Ratvar135A
+    - Ratvar6215
+    - Ratvar6611
+    - Ratvar1166
+    - Ratvar5515
+    - Ratvar6442
+    - Ratvar2655
+    - Ratvar4426
+    chance: 1
+
+# Prize Booster Pack
+- type: entity
+  name: prize ultra rare ratvar pool
+  id: PrizeUltraRareRatvarPool
+  parent: MarkerBasePlaceFree
+  suffix: "Ratvar"
+  components:
+  - type: RandomSpawner
+    prototypes:
+    - Ratvar6831
+    - Ratvar1665
+    - Ratvar6464
+    - Ratvar4646
+    - Ratvar6516
+    - Ratvar6561
+    - Ratvar4555
+    - Ratvar5545
+    - Ratvar1276
+    - Ratvar31A6
+    - Ratvar7136
+    - Ratvar6713
+    chance: 1
+
+# Mystery Booster Packs
+- type: entity
+  name: mystery ultra rare ratvar pool
+  id: MysteryUltraRareRatvarPool
+  parent: MarkerBasePlaceFree
+  suffix: "Ratvar"
+  components:
+  - type: RandomSpawner
+    prototypes:
+    - Ratvar6731
+    - RatvarAAAA
+    - Ratvar7262
+    - Ratvar6156
+    - Ratvar4167
+    - Ratvar1476
+    - Ratvar7712
+    - Ratvar7127
+    - Ratvar3771
+    - Ratvar1377
+    - Ratvar7271
+    - Ratvar7316
+    chance: 1
+
+# Common and rare loot
+- type: entity
+  name: common and rare ratvar loot
+  id: CommonAndRareRatvarLoot
+  parent: MarkerBasePlaceFree
+  suffix: "Ratvar"
+  components:
+  - type: RandomSpawner
+    prototypes:
+    - GeneralCommonRatvarPool
+    chance: 1
+    rarePrototypes:
+    - GeneralRareRatvarPool
+    rareChance: 0.33
+
+# Common and rare loot
+- type: entity
+  name: rare and prize ratvar loot
+  id: RareAndPrizeRatvarLoot
+  parent: MarkerBasePlaceFree
+  suffix: "Ratvar"
+  components:
+  - type: RandomSpawner
+    prototypes:
+    - GeneralRareRatvarPool
+    chance: 1
+    rarePrototypes:
+    - PrizeUltraRareRatvarPool
+    rareChance: 0.33
+
+# Common and rare loot
+- type: entity
+  name: rare and mystery ratvar loot
+  id: RareAndMysteryRatvarLoot
+  parent: MarkerBasePlaceFree
+  suffix: "Ratvar"
+  components:
+  - type: RandomSpawner
+    prototypes:
+    - GeneralRareRatvarPool
+    chance: 1
+    rarePrototypes:
+    - MysteryUltraRareRatvarPool
+    rareChance: 0.33

@@ -9,6 +9,27 @@
     "states": [
         {
             "name": "deck_storage_box"
+        },   
+        {
+            "name": "deck_storage_box_open"
+        },
+        {
+            "name": "bag-fill-1"
+        },
+        {
+            "name": "bag-fill-2"
+        },
+        {
+            "name": "bag-fill-3"
+        },
+        {
+            "name": "bag-fill-4"
+        },
+        {
+            "name": "bag-fill-5"
+        },
+        {
+            "name": "booster_pack_trash"
         },
         {
             "name": "boosters_pack"

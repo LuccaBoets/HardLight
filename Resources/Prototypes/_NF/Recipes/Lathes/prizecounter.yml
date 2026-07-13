@@ -553,3 +553,8 @@
   id: PlushieAbductorAgentRecipe
   result: PlushieAbductorAgent
   parent: BasePrize50Recipe
+
+- type: latheRecipe 
+  id: PrizeVendBoosterPackRecipe # HL
+  result: PrizeVendBoosterPack
+  parent: BasePrize50Recipe
